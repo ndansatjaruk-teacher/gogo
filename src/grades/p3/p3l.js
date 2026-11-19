@@ -43,11 +43,11 @@ function simL3Chain() { // unit ladder: tap a step to see × / ÷
   out.innerHTML = 'แตะแต่ละขั้นของบันไดหน่วย'; box.append(row, out); return box; }
 function simL3Guess(items) { // guess with body units, then measure
   const box = h('div', { class: 'colstack' }, h6wait()), out = fNote(); let k = 0, g = 0; const fig = h('div', { class: 'pw-fig' }), lab = h('div', { class: 'fbig' });
-  const show = () => { const [name, e, cm, step] = items[k]; g = step * 2; fig.innerHTML = objRow(e, 1, { size: '96px' }).outerHTML + `<div class="cap">${name}</div>`; lab.innerHTML = `คาดคะเน: <b class="num">${mcTxt(g)}</b> <small>(ทีละ ${step} ซม.)</small>`; out.innerHTML = 'ใช้ เพิ่ม/ลด คาดคะเน แล้วกด “วัดจริง”<br>1 คืบ ≈ 15 ซม. · 1 ก้าว ≈ 50 ซม. · กางแขน ≈ 1 เมตร'; };
+  let wait = false; const show = () => { wait = false; if (k >= items.length) return; const [name, e, cm, step] = items[k]; /* v134: กด “วัดจริง” ซ้ำเร็ว ๆ เคยทำให้ items[k] เกินรายการแล้ว error */ g = step * 2; fig.innerHTML = objRow(e, 1, { size: '96px' }).outerHTML + `<div class="cap">${name}</div>`; lab.innerHTML = `คาดคะเน: <b class="num">${mcTxt(g)}</b> <small>(ทีละ ${step} ซม.)</small>`; out.innerHTML = 'ใช้ เพิ่ม/ลด คาดคะเน แล้วกด “วัดจริง”<br>1 คืบ ≈ 15 ซม. · 1 ก้าว ≈ 50 ซม. · กางแขน ≈ 1 เมตร'; };
   const st = d => h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); if (k >= items.length) return; g = Math.max(items[k][3], g + d * items[k][3]); sfx.tap(); lab.innerHTML = `คาดคะเน: <b class="num">${mcTxt(g)}</b> <small>(ทีละ ${items[k][3]} ซม.)</small>`; } }, d > 0 ? '＋ เพิ่ม' : '－ ลด');
-  const meas = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const [name, , cm] = items[k], d = Math.abs(cm - g); sfx.ok();
+  const meas = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); if (wait || k >= items.length) return; const [name, , cm] = items[k], d = Math.abs(cm - g); sfx.ok();
     out.innerHTML = `วัดจริง ${name} <b>${mcTxt(cm)}</b><br>คาดคะเนต่างจริง ${mcTxt(d) || '0 เซนติเมตร'} ${d <= cm / 5 ? '— ใกล้เคียงมาก!' : '— ลองเทียบกับสิ่งที่รู้ความยาว'}`; k++;
-    if (k >= items.length) { meas.remove(); teachDone(box); } else setTimeout(show, 1600); } }, 'วัดจริง');
+    if (k >= items.length) { meas.remove(); teachDone(box); } else { wait = true; setTimeout(show, 1600); } } }, 'วัดจริง');
   show(); box.append(fig, lab, h('div', { class: 'rowstack' }, st(-1), st(1)), meas, out); return box; }
 
 /* ---------- question types ---------- */

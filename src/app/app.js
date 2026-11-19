@@ -505,6 +505,7 @@ function zoomBtn() {
     const btns = [...document.querySelectorAll('button')].filter(vis), txt = b => b.textContent.replace(/\s+/g, ' ').trim();
     const go = btns.find(b => /^(ข้อต่อไป|ดูผล)/.test(txt(b)))
       || btns.find(b => b.classList.contains('info') && !b.classList.contains('h6-wait') && !b.dataset.done && /ขั้น|ต่อไป|ดูต่อ/.test(txt(b)) && !/ใหม่/.test(txt(b)))
+      || (() => { const g = window.__gate, b = g && !g.isDone() && g.next && g.next(); return b && vis(b) && document.querySelector('.screen.teach') ? b : null; })() /* v134: ปุ่มลำดับขั้นของตัวอย่างทุกแบบ (เช่น “ดูแถวต่อไป” “เพิ่มทีละ 100,000”) */
       || btns.find(b => b.closest('.bottombar') && /ถัดไป|เล่นเกม|เริ่มเกม|ไปเล่น/.test(txt(b)) && !b.classList.contains('waiting'));
     e.preventDefault(); if (go) go.click(); }, true);
   addEventListener('keydown', e => { if (!(e.ctrlKey || e.metaKey) || e.altKey) return; const k = e.key;

@@ -57,7 +57,7 @@ def main():
         pg.evaluate('SET.mute = true; window.say = () => {}; 0')
         if errs:
             sys.exit('Error while loading the game:\n' + '\n'.join(errs))
-        lessons = pg.evaluate('LESSONS.map((L, i) => ({ i, id: L.id, title: L.title, grade: (CITIES.find(c => c.lessons.includes(L)) || {}).grade, pages: (L.teach || []).length, boss: !!L.boss }))')
+        lessons = pg.evaluate('LESSONS.map((L, i) => ({ i, id: L.id, title: L.title, grade: (CITIES.find(c => c.lessons.includes(L)) || {}).grade || 1, pages: (L.teach || []).length, boss: !!L.boss }))')
         if a.grade:
             lessons = [L for L in lessons if L['grade'] in a.grade]
         if a.lesson:

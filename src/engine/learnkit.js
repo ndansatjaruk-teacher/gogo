@@ -65,6 +65,10 @@ function lrnBoard(cards, k, figOf) {
   const keys = lbFocus(cur), olds = items.filter(x => x.classList.contains('lb-old'));
   if (keys.length) { const tgt = olds.length ? olds : items; tgt.some(x => lbMark(x, keys, bad)); }
   return board; }
+/* v134: รูปในหน้า “รู้จัก” ขยาย (zoom 1.8) แล้วกว้างเกินช่อง → ลด zoom ให้พอดี (เดิมตาชั่ง 2 อันของ ป.3 ถูกตัดขอบ) */
+function lrnFitZoom(pf) { let n = 0; const fit = () => { if (!pf.isConnected) { if (n++ < 30) requestAnimationFrame(fit); return; } pf.style.zoom = ''; const z = parseFloat(getComputedStyle(pf).zoom) || 1, cw = pf.clientWidth, sw = Math.max(pf.scrollWidth, ...[...pf.querySelectorAll('.lrn-fig, .lrn-fig > *')].map(e => Math.max(e.scrollWidth, e.offsetWidth)));
+    if (cw > 0 && sw > cw + 2) pf.style.zoom = String(Math.max(.6, Math.floor(z * cw / sw * 20) / 20)); };
+  requestAnimationFrame(fit); try { new ResizeObserver(() => requestAnimationFrame(fit)).observe(pf); } catch (_) { } }
 const learnStep = (t, s, cards, sum) => cards.map((c, k) => {
   let ci = -1; if (!lrnVis(c) && c.carry !== false && c.fig) for (let j = k - 1; j >= 0; j--) if (lrnVis(cards[j])) { ci = j; break; }
   const figOf = d => typeof d.fig === 'function' ? d.fig() : h('div', { class: 'lrn-fig', html: d.fig || '' });
@@ -72,8 +76,8 @@ const learnStep = (t, s, cards, sum) => cards.map((c, k) => {
   const bub = (first ? t + ' — ' : '') + `<b>${c.name}</b>`;
   const cs = c.sum != null ? c.sum : last ? sum : null;
   const say = (first ? plain(t) + ' ' : '') + (c.say || plain(c.name) + ' ' + plain(c.text)) + (cs ? ' สรุปว่า ' + plain(cs) : '');
-  return Object.assign(T(bub, say, el => { const fig = lrnBoard(cards, k, figOf);
-    el.append(h('div', { class: 'lrn-page' }, h('div', { class: 'lrn-chip' }, `รู้จัก ${k + 1} / ${cards.length}`), h('div', { class: 'lrn-pfig' }, fig),
+  return Object.assign(T(bub, say, el => { const fig = lrnBoard(cards, k, figOf), pf = h('div', { class: 'lrn-pfig' }, fig); lrnFitZoom(pf);
+    el.append(h('div', { class: 'lrn-page' }, h('div', { class: 'lrn-chip' }, `รู้จัก ${k + 1} / ${cards.length}`), pf,
       h('h3', { class: 'lrn-h', html: name }), c.text ? h('p', { class: 'lrn-p', html: FX(c.text) }) : null,
       cs ? h('div', { class: 'lrn-sum', html: '<b>สรุป:</b> ' + FX(cs) }) : null)); }), { lf: [c.name, String(c.text || '').split(/<br>|·/)[0]].map(x => plain(String(x || '').replace(/<span class="fq"><i>(\d+)<\/i><i>(\d+)<\/i><\/span>/g, '$1/$2').replace(/\[(\d+ )?(\d+)\/(\d+)\]/g, (_, w, n, d) => (w || '') + n + '/' + d)).replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&').trim()).filter(Boolean).join(' — ') });
 });

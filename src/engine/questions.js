@@ -896,6 +896,8 @@ const uniqExt = (c, f) => { const v = f(...c.data.map(d => d.n)); return c.data.
 const labelChoices = (b, ctx, c, right, hint, pool) => { b.append(choices(ctx, (pool || c.data).map(d => ({ value: d.label, label: d.label })), right, { hint })); b.querySelectorAll('.opt').forEach(o => o.classList.add('txt')); };
 Object.assign(Q, {
   chartAsk({ chart: c, ask, a = 0, b = 1, k = 3 }) {
+    if (ask === 'diff' && c.data[a].n < c.data[b].n) [a, b] = [b, a]; /* v134: “A มากกว่า B กี่ชิ้น” ต้องให้ A มากกว่าจริง (เดิมได้คำตอบติดลบ −2 ซึ่งกดตอบไม่ได้) */
+    if (ask === 'diff' && c.data[a].n === c.data[b].n) ask = 'total';
     let A = c.data[a]; const B = c.data[b], u = c.unit || 'ชิ้น';
     const P = {
       count: [`${A.label} มีกี่${u}?`, A.n, `นับรูปในแถว${A.label} 1 รูปแทน 1 ${u}`],

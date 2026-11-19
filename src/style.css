@@ -3658,3 +3658,5 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
   .cnsf-tools .btn .cns-ti{transform:scale(.85)}
   .cns-msg{min-height:2.4em;font-size:13px}
 }
+/* v134: รูปเล็กในการ์ด (เช่น ภาชนะในการ์ดความจุ) ไม่ถูกขยายเต็มช่องภาพด้านซ้ายของตัวอย่างฝึก (.qs-l svg … !important) */
+.qs-l .p2card svg.vcont,.qs-l .vcard svg{width:48px!important;height:60px!important;max-height:none}
