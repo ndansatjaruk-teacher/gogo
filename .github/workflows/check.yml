@@ -1,0 +1,32 @@
+# Every pull request (and every push): build, syntax-check, then open every lesson in a real browser.
+name: check
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: ['src/**', 'tools/**', 'tests/**', '.github/workflows/**']
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Build + syntax check
+        run: python3 tools/build.py --check
+      - name: Install Playwright
+        run: pip install playwright && python3 -m playwright install --with-deps chromium
+      - name: Smoke test — every teach page and every game question
+        run: python3 tests/smoke.py
+      - name: Construction board (ป.5 ถ้ำสี่เหลี่ยม)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          git fetch --depth=1 origin "${{ github.base_ref }}"
+          if git diff --name-only FETCH_HEAD HEAD | grep -q 'src/grades/p5/p5q.js'; then
+            python3 tests/construction/edge_cases.py && python3 tests/construction/solve_all.py
+          else
+            echo "p5q.js not changed — skipped"
+          fi
