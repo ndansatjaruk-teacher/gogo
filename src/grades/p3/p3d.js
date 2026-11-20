@@ -27,7 +27,7 @@ function d3BoardHTML(D, k, pos, phase, o = {}) { // pos = index in S being asked
    หารยาว: ① แตะตัวเลขที่จะเริ่มหาร ② ผลหาร (เขียนบนหลักนั้น) ③ คูณ (เขียนใต้) ④ ลบ ⑤ แตะตัวเลขถัดไปเพื่อดึงลง → ทำซ้ำ
    หารสั้น: ① แตะตัวเลขที่จะเริ่มหาร ② ผลหาร (ใต้เส้น) ③ เศษตัวเล็กหน้าหลักถัดไป → ทำซ้ำ ④ เศษสุดท้าย
    ผิดแต่ละขั้นบอกเหตุผลจริง (เช่น 7 × 6 = 42 มากกว่า 40) · เฉลย (ผิดครบ 3 ครั้ง) เติมกระดานให้ครบ · o.final === false → ไม่จบข้อเอง (ใช้ในโจทย์ปัญหา) */
-const D3_PLACE = ['หลักหน่วย', 'หลักสิบ', 'หลักร้อย', 'หลักพัน', 'หลักหมื่น'];
+const D3_PLACE = ['หลักหน่วย', 'หลักสิบ', 'หลักร้อย', 'หลักพัน', 'หลักหมื่น', 'หลักแสน', 'หลักล้าน']; /* v148: ใช้กับ ป.4 ตัวตั้งถึงหลักล้าน */
 function d3Work(D, k, ctx, o = {}) {
   const demo = !!o.demo, P = p4ldivPlan(D, k), nd = P.digs.length, f = Math.max(0, P.steps.findIndex(s => !s.quiet)), short = !!o.short, guide = !!o.guide, place = i => D3_PLACE[nd - 1 - i];
   /* ลำดับงานทั้งหมดของข้อนี้ */
@@ -100,7 +100,7 @@ function d3Work(D, k, ctx, o = {}) {
     if (fin) { lab.innerHTML = `${fmt(D)} ÷ ${fmt(k)} = <b>${fmt(P.q)}</b>${P.rem ? ` เศษ <b>${fmt(P.rem)}</b>` : ''}${shown ? '' : ' ✓'}`; tip.textContent = ''; return; }
     const s = T.i != null ? P.steps[Math.min(T.i, nd - 1)] : null;
     if (T.t === 'start') { lab.innerHTML = 'เริ่มหารที่ตัวเลขไหน? <b>แตะตัวเลขของตัวตั้ง</b>'; tip.textContent = guide ? `ตัวเลขที่เริ่มหารต้องมีค่าไม่น้อยกว่า ${k} ถ้าหลักแรกน้อยกว่า ${k} ให้ใช้สองหลัก` : ''; }
-    else if (T.t === 'q') { lab.innerHTML = `<b>${fmt(s.cur)} ÷ ${k}</b> ได้เท่าไร — เขียนผลหาร${short ? 'ใต้' : 'บน'}${place(T.i)}`; tip.textContent = guide ? (s.cur < k ? `${s.cur} น้อยกว่า ${k} หารไม่ได้ → ผลหารเป็น 0` : `ท่องแม่ ${k}: ${k} × อะไรได้ใกล้ ${s.cur} ที่สุดแต่ไม่เกิน`) : ''; }
+    else if (T.t === 'q') { lab.innerHTML = `<b>${fmt(s.cur)} ÷ ${k}</b> ได้เท่าไร — เขียนผลหาร${short ? 'ใต้' : 'บน'}${place(T.i)}`; tip.textContent = guide ? (s.cur < k ? `${s.cur} น้อยกว่า ${k} หารไม่ได้ → ผลหารเป็น 0` : (k < 10 ? `ท่องแม่ ${k}: ${k} × อะไรได้ใกล้ ${s.cur} ที่สุดแต่ไม่เกิน` : `ประมาณ ${k} ≈ ${p4lead(k)} แล้วลองคูณ — ผลคูณต้องไม่เกิน ${fmt(s.cur)}`)) : ''; }
     else if (T.t === 'm') { lab.innerHTML = `คูณ: <b>${s.q} × ${k}</b> = ? — เขียนผลคูณใต้ ${fmt(s.cur)}`; tip.textContent = guide ? 'ผลหารที่เพิ่งเขียน × ตัวหาร' : ''; }
     else if (T.t === 's') { lab.innerHTML = `ลบ: <b>${fmt(s.cur)} − ${fmt(s.prod)}</b> = ?`; tip.textContent = guide ? `ผลลบต้องน้อยกว่า ${k}` : ''; }
     else if (T.t === 'b') { lab.innerHTML = 'ดึงตัวเลขหลักถัดไปลงมา — <b>แตะตัวเลขนั้นที่ตัวตั้ง</b>'; tip.textContent = guide ? `ตัวถัดไปทางขวาคือ ${P.digs[T.i]} (${place(T.i)})` : ''; }
@@ -117,7 +117,7 @@ function d3Work(D, k, ctx, o = {}) {
   function enter(v) { const T = tasks[at]; if (fin || !T) return; const s = T.i != null ? P.steps[Math.min(T.i, nd - 1)] : null;
     if (T.t === 'q') { if (v === s.q) return next();
       return wrong(v * k > s.cur ? `${v} × ${k} = ${v * k} มากกว่า ${fmt(s.cur)} — ผลหารต้องน้อยกว่า ${v}` : `${v} × ${k} = ${v * k} เหลือ ${fmt(s.cur - v * k)} ซึ่งยังไม่น้อยกว่า ${k} แบ่งได้อีก — ผลหารต้องมากกว่า ${v}`); }
-    if (T.t === 'm') { if (v === s.prod) return next(); return wrong(`${s.q} × ${k} ไม่เท่ากับ ${fmt(v)} — ลองท่องแม่ ${k} อีกครั้ง`); }
+    if (T.t === 'm') { if (v === s.prod) return next(); return wrong(`${s.q} × ${k} ไม่เท่ากับ ${fmt(v)} — ${k < 10 ? `ลองท่องแม่ ${k} อีกครั้ง` : 'ลองตั้งคูณใหม่ทีละหลัก'}`); }
     if (T.t === 's') { if (v === s.rem) return next(); return wrong(`${fmt(s.cur)} − ${fmt(s.prod)} ไม่เท่ากับ ${fmt(v)}${v >= k ? ` (และเศษต้องน้อยกว่า ${k})` : ''}`); }
     if (T.t === 'c') { if (v === s.rem) return next(); return wrong(`${s.q} × ${k} = ${s.q * k} · ${fmt(s.cur)} − ${s.q * k} ไม่เท่ากับ ${v}`); }
     if (T.t === 'r') { if (v === P.rem) return next(); return wrong(`${fmt(P.steps[nd - 1].cur)} − ${P.steps[nd - 1].prod} ไม่เท่ากับ ${v}`); } }
