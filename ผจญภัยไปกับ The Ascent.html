@@ -6247,6 +6247,15 @@ function cvnBoard(o) {
   return box;
 }
 
+/* v167 — กระดานกระโดดบนเส้นจำนวน: เริ่มที่ a แล้วแตะทีละช่อง (บวก → ขวา · ลบ → ซ้าย) ครบ b ครั้งจึงได้คำตอบ */
+function hopLine(ctx, a, b, op, lo, hi) { const nl = numberLine(lo, hi, { hi: [a] }), e = eqRow([a, op, b, '=', '?'], { sm: true }), d = op === '+' ? 1 : -1, ans = a + d * b; nl.classList.add('ia', 'tapline', 'hopline'); let cur = a, k = 0;
+  const T = [...nl.querySelectorAll('.tick')], tk = n => T[n - lo], dir = op === '+' ? 'ขวา' : 'ซ้าย';
+  T.forEach((t, i) => { const n = i + lo; t.onclick = ev => { ev.stopPropagation(); if (nl.dataset.done) return;
+    if (n === cur + d) { k++; cur = n; t.classList.add('hop'); t.dataset.k = k; sfx.pop(Math.min(8, k + 2)); if (k === b) { nl.dataset.done = 1; t.classList.add('hi2'); e.fill(ans); ctx.check(true); } return; }
+    t.classList.remove('wrongtick'); void t.offsetWidth; t.classList.add('wrongtick');
+    ctx.check(false, (n - cur) * d <= 0 ? `${op === '+' ? 'บวก' : 'ลบ'}ต้องกระโดดไปทาง<b>${dir}</b> — จาก ${cur} ช่องถัดไปคือ ${cur + d}` : `กระโดดทีละ 1 ช่องนะ — จาก ${cur} ช่องถัดไปคือ ${cur + d}`); }; });
+  ctx.onRight = () => { nl.dataset.done = 1; for (let j = 1; j <= b; j++) { const t = tk(a + d * j); t.classList.add('hop'); t.dataset.k = j; } tk(ans).classList.add('hi2'); e.fill(ans); };
+  return h('div', { class: 'colstack' }, e, nl, h('div', { class: 'cap' }, `${op === '+' ? 'บวก' : 'ลบ'} ${b} = กระโดดไปทาง${dir} ${b} ครั้ง`)); }
 'use strict';
 /* =========================================================
    QUESTION TYPES — reusable game rounds.
@@ -7081,12 +7090,9 @@ Object.assign(Q, {
         bd.append(h('div', { class: 'colstack' }, e, cnt), answerBox(ctx, a + b, { hint: `เริ่มที่ ${big} แล้วนับต่ออีก ${small}: ${range(big + 1, Math.min(big + 3, big + small)).join(', ')} …` })); ctx.onRight = () => e.fill(a + b); } };
   },
   /* tap the answer on the 0–20 number line */
-  lineCalc({ a, b, op = '+' }) {
-    const ans = op === '+' ? a + b : a - b;
-    return { prompt: `<span class="hl">${a} ${op === '+' ? '+' : '−'} ${b}</span> แตะคำตอบบนเส้นจำนวน`, say: `${WORD[a]} ${opWord(op)} ${WORD[b]} แตะคำตอบบนเส้นจำนวน`,
-      mount(bd, ctx) { const nl = numberLine(0, 20, { hi: [a] }); nl.classList.add('ia', 'tapline');
-        nl.querySelectorAll('.tick').forEach((t, n) => { t.onclick = e => { e.stopPropagation(); if (nl.dataset.done) return; const ok = n === ans; if (ok) { nl.dataset.done = 1; t.classList.add('hi2'); } else { t.classList.remove('wrongtick'); void t.offsetWidth; t.classList.add('wrongtick'); } ctx.check(ok, `เริ่มที่ ${a} แล้วกระโดดไปทาง${op === '+' ? 'ขวา' : 'ซ้าย'} ${b} ช่อง`); }; });
-        bd.append(h('div', { class: 'colstack' }, eqRow([a, op === '+' ? '+' : '−', b, '=', '?'], { sm: true }), nl, h('div', { class: 'cap' }, op === '+' ? 'บวก = กระโดดไปทางขวา' : 'ลบ = กระโดดไปทางซ้าย'))); } };
+  lineCalc({ a, b, op = '+' }) { /* v167: กระโดดเองทีละช่อง (เดิมแตะคำตอบเลย) */
+    return { prompt: `<span class="hl">${a} ${op === '+' ? '+' : '−'} ${b}</span> เริ่มที่ ${a} แล้วแตะกระโดดไปทาง${op === '+' ? 'ขวา' : 'ซ้าย'}ทีละ 1 ช่อง`, say: `${WORD[a]} ${opWord(op)} ${WORD[b]} เริ่มที่ ${WORD[a]} แล้วแตะกระโดดทีละหนึ่งช่อง`,
+      mount(bd, ctx) { bd.append(hopLine(ctx, a, b, op === '+' ? '+' : '−', 0, 20)); } };
   },
   /* practice: doubles */
   doubles({ n, item = pick(ITEMS.fruits) }) {
@@ -7095,12 +7101,17 @@ Object.assign(Q, {
         bd.append(h('div', { class: 'colstack' }, h('div', { class: 'rows20' }, objRow(item.e, n, { size: sz, pop: true }), objRow(item.e, n, { size: sz, pop: true, delay0: .5 })), e), answerBox(ctx, n + n, { hint: `${n} + ${n} คือนับ ${n} สองครั้ง` })); ctx.onRight = () => e.fill(n + n); } };
   },
   /* practice: make ten — ask the leftover part or the final sum */
-  makeTen20({ a, b, ask = 'sum' }) {
+  makeTen20({ a, b }) { /* v167 (ผู้ใช้ขอ: ทำให้ครบสิบเองทีละขั้น — เดิมคำอธิบายบอกคำตอบไว้แล้ว) ① ใหญ่ + □ = 10 ② แบ่งตัวเล็ก ③ 10 + ที่เหลือ */
     const big = Math.max(a, b), small = Math.min(a, b), need = 10 - big, rest = small - need;
-    const t = ask === 'rest' ? [a, '+', b, '=', '?', '+', 10] : [a, '+', b, '=', rest, '+', 10, '=', '?'], ans = ask === 'rest' ? rest : a + b;
-    return { prompt: ask === 'rest' ? `ทำให้ครบสิบ: ${big} ต้องการอีก ${need} จึงครบ 10 แล้ว ${small} เหลือเท่าไร?` : 'ทำให้ครบสิบ แล้วหาผลบวก', say: ask === 'rest' ? `${WORD[big]} ต้องการอีก ${WORD[need]} จึงครบสิบ แล้ว ${WORD[small]} เหลือเท่าไร` : `${WORD[a]} บวก ${WORD[b]} ทำให้ครบสิบ แล้วหาผลบวก`,
-      mount(bd, ctx) { const w = 'clamp(150px,19vw,220px)', f = h('div', { class: 'tf2' }, tenFrame(10, { w, color: i => i < big ? '' : 'b' }), tenFrame(rest, { w, color: () => 'b' })), e = eqRow(t, { sm: true });
-        bd.append(h('div', { class: 'colstack' }, f, h('div', { class: 'cap' }, `แบ่ง ${small} เป็น ${need} กับ ${rest} · ${big} + ${need} = 10`), e), answerBox(ctx, ans, { hint: ask === 'rest' ? `${small} แบ่งเป็น ${need} กับอีกเท่าไร` : `${rest} + 10 = ?` })); ctx.onRight = () => e.fill(ans); } };
+    return { prompt: `หาผลบวก <span class="hl">${a} + ${b}</span> โดยทำให้ครบสิบ`, say: `${WORD[a]} บวก ${WORD[b]} โดยทำให้ครบสิบ`, __sig: `mk10 ${a}+${b}`,
+      mount(bd, ctx) { const w = 'clamp(150px,19vw,220px)', fr = h('div', { class: 'tf2' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack' }), e = eqRow([a, '+', b, '=', '?'], { sm: true }); let st = 0;
+        const draw = () => { fr.innerHTML = ''; fr.append(st === 0 ? tenFrame(big, { w }) : tenFrame(10, { w, color: i => i < big ? '' : 'b' }), tenFrame(st === 0 ? small : rest, { w, color: () => 'b' })); };
+        const sub = f => ({ check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(st + 3); f(); }, say: ctx.say });
+        const run = () => { slot.innerHTML = ''; draw();
+          if (st === 0) { lab.innerHTML = `① ${big} ต้องการอีกเท่าไรจึงครบ 10: <b>${big} + ☐ = 10</b>`; slot.append(answerBox(sub(() => { st = 1; run(); }), need, { hint: `นับช่องว่างในกรอบแรก` })); }
+          else if (st === 1) { lab.innerHTML = `② แบ่ง ${small} ให้ไปเติม ${need} แล้ว ${small} เหลือเท่าไร: <b>${small} = ${need} + ☐</b>`; slot.append(answerBox(sub(() => { st = 2; run(); }), rest, { hint: `${small} − ${need}` })); }
+          else { lab.innerHTML = `③ ครบสิบแล้ว: <b>10 + ${rest} = ☐</b>`; slot.append(answerBox(ctx, a + b, { hint: `10 กับอีก ${rest}` })); } };
+        ctx.onRight = () => e.fill(a + b); run(); bd.append(h('div', { class: 'colstack' }, e, fr, lab, slot)); } };
   },
   /* three numbers, left to right */
   three({ nums, op = '+' }) {
