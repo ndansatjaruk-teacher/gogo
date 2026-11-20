@@ -104,8 +104,9 @@ Object.assign(Q, {
   },
   /* counters: tap to circle groups, then answer */
   dvCtr({ n, d }) { const q = `${n} ÷ ${d} = ?`;
-    return { prompt: q + ' <small>(แตะตัวนับเพื่อวงกลุ่มละ ' + d + ')</small>', say: `${n} หารด้วย ${d} เท่ากับเท่าไร`, mount(bd, ctx) { const f = h('div', { class: 'p4-fig', html: dvCtrHTML(n) }); dvCircle(f.firstChild, d);
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, f, answerBox(ctx, String(n / d), { hint: `วงกลุ่มละ ${d} แล้วนับจำนวนกลุ่ม` }))); } };
+    return { prompt: q + ' <small>(แตะตัวนับเพื่อวงกลุ่มละ ' + d + ')</small>', say: `${n} หารด้วย ${d} เท่ากับเท่าไร`, mount(bd, ctx) { const f = h('div', { class: 'p4-fig', html: dvCtrHTML(n) }), ab = h('div', { class: 'dvgate', style: { visibility: 'hidden' } }, answerBox(ctx, String(n / d), { hint: `วงกลุ่มละ ${d} แล้วนับจำนวนกลุ่ม` }));
+      dvCircle(f.firstChild, d, (g, left) => { if (!left) { ab.style.visibility = ''; ctx.say('วงครบแล้ว นับว่ามีกี่กลุ่ม แล้วตอบ'); } }); /* v172: ต้องวงตัวนับให้ครบก่อน จึงตอบได้ */
+      bd.append(h('div', { class: 't6-q p4-q p2q' }, f, ab)); } };
   },
   /* one division fact — remembered with the times tables */
   dvFact({ n, d }) { const q = n / d;
@@ -147,7 +148,10 @@ Object.assign(Q, {
   dvUnk({ a, b, c, pos }) { const x = pos === 0 ? a : b, L = pos === 0 ? '□' : a, R = pos === 1 ? '□' : b;
     return { prompt: `${L} ÷ ${R} = ${c}  □ คือจำนวนใด`, say: `${pos === 0 ? 'อะไร' : a} หารด้วย ${pos === 1 ? 'อะไร' : b} เท่ากับ ${c}`, mount(bd, ctx) {
       const hint = pos === 0 ? `ตัวตั้ง = ผลหาร × ตัวหาร → ${c} × ${b}` : `ตัวหาร = ตัวตั้ง ÷ ผลหาร → ${a} ÷ ${c} (${c} × อะไร = ${a})`;
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'fbig p4big mt-big', html: `${L === '□' ? '<span class="fsign">□</span>' : L} <span class="fop">÷</span> ${R === '□' ? '<span class="fsign">□</span>' : R} <span class="fop">=</span> ${c}` }), answerBox(ctx, String(x), { hint }))); } };
+      const right = pos === 0 ? `${c} × ${b}` : `${a} ÷ ${c}`, opts = pos === 0 ? [right, `${c} ÷ ${b}`, `${c} + ${b}`] : [right, `${a} × ${c}`, `${a} − ${c}`];
+      const step2 = () => { if (pos === 0 && (c >= 10) !== (b >= 10)) { const w = h('div', { class: 'k3stcol' }); Q.colW({ nums: c >= 10 ? [c, b] : [b, c], op: '×' }).mount(w, ctx); return w; } return answerBox(ctx, String(x), { hint: pos === 0 ? `ท่องแม่ ${Math.min(b, c)}` : `${c} × อะไร = ${a}` }); };
+      bd.append(h('div', { class: 't6-q p4-q p2q p2st' }, h('div', { class: 'fbig p4big mt-big', html: `${L === '□' ? '<span class="fsign">□</span>' : L} <span class="fop">÷</span> ${R === '□' ? '<span class="fsign">□</span>' : R} <span class="fop">=</span> ${c}` }),
+        mtTwoStep(ctx, opts, right, hint, step2))); } }; /* v172: ① เลือกวิธีหา □ (ความสัมพันธ์คูณ-หาร) ② คูณ/หารเอง */
   },
   /* story: ① choose the sentence ② answer (with remainder when rem) */
   dvStory({ text, n, d, unit, unit2, fig }) { const q = Math.floor(n / d), r = n % d;
