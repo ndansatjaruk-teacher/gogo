@@ -3775,3 +3775,4 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .h6stop{background:var(--coral-soft,#FDECEE);color:#B4232F;font-weight:800}
 .h6pfrows{gap:2px}.h6pfrows:empty{display:none}
 .h6pfdone{font-size:clamp(20px,2.6cqw,28px);opacity:.85}
+.d6divq{gap:6px;align-items:center}.d6divq .d6slot{align-items:center}
