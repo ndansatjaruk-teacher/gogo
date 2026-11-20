@@ -325,14 +325,14 @@
 | `Q.t3End` | `{ text, h1, m1, add, back }` | [`grades/p3/p3t.js:56`](../src/grades/p3/p3t.js#L56) |
 | `Q.t3Read` | `{ h: H, m }` | [`grades/p3/p3t.js:39`](../src/grades/p3/p3t.js#L39) |
 | `Q.t3Set` | `{ h: H, m }` | [`grades/p3/p3t.js:42`](../src/grades/p3/p3t.js#L42) |
-| `Q.t4Cmp` | `{ A, B }` | [`grades/p4/p4t.js:80`](../src/grades/p4/p4t.js#L80) |
-| `Q.t4Conv` | `{ from, to }` | [`grades/p4/p4t.js:67`](../src/grades/p4/p4t.js#L67) |
-| `Q.t4Diff` | `{ text, A, B, units }` | [`grades/p4/p4t.js:84`](../src/grades/p4/p4t.js#L84) |
-| `Q.t4Span` | `{ text, d1, h1, d2, h2, mon }` | [`grades/p4/p4t.js:71`](../src/grades/p4/p4t.js#L71) |
-| `Q.t4Story` | `{ text, how, opts, ans, units, pre }` | [`grades/p4/p4t.js:93`](../src/grades/p4/p4t.js#L93) |
-| `Q.t4Tab` | `{ T, q, opts, right, hint }` | [`grades/p4/p4t.js:88`](../src/grades/p4/p4t.js#L88) |
-| `Q.t4TabDur` | `{ T, i }` | [`grades/p4/p4t.js:89`](../src/grades/p4/p4t.js#L89) |
-| `Q.t4YM` | `{ text, a, b }` | [`grades/p4/p4t.js:76`](../src/grades/p4/p4t.js#L76) |
+| `Q.t4Cmp` | `{ A, B }` | [`grades/p4/p4t.js:92`](../src/grades/p4/p4t.js#L92) |
+| `Q.t4Conv` | `{ from, to }` | [`grades/p4/p4t.js:76`](../src/grades/p4/p4t.js#L76) |
+| `Q.t4Diff` | `{ text, A, B, units }` | [`grades/p4/p4t.js:96`](../src/grades/p4/p4t.js#L96) |
+| `Q.t4Span` | `{ text, d1, h1, d2, h2, mon }` | [`grades/p4/p4t.js:83`](../src/grades/p4/p4t.js#L83) |
+| `Q.t4Story` | `{ text, how, opts, ans, units, pre, work }` | [`grades/p4/p4t.js:105`](../src/grades/p4/p4t.js#L105) |
+| `Q.t4Tab` | `{ T, q, opts, right, hint }` | [`grades/p4/p4t.js:100`](../src/grades/p4/p4t.js#L100) |
+| `Q.t4TabDur` | `{ T, i }` | [`grades/p4/p4t.js:101`](../src/grades/p4/p4t.js#L101) |
+| `Q.t4YM` | `{ text, a, b }` | [`grades/p4/p4t.js:88`](../src/grades/p4/p4t.js#L88) |
 | `Q.t6Cls` | `{ B, C, by }` | [`grades/p6/p6t.js:207`](../src/grades/p6/p6t.js#L207) |
 | `Q.t6Find` | `{ B, C, ask = 0, names = ['ก', 'ข', 'ค'] }` | [`grades/p6/p6t.js:223`](../src/grades/p6/p6t.js#L223) |
 | `Q.t6Num` | `{ fig, q, a, unit, hint }` | [`grades/p6/p6t.js:229`](../src/grades/p6/p6t.js#L229) |

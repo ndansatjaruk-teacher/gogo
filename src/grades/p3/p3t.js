@@ -64,7 +64,7 @@ Object.assign(Q, {
 /* other units (base = minutes for นาที/ชั่วโมง/วัน/สัปดาห์; months/years use their own base) */
 const T3U = { 'นาที': 1, 'ชั่วโมง': 60, 'วัน': 1440, 'สัปดาห์': 10080, 'เดือน': 1, 'ปี': 12 };
 const T3U_P = t => { let s = 0; String(t).replace(/([\d,]+)\s*(วัน|สัปดาห์|ปี|เดือน)/g, (m, n, u) => { s += +n.replace(/,/g, '') * T3U[u]; }); return s; };
-Object.assign(W3P, { dh: { U: ['วัน', 'ชั่วโมง'], R: 24, s: 60 }, wd: { U: ['สัปดาห์', 'วัน'], R: 7, s: 1440 }, ym: { U: ['ปี', 'เดือน'], R: 12, s: 1 } });
+Object.assign(W3P, { dh: { U: ['วัน', 'ชั่วโมง'], R: 24, s: 60 }, wd: { U: ['สัปดาห์', 'วัน'], R: 7, s: 1440 }, ym: { U: ['ปี', 'เดือน'], R: 12, s: 1 } }); /* v150 ป.4 เวลา: นาที|วินาที (เก็บเป็นวินาที) · เดือน|วัน (เก็บเป็นวัน, 1 เดือน = 30 วัน) */ Object.assign(W3P, { ms: { U: ['นาที', 'วินาที'], R: 60, s: 1 }, md: { U: ['เดือน', 'วัน'], R: 30, s: 1 } });
 const t3CmpQ = ([A, B]) => Q.p2cmpWord({ a: ['', A, t3p(A)], b: ['', B, t3p(B)], words: W3W, hint: 'เปลี่ยนเป็นนาทีทั้งคู่ก่อน (1 ชั่วโมง = 60 นาที) แล้วเปรียบเทียบ' });
 const t3SortQ = (items, q) => Q.ixSort({ q: q || 'เรียงจากใช้เวลาน้อยที่สุดไปมากที่สุด', items: items.map(([n, s]) => ({ label: `${n} ${s}`, v: t3p(s) })), dir: 'asc' });
 const t3RecQ = (R, kind, i) => { const [title, rows] = R, fig = `<div class="t3recw">${t3RecHTML(title, rows)}</div>`, r = rows[i];
