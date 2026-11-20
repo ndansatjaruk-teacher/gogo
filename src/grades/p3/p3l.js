@@ -36,10 +36,11 @@ function simL3Walk() { // walk 100 m per tap → 1 km = 1,000 m
     out.innerHTML = `เดินแล้ว <b>${fmt(m)} เมตร</b>${m >= 1000 ? ` = <b>${l3t(m * 1000, 'kmm')}</b>` : ''}${m === 1000 ? '<br>1,000 เมตร = 1 กิโลเมตร!' : ''}`; if (m >= 1000) teachDone(box); };
   const go = h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); if (m >= 1500) return; m += 100; sfx.pop(m / 100 % 8 + 1); draw(); } }, icon('right'), 'เดิน 100 เมตร');
   draw(); box.append(fig, go, out); return box; }
-function simL3Chain() { // v137 (ผู้ใช้ขอ: บันไดหน่วยให้เป็นภาพ) — บันได 4 ขั้น กม. → ม. → ซม. → มม. แตะลูกศรระหว่างขั้น
-  const box = h('div', { class: 'colstack' }, h6wait()), out = fNote(), seen = new Set(), N = ['กิโลเมตร', 'เมตร', 'เซนติเมตร', 'มิลลิเมตร'], K = [1000, 100, 10];
+function simL3Chain() { return simUnitStair(['กิโลเมตร', 'เมตร', 'เซนติเมตร', 'มิลลิเมตร'], ['กม.', 'ม.', 'ซม.', 'มม.'], [1000, 100, 10]); }
+function simUnitStair(N, A, K) { // v137/138 บันไดหน่วย 4 ขั้น (ความยาว · น้ำหนัก) แตะลูกศรระหว่างขั้น
+  const box = h('div', { class: 'colstack' }, h6wait()), out = fNote(), seen = new Set();
   const st = h('div', { class: 'l3stair ia' });
-  N.forEach((n, i) => { st.append(h('div', { class: 'l3st', style: { '--i': i } }, h('b', null, n), h('small', null, ['กม.', 'ม.', 'ซม.', 'มม.'][i])));
+  N.forEach((n, i) => { st.append(h('div', { class: 'l3st', style: { '--i': i } }, h('b', null, n), h('small', null, A[i])));
     if (i < 3) st.append(h('button', { class: 'l3arr', style: { '--i': i }, html: `<span class="dn">× ${fmt(K[i])} ↘</span><span class="up">↖ ÷ ${fmt(K[i])}</span>`, onclick: e => { e.stopPropagation(); seen.add(i); sfx.pop(i + 2); e.currentTarget.classList.add('on');
       out.innerHTML = `1 ${N[i]} = <b>${fmt(K[i])} ${N[i + 1]}</b><br>ลงบันได (${N[i]} → ${N[i + 1]}) <b>× ${fmt(K[i])}</b> · ขึ้นบันได (${N[i + 1]} → ${N[i]}) <b>÷ ${fmt(K[i])}</b>`; if (seen.size >= 3) teachDone(box); } })); });
   out.innerHTML = 'แตะลูกศรระหว่างขั้นบันไดทีละขั้น'; box.append(st, out); return box; }
@@ -106,9 +107,9 @@ const L3S = (text, sent, wrong, g, m) => ({ text, sent, wrong, g, m });
 const l3SentQ = s => { const o = [s.sent, ...w3StoryOpts(s.sent, s.wrong)]; return Q.p4Pick({ fig: `<div class="storybox">${s.text}</div>`, q: 'ข้อใดเป็น<b>วิธีคิด</b>ของโจทย์นี้', opts: o, right: s.sent, hint: 'รวม/ยาวกว่า → บวก · เหลือ/ต่างกัน → ลบ · หลายชิ้นเท่า ๆ กัน → คูณ · แบ่งเท่า ๆ กัน → หาร' }); };
 
 /* v137 คำถามสั้นให้เกมหลากหลาย: ทด · กระจาย · ขั้นแรกของการหาร */
-const l3CarryQ = m => { const U = W3P[m].U, R = W3P[m].R, s1 = R + (m === 'cmm' ? 3 : m === 'mcm' ? 25 : 120); return Q.p4Pick({ fig: p4big(`บวก${U[1]}ได้ <b class="num">${fmt(s1)}</b> ${U[1]}`), q: 'ต้องเขียนอย่างไร',
+const l3CarryQ = m => { const U = W3P[m].U, R = W3P[m].R, s1 = R + (R === 10 ? 3 : R === 100 ? 25 : 120); return Q.p4Pick({ fig: p4big(`บวก${U[1]}ได้ <b class="num">${fmt(s1)}</b> ${U[1]}`), q: 'ต้องเขียนอย่างไร',
   opts: [`เขียน ${fmt(s1 - R)} ${U[1]} ทด 1 ${U[0]}`, `เขียน ${fmt(s1)} ${U[1]}`, `เขียน 1 ${U[1]} ทด ${fmt(s1 - R)} ${U[0]}`], right: `เขียน ${fmt(s1 - R)} ${U[1]} ทด 1 ${U[0]}`, hint: `${fmt(R)} ${U[1]} = 1 ${U[0]}` }); };
-const l3BorrowQ = m => { const U = W3P[m].U, R = W3P[m].R, x = m === 'cmm' ? [3, 8] : m === 'mcm' ? [25, 60] : [150, 700]; return Q.p4Pick({ fig: p4big(`ลบ${U[1]}: <b class="num">${x[0]} − ${x[1]}</b>`), q: 'ลบไม่พอ ต้องทำอย่างไร',
+const l3BorrowQ = m => { const U = W3P[m].U, R = W3P[m].R, x = R === 10 ? [3, 8] : R === 100 ? [25, 60] : [150, 700]; return Q.p4Pick({ fig: p4big(`ลบ${U[1]}: <b class="num">${x[0]} − ${x[1]}</b>`), q: 'ลบไม่พอ ต้องทำอย่างไร',
   opts: [`กระจาย 1 ${U[0]} = ${fmt(R)} ${U[1]}`, `สลับเป็น ${x[1]} − ${x[0]}`, `กระจาย 1 ${U[0]} = ${fmt(R / 10)} ${U[1]}`], right: `กระจาย 1 ${U[0]} = ${fmt(R)} ${U[1]}`, hint: `1 ${U[0]} = ${fmt(R)} ${U[1]}` }); };
 const l3DivFirstQ = ([a, b, m]) => { const U = W3P[m].U; return Q.p4Pick({ fig: p4big(`<b class="num">${l3t(a, m)} ÷ ${b}</b>`), q: 'ขั้นแรกควรทำอย่างไร', opts: [`เปลี่ยนเป็น${U[1]}ทั้งหมดก่อน`, `หาร${U[0]}กับ${U[1]}แยกกันเลย`, `คูณด้วย ${b} ก่อน`], right: `เปลี่ยนเป็น${U[1]}ทั้งหมดก่อน`, hint: 'เปลี่ยนเป็นหน่วยเล็ก → หาร → เปลี่ยนกลับ' }); };
 const l3Small = ([a, , m]) => Math.round(a / W3P[m].s) <= 9999; /* หารยาว ป.3 ตัวตั้งไม่เกิน 4 หลัก */

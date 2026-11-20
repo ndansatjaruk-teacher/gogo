@@ -141,8 +141,8 @@ Object.assign(Q, {
   },
   /* drag the needle to a weight */
   w2Set({ e, name, g, kind = 'kd', m }) { m = m || kind; const q = `ลากเข็มให้ชี้ <span class="hl">${w2t(g, m)}</span> (${name})`;
-    return { prompt: q, say: `ลากเข็มให้ชี้ ${w2t(g, m)}`, mount(bd, ctx) { const lab = h('div', { class: 'fbig' }), draw = v => { lab.innerHTML = `<b class="num">${w2t(v, m)}</b>`; }, d = w2Dial(0, kind, { ia: 1, items: [e], col: 'sky', onSet: draw }); draw(0);
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, d, h('div', { class: 'colstack' }, lab, h('div', { class: 'cap' }, 'แตะหรือลากบนหน้าปัด'), checkButton('ตรวจคำตอบ', () => { const v = d.value(); ctx.check(v === g, v > g ? `เกินไป ${w2t(v - g, m)}` : `ยังขาดอีก ${w2t(g - v, m)}`); })))); } };
+    return { prompt: q, say: `ลากเข็มให้ชี้ ${w2t(g, m)}`, mount(bd, ctx) { const lab = h('div', { class: 'p4steplab', html: `ให้เข็มชี้ <b>${w2t(g, m)}</b>` }), d = w2Dial(0, kind, { ia: 1, items: [e], col: 'sky' }); /* v138: ไม่บอกค่าขณะลาก — เด็กต้องอ่านหน้าปัดเอง */
+      bd.append(h('div', { class: 't6-q p4-q p2q' }, d, h('div', { class: 'colstack' }, lab, h('div', { class: 'cap' }, 'แตะหรือลากบนหน้าปัด'), checkButton('ตรวจคำตอบ', () => { const v = d.value(); if (v === g) lab.innerHTML = `เข็มชี้ <b>${w2t(v, m)}</b> ✓`; ctx.check(v === g, `ตอนนี้เข็มชี้ ${w2t(v, m)} — ${v > g ? 'เกินไป' : 'ยังขาดอีก'} ${w2t(Math.abs(v - g), m)}`); })))); } };
   },
   w2Body({ txt }) { const g = Math.round(parseFloat(txt) * 1000), q = 'เครื่องชั่งน้ำหนักตัวบอกน้ำหนักเท่าไร';
     return { prompt: q + ' <small>(ตัวเลขหลังจุด = ขีด)</small>', say: q, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'w2fig', html: w2BodySVG(txt, pick(['lilac', 'sky', 'coral'])) }), w2Duo(ctx, g, 'kd', { hint: `${txt} → ตัวเลขหน้าจุดเป็นกิโลกรัม หลังจุดเป็นขีด` }))); } };

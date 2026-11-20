@@ -329,7 +329,7 @@ XG(268, () => { const used = new Set(LESSONS.find(L => L.id === 269)?.exam?.filt
   const M = [...[1, 3, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17].map(i => WS9_MISS[i]), ...WS9X_MISS].filter(([seq]) => !used.has(seq.join()));
   return [...shuffle(M).slice(0, 6).map(([seq, blank]) => xS({ ...Q.patMissing({ seq, blank }), prompt: 'ช่องว่างในแบบรูปซ้ำนี้ควรเป็นรูปใด?', say: 'ช่องว่างในแบบรูปซ้ำนี้ควรเป็นรูปใด' }, 'pm ' + seq.join() + blank)),
     (u => xS(Q.patMake({ unit: u, palette: ['heart', 'star', 'sq.coral', 'tri.mint', 'el.yellow', 'ci.lilac'] }), 'pmk ' + u.join()))(pick([['heart', 'star', 'star'], ['sq.coral', 'sq.coral', 'tri.mint'], ['el.yellow', 'ci.lilac', 'heart']]))]; });
-W3W_TOOL.push(['กระเป๋าเดินทาง', 18], ['ปูนซีเมนต์ 20 ถุง', 1000], ['ผงชูรส', 1], ['หมูทั้งตัว', 85], ['ทรายบนรถบรรทุก', 1500], ['เนย', 2]);
+W3W_TOOL.push(['กระเป๋าเดินทาง', 18], ['ปูนซีเมนต์ 20 ถุง', 1000], ['ผงชูรส', 1], ['หมูทั้งตัว', 85, 'pig'], ['ทรายบนรถบรรทุก', 1500], ['ข้าวสาร 1 ถุง', 5]); /* v138: เดิม “เนย 2 กิโลกรัม” ไม่สมจริง */
 XA(666, () => xN(3, () => { const l = rnd(3, 15), w = rnd(2, 10), hh = rnd(2, 12), u = pick(['ซม.', 'ม.']);
   return xS(Q.t6Num({ q: `ทรงสี่เหลี่ยมมุมฉากยาว ${l} ${u} กว้าง ${w} ${u} สูง ${hh} ${u} มีปริมาตรเท่าใด`, a: String(l * w * hh), unit: 'ลบ.' + u, hint: 'กว้าง × ยาว × สูง' }), `x666 ${l}|${w}|${hh}|${u}`); }));
 /* lesson 473 (บวก ลบ ไม่มีวงเล็บ) ran short of non-boss items → fresh random left-to-right expressions every game */

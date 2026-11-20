@@ -163,11 +163,11 @@
 | `Q.k7Count` | `{ shape, ask = 'ด้าน' }` | [`grades/p6/p6k.js:196`](../src/grades/p6/p6k.js#L196) |
 | `Q.k7Is` | `{ fig, kind }` | [`grades/p6/p6k.js:188`](../src/grades/p6/p6k.js#L188) |
 | `Q.k7Name` | `{ shape }` | [`grades/p6/p6k.js:192`](../src/grades/p6/p6k.js#L192) |
-| `Q.l3Conv` | `{ from, to }` | [`grades/p3/p3l.js:68`](../src/grades/p3/p3l.js#L68) |
-| `Q.l3Map` | `{ M, q, e, as }` | [`grades/p3/p3l.js:72`](../src/grades/p3/p3l.js#L72) |
-| `Q.l3Place` | `{ it }` | [`grades/p3/p3l.js:86`](../src/grades/p3/p3l.js#L86) |
-| `Q.l3Read` | `{ it }` | [`grades/p3/p3l.js:62`](../src/grades/p3/p3l.js#L62) |
-| `Q.l3Set` | `{ it, mm }` | [`grades/p3/p3l.js:65`](../src/grades/p3/p3l.js#L65) |
+| `Q.l3Conv` | `{ from, to }` | [`grades/p3/p3l.js:69`](../src/grades/p3/p3l.js#L69) |
+| `Q.l3Map` | `{ M, q, e, as }` | [`grades/p3/p3l.js:73`](../src/grades/p3/p3l.js#L73) |
+| `Q.l3Place` | `{ it }` | [`grades/p3/p3l.js:87`](../src/grades/p3/p3l.js#L87) |
+| `Q.l3Read` | `{ it }` | [`grades/p3/p3l.js:63`](../src/grades/p3/p3l.js#L63) |
+| `Q.l3Set` | `{ it, mm }` | [`grades/p3/p3l.js:66`](../src/grades/p3/p3l.js#L66) |
 | `Q.lCls` | `{ k }` | [`grades/p5/p5g.js:187`](../src/grades/p5/p5g.js#L187) |
 | `Q.lenDiff` | `{ a, b, unit = 'cm', vis = 'none', word }` | [`engine/questions.js:1277`](../src/engine/questions.js#L1277) |
 | `Q.lenExtreme` | `{ items, ask, unit, vis = 'len', max }` | [`engine/questions.js:1259`](../src/engine/questions.js#L1259) |
@@ -376,12 +376,12 @@
 | `Q.w2Read` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:137`](../src/grades/p2/p2w.js#L137) |
 | `Q.w2Set` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:143`](../src/grades/p2/p2w.js#L143) |
 | `Q.w2Story` | `{ text, a, b, op, m = 'kd', why }` | [`grades/p2/p2w.js:162`](../src/grades/p2/p2w.js#L162) |
-| `Q.w3Calc` | `{ a, b, op, m }` | [`grades/p3/p3w.js:129`](../src/grades/p3/p3w.js#L129) |
-| `Q.w3Conv` | `{ from, to }` | [`grades/p3/p3w.js:123`](../src/grades/p3/p3w.js#L123) |
-| `Q.w3Dig` | `{ g, m = 'kg', name }` | [`grades/p3/p3w.js:109`](../src/grades/p3/p3w.js#L109) |
-| `Q.w3Story` | `{ text, sent, wrong, g, m, unit }` | [`grades/p3/p3w.js:136`](../src/grades/p3/p3w.js#L136) |
-| `Q.w3Tool` | `{ name, kg }` | [`grades/p3/p3w.js:114`](../src/grades/p3/p3w.js#L114) |
-| `Q.w3Unit` | `{ text, right }` | [`grades/p3/p3w.js:118`](../src/grades/p3/p3w.js#L118) |
+| `Q.w3Calc` | `{ a, b, op, m }` | [`grades/p3/p3w.js:135`](../src/grades/p3/p3w.js#L135) |
+| `Q.w3Conv` | `{ from, to }` | [`grades/p3/p3w.js:129`](../src/grades/p3/p3w.js#L129) |
+| `Q.w3Dig` | `{ g, m = 'kg', name, e }` | [`grades/p3/p3w.js:115`](../src/grades/p3/p3w.js#L115) |
+| `Q.w3Story` | `{ text, sent, wrong, g, m, unit }` | [`grades/p3/p3w.js:142`](../src/grades/p3/p3w.js#L142) |
+| `Q.w3Tool` | `{ name, kg, e }` | [`grades/p3/p3w.js:120`](../src/grades/p3/p3w.js#L120) |
+| `Q.w3Unit` | `{ text, right }` | [`grades/p3/p3w.js:124`](../src/grades/p3/p3w.js#L124) |
 | `Q.whichPlace` | `{ n }` | [`engine/questions.js:589`](../src/engine/questions.js#L589) |
 | `Q.wordToNum` | `{ n }` | [`engine/questions.js:567`](../src/engine/questions.js#L567) |
 | `Q.writeDigits` | `{ n, from = 'word' }` | [`engine/questions.js:669`](../src/engine/questions.js#L669) |
