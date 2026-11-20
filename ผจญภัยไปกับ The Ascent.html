@@ -3736,6 +3736,8 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .w3digfig{display:flex;flex-direction:column;align-items:center}.w3digob{margin-bottom:-34px;position:relative;z-index:1}
 .w3toolob{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:6px}.w3toolob b{font:800 clamp(17px,2.2cqw,22px) var(--font)}
 .w3errfig{display:flex;flex-direction:column;align-items:center;gap:8px}.w3errfig .w2fig svg{width:min(260px,40cqw)!important;height:auto!important;max-height:52cqh}
+.w3fit{display:flex;flex-direction:column;align-items:center;gap:8px}.w3fitl{display:flex;gap:18px;font:800 clamp(14px,1.7cqw,17px) var(--font)}.w3fitl .ok{color:#2FA36B}.w3fitl .no{color:#C2485A}
+.w3fitl span{white-space:nowrap}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -19492,8 +19494,8 @@ const LESSONS_P3C10 = [
   L3W(1, 'ป่าตาชั่ง', 'การวัดน้ำหนักเป็นกิโลกรัมและขีด กิโลกรัมและกรัม (1)', 'กิโลกรัม ขีด กรัม', 'อ่านน้ำหนักจากเครื่องชั่งเป็นกิโลกรัมและขีด กิโลกรัมและกรัม',
     [...learnStep('ยินดีต้อนรับสู่ <b>ป่าตาชั่ง</b>! อ่านน้ำหนักจากเครื่องชั่ง', 'ยินดีต้อนรับสู่ป่าตาชั่ง อ่านน้ำหนักจากเครื่องชั่ง', [
       { fig: w3fig(2300, 'kd', 'pineapple'), name: 'เครื่องชั่งสปริง', text: 'ตัวเลขใหญ่ = กิโลกรัม<br>ขีดเล็ก 1 ช่อง = 1 ขีด = 100 กรัม' },
-      { fig: w3fig(2300, 'kd', 'pineapple', 'coral'), name: 'อ่านได้ 2 แบบ', text: '2 กิโลกรัม 3 ขีด<br>หรือ 2 กิโลกรัม 300 กรัม' },
-      { fig: w3DigSVG('1.300'), name: 'เครื่องชั่งแบบตัวเลข', text: '1.300 kg = 1 กิโลกรัม 300 กรัม<br>หลังจุด 3 ตำแหน่ง = กรัม' },
+      { fig: lbig('2 กก. 3 ขีด = 2 กก. 300 ก.'), name: 'อ่านได้ 2 แบบ', text: '2 กิโลกรัม 3 ขีด<br>หรือ 2 กิโลกรัม 300 กรัม' }, /* v139: ไม่ซ้ำรูปเครื่องชั่งเดิม */
+      { fig: w3DigSVG('1.300'), carry: false, name: 'เครื่องชั่งแบบตัวเลข', /* v139: เครื่องชั่งแบบใหม่ เริ่มกระดานใหม่ (เดิมรูปเล็กลงเรื่อย ๆ) */ text: '1.300 kg = 1 กิโลกรัม 300 กรัม<br>หลังจุด 3 ตำแหน่ง = กรัม' },
       { fig: w2BodySVG('54.8'), name: 'เครื่องชั่งน้ำหนักตัว', text: '54.8 = 54 กิโลกรัม 8 ขีด<br>หลังจุด 1 ตำแหน่ง = ขีด' }], '1 กิโลกรัม = 10 ขีด = 1,000 กรัม · 1 ขีด = 100 กรัม'),
      pexStep('ตัวอย่างทีละขั้น: อ่านน้ำหนักแตงโม', 'ตัวอย่างทีละขั้น', [['① ตัวเลขที่เข็มผ่านมา', 'เลย 4 มาแล้ว → 4 กิโลกรัม', w3fig(4700, 'kd', 'watermelon')], ['② นับขีดเล็ก', 'เลย 4 มา 7 ช่อง → 7 ขีด', null], ['③ เขียน 2 แบบ', '4 กิโลกรัม 7 ขีด = 4 กิโลกรัม 700 กรัม', null]], 'แตงโมหนัก <b>4 กิโลกรัม 7 ขีด</b>'),
      T('ลองวางของบนตาชั่ง', 'ลองวางของบนตาชั่ง', el => el.append(simW2Weigh([['durian', 'ทุเรียน', 2600], ['coconut', 'มะพร้าว', 1300], ['cabbage', 'กะหล่ำปลี', 900]], 'kd')))],
@@ -19501,8 +19503,8 @@ const LESSONS_P3C10 = [
   L3W(2, 'ป่าเลือกตาชั่ง', 'การเลือกเครื่องชั่งที่เหมาะสม', 'เลือกเครื่องชั่ง', 'เลือกเครื่องชั่งที่เหมาะสมกับน้ำหนักของสิ่งที่จะชั่ง โดยดูพิกัดของเครื่องชั่ง',
     [...learnStep('รู้จัก<b>พิกัด</b>ของเครื่องชั่ง', 'รู้จักพิกัดของเครื่องชั่ง', [
       { fig: `<div class="rowstack">${w3ToolCard('spring')}</div>`, name: 'พิกัด = น้ำหนักมากที่สุดที่ชั่งได้', text: 'เครื่องชั่งสปริงนี้ชั่งได้ไม่เกิน 60 กิโลกรัม' },
-      { fig: `<div class="rowstack w3tools">${Object.keys(W3_TOOL).map(k => w3ToolCard(k)).join('')}</div>`, name: 'เครื่องชั่งแต่ละแบบพิกัดต่างกัน', text: 'ตัวเลข 5 · สปริง 60 · น้ำหนักตัว 100 · แขวน 2,000 กิโลกรัม' },
-      { fig: lbig('พิกัด ≥ น้ำหนัก และใกล้ที่สุด'), name: 'เลือกให้เหมาะสม', text: 'พิกัดน้อยไป → ชั่งไม่ได้<br>พิกัดมากไป → อ่านค่าไม่ละเอียด' }], 'เลือกเครื่องชั่งที่พิกัดมากกว่าน้ำหนัก และใกล้ที่สุด'),
+      { fig: `<div class="rowstack w3tools">${Object.keys(W3_TOOL).map(k => w3ToolCard(k)).join('')}</div>`, carry: false, name: 'เครื่องชั่งแต่ละแบบพิกัดต่างกัน', text: 'ตัวเลข 5 · สปริง 60 · น้ำหนักตัว 100 · แขวน 2,000 กิโลกรัม' },
+      { fig: `<div class="w3fit"><div class="w3obj">${objRow('watermelon', 1, { size: '70px' }).outerHTML}<b>แตงโม 3 กก.</b></div><div class="rowstack w3tools">${w3ToolCard('digital', 1)}${w3ToolCard('hang')}</div><div class="w3fitl"><span class="ok">พิกัด 5 กก. ✓ พอดี</span><span class="no">พิกัด 2,000 กก. ✗ ละเอียดน้อย</span></div></div>`, carry: false, name: 'เลือกให้เหมาะสม: พิกัด ≥ น้ำหนัก และใกล้ที่สุด', text: 'พิกัดน้อยไป → ชั่งไม่ได้<br>พิกัดมากไป → อ่านค่าไม่ละเอียด' }], 'เลือกเครื่องชั่งที่พิกัดมากกว่าน้ำหนัก และใกล้ที่สุด'),
      pexStep('ตัวอย่างทีละขั้น: ชั่งปลาหนัก 36 กิโลกรัม', 'ตัวอย่างทีละขั้น', [['① ตัดเครื่องที่พิกัดน้อยไป', 'แบบตัวเลข พิกัด 5 กก. → ชั่งไม่ได้', `<div class="rowstack w3tools">${w3ToolCard('digital')}</div>`], ['② เครื่องที่ชั่งได้', 'สปริง 60 · น้ำหนักตัว 100 · แขวน 2,000', `<div class="rowstack w3tools">${['spring', 'body', 'hang'].map(k => w3ToolCard(k)).join('')}</div>`], ['③ เลือกพิกัดใกล้ที่สุด', '60 ใกล้ 36 ที่สุด', `<div class="rowstack w3tools">${w3ToolCard('spring', 1)}</div>`]], 'ควรใช้<b>เครื่องชั่งสปริง</b>'),
      T('ลองเลือกเครื่องชั่งเอง', 'ลองเลือกเครื่องชั่งเอง', el => el.append(simW3Tool([['แตงโม', 4], ['ลูกหมู', 45], ['ปุ๋ย 30 กระสอบ', 1500], ['คุณครู', 70]])))],
     () => [...pkF(W3W_TOOL, 5).map(([name, kg, e]) => Q.w3Tool({ name, kg, e })), ...pkF(W3_CAPQ, 3)]), /* v138: เลือกเครื่องชั่ง 5 · เข้าใจพิกัด 3 */
