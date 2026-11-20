@@ -3746,6 +3746,8 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .t6-q .mnrow{max-width:min(640px,96%)}.t6-q .mnrow .mn-n{width:clamp(96px,12cqw,132px)}.t6-q .mnrow .mn-c{width:calc(var(--r) * 3.3px + 10px)}
 .t6-q.p2q .mnledw{min-width:min(520px,56cqw)}.t6-q.p2q .mnledw .mnled td{font-size:clamp(12px,1.5cqw,15px);padding:3px 6px}.t6-q.p2q .mnledw .mnled .hd td{font-size:clamp(11px,1.3cqw,13px)}
 .x3st{gap:8px}.x3st .storybox{font-size:clamp(17px,2.2cqw,21px);line-height:1.55;max-width:min(820px,94cqw)}.x3unit{font-size:20px!important;margin-left:6px}
+.k3zq{gap:10px}.k3zq .k3-eq{font-size:clamp(34px,5cqw,52px)}.k3stcol{display:flex;justify-content:center;width:100%}
+.f3-st.k3st2{flex-direction:column!important;gap:4px!important}.f3-st.k3st2 > .p4-fig .storybox{font-size:15px;padding:4px 12px;line-height:1.4}.f3-st.k3st2 .p4steplab{margin:0}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -22083,10 +22085,16 @@ Object.assign(Q, {
     return Q.colW({ nums: [a, m], op: '×', prompt: `หาผลคูณ ${flip ? `${m} × ${fmt(a)}` : `${fmt(a)} × ${m}`} โดยการตั้งคูณ`, say: `${flip ? `${m} คูณ ${thaiWords(a)}` : `${thaiWords(a)} คูณ ${m}`} ตั้งคูณ`, sig: `k3c ${a}x${m}` }); },
   k3Long({ a, b }) { // v111: the shared column board — partial products, then the sum
     return Q.colW({ nums: [a, b], op: '×', prompt: `หาผลคูณ ${a} × ${b} โดยการตั้งคูณ`, say: `${thaiWords(a)} คูณ ${thaiWords(b)} ตั้งคูณ`, sig: `k3l ${a}x${b}` }); },
-  k3Zero({ a, b }) { const r = a * b, q = 'หาผลคูณ';
+  k3Zero({ a, b }) { const r = a * b, q = `หาผลคูณ ${fmt(a)} × ${fmt(b)}`, zc = n => (String(n).match(/0+$/) || [''])[0].length, za = zc(a), zb = zc(b), A = a / 10 ** za, B = b / 10 ** zb, z = za + zb;
+    /* v143 (ผู้ใช้ขอ: ได้ทำตามจุดประสงค์จริง) ① คูณตัวเลขหน้า 0 ② นับ 0 แล้วเติม (เดิมพิมพ์คำตอบเลย) */
     return { prompt: q, say: `${thaiWords(a)} คูณ ${thaiWords(b)}`, __sig: `k3z ${a}x${b}`, mount(bd, ctx) {
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: p4big(`<b class="num">${fmt(a)} × ${fmt(b)}</b> <b class="fop">=</b> <span class="fsign">?</span>`) }),
-        answerBox(ctx, String(r), { hint: 'คูณตัวเลขที่ไม่ใช่ 0 ก่อน แล้วเติม 0 ให้ครบตามจำนวน 0 ของตัวคูณ' }))); } }; },
+      const eq = h('div', { class: 'p4-fig', html: k3Eq(a, b, null) }), lab = h('div', { class: 'p4steplab', html: `ขั้นที่ 1: คูณตัวเลขที่ไม่ใช่ 0 ก่อน <b>${fmt(A)} × ${fmt(B)}</b> = ?` }), slot = h('div', { class: 'rowstack' });
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(4); ctx.say && ctx.say(`ใช่แล้ว! ${fmt(A)} × ${fmt(B)} = ${fmt(A * B)} แล้วเติม 0 อีก ${z} ตัว`);
+        lab.innerHTML = `${fmt(A)} × ${fmt(B)} = <b>${fmt(A * B)}</b> ✓ · ขั้นที่ 2: ${za && zb ? `${fmt(a)} มี 0 ${za} ตัว ${fmt(b)} มี 0 ${zb} ตัว รวม` : 'ตัวคูณมี 0'} <b>${z} ตัว</b> → เติม 0 แล้วตอบ`;
+        slot.innerHTML = ''; slot.append(answerBox(ctx, String(r), { hint: `${fmt(A * B)} เติม 0 อีก ${z} ตัว` })); } };
+      slot.append(answerBox(sub, String(A * B), { hint: 'ใช้สูตรคูณ (หรือตั้งคูณ) กับตัวเลขที่ไม่ใช่ 0' }));
+      ctx.onRight = () => { eq.innerHTML = k3Eq(a, b, r, z); };
+      bd.append(h('div', { class: 'colstack k3zq' }, eq, lab, slot)); } }; },
   k3Groups({ g, m, z }) { const r = g * m * 10 ** z, q = `มี ${g} กลุ่ม กลุ่มละ ${fmt(m * 10 ** z)} รวมทั้งหมดเท่าไร`;
     return { prompt: q, say: q, __sig: `k3g ${g}x${m}e${z}`, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: k3FlatsSVG(g, m, z) }), answerBox(ctx, String(r), { hint: `${g} × ${fmt(m * 10 ** z)} → ${g} × ${m} แล้วเติม 0 อีก ${z} ตัว` }))); } }; },
   k3Cmp({ L, R }) { const vl = L[0] * L[1], vr = R[0] * R[1], right = vl > vr ? '>' : vl < vr ? '<' : '=', q = 'เติมเครื่องหมาย > < หรือ = (ไม่ต้องคูณจริงก็ได้)';
@@ -22099,8 +22107,11 @@ Object.assign(Q, {
   k3Story({ text, a, b, unit, wrong }) { const r = a * b, sent = `${fmt(a)} × ${fmt(b)} = □`;
     return { prompt: 'อ่านโจทย์ แล้วหาคำตอบ', say: text, __sig: 'k3s ' + text.slice(0, 40), mount(bd, ctx) {
       bd.append(h('div', { class: 't6-q p4-q p2q p2st f3-st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })),
-        tkTwoStep(ctx, '① เลือกประโยคสัญลักษณ์', shuffle([sent, ...(wrong || [`${fmt(a)} + ${fmt(b)} = □`, `${fmt(Math.max(a, b))} − ${fmt(Math.min(a, b))} = □`])]), sent, 'กลุ่มละเท่า ๆ กัน หลายกลุ่ม · ละ … จำนวน … → ใช้การคูณ', () => answerBox(ctx, String(r), { hint: `${fmt(a)} × ${fmt(b)}` }), `<b>${sent}</b> ✓ · ② หาคำตอบ (${unit})`))); } }; }
+        tkTwoStep(ctx, '① เลือกประโยคสัญลักษณ์', shuffle([sent, ...(wrong || [`${fmt(a)} + ${fmt(b)} = □`, `${fmt(Math.max(a, b))} − ${fmt(Math.min(a, b))} = □`])]), sent, 'กลุ่มละเท่า ๆ กัน หลายกลุ่ม · ละ … จำนวน … → ใช้การคูณ', () => { const w = h('div', { class: 'k3stcol' }); Q.colW({ nums: b < 10 || a >= 100 ? [Math.max(a, b), Math.min(a, b)] : [a, b], op: '×' }).mount(w, ctx); requestAnimationFrame(() => { const r = w.closest('.f3-st'); r && r.classList.add('k3st2'); }); return w; }, `<b>${sent}</b> ✓ · ② ตั้งคูณหาคำตอบ (ตอบเป็น${unit})`))); /* v143: ตั้งคูณเองบนกระดาน (เดิมพิมพ์คำตอบเลย) */ } }; }
 });
+/* v143: □ แบบเลือก — ลองคูณตรวจแต่ละตัวเลือก */
+const k3UnkPick = ({ k, x, pos }) => { const p = k * x, s = pos ? `${k} × □ = ${p}` : `□ × ${k} = ${p}`, o = [...new Set([x, x + 1, x - 1, x + 2].filter(v => v > 0))].slice(0, 3);
+  return { ...Q.p4Pick({ fig: `<div class="fbig p4big">${p4uHTML(s)}</div>`, q: 'จำนวนใดแทน □ ได้ <small>(ลองคูณตรวจทีละตัวเลือก)</small>', opts: o.map(String), right: String(x), hint: o.map(v => `${fmt(k)} × ${v} = ${fmt(k * v)}`).join(' · ') }), __sig: `k3up ${s}` }; };
 const k3MatchZ = (a, m) => ({ ...Q.ixMatch({ q: 'จับคู่การคูณกับผลคูณ', pairs: [[`${a} × ${m}`, fmt(a * m)], [`${a} × ${fmt(m * 100)}`, fmt(a * m * 100)], [`${a} × ${fmt(m * 1000)}`, fmt(a * m * 1000)]], wide: true, hint: 'นับจำนวน 0 ของตัวคูณ แล้วเติม 0 ให้ผลคูณเท่ากัน' }), __sig: `k3mz ${a}x${m}` });
 const k3MatchT = (a, t) => ({ ...Q.ixMatch({ q: 'จับคู่การคูณกับผลคูณ', pairs: [[`${a} × ${t}`, fmt(a * t)], [`${a} × ${t * 10}`, fmt(a * t * 10)], [`${a} × 1`, String(a)], [`${a} × 10`, fmt(a * 10)]].filter((x, i, A) => A.findIndex(y => y[1] === x[1]) === i), wide: true }), __sig: `k3mt ${a}x${t}` });
 const k3TF = (L) => ({ ...Q.ixGroup({ q: 'แตะการ์ด แล้วแตะกล่อง ถูก หรือ ผิด', bins: ['ถูก ✓', 'ผิด ✗'], items: L.map(([a, m, r]) => ({ label: `${fmt(a)} × ${m} = ${fmt(r)}`, bin: a * m === r ? 0 : 1, why: `${fmt(a)} × ${m} = ${fmt(a * m)}` })) }), __sig: 'k3tf ' + L.map(x => x.join('x')).join() });
@@ -22109,7 +22120,7 @@ const k3Wrong = (a, m) => { const r = a * m, opts = [r + 10 ** rnd(0, k3n(r) - 2
 /* ---------- random data in each clip's range ---------- */
 const k3Digits = (len, ok) => { for (let g = 0; g < 200; g++) { const v = rnd(10 ** (len - 1), 10 ** len - 1); if (!ok || ok(v)) return v; } return 10 ** (len - 1) + 1; };
 const k3Carries = (a, m) => p4mul1Plan(a, m).filter(s => !s.last && s.carry).length;
-const k3Easy3 = () => { const m = rnd(2, 4); return [k3Digits(3, v => k3Carries(v, m) <= 1 && v * m < 1000), m]; };
+const k3Easy3 = () => { const m = rnd(2, 4); return [k3Digits(3, v => k3Carries(v, m) <= 1 && v * m < 1000 && v % 100 !== 0), m]; }; /* v143: ไม่เอา 200 × 4 */
 const k3Hard3 = () => { const m = rnd(4, 9); return [k3Digits(3, v => k3Carries(v, m) >= 2 || /0/.test(String(v).slice(1))), m]; };
 const k3Four = () => { const m = rnd(2, 9); return [k3Digits(4, v => v * m < 100000), m]; };
 const k3TwoTwo = hard => { for (let g = 0; g < 200; g++) { const a = rnd(hard ? 35 : 12, hard ? 99 : 59), b = rnd(hard ? 25 : 11, hard ? 99 : 34); if (b % 10 && a % 10) return [a, b]; } return [23, 14]; };
@@ -22129,13 +22140,13 @@ const K3_ST = [K3S('ร้านขายขนมจัดคุกกี้ใ
   K3S('พ่อซื้อปุ๋ย 8 กระสอบ กระสอบละ 375 บาท พ่อต้องจ่ายเงินกี่บาท', 375, 8, 'บาท'),
   K3S('แปลงผักปลูกผักกาดแถวละ 27 ต้น จำนวน 43 แถว ปลูกผักกาดทั้งหมดกี่ต้น', 27, 43, 'ต้น'),
   K3S('รถบรรทุกขนแตงโมเที่ยวละ 650 ผล ขนไป 9 เที่ยว ขนแตงโมไปทั้งหมดกี่ผล', 650, 9, 'ผล'),
-  K3S('ห้องสมุดมีตู้หนังสือ 17 ตู้ ตู้ละ 38 เล่ม ห้องสมุดมีหนังสือทั้งหมดกี่เล่ม', 38, 17, 'เล่ม'),
+  K3S('ห้องสมุดมีชั้นหนังสือ 17 ชั้น ชั้นละ 38 เล่ม ห้องสมุดมีหนังสือทั้งหมดกี่เล่ม', 38, 17, 'เล่ม'),
   K3S('นักวิ่งวิ่งรอบสนามวันละ 2,350 เมตร เป็นเวลา 4 วัน วิ่งได้ทั้งหมดกี่เมตร', 2350, 4, 'เมตร'),
   K3S('แม่ค้าขายส้มตำได้วันละ 58 จาน ขาย 12 วัน ขายส้มตำได้ทั้งหมดกี่จาน', 58, 12, 'จาน'),
   K3S('โรงงานผลิตตุ๊กตาได้ชั่วโมงละ 145 ตัว ทำงาน 8 ชั่วโมง ผลิตตุ๊กตาได้กี่ตัว', 145, 8, 'ตัว'),
   K3S('ค่ายลูกเสือมีเต็นท์ 33 หลัง หลังละ 6 คน มีลูกเสือพักในเต็นท์ทั้งหมดกี่คน', 33, 6, 'คน'),
   K3S('ชาวสวนเก็บมังคุดได้ต้นละ 86 ผล จาก 25 ต้น เก็บมังคุดได้ทั้งหมดกี่ผล', 86, 25, 'ผล'),
-  K3S('กล่องดินสอสีมี 9 กล่อง กล่องละ 1,200 แท่ง มีดินสอสีทั้งหมดกี่แท่ง', 1200, 9, 'แท่ง'),
+  K3S('โรงงานส่งดินสอสี 9 ลัง ลังละ 1,200 แท่ง ส่งดินสอสีทั้งหมดกี่แท่ง', 1200, 9, 'แท่ง'),
   K3S('สวนสัตว์ขายบัตรได้วันละ 3,048 ใบ เป็นเวลา 3 วัน ขายบัตรได้ทั้งหมดกี่ใบ', 3048, 3, 'ใบ')];
 
 /* ---------- lessons ---------- */
@@ -22160,7 +22171,7 @@ const LESSONS_P3C7 = [
       { fig: k3mulFig(312, 3, '936'), name: 'คูณทีละหลักไปทางซ้าย', text: '1 × 3 = 3 · 3 × 3 = 9 → 936' }], 'คูณจากหลักหน่วย → หลักสิบ → หลักร้อย'),
      pexStep('ตัวอย่างทีละขั้น: 214 × 4 (มีทด)', 'ตัวอย่างทีละขั้น สองร้อยสิบสี่คูณสี่', k3mulRows(214, 4), '214 × 4 = <b>856</b>'),
      T('ลองกดคูณทีละหลัก', 'ลองกดคูณทีละหลัก', el => el.append(simMul1([[132, 3], [241, 4], [305, 3]]))),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.k3Col({ a: 123, m: 4 }), 'ถูกต้อง!')))],
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.k3Col({ a: 123, m: 4 }), '', 'ลองทำเอง'))],
     () => [...k3N(4, () => { const [a, m] = k3Easy3(); return Q.k3Col({ a, m, flip: Math.random() < .3 }); }), k3TF(k3N(4, () => { const [a, m] = k3Easy3(); return [a, m, Math.random() < .5 ? a * m : k3Wrong(a, m)]; }))]),
   L3K(3, 'ป่าทดหลายครั้ง', 'การหาผลคูณของจำนวนหนึ่งหลักกับจำนวนสามหลักโดยการตั้งคูณ (2)', 'ตั้งคูณ 3 หลัก (2)', 'ตั้งคูณจำนวนหนึ่งหลักกับจำนวนสามหลักที่มีการทดหลายครั้ง และตัวตั้งที่มี 0',
     [...learnStep('<b>ทดหลายครั้ง</b>', 'ทดหลายครั้ง', [
@@ -22169,7 +22180,7 @@ const LESSONS_P3C7 = [
       { fig: k3mulFig(408, 5, '40', '  4 ', 1), name: 'หลักที่เป็น 0', text: '0 × 5 = 0 แล้วบวกตัวทด 4 → เขียน 4' }], 'คูณก่อน แล้วค่อยบวกตัวทด'),
      pexStep('ตัวอย่างทีละขั้น: 587 × 6', 'ตัวอย่างทีละขั้น ห้าร้อยแปดสิบเจ็ดคูณหก', k3mulRows(587, 6), '587 × 6 = <b>3,522</b>'),
      T('ลองกดคูณทีละหลัก', 'ลองกดคูณทีละหลัก', el => el.append(simMul1([[476, 8], [903, 7], [658, 9]]))),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.k3Col({ a: 736, m: 5 }), 'ถูกต้อง!')))],
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.k3Col({ a: 736, m: 5 }), '', 'ลองทำเอง'))],
     () => [...k3N(5, () => { const [a, m] = k3Hard3(); return Q.k3Col({ a, m, flip: Math.random() < .3 }); }), k3TF(k3N(4, () => { const [a, m] = k3Hard3(); return [a, m, Math.random() < .5 ? a * m : k3Wrong(a, m)]; }))]),
   L3K(4, 'ป่าสี่หลัก', 'การหาผลคูณของจำนวนหนึ่งหลักกับจำนวนสี่หลักโดยการตั้งคูณ', 'ตั้งคูณ 4 หลัก', 'ตั้งคูณจำนวนหนึ่งหลักกับจำนวนสี่หลัก',
     [...learnStep('ตั้งคูณ <b>จำนวนสี่หลัก</b>', 'ตั้งคูณจำนวนสี่หลัก', [
@@ -22177,7 +22188,7 @@ const LESSONS_P3C7 = [
       { fig: k3mulFig(2134, 3, '6402'), name: 'ครบ 4 หลัก', text: '2,134 × 3 = 6,402' }], 'หน่วย → สิบ → ร้อย → พัน ทดเมื่อครบ 10'),
      pexStep('ตัวอย่างทีละขั้น: 3,568 × 4', 'ตัวอย่างทีละขั้น สามพันห้าร้อยหกสิบแปดคูณสี่', k3mulRows(3568, 4), '3,568 × 4 = <b>14,272</b>'),
      T('ลองกดคูณทีละหลัก', 'ลองกดคูณทีละหลัก', el => el.append(simMul1([[4127, 6], [2093, 8], [6754, 3]]))),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.k3Col({ a: 1625, m: 4 }), 'ถูกต้อง!')))],
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.k3Col({ a: 1625, m: 4 }), '', 'ลองทำเอง'))],
     () => [...k3N(5, () => { const [a, m] = k3Four(); return Q.k3Col({ a, m, flip: Math.random() < .3 }); }), ...k3N(1, () => { const [a, m] = k3Four(); return Q.dPick({ q: `${fmt(a)} × ${m} ได้เท่าใด`, opts: shuffle([fmt(a * m), fmt(k3Wrong(a, m)), fmt(a * m + 1000)]), right: fmt(a * m), hint: 'ตั้งคูณทีละหลัก แล้วตรวจคำตอบ' }); })]),
   L3K(5, 'ป่าสิบเท่า', 'การหาผลคูณของจำนวนสองหลักกับ 10 20 30 … 90', '× 10 20 … 90', 'หาผลคูณของจำนวนสองหลักกับ 10, 20, 30, … 90 โดยคูณแล้วเติม 0 หนึ่งตัว',
     [...learnStep('คูณด้วย <b>10, 20, … 90</b>', 'คูณด้วยสิบ ยี่สิบ ถึงเก้าสิบ', [
@@ -22185,7 +22196,7 @@ const LESSONS_P3C7 = [
       { fig: `<div class="k3-eqs">${k3Eq(23, 3, 69) + k3Eq(23, 30, 690, 1)}</div>`, name: 'คูณด้วย 30', text: '30 = 3 สิบ → 23 × 3 = 69 แล้วเติม 0 → 690' }], 'คูณตัวเลขหน้า 0 แล้วเติม 0 หนึ่งตัว'),
      pexStep('ตัวอย่างทีละขั้น: 47 × 60', 'ตัวอย่างทีละขั้น สี่สิบเจ็ดคูณหกสิบ', [['① 60 = 6 สิบ', 'คูณ 6 ก่อน', k3Eq(47, 60, null)], ['② คูณ', '47 × 6 = 282', k3mulFig(47, 6, '282')], ['③ เติม 0', '282 → 2,820', k3Eq(47, 60, 2820, 1)]], '47 × 60 = <b>2,820</b>'),
      T('ลองเปลี่ยนตัวตั้งและตัวคูณ', 'ลองเปลี่ยนตัวตั้งและตัวคูณ', el => el.append(simK3Zero('t')))],
-    () => [...k3N(5, () => Q.k3Zero(k3Order(k3Tens()))), k3MatchT(rnd(12, 49), rnd(2, 9))]),
+    () => [...k3N(5, () => Q.k3Zero(k3Order(k3Tens()))), k3MatchT(rnd(12, 49), rnd(2, 9)), ...k3N(2, () => Q.k3Cmp((() => { const a = rnd(12, 49), t = rnd(2, 8) * 10; return Math.random() < .5 ? { L: [a, t], R: [t, a] } : { L: [a, t], R: [a, t + 10] }; })()))]), /* v143 */
   L3K(6, 'ป่าผลคูณย่อย', 'การหาผลคูณของจำนวนสองหลักกับจำนวนสองหลักโดยการตั้งคูณ (1)', 'สองหลัก × สองหลัก (1)', 'ตั้งคูณจำนวนสองหลักกับจำนวนสองหลัก: คูณหลักหน่วย คูณหลักสิบ แล้วบวกผลคูณย่อย',
     [...learnStep('สองหลัก <b>×</b> สองหลัก', 'สองหลักคูณสองหลัก', [
       { fig: k3col([{ t: 32 }, { s: '×', t: 14 }, { line: true }], 4), name: 'แยกตัวคูณ', text: '14 = 10 + 4' },
@@ -22193,7 +22204,7 @@ const LESSONS_P3C7 = [
       { fig: k3col([{ t: 32 }, { s: '×', t: 14 }, { line: true }, { t: 128 }, { s: '+', t: 320, z: 1 }, { line: true }, { t: 448, cls: 'dg rs' }, { line: true, dbl: true }], 4), name: 'บวกกัน', text: '128 + 320 = 448' }], 'คูณหลักหน่วย + คูณหลักสิบ = ผลคูณ'),
      pexStep('ตัวอย่างทีละขั้น: 26 × 13', 'ตัวอย่างทีละขั้น ยี่สิบหกคูณสิบสาม', [['① คูณหลักหน่วย', '26 × 3 = 78', k3col([{ t: 26 }, { s: '×', t: 13 }, { line: true }, { t: 78 }], 4)], ['② คูณหลักสิบ', '26 × 10 = 260', k3col([{ t: 26 }, { s: '×', t: 13 }, { line: true }, { t: 78 }, { t: 260, z: 1 }], 4)], ['③ บวก', '78 + 260 = 338', k3col([{ t: 26 }, { s: '×', t: 13 }, { line: true }, { t: 78 }, { s: '+', t: 260, z: 1 }, { line: true }, { t: 338, cls: 'dg rs' }, { line: true, dbl: true }], 4)]], '26 × 13 = <b>338</b>'),
      T('ลองกดทีละขั้น', 'ลองกดทีละขั้น', el => el.append(simMulLong([[34, 12], [41, 23], [27, 31]]))),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.k3Long({ a: 43, b: 12 }), 'ถูกต้อง!')))],
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.k3Long({ a: 43, b: 12 }), '', 'ลองทำเอง'))],
     () => k3N(5, () => { const [a, b] = k3TwoTwo(false); return Q.k3Long({ a, b }); })),
   L3K(7, 'ป่าคูณใหญ่', 'การหาผลคูณของจำนวนสองหลักกับจำนวนสองหลักโดยการตั้งคูณ (2)', 'สองหลัก × สองหลัก (2)', 'ตั้งคูณจำนวนสองหลักกับจำนวนสองหลักที่มีการทด และใช้ความรู้สึกเชิงจำนวนเปรียบเทียบผลคูณ',
     [...learnStep('ผลคูณย่อย <b>มีทด</b>', 'ผลคูณย่อยมีทด', [
@@ -22203,7 +22214,7 @@ const LESSONS_P3C7 = [
      learnStep('เรื่องใหม่: <b>เปรียบเทียบผลคูณ</b>โดยไม่ต้องคูณ', 'เรื่องใหม่ เปรียบเทียบผลคูณโดยไม่ต้องคูณ', [
        { fig: `<div class="f3-eq">548 × 6 <b>=</b> 6 × 548</div>`, name: 'สลับที่', text: 'สลับตัวตั้งกับตัวคูณ ผลคูณเท่าเดิม' },
        { fig: `<div class="f3-eq">7 × 2,036 <b>&gt;</b> 5 × 2,036</div>`, name: 'จำนวนหนึ่งเท่ากัน', text: 'ดูอีกจำนวน: 7 มากกว่า 5 → ผลคูณมากกว่า' }], 'ดูก่อนว่ามีจำนวนใดเท่ากัน'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.k3Long({ a: 85, b: 37 }), 'ถูกต้อง!')))],
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.k3Long({ a: 85, b: 37 }), '', 'ลองทำเอง'))],
     () => [...k3N(4, () => { const [a, b] = k3TwoTwo(true); return Q.k3Long({ a, b }); }), ...k3N(2, () => Q.k3Cmp(k3CmpData()))]),
   L3K(8, 'ป่ากล่องปริศนา', 'การหาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์', 'ตัวไม่ทราบค่า', 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์แสดงการคูณ โดยใช้สูตรคูณและการลองแล้วตรวจ',
     [...learnStep('<b>ตัวไม่ทราบค่า</b> ในการคูณ', 'ตัวไม่ทราบค่าในการคูณ', [
@@ -22211,7 +22222,7 @@ const LESSONS_P3C7 = [
       { fig: `<div class="fbig p4big">${p4uHTML('□ × 6 = 42', 7)}</div>`, name: 'นึกถึงสูตรคูณ', text: '7 × 6 = 42 → □ = 7' }], 'ได้คำตอบแล้ว คูณตรวจทุกครั้ง'),
      pexStep('ตัวอย่างทีละขั้น: 25 × □ = 300', 'ตัวอย่างทีละขั้น ยี่สิบห้าคูณกรอบเท่ากับสามร้อย', [['① ลอง 10', '25 × 10 = 250 ยังน้อยไป', `<div class="fbig p4big">${p4uHTML('25 × □ = 300')}</div>`], ['② ลอง 12', '25 × 12 = 300 พอดี', `<div class="fbig p4big">${p4uHTML('25 × □ = 300', 12)}</div>`]], '□ = <b>12</b>'),
      T('ลองเปลี่ยนค่า □ ให้ผลคูณพอดี', 'ลองเปลี่ยนค่ากรอบให้ผลคูณพอดี', el => el.append(simK3Unk([[8, 56, 0], [15, 180, 1], [400, 2800, 1]])))],
-    () => k3N(6, () => Q.k3Unk(k3UnkData()))),
+    () => [...k3N(5, () => Q.k3Unk(k3UnkData())), ...k3N(2, () => k3UnkPick(k3UnkData()))]), /* v143 */
   L3K(9, 'ป่าโจทย์คูณ', 'โจทย์ปัญหาการคูณ', 'โจทย์ปัญหาการคูณ', 'วิเคราะห์โจทย์ปัญหาการคูณ เขียนประโยคสัญลักษณ์ และหาคำตอบ',
     [...learnStep('<b>โจทย์ปัญหาการคูณ</b>', 'โจทย์ปัญหาการคูณ', [
       { fig: mtGroupsSVG(4, 6, 'apple', { size: 16 }), name: 'กลุ่มละเท่า ๆ กัน', text: 'มีหลายกลุ่ม แต่ละกลุ่มเท่ากัน → ใช้การคูณ' },
