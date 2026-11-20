@@ -3752,6 +3752,17 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 /* v146 ป.4 */
 .p4lnq{width:min(640px,90cqw);height:auto}.p4ln-t{font:800 18px var(--font-num);fill:#2B2550}.p4ln-m{font:800 15px var(--font-num);fill:#E5505E}.p4ln-n{font:900 20px var(--font-num);fill:#2F7FD8}
 .t6-q .abacus svg{width:clamp(220px,32cqw,320px)}
+
+/* ---------- v149 P4 ch4: p4stepBox — แตะเครื่องหมายที่ต้องคิดก่อน แล้วพิมพ์ผล ---------- */
+.p4sline{display:flex;align-items:center;justify-content:center;gap:.22em;flex-wrap:nowrap}
+.p4sline .p4sop{font:inherit;font-weight:800;background:#fff;border:2px dashed #d9cbb0;border-radius:12px;padding:0 .18em;min-width:1.25em;cursor:pointer;line-height:1.2}
+.p4sline .p4sop:hover{border-color:#f0b429;background:#fffbea}
+.p4sline .p4sop.on{background:#fff3c4;border-style:solid;border-color:#f0b429}
+.p4sline.lock .p4sop:not(.on){border-color:transparent;background:transparent;cursor:default}
+.p4sline .p4shl{background:#fff3c4;border-radius:8px}
+.p4slog:empty{display:none}
+.p4slog .fstep-row{font-size:clamp(18px,2.4cqw,24px)}
+.x3st.p4s2on>.storybox{font-size:17px;padding:6px 14px}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -16076,7 +16087,59 @@ function p4firstQ(expr) { // which part first? candidates = every neighbouring p
   const opts = [...new Set([right, ...shuffle(parts)])].slice(0, 3);
   return Q.p4Pick({ fig: p4big(exprHTML(expr)), q: 'ต้องคำนวณส่วนใด<span class="hl">ก่อน</span>', say: 'ต้องคำนวณส่วนใดก่อน', opts: opts.map(o => exprHTML(o)), right: exprHTML(right), hint: 'ลำดับ: ในวงเล็บก่อน → คูณ หาร (ซ้ายไปขวา) → บวก ลบ (ซ้ายไปขวา)' });
 }
-const p4calcQ = expr => Q.dCalc({ expr, hint: 'ลำดับ: ในวงเล็บก่อน → คูณ หาร จากซ้ายไปขวา → บวก ลบ จากซ้ายไปขวา' });
+/* v149 (ผู้ใช้ขอ: ให้เด็กทำเองตามลำดับจริง) — p4stepBox: ① แตะเครื่องหมายที่ต้องคิดก่อน ② พิมพ์ผลของส่วนนั้น → ประโยคย่อลง ทำซ้ำจนเหลือจำนวนเดียว
+   แตะผิดบอกเหตุผล (ในวงเล็บก่อน · คูณหารก่อนบวกลบ · ซ้ายไปขวา) · ในวงเล็บที่บวกกันล้วน (เช่น รวมข้อมูลหาค่าเฉลี่ย) ทำในขั้นเดียว · มีเครื่องหมายเดียวเลือกให้เอง */
+const p4tok = e => e.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').replace(/,/g, '').trim().split(/\s+/);
+const P4OPF = { '+': (a, b) => a + b, '−': (a, b) => a - b, '×': (a, b) => a * b, '÷': (a, b) => a / b };
+const p4isOp = t => /^[+−×÷]$/.test(t);
+function p4nextOps(T) {
+  const G = []; for (let i = 0; i < T.length; i++) if (T[i] === '(') { let j = i + 1; while (T[j] !== ')' && T[j] !== '(') j++; if (T[j] === ')') G.push([i + 1, j - 1]); }
+  const segs = G.length ? G : [[0, T.length - 1]], out = [];
+  segs.forEach(([a, b]) => { const ops = []; for (let k = a + 1; k < b; k += 2) ops.push(k);
+    if (ops.length > 1 && ops.every(k => T[k] === '+')) return out.push({ ops, lo: a, hi: b, val: ops.reduce((t, k) => t + +T[k + 1], +T[a]), part: T.slice(a, b + 1).join(' ') });
+    const md = ops.filter(k => T[k] === '×' || T[k] === '÷'), cand = md.length ? md.filter(k => k - 2 < a || T[k - 2] === '+' || T[k - 2] === '−') : ops.slice(0, 1);
+    cand.forEach(k => out.push({ ops: [k], lo: k - 1, hi: k + 1, val: P4OPF[T[k]](+T[k - 1], +T[k + 1]), part: `${T[k - 1]} ${T[k]} ${T[k + 1]}` })); });
+  return { N: out, G }; }
+function p4stepBox(ctx, expr, o = {}) {
+  let T = p4tok(expr), k = 0, pick = null, done = false;
+  const line = h('div', { class: 'fbig p4sline one-line' }), log = h('div', { class: 'colstack fsteps p4slog' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'p4sslot' });
+  const draw = () => { line.innerHTML = ''; line.classList.toggle('lock', !!pick || done);
+    T.forEach((t, i) => { if (p4isOp(t)) line.append(h('button', { class: 'fop p4sop' + (pick && pick.ops.includes(i) ? ' on' : ''), onclick: e => { e.stopPropagation(); tap(i); } }, t));
+      else if (t === '(' || t === ')') line.append(h('b', { class: 'fop p4spar' + (pick && (i === pick.lo - 1 || i === pick.hi + 1) && T[pick.lo - 1] === '(' && T[pick.hi + 1] === ')' ? ' p4shl' : '') }, t));
+      else line.append(h('b', { class: 'num' + (pick && i >= pick.lo && i <= pick.hi ? ' p4shl' : '') }, fmt(+t))); });
+    if (!done) line.append(h('b', { class: 'fop' }, '='), h('span', { class: 'fsign' }, '?')); };
+  const apply = P => { T = [...T.slice(0, P.lo), String(P.val), ...T.slice(P.hi + 1)];
+    for (let i = 1; i < T.length - 1; i++) if (T[i - 1] === '(' && T[i + 1] === ')') { T.splice(i + 1, 1); T.splice(i - 1, 1); i = 0; } };
+  const addLog = P => log.append(h('div', { class: 'fstep-row' }, h('span', { class: 'ms-lab' }, `ขั้นที่ ${k}`), h('span', { html: `${exprHTML(P.part)} <b class="fop">=</b> <b class="num">${fmt(P.val)}</b> ✓` })));
+  const ask = () => { slot.innerHTML = ''; pick = null; draw();
+    if (T.length === 1) { done = true; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${fmt(+T[0])}</b>`; return; }
+    const { N } = p4nextOps(T), nOps = T.filter(p4isOp).length;
+    if (nOps === 1 || (N.length === 1 && N[0].ops.length === nOps)) return choose(N[0], true);
+    lab.innerHTML = `ขั้นที่ ${k + 1}: แตะ<b>เครื่องหมาย</b>ที่ต้องคิดก่อน`; };
+  const choose = (P, auto) => { pick = P; draw(); const last = T.length === P.hi - P.lo + 1;
+    lab.innerHTML = `ขั้นที่ ${k + 1}: ${exprHTML(P.part)} = ?`;
+    const sub = last ? ctx : { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); k++; sfx.pop(Math.min(8, k + 2)); addLog(P); apply(P); ask(); }, say: ctx.say };
+    slot.append(answerBox(sub, String(P.val), { hint: P.ops.length > 1 ? `รวมทุกจำนวนในวงเล็บ` : /[×÷]/.test(P.part) && P.val > 999 ? `ตั้ง${P.part.includes('×') ? 'คูณ' : 'หาร'} ${exprHTML(P.part)} ในกระดาษทด` : `คิด ${exprHTML(P.part)}` }));
+    if (last) { const r = ctx.onRight; ctx.onRight = () => { if (!done) { k++; addLog(P); apply(P); ask(); } r && r(); }; }
+    if (!auto && ctx.say && k === 0) ctx.say('ใช่แล้ว! คิดส่วนนี้ก่อน'); };
+  function tap(i) { if (pick || done) return; const { N, G } = p4nextOps(T), P = N.find(x => x.ops.includes(i)); if (P) { sfx.tap(); return choose(P); }
+    const inG = G.some(([a, b]) => i > a && i < b), t = T[i];
+    ctx.check(false, G.length && !inG ? `${t} อยู่นอกวงเล็บ — ต้องคิดในวงเล็บก่อน` : (t === '+' || t === '−') && N.some(x => /[×÷]/.test(T[x.ops[0]])) ? `ต้องคูณ หาร ก่อน แล้วจึง${t === '+' ? 'บวก' : 'ลบ'}` : 'บวก ลบ (หรือ คูณ หาร) ทำจากซ้ายไปขวา — เริ่มที่เครื่องหมายทางซ้ายก่อน'); }
+  const wrap = h('div', { class: 'colstack p2q p4sbox ans' }, line, log, lab, slot);
+  wrap.reveal = () => { while (T.length > 1) { const P = p4nextOps(T).N[0]; k++; addLog(P); apply(P); } slot.innerHTML = ''; done = true; pick = null; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${fmt(+T[0])}</b>`; };
+  ask(); return wrap; }
+Object.assign(Q, {
+  p4Steps({ expr }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้นตามลำดับ`, say: `หาผลลัพธ์ ${speakText(expr)}`, __sig: 'p4st ' + expr, mount(bd, ctx) { bd.append(p4stepBox(ctx, expr)); } }; },
+  /* โจทย์ 2 ขั้นตอน/ค่าเฉลี่ย: ① เลือกประโยคสัญลักษณ์ ② คิดทีละขั้น */
+  p4Story2({ text, expr, wrong = [], unit = '' }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
+    return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: text.replace(/<[^>]+>/g, ''), __sig: 'p4s2 ' + expr, mount(bd, ctx) {
+      const lab = h('div', { class: 'p4steplab', html: '① เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' });
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; slot.append(p4stepBox(ctx, expr)); bd.querySelector('.x3st').classList.add('p4s2on'); } };
+      const ch = choices(sub, opts.map(o => ({ value: o, label: exprHTML(o) })), expr, { hint: 'เรื่องที่ต้องรู้ก่อนอยู่ในวงเล็บ · รวม/เพิ่ม → บวก · เหลือ → ลบ · หลายกลุ่มเท่ากัน → คูณ · แบ่งเท่า ๆ กัน → หาร' });
+      ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); slot.append(ch);
+      bd.append(h('div', { class: 'colstack x3st' }, h('div', { class: 'storybox', html: text }), lab, slot)); } }; }
+});
+const p4calcQ = expr => Q.p4Steps({ expr }); /* v149: เดิม Q.dCalc พิมพ์คำตอบสุดท้ายอย่างเดียว */
 const p4boxQ = s => Q.p4Num({ fig: p4big(p4box(s)), q: 'เติมจำนวนใน □ ให้ถูกต้อง', say: 'เติมจำนวนในช่องให้ถูกต้อง', a: p4boxSolve(s), hint: 'คิดลำดับการคำนวณ (วงเล็บ → คูณ หาร → บวก ลบ) แล้วลองแทนค่าตรวจ' });
 const p4tfOrder = ([expr, wrongVal]) => { const r = p4ev(expr), ok = Math.random() < .5, v = ok ? r : wrongVal;
   return Q.hTF({ text: `${exprHTML(expr)} <b class="fop">=</b> <b class="num">${fmt(v)}</b>`, ok, why: `ทำตามลำดับ: ${exprHTML(expr)} = ${fmt(r)}` }); };
@@ -16139,7 +16202,12 @@ const P4S_2B = [
   D6S('นักกีฬา 2,030 คน เดินทางไปแข่งขันด้วยรถตู้ รถตู้ 1 คันนั่งได้ 7 คน ค่าเช่าคันละ 800 บาท ต้องจ่ายค่าเช่ารถรวมกี่บาท', '(2030 ÷ 7) × 800', ['2030 × 7 × 800', '2030 ÷ 7 + 800'], 'บาท'),
   D6S('ร้านมีส้ม 73 ลัง ลังละ 25 ผล ส้มช้ำเสียไป 165 ผล ร้านเหลือส้มดีกี่ผล', '73 × 25 − 165', ['73 × 25 + 165', '(73 + 25) × 165'], 'ผล'),
   D6S('ร้านค้าซื้อน้ำดื่ม 125 แพ็ก แพ็กละ 12 ขวด ขายไปแล้ว 984 ขวด เหลือน้ำดื่มกี่ขวด', '125 × 12 − 984', ['125 × 12 + 984', '(125 + 12) × 984'], 'ขวด'),
-  D6S('ฟาร์มเก็บไข่ได้วันละ 1,350 ฟอง เป็นเวลา 4 วัน นำมาบรรจุแผงละ 30 ฟอง ได้กี่แผง', '1350 × 4 ÷ 30', ['1350 + 4 ÷ 30', '1350 ÷ 30 + 4'], 'แผง')];
+  D6S('ฟาร์มเก็บไข่ได้วันละ 1,350 ฟอง เป็นเวลา 4 วัน นำมาบรรจุแผงละ 30 ฟอง ได้กี่แผง', '1350 × 4 ÷ 30', ['1350 + 4 ÷ 30', '1350 ÷ 30 + 4'], 'แผง'),
+  /* v149 เพิ่ม (เกมต้องมี ≥ 8 ข้อ) */
+  D6S('โรงเรียนมีนักเรียนชาย 1,248 คน นักเรียนหญิง 1,352 คน จัดนั่งรถบัสคันละ 40 คน ต้องใช้รถบัสกี่คัน', '(1248 + 1352) ÷ 40', ['1248 + 1352 ÷ 40', '(1352 − 1248) ÷ 40'], 'คัน'),
+  D6S('โกดังมีข้าวสาร 9,600 กิโลกรัม ขายไปวันละ 245 กิโลกรัม เป็นเวลา 30 วัน โกดังเหลือข้าวสารกี่กิโลกรัม', '9600 − 245 × 30', ['(9600 − 245) × 30', '9600 − 245 + 30'], 'กิโลกรัม'),
+  D6S('สวนมีต้นมะม่วง 48 แถว แถวละ 36 ต้น และมีต้นมะพร้าวอีก 1,275 ต้น สวนนี้มีต้นไม้ทั้งหมดกี่ต้น', '48 × 36 + 1275', ['48 + 36 + 1275', '48 × 36 − 1275'], 'ต้น'),
+  D6S('แม่ค้ามีเงิน 15,000 บาท ซื้อพัดลม 8 เครื่อง เครื่องละ 1,290 บาท แม่ค้าเหลือเงินกี่บาท', '15000 − 8 × 1290', ['(15000 − 8) × 1290', '15000 − 8 + 1290'], 'บาท')];
 const P4_SOL2 = [
   { text: 'ซื้อปากกา 12 ด้าม ด้ามละ 15 บาท จ่ายเงิน 500 บาท ได้เงินทอนกี่บาท', expr: '500 − 12 × 15', giv: 'ปากกา 12 ด้าม ด้ามละ 15 บาท · จ่ายเงิน 500 บาท', lab: 'ได้เงินทอน', unit: 'บาท', wrongUnit: 'ด้าม' },
   { text: 'มีลูกอม 480 เม็ด แบ่งใส่ถุง ถุงละ 12 เม็ด แล้วขายไป 25 ถุง เหลือลูกอมกี่ถุง', expr: '480 ÷ 12 − 25', giv: 'ลูกอม 480 เม็ด ถุงละ 12 เม็ด · ขายไป 25 ถุง', lab: 'เหลือลูกอม', unit: 'ถุง', wrongUnit: 'เม็ด' },
@@ -16246,12 +16314,12 @@ const LESSONS_P4C4 = [
     [T('โจทย์ 2 ขั้น: <b>เลือกทีละขั้น</b>', 'โจทย์สองขั้น เลือกทีละขั้น', el => el.append(simStepPick('ซื้อขนม <b>8</b> ห่อ ห่อละ <b>15</b> บาท จ่ายเงิน <b>200</b> บาท ได้เงินทอนกี่บาท',
        [{ q: 'ขั้นแรก หาราคาขนมทั้งหมด', opts: ['8 × 15', '8 + 15', '200 − 8'], right: '8 × 15', lab: 'ราคาขนม', unit: 'บาท' }, { q: 'ขั้นที่สอง หาเงินทอน', opts: ['200 − 120', '200 + 120'], right: '200 − 120', lab: 'เงินทอน', unit: 'บาท' }], 'ตอบ <b>80 บาท</b> · เขียนรวม 200 − (8 × 15) = □'))),
      T('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', p4ex([['โจทย์', 'มีลูกโป่ง 6 ถุง ถุงละ 20 ลูก แตกไป 18 ลูก เหลือลูกโป่งกี่ลูก'], ['ขั้นที่ 1', 'ลูกโป่งทั้งหมด 6 × 20 = 120 ลูก'], ['ขั้นที่ 2', 'เหลือ 120 − 18 = 102 ลูก'], ['ประโยครวม', '(6 × 20) − 18 = □']], 'ตอบ <b>102 ลูก</b>'))],
-    () => pkF(P4S_2A, 5).map(s => Q.dStory(s))),
+    () => pkF(P4S_2A, 6).map(s => Q.p4Story2(s))), /* v149: ② คิดทีละขั้นเอง */
   L4O(9, 'ตลาดสองขั้นใหญ่', 'การวิเคราะห์โจทย์ปัญหา 2 ขั้นตอน (ตอนที่ 2)', 'โจทย์ 2 ขั้น (2)', 'วิเคราะห์และแก้โจทย์ปัญหา 2 ขั้นตอนที่มีจำนวนมาก',
     [T('โจทย์ 2 ขั้นที่ใช้การคูณและการหาร', 'โจทย์สองขั้นที่ใช้การคูณและการหาร', el => el.append(simStepPick('โรงงานผลิตขวด <b>3,600</b> ขวดต่อวัน เป็นเวลา <b>5</b> วัน บรรจุลังละ <b>24</b> ขวด ได้กี่ลัง',
        [{ q: 'ขั้นแรก หาขวดทั้งหมด', opts: ['3600 × 5', '3600 ÷ 5', '3600 + 5'], right: '3600 × 5', lab: 'ขวดทั้งหมด', unit: 'ขวด' }, { q: 'ขั้นที่สอง หาจำนวนลัง', opts: ['18000 ÷ 24', '18000 × 24'], right: '18000 ÷ 24', lab: 'ได้', unit: 'ลัง' }], 'ตอบ <b>750 ลัง</b> · เขียนรวม (3,600 × 5) ÷ 24 = □'))),
      T('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', p4ex([['โจทย์', 'ห้องสมุดมีหนังสือ 1,250 เล่ม ได้รับบริจาค 30 กล่อง กล่องละ 25 เล่ม มีหนังสือกี่เล่ม'], ['ขั้นที่ 1', 'หนังสือบริจาค 30 × 25 = 750 เล่ม'], ['ขั้นที่ 2', 'รวม 1,250 + 750 = 2,000 เล่ม'], ['ประโยครวม', '1,250 + (30 × 25) = □']], 'ตอบ <b>2,000 เล่ม</b>'))],
-    () => pkF(P4S_2B, 5).map(s => Q.dStory(s))),
+    () => pkF(P4S_2B, 6).map(s => Q.p4Story2(s))), /* v149 */
   L4O(10, 'กระดานสองขั้น', 'การแสดงวิธีทำ โจทย์ปัญหา 2 ขั้นตอน', 'แสดงวิธีทำ 2 ขั้น', 'เขียนแสดงวิธีทำโจทย์ปัญหา 2 ขั้นตอนอย่างเป็นลำดับ พร้อมคำตอบและหน่วย',
     [T('เรียง<b>การแสดงวิธีทำ</b>ให้ถูกลำดับ', 'เรียงการแสดงวิธีทำให้ถูกลำดับ', el => el.append(simSeqSolve({ text: 'ซื้อแก้วน้ำ 15 ใบ ใบละ 35 บาท จ่ายเงิน 1,000 บาท ได้เงินทอนกี่บาท', expr: '1000 − 15 × 35', giv: 'แก้วน้ำ 15 ใบ ใบละ 35 บาท · จ่ายเงิน 1,000 บาท', lab: 'ได้เงินทอน', unit: 'บาท' }))),
      T('ตัวอย่าง: การแสดงวิธีทำที่สมบูรณ์', 'ตัวอย่าง การแสดงวิธีทำที่สมบูรณ์', p4ex([['โจทย์', 'มีไข่ 12 แผง แผงละ 30 ฟอง ทำขนมไป 85 ฟอง เหลือไข่กี่ฟอง'], ['ประโยคสัญลักษณ์', '(12 × 30) − 85 = □'], ['วิธีทำ', 'ไข่ทั้งหมด 12 × 30 = 360 ฟอง'], ['', 'เหลือไข่ 360 − 85 = 275 ฟอง'], ['ตอบ', '<span class="thn">๒๗๕</span> ฟอง']], 'แสดงทีละขั้น และตอบพร้อม<b>หน่วย</b>'))],
@@ -16267,12 +16335,12 @@ const LESSONS_P4C4 = [
   L4O(13, 'บ่อน้ำค่าเฉลี่ย', 'การหาค่าเฉลี่ยจากสถานการณ์ที่กำหนด', 'ค่าเฉลี่ย', 'หาค่าเฉลี่ยของข้อมูล โดยนำข้อมูลทั้งหมดมารวมกันแล้วหารด้วยจำนวนข้อมูล',
     [T('กด<b>ขั้นต่อไป</b> — รวม นับ แล้วเกลี่ยให้เท่ากัน', 'กดขั้นต่อไป รวม นับ แล้วเกลี่ยให้เท่ากัน', el => el.append(simMean([{ t: 'ปลาที่คาราวานจับได้ 5 วัน', v: [12, 7, 9, 14, 8], n: ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.'], u: 'ตัว', c: 'วัน' }, { t: 'น้ำที่อูฐ 4 ตัวดื่ม', v: [35, 42, 28, 39], n: ['อูฐ 1', 'อูฐ 2', 'อูฐ 3', 'อูฐ 4'], u: 'ลิตร', c: 'ตัว' }]))),
      T('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', p4ex([['ข้อมูล', 'ยอดขายน้ำ 4 วัน: 120, 135, 150, 115 ขวด'], ['① รวม', '120 + 135 + 150 + 115 = 520'], ['② นับ', 'มีข้อมูล 4 วัน'], ['③ หาร', '520 ÷ 4 = 130']], 'ขายน้ำได้เฉลี่ยวันละ <b>130 ขวด</b>'))],
-    () => [...pkF(P4W4_GASM, 2).map(([q, a, hint]) => Q.p4Num({ fig: p4gasFig(), q, a, hint, unit: 'กก.' })), p4meanTabQ(), p4meanTabQ(), p4meanTabQ(), ...pkF(P4S_MEAN.filter(x => p4meanKind(x) === 'mean'), 2).map(s => Q.dStory(s))]), // v115: ทุกข้อหาค่าเฉลี่ย
+    () => [...pkF(P4W4_GASM, 2).map(([q, a, hint]) => Q.p4Num({ fig: p4gasFig(), q, a, hint, unit: 'กก.' })), p4meanTabQ(), p4meanTabQ(), p4meanTabQ(), ...pkF(P4S_MEAN.filter(x => p4meanKind(x) === 'mean'), 2).map(s => Q.p4Story2(s))]), // v115: ทุกข้อหาค่าเฉลี่ย
   L4O(14, 'คาราวานค่าเฉลี่ย', 'การแสดงวิธีหาคำตอบโจทย์ปัญหาที่เกี่ยวกับค่าเฉลี่ย', 'โจทย์ค่าเฉลี่ย', 'แก้โจทย์ปัญหาเกี่ยวกับค่าเฉลี่ย: หาค่าเฉลี่ย หาผลรวมจากค่าเฉลี่ย และหาจำนวนจากค่าเฉลี่ย',
     [T('ค่าเฉลี่ย × จำนวน = ผลรวม — <b>เลือกทีละขั้น</b>', 'ค่าเฉลี่ยคูณจำนวนเท่ากับผลรวม เลือกทีละขั้น', el => el.append(simStepPick('ร้านขายข้าวมันไก่ <b>5</b> วัน ได้เงินเฉลี่ยวันละ <b>1,850</b> บาท ห้าวันได้เงินรวมกี่บาท',
        [{ q: 'รู้ค่าเฉลี่ยและจำนวนวัน หาผลรวม', opts: ['1850 × 5', '1850 ÷ 5', '1850 + 5'], right: '1850 × 5', lab: 'รวม', unit: 'บาท', why: 'ผลรวม = ค่าเฉลี่ย × จำนวน' }], 'ตอบ <b>9,250 บาท</b> · สูตร: ค่าเฉลี่ย = ผลรวม ÷ จำนวน → ผลรวม = ค่าเฉลี่ย × จำนวน'))),
      T('ตัวอย่างทีละขั้น: หาจำนวนจากค่าเฉลี่ย', 'ตัวอย่างทีละขั้น หาจำนวนจากค่าเฉลี่ย', p4ex([['โจทย์', 'ขายขนมได้เงิน 2,400 บาท ราคาเฉลี่ยชิ้นละ 30 บาท ขายได้กี่ชิ้น'], ['① ความสัมพันธ์', 'จำนวน = ผลรวม ÷ ค่าเฉลี่ย'], ['② คำนวณ', '2,400 ÷ 30 = 80'], ['③ ตรวจ', '80 × 30 = 2,400 ✓']], 'ตอบ <b>80 ชิ้น</b>'))],
-    () => ['mean', 'total', 'count'].flatMap(k => pkF(P4S_MEAN.filter(x => p4meanKind(x) === k), 2).map(s => Q.dStory(s)))) // v115: 3 แบบ แบบละ 2 ข้อ
+    () => ['mean', 'total', 'count'].flatMap(k => pkF(P4S_MEAN.filter(x => p4meanKind(x) === k), 2).map(s => Q.p4Story2(s)))) /* v149 */ // v115: 3 แบบ แบบละ 2 ข้อ
 ];
 
 /* ---------- boss: built from our own practice items (no official test supplied) — options rotated with d6spread ---------- */
