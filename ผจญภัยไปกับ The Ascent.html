@@ -17119,7 +17119,7 @@ Object.assign(Q, {
       const lab = h('div', { class: 'p4steplab', html: 'ขั้นที่ 1: เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' });
       const hint = op === '+' ? 'บวกเซนติเมตรก่อน ครบ 100 ทด 1 เมตร แล้วบวกเมตร' : 'ลบเซนติเมตรก่อน ไม่พอให้กระจาย 1 เมตร = 100 เซนติเมตร แล้วลบเมตร';
       const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(4); lab.innerHTML = `<b>${right} = ?</b> ✓ · ขั้นที่ 2: หาคำตอบ`; slot.innerHTML = '';
-        slot.append(r < 100 ? h('div', { class: 'rowstack' }, answerBox(ctx, String(r), { hint }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เซนติเมตร')) : mcInput(ctx, r, { hint })); ctx.say('ใช่แล้ว! หาคำตอบเลย'); } };
+        slot.append(r < 100 ? h('div', { class: 'rowstack' }, answerBox(ctx, String(r), { hint }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เซนติเมตร')) : h('div', { class: 'rowstack p2stcol' }, h('div', { class: 'p4colwrap', html: p2mcColHTML(a, b, op, { q: true }) }), mcInput(ctx, r, { hint }))); if (r >= 100) ctx.onRight = () => { const w = bd.querySelector('.p2stcol .p4colwrap'); if (w) w.innerHTML = p2mcColHTML(a, b, op, { m: 1, c: 1, x: 1 }); }; ctx.say('ใช่แล้ว! ตั้งให้ตรงหน่วย แล้วหาคำตอบ'); } }; /* v171: ขั้น ② มีกระดานตั้งบวก/ลบ ม. ซม. */
       slot.append(choices(sub, shuffle([right, wrong]).map(x => ({ value: x, label: x })), right, { hint: why || (op === '+' ? 'โจทย์ถามความยาวรวม หรือสิ่งที่ยาวกว่า → บวก' : 'โจทย์ถามส่วนที่เหลือ ผลต่าง หรือสิ่งที่สั้นกว่า → ลบ') }));
       bd.append(h('div', { class: 't6-q p4-q p2q p2st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text }), fig ? h('div', { html: fig }) : null), h('div', { class: 'colstack' }, lab, slot))); } };
   }
@@ -18242,7 +18242,7 @@ Object.assign(Q, {
     return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วหาคำตอบ', say: text.replace(/<[^>]+>/g, ''), mount(bd, ctx) {
       const lab = h('div', { class: 'p4steplab', html: 'ขั้นที่ 1: เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' });
       const hint = op === '+' ? (m === 'kd' ? 'บวกขีดก่อน ครบ 10 ขีด ทด 1 กิโลกรัม' : 'บวกกรัมก่อน ครบ 1,000 กรัม ทด 1 กิโลกรัม') : (m === 'kd' ? 'ลบขีดก่อน ไม่พอให้กระจาย 1 กิโลกรัม = 10 ขีด' : 'ลบกรัมก่อน ไม่พอให้กระจาย 1 กิโลกรัม = 1,000 กรัม');
-      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(4); lab.innerHTML = `<b>${right} = ?</b> ✓ · ขั้นที่ 2: หาคำตอบ`; slot.innerHTML = ''; slot.append(w2Duo(ctx, r, m, { hint })); ctx.say('ใช่แล้ว! หาคำตอบเลย'); } };
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(4); lab.innerHTML = `<b>${right} = ?</b> ✓ · ขั้นที่ 2: หาคำตอบ`; slot.innerHTML = ''; slot.append(h('div', { class: 'rowstack p2stcol' }, h('div', { class: 'w2colwrap', html: w2ColHTML(a, b, op, m, { q: true }) }), w2Duo(ctx, r, m, { hint }))); ctx.onRight = () => { const w = bd.querySelector('.p2stcol .w2colwrap'); if (w) w.innerHTML = w2ColHTML(a, b, op, m); }; ctx.say('ใช่แล้ว! ตั้งให้ตรงหน่วย แล้วหาคำตอบ'); } }; /* v171: ขั้น ② มีกระดานตั้ง */
       slot.append(choices(sub, shuffle([right, wrong]).map(x => ({ value: x, label: x })), right, { hint: why || (op === '+' ? 'รวมกัน เพิ่มขึ้น หรือถามสิ่งที่หนักกว่า → บวก' : 'เหลือ ผลต่าง หรือถามสิ่งที่เบากว่า → ลบ') }));
       bd.append(h('div', { class: 't6-q p4-q p2q p2st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })), h('div', { class: 'colstack' }, lab, slot))); } };
   }
