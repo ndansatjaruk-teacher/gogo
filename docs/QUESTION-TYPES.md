@@ -349,8 +349,8 @@
 | `Q.tallyMake` | `{ n, label }` | [`engine/questions.js:946`](../src/engine/questions.js#L946) |
 | `Q.tallyRead` | `{ n, label }` | [`engine/questions.js:942`](../src/engine/questions.js#L942) |
 | `Q.tapKind` | `{ items, kind, mode = 'solid' }` | [`engine/questions.js:1096`](../src/engine/questions.js#L1096) |
-| `Q.tCan` | `{ text, can, why }` | [`grades/p5/p5r.js:145`](../src/grades/p5/p5r.js#L145) |
-| `Q.tCheaper` | `{ item, unit, A, B, nA = 'ร้านขายดี', nB = 'ร้านสะดวกซื้อ' }` | [`grades/p5/p5r.js:152`](../src/grades/p5/p5r.js#L152) |
+| `Q.tCan` | `{ text, can, why }` | [`grades/p5/p5r.js:146`](../src/grades/p5/p5r.js#L146) |
+| `Q.tCheaper` | `{ item, unit, A, B, nA = 'ร้านขายดี', nB = 'ร้านสะดวกซื้อ' }` | [`grades/p5/p5r.js:153`](../src/grades/p5/p5r.js#L153) |
 | `Q.tensRead` | `{ n, ask = 'digit' }` | [`engine/questions.js:1194`](../src/engine/questions.js#L1194) |
 | `Q.tenSub` | `{ a, b }` | [`engine/questions.js:476`](../src/engine/questions.js#L476) |
 | `Q.three` | `{ nums, op = '+' }` | [`engine/questions.js:851`](../src/engine/questions.js#L851) |
@@ -363,13 +363,13 @@
 | `Q.tkSet` | `{ h: H, m = 0 }` | [`grades/p2/p2t.js:169`](../src/grades/p2/p2t.js#L169) |
 | `Q.tkStory` | `{ text, sent, wrong, a, unit, duo }` | [`grades/p2/p2t.js:202`](../src/grades/p2/p2t.js#L202) |
 | `Q.tkTwoNames` | `{ k }` | [`grades/p2/p2t.js:164`](../src/grades/p2/p2t.js#L164) |
-| `Q.tMoreLess` | `{ r1, r2, v, unit, more }` | [`grades/p5/p5r.js:136`](../src/grades/p5/p5r.js#L136) |
+| `Q.tMoreLess` | `{ r1, r2, v, unit, more }` | [`grades/p5/p5r.js:137`](../src/grades/p5/p5r.js#L137) |
 | `Q.toThai` | `{ n }` | [`engine/questions.js:682`](../src/engine/questions.js#L682) |
 | `Q.traceShape` | `{ v, obj, name }` | [`engine/questions.js:1139`](../src/engine/questions.js#L1139) |
 | `Q.traceWhat` | `{ obj, name, kind }` | [`engine/questions.js:1147`](../src/engine/questions.js#L1147) |
 | `Q.truth` | `{ text, ok, hint }` | [`engine/questions.js:688`](../src/engine/questions.js#L688) |
 | `Q.tSolve` | `{ text, a, b, c, unit, round, plain }` | [`grades/p5/p5r.js:116`](../src/grades/p5/p5r.js#L116) |
-| `Q.tTable` | `{ k1, u1, k2, u2, a, b, c }` | [`grades/p5/p5r.js:128`](../src/grades/p5/p5r.js#L128) |
+| `Q.tTable` | `{ k1, u1, k2, u2, a, b, c }` | [`grades/p5/p5r.js:129`](../src/grades/p5/p5r.js#L129) |
 | `Q.unitCount` | `{ item, unit, vis = 'len', max }` | [`engine/questions.js:1272`](../src/engine/questions.js#L1272) |
 | `Q.unitPick` | `{ name, e, m }` | [`engine/questions.js:1302`](../src/engine/questions.js#L1302) |
 | `Q.unknown20` | `{ t }` | [`engine/questions.js:864`](../src/engine/questions.js#L864) |

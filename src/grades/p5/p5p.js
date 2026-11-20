@@ -100,7 +100,7 @@ Object.assign(Q, {
   }
 });
 /* word problems reuse Q.dStory (choose the number sentence, then a decimal answer): expressions may contain n/100 */
-const PS = (text, expr, wrong, unit) => Q.dStory({ text, expr, wrong, unit });
+const PS = (text, expr, wrong, unit) => p6st({ text, expr, wrong, unit });
 
 /* =========================================================
    ========================================================= */

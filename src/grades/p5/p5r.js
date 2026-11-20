@@ -121,7 +121,8 @@ Object.assign(Q, {
         const ch = choices({ check: (ok, hint) => { if (ok) { ch.style.display = 'none'; step2.style.display = ''; sfx.pop(5); ctx.say(round ? 'ใช่แล้ว! คำนวณ แล้วอย่าลืมดูว่าต้องปัดอย่างไร' : 'ใช่แล้ว! คำนวณหาคำตอบเลย'); } else ctx.check(false, hint); } },
           opts.map(o => ({ value: o, label: `<span class="fexpr">${o}</span>` })), right, { hint: `หาค่าของ 1 หน่วยก่อน (${fmtDec(String(b))} ÷ ${fmtDec(String(a))}) แล้วคูณด้วยจำนวนที่ถาม (${fmtDec(String(c))})` });
         ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt'));
-        step2.append(h('div', { class: 'fbig', html: `${right} <b class="fop">=</b> <span class="fsign">?</span>` }), decAnswer(ctx, ans, { hint: round === 'down' ? `ได้ ${dTxt(exact)} แต่ซื้อ/ทำได้แค่จำนวนเต็ม จึงปัดทิ้ง` : round === 'up' ? `ได้ ${dTxt(exact)} ต้องให้พอ จึงปัดขึ้น` : 'คูณก่อนแล้วค่อยหาร จะได้ตัวเลขลงตัวง่าย', unit }));
+        const sx = +c === 1 ? `${b} ÷ ${a}` : +a === 1 ? `${c} × ${b}` : `${c} × ${b} ÷ ${a}`; /* v165: ② คิดทีละขั้น (คูณก่อนแล้วหาร) เมื่อไม่ต้องปัด */
+        if (!round && typeof p4stepBox === 'function') step2.append(p4stepBox(ctx, sx, { dec: true })); else step2.append(h('div', { class: 'fbig', html: `${right} <b class="fop">=</b> <span class="fsign">?</span>` }), decAnswer(ctx, ans, { hint: round === 'down' ? `ได้ ${dTxt(exact)} แต่ซื้อ/ทำได้แค่จำนวนเต็ม จึงปัดทิ้ง` : round === 'up' ? `ได้ ${dTxt(exact)} ต้องให้พอ จึงปัดขึ้น` : 'คูณก่อนแล้วค่อยหาร จะได้ตัวเลขลงตัวง่าย', unit }));
         bd.append(h('div', { class: 'colstack' }, h('div', { class: 'cap' }, plain ? '① รู้ของ 1 สิ่ง หรือรู้ของรวม? เลือกวิธีคิด (คูณ หรือ หาร)' : '① เลือกวิธีคิดแบบบัญญัติไตรยางศ์'), ch, step2)); ctx.onRight = () => { const q = step2.querySelector('.fsign'); if (q) q.outerHTML = `<b class="dnum">${dTxt(exact)}</b>`; }; } };
   },
   /* fill the 3-row table: value of one, then the answer */
