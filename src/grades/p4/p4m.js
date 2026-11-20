@@ -161,7 +161,7 @@ const p4divFig = (D, k) => `<div class="ldiv sm" style="grid-template-columns:au
 /* ---------- short division (หารสั้น) ---------- */
 function p4sdivHTML(D, k, upto = -1) {
   const P = p4ldivPlan(D, k), nd = P.digs.length, first = P.steps.findIndex(s => !s.quiet), rems = P.steps.map(s => s.rem);
-  let s = `<div class="p4sd" style="grid-template-columns:auto repeat(${nd},1.2em)"><span class="dv">${k} )</span>`;
+  let s = `<div class="p4sd" style="grid-template-columns:auto repeat(${nd},1.2em)"><span class="dv">${k}</span>`;
   P.digs.forEach((d, i) => { const r = i > 0 && i <= upto + 1 && rems[i - 1] ? `<sup>${rems[i - 1]}</sup>` : ''; s += `<span class="dd${i === upto ? ' hi' : ''}">${r}${d}</span>`; });
   s += '<span></span>'; P.steps.forEach((st, i) => { s += `<span class="qq${i === upto ? ' hi' : ''}">${i <= upto && (i >= first || first < 0 && i === nd - 1) ? st.q : ''}</span>`; });
   return s + '</div>';

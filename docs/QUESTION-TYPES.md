@@ -43,10 +43,10 @@
 | `Q.compareSym` | `{ a, b: bb, blocks = false }` | [`engine/questions.js:606`](../src/engine/questions.js#L606) |
 | `Q.countKind` | `{ items, kind, mode = 'solid', art: isArt }` | [`engine/questions.js:1113`](../src/engine/questions.js#L1113) |
 | `Q.countOnAdd` | `{ a, b }` | [`engine/questions.js:821`](../src/engine/questions.js#L821) |
-| `Q.d3Long` | `{ D, k, guide }` | [`grades/p3/p3d.js:116`](../src/grades/p3/p3d.js#L116) |
-| `Q.d3Short` | `{ D, k, guide }` | [`grades/p3/p3d.js:118`](../src/grades/p3/p3d.js#L118) |
-| `Q.d3Story` | `{ text, n, d, unit, unit2 }` | [`grades/p3/p3d.js:121`](../src/grades/p3/p3d.js#L121) |
-| `Q.d3Unk` | `{ a, b, c, pos }` | [`grades/p3/p3d.js:132`](../src/grades/p3/p3d.js#L132) |
+| `Q.d3Long` | `{ D, k, guide }` | [`grades/p3/p3d.js:134`](../src/grades/p3/p3d.js#L134) |
+| `Q.d3Short` | `{ D, k, guide }` | [`grades/p3/p3d.js:136`](../src/grades/p3/p3d.js#L136) |
+| `Q.d3Story` | `{ text, n, d, unit, unit2 }` | [`grades/p3/p3d.js:139`](../src/grades/p3/p3d.js#L139) |
+| `Q.d3Unk` | `{ a, b, c, pos }` | [`grades/p3/p3d.js:150`](../src/grades/p3/p3d.js#L150) |
 | `Q.d6ToFrac` | `{ x }` | [`grades/p6/p6d.js:98`](../src/grades/p6/p6d.js#L98) |
 | `Q.dCalc` | `{ expr, hint }` | [`grades/p5/p5d.js:108`](../src/grades/p5/p5d.js#L108) |
 | `Q.dCmp` | `{ l, r, hint }` | [`grades/p5/p5d.js:126`](../src/grades/p5/p5d.js#L126) |
@@ -61,15 +61,15 @@
 | `Q.drawSum` | `{ a, b }` | [`engine/questions.js:264`](../src/engine/questions.js#L264) |
 | `Q.dRound` | `{ x, p, line = false }` | [`grades/p5/p5d.js:95`](../src/grades/p5/p5d.js#L95) |
 | `Q.dStory` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p5/p5d.js:149`](../src/grades/p5/p5d.js#L149) |
-| `Q.dvCmp` | `{ l, r }` | [`grades/p2/p2d.js:140`](../src/grades/p2/p2d.js#L140) |
-| `Q.dvCtr` | `{ n, d }` | [`grades/p2/p2d.js:105`](../src/grades/p2/p2d.js#L105) |
-| `Q.dvFact` | `{ n, d }` | [`grades/p2/p2d.js:110`](../src/grades/p2/p2d.js#L110) |
-| `Q.dvFam` | `{ a, b }` | [`grades/p2/p2d.js:117`](../src/grades/p2/p2d.js#L117) |
-| `Q.dvPic` | `{ n, d, e, what, box, unit, mode }` | [`grades/p2/p2d.js:99`](../src/grades/p2/p2d.js#L99) |
-| `Q.dvPop` | `{ facts }` | [`grades/p2/p2d.js:124`](../src/grades/p2/p2d.js#L124) |
-| `Q.dvRem` | `{ n, d, e }` | [`grades/p2/p2d.js:135`](../src/grades/p2/p2d.js#L135) |
-| `Q.dvStory` | `{ text, n, d, unit, unit2, fig }` | [`grades/p2/p2d.js:152`](../src/grades/p2/p2d.js#L152) |
-| `Q.dvUnk` | `{ a, b, c, pos }` | [`grades/p2/p2d.js:146`](../src/grades/p2/p2d.js#L146) |
+| `Q.dvCmp` | `{ l, r }` | [`grades/p2/p2d.js:141`](../src/grades/p2/p2d.js#L141) |
+| `Q.dvCtr` | `{ n, d }` | [`grades/p2/p2d.js:106`](../src/grades/p2/p2d.js#L106) |
+| `Q.dvFact` | `{ n, d }` | [`grades/p2/p2d.js:111`](../src/grades/p2/p2d.js#L111) |
+| `Q.dvFam` | `{ a, b }` | [`grades/p2/p2d.js:118`](../src/grades/p2/p2d.js#L118) |
+| `Q.dvPic` | `{ n, d, e, what, box, unit, mode }` | [`grades/p2/p2d.js:100`](../src/grades/p2/p2d.js#L100) |
+| `Q.dvPop` | `{ facts }` | [`grades/p2/p2d.js:125`](../src/grades/p2/p2d.js#L125) |
+| `Q.dvRem` | `{ n, d, e }` | [`grades/p2/p2d.js:136`](../src/grades/p2/p2d.js#L136) |
+| `Q.dvStory` | `{ text, n, d, unit, unit2, fig }` | [`grades/p2/p2d.js:153`](../src/grades/p2/p2d.js#L153) |
+| `Q.dvUnk` | `{ a, b, c, pos }` | [`grades/p2/p2d.js:147`](../src/grades/p2/p2d.js#L147) |
 | `Q.e4Col` | `{ a, b, op }` | [`grades/p4/p4e.js:100`](../src/grades/p4/p4e.js#L100) |
 | `Q.e4Exp` | `{ s }` | [`grades/p4/p4e.js:129`](../src/grades/p4/p4e.js#L129) |
 | `Q.e4Frac` | `{ s }` | [`grades/p4/p4e.js:116`](../src/grades/p4/p4e.js#L116) |

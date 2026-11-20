@@ -3688,3 +3688,15 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .d3stq .t6-q.p4-q.d3wq{gap:clamp(16px,4cqw,48px)}
 .d3stq .storybox{font-size:clamp(17px,2.3cqw,22px);line-height:1.55;padding:8px 16px}
 .d3stq > .p4steplab{font-size:clamp(15px,1.9cqw,18px)}
+
+/* ---------- v136: เครื่องหมายหารยาว/หารสั้นแบบที่เขียนจริง ----------
+   หารยาว ⟌ : วงเล็บโค้ง “)” หน้าตัวตั้ง ปลายบนต่อกับเส้นเหนือตัวตั้ง · หารสั้น : “)” หน้าตัวตั้ง ปลายล่างต่อกับเส้นใต้ตัวตั้ง */
+.ldiv .ld-c.dv{border-right:none;border-radius:0;padding-right:.55em;overflow:visible}
+.ldiv .ld-c.dv::after{content:'';position:absolute;right:0;top:0;width:.42em;height:calc(100% + .14em);box-sizing:border-box;border-top:3px solid var(--ink);border-right:3px solid var(--ink);border-radius:0 100% 100% 0 / 0 50% 50% 0}
+.p4sd .dv{position:relative;padding-right:.6em}
+.p4sd .dv::after{content:'';position:absolute;right:.04em;bottom:.02em;width:.34em;height:1.2em;box-sizing:border-box;border-right:3px solid var(--ink);border-radius:0 100% 100% 0 / 0 50% 50% 0}
+.p4sd .dv::before{content:'';position:absolute;right:-.02em;bottom:0;width:.4em;border-bottom:3px solid var(--ink)}
+.keypad.d3demo{pointer-events:none}
+.keypad .btn.d3key{background:#FFE58A;transform:scale(.92);box-shadow:inset 0 0 0 3px #E3A21C}
+.d3ans .btn.d3nx{min-width:180px}
+.ql-grid .p4sd.d3sd,.d3wq .p4sd.d3sd{font-size:clamp(34px,4.6cqw,50px)}

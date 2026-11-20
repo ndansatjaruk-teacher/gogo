@@ -25,14 +25,15 @@ function duoInput(ctx, want, U, o = {}) {
   const paint = () => slots.forEach((s, i) => { s.textContent = val[i] === '' ? '?' : fmt(+val[i]); s.classList.toggle('on', i === cur && !done); s.classList.toggle('filled', val[i] !== ''); });
   const type = d => { if (done) return; sfx.tap(); msg.textContent = ''; val[cur] = (val[cur] + d).slice(-Math.max(3, String(want[cur]).length + 1, 7)).replace(/^0+(\d)/, '$1'); paint(); };
   const ok = () => { if (done) return;
-    if (val[cur] === '') { msg.textContent = `กดจำนวน${U[cur]} (ถ้าไม่มีให้กด 0)`; return; }
-    const other = 1 - cur; if (val[other] === '') { cur = other; paint(); msg.textContent = `ต่อไปกด${U[cur]} (ถ้าไม่มีให้กด 0)`; return; }
+    const nm = i => (o.names && o.names[i]) || U[i]; /* v136: ชื่อช่องในข้อความเตือน */
+    if (val[cur] === '') { msg.textContent = `กดจำนวน${nm(cur)} (ถ้าไม่มีให้กด 0)`; return; }
+    const other = 1 - cur; if (val[other] === '') { cur = other; paint(); msg.textContent = `ต่อไปกด${nm(cur)} (ถ้าไม่มีให้กด 0)`; return; }
     const good = +val[0] === want[0] && +val[1] === want[1]; if (good) { done = true; wrap.classList.add('done'); }
     ctx.check(good, o.hint); if (!good) { val[0] = val[1] = ''; cur = 0; paint(); } };
   const kp = h('div', { class: 'keypad' });
   [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: () => type(d) }, d)));
   kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: () => { sfx.tap(); val[cur] = val[cur].slice(0, -1); paint(); } }, icon('left')), h('button', { class: 'btn', onclick: () => type(0) }, '0'), h('button', { class: 'btn primary', 'aria-label': 'ส่งคำตอบ', onclick: ok }, icon('check')));
-  const wrap = h('div', { class: 'ans mc-ans ia' }, h('div', { class: 'mc-row' }, o.pre === '' ? null : h('span', { class: 'mc-u' }, o.pre || 'ได้'), slots[0], h('span', { class: 'mc-u' }, U[0]), slots[1], h('span', { class: 'mc-u' }, U[1])), kp, msg);
+  const wrap = h('div', { class: 'ans mc-ans ia' }, h('div', { class: 'mc-row' }, o.pre === '' ? null : h('span', { class: 'mc-u' }, o.pre || 'ได้'), slots[0], U[0] ? h('span', { class: 'mc-u' }, U[0]) : null, o.mid ? h('span', { class: 'mc-u mc-mid' }, o.mid) : null, slots[1], U[1] ? h('span', { class: 'mc-u' }, U[1]) : null), kp, msg); /* v136: o.mid = คำระหว่างสองช่อง (ได้ __ เศษ __) */
   wrap.reveal = () => { val[0] = String(want[0]); val[1] = String(want[1]); done = true; paint(); wrap.classList.add('done', 'revealed'); }; wrap.ansText = want.map(String);
   paint(); return wrap;
 }
@@ -135,7 +136,7 @@ Object.assign(Q, {
   dvRem({ n, d, e }) { const q = Math.floor(n / d), r = n % d;
     return { prompt: `${n} ÷ ${d} ได้เท่าไร เศษเท่าไร`, say: `${n} หารด้วย ${d} ได้เท่าไร เศษเท่าไร`, mount(bd, ctx) {
       bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'colstack' }, h('div', { class: 'fbig p4big', html: `${n} <span class="fop">÷</span> ${d}` }), n <= 40 ? h('div', { class: 'p4-fig', html: dvLeft(n, d, e || 'cookie', { box: 'bag', size: 12 }) }) : null),
-        duoInput(ctx, [q, r], ['', 'เศษ'], { pre: 'ได้', hint: `${d} × ${q} = ${d * q} ใกล้ ${n} ที่สุดแต่ไม่เกิน → เหลือ ${n} − ${d * q}` }))); } };
+        duoInput(ctx, [q, r], ['', ''], { pre: 'ได้', mid: 'เศษ', names: ['ผลหาร', 'เศษ'], hint: `${d} × ${q} = ${d * q} ใกล้ ${n} ที่สุดแต่ไม่เกิน → เหลือ ${n} − ${d * q}` }))); } };
   },
   dvCmp({ l, r }) { const L = l[0] / l[1], R = r[0] / r[1], sym = L > R ? '>' : L < R ? '<' : '=';
     return { prompt: 'เติมเครื่องหมาย > < หรือ =', say: `${l[0]} หาร ${l[1]} กับ ${r[0]} หาร ${r[1]} เติมเครื่องหมาย`, mount(bd, ctx) { const blank = h('span', { class: 'blank' }, '?');
@@ -152,7 +153,7 @@ Object.assign(Q, {
   dvStory({ text, n, d, unit, unit2, fig }) { const q = Math.floor(n / d), r = n % d;
     return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วหาคำตอบ', say: text, mount(bd, ctx) {
       bd.append(h('div', { class: 't6-q p4-q p2q p2st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text }), fig ? h('div', { html: fig }) : null),
-        mtTwoStep(ctx, dvOpts(n, d), `${fmt(n)} ÷ ${d}`, 'แบ่งเท่า ๆ กัน → หาร', () => r ? duoInput(ctx, [q, r], [unit, `เหลือ (${unit2 || unit})`], { pre: 'ได้', hint: `${d} × ${q} = ${d * q} → เหลือ ${n - d * q}` })
+        mtTwoStep(ctx, dvOpts(n, d), `${fmt(n)} ÷ ${d}`, 'แบ่งเท่า ๆ กัน → หาร', () => r ? duoInput(ctx, [q, r], [unit, unit2 || unit], { pre: 'ได้', mid: 'เหลือ', names: [unit, `ที่เหลือ`], hint: `${d} × ${q} = ${d * q} → เหลือ ${n - d * q}` })
           : h('div', { class: 'rowstack' }, answerBox(ctx, String(q), { hint: `${d} × อะไร = ${n}` }), h('span', { class: 'cap', style: { fontSize: '20px' } }, unit))))); } };
   }
 });
