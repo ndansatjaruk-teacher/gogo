@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-394 types
+395 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -49,6 +49,7 @@
 | `Q.d3Short` | `{ D, k, guide }` | [`grades/p3/p3d.js:136`](../src/grades/p3/p3d.js#L136) |
 | `Q.d3Story` | `{ text, n, d, unit, unit2 }` | [`grades/p3/p3d.js:139`](../src/grades/p3/p3d.js#L139) |
 | `Q.d3Unk` | `{ a, b, c, pos }` | [`grades/p3/p3d.js:150`](../src/grades/p3/p3d.js#L150) |
+| `Q.d5Work` | `{ expr, mode = 'col' }` | [`grades/p5/p5d.js:458`](../src/grades/p5/p5d.js#L458) |
 | `Q.d6Div` | `{ expr, mode = 'long' }` | [`grades/p6/p6d.js:110`](../src/grades/p6/p6d.js#L110) |
 | `Q.d6ToFrac` | `{ x }` | [`grades/p6/p6d.js:98`](../src/grades/p6/p6d.js#L98) |
 | `Q.dCalc` | `{ expr, hint }` | [`grades/p5/p5d.js:108`](../src/grades/p5/p5d.js#L108) |
