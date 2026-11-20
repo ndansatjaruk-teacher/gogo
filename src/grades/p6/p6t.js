@@ -157,14 +157,16 @@ function t6ConSteps(kind, v) { const W = 420, H = 250, k = Math.min(45, 330 / v[
 Object.assign(Q, {
   t6Con({ kind, v }) { const txt = kind === 'SSS' ? `BC = ${v[0]} ซม. CA = ${v[1]} ซม. AB = ${v[2]} ซม.` : kind === 'SAS' ? `BC = ${v[0]} ซม. ∠B = ${v[1]}° AB = ${v[2]} ซม.` : `BC = ${v[0]} ซม. ∠B = ${v[1]}° ∠C = ${v[2]}°`;
     return { prompt: `สร้าง △ABC ที่ ${txt} — แตะขั้นตอนตามลำดับ`, say: `สร้างรูปสามเหลี่ยม เอ บี ซี แตะขั้นตอนตามลำดับ`, __sig: `t6con ${kind} ${v}`, mount(bd, ctx) {
-      const { S, W, H } = t6ConSteps(kind, v); let kk = 0; const fig = h('div', { class: 't6-board' }), done = h('div', { class: 'colstack fstory t6cdone' }), cards = h('div', { class: 'colstack t6ccards ia' });
+      const { S, W, H } = t6ConSteps(kind, v); conSeqMount(bd, ctx, S, W, H); } }; }
+});
+/* กระดานสร้างทีละขั้น (ใช้ร่วม: สร้างรูปสามเหลี่ยม วงกลม) — S = [[ข้อความขั้นตอน, SVG ที่วาดเพิ่ม], …] */
+function conSeqMount(bd, ctx, S, W, H) { { let kk = 0; const fig = h('div', { class: 't6-board' }), done = h('div', { class: 'colstack fstory t6cdone' }), cards = h('div', { class: 'colstack t6ccards ia' });
       const draw = () => { fig.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="t6-svg" aria-hidden="true">${S.slice(0, kk).map(x => x[1]).join('')}</svg>`; };
       shuffle(S.map((x, i) => i)).forEach(i => cards.append(h('button', { class: 'btn t6cbtn', onclick: e => { e.stopPropagation(); const b = e.currentTarget; if (b.disabled) return;
         if (i !== kk) return ctx.check(false, kk === 0 ? 'ขั้นแรกต้องลากฐานก่อน' : `ยังไม่ถึงขั้นนี้ — ต่อจาก “${S[kk - 1][0]}” ต้องทำอะไร`);
         b.disabled = true; b.remove(); kk++; done.append(h('div', { class: 'fst-row' }, h('b', null, `${['①', '②', '③', '④'][kk - 1]}`), h('span', null, S[i][0]))); draw(); sfx.pop(kk + 2); if (kk === S.length) ctx.check(true); } }, S[i][0])));
       ctx.onRight = () => { kk = S.length; draw(); cards.innerHTML = ''; done.innerHTML = ''; S.forEach((x, j) => done.append(h('div', { class: 'fst-row' }, h('b', null, ['①', '②', '③', '④'][j]), h('span', null, x[0])))); };
-      draw(); bd.append(h('div', { class: 'gside' }, fig, h('div', { class: 'colstack gside-r' }, done, cards))); } }; }
-});
+      draw(); bd.append(h('div', { class: 'gside' }, fig, h('div', { class: 'colstack gside-r' }, done, cards))); } }
 /* step-by-step construction pictures */
 function simConstruct(kind) {
   const W = 420, H = 250, B = [70, 205], C = [70 + 6 * 45, 205], k = 45, r = Math.PI / 180;

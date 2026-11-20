@@ -20,7 +20,8 @@ const p4isOp = t => /^[+−×÷]$/.test(t);
 /* v157: โหมดเศษส่วน (ป.6 ระคน) — โทเค็นเป็นข้อความ "1 1/2" · ค่าเป็นจำนวนตรรกยะ (p5 rAdd…) */
 const P4NUM = { v: t => +t, op: (o, a, b) => P4OPF[o](a, b), s: v => String(v), html: t => fmt(+t), vh: v => fmt(v) };
 const P4FRN = { v: t => litR(litParse(t).lit), op: (o, a, b) => o === '+' ? rAdd(a, b) : o === '−' ? rSub(a, b) : o === '×' ? rMul(a, b) : rDiv(a, b), s: r => rText(r), html: t => litHTML(litParse(t).lit), vh: r => rHTML(r) };
-const P4DEC = { ...P4FRN, s: r => decStr(r), vh: r => dH(r) }; /* v158: ทศนิยม (ป.6) — คิดเป็นจำนวนตรรกยะ แสดงเป็นทศนิยม */
+const p4term = r => { let d = r.d; while (d % 2 === 0) d /= 2; while (d % 5 === 0) d /= 5; return d === 1; };
+const P4DEC = { ...P4FRN, s: r => p4term(r) ? decStr(r) : rText(r), vh: r => p4term(r) ? dH(r) : rHTML(r) }; /* ผลที่เป็นทศนิยมไม่รู้จบเก็บเป็นเศษส่วน (ไม่ปัด) */ /* v158: ทศนิยม (ป.6) — คิดเป็นจำนวนตรรกยะ แสดงเป็นทศนิยม */
 const p4tokF = e => exprTokens(e).map(k => k.lit ? tokSrc([k]) : k.op);
 function p4nextOps(T, F = P4NUM) {
   const G = []; for (let i = 0; i < T.length; i++) if (T[i] === '(') { let j = i + 1; while (T[j] !== ')' && T[j] !== '(') j++; if (T[j] === ')') G.push([i + 1, j - 1]); }
@@ -32,6 +33,7 @@ function p4nextOps(T, F = P4NUM) {
   return { N: out, G }; }
 function p4stepBox(ctx, expr, o = {}) {
   const F = o.dec ? P4DEC : o.frac ? P4FRN : P4NUM, nx = () => p4nextOps(T, F); let T = o.frac || o.dec ? p4tokF(expr) : p4tok(expr), k = 0, pick = null, done = false;
+  let swapped = false; if (o.dec && T.filter(p4isOp).every(t => t === '×') && T.some(t => t.includes('/')) && T.every(t => t !== '(')) { const n = T.filter(t => !p4isOp(t)), R = [...n.filter(t => !t.includes('/')), ...n.filter(t => t.includes('/'))]; if (R.join() !== n.join()) { T = R.flatMap((t, i) => i ? ['×', t] : [t]); swapped = true; } } /* v161: คูณล้วน → สลับที่ให้เศษส่วน (เช่น 22/7) อยู่ท้าย จะได้ไม่มีทศนิยมไม่รู้จบ */
   const line = h('div', { class: 'fbig p4sline one-line' }), log = h('div', { class: 'colstack fsteps p4slog' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'p4sslot' });
   const draw = () => { line.innerHTML = ''; line.classList.toggle('lock', !!pick || done);
     T.forEach((t, i) => { if (p4isOp(t)) line.append(h('button', { class: 'fop p4sop' + (pick && pick.ops.includes(i) ? ' on' : ''), onclick: e => { e.stopPropagation(); tap(i); } }, t));
@@ -45,12 +47,12 @@ function p4stepBox(ctx, expr, o = {}) {
     if (T.length === 1) { done = true; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${F.html(T[0])}</b>`; return; }
     const { N } = nx(), nOps = T.filter(p4isOp).length;
     if (nOps === 1 || (N.length === 1 && N[0].ops.length === nOps)) return choose(N[0], true);
-    lab.innerHTML = `ขั้นที่ ${k + 1}: แตะ<b>เครื่องหมาย</b>ที่ต้องคิดก่อน`; };
+    lab.innerHTML = `ขั้นที่ ${k + 1}: แตะ<b>เครื่องหมาย</b>ที่ต้องคิดก่อน${swapped && !k ? ' <small>(คูณสลับที่ได้ — ย้ายเศษส่วนไว้ท้าย)</small>' : ''}`; };
   const choose = (P, auto) => { pick = P; draw(); const last = T.length === P.hi - P.lo + 1;
     lab.innerHTML = `ขั้นที่ ${k + 1}: ${exprHTML(P.part)} = ?`;
     const sub = last ? ctx : { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); k++; sfx.pop(Math.min(8, k + 2)); addLog(P); apply(P); ask(); }, say: ctx.say };
     const hint = o.frac ? (P.ops.length > 1 ? 'ทำตัวส่วนให้เท่ากัน แล้วรวมทุกจำนวนในวงเล็บ' : /[+−]/.test(T[P.ops[0]]) ? 'ทำตัวส่วนให้เท่ากัน (ใช้ ค.ร.น.) แล้วบวก/ลบตัวเศษ' : T[P.ops[0]] === '×' ? 'เปลี่ยนจำนวนคละเป็นเศษเกิน แล้วเศษคูณเศษ ส่วนคูณส่วน' : 'หารด้วยเศษส่วน = คูณด้วยส่วนกลับของตัวหาร') : null;
-    slot.append(o.dec ? decAnswer(sub, P.val, { hint: /[×÷]/.test(T[P.ops[0]]) ? (T[P.ops[0]] === '×' ? 'คูณแบบจำนวนนับ แล้วนับตำแหน่งทศนิยมรวมของตัวตั้งและตัวคูณ' : 'ทำตัวหารให้เป็นจำนวนนับ (เลื่อนจุดทั้งสองจำนวนเท่ากัน) แล้วหาร') : 'ตั้งให้จุดตรงกัน แล้วบวก/ลบ' }) : o.frac ? numOrFrac(sub, P.val, hint) : answerBox(sub, String(P.val), { hint: P.ops.length > 1 ? `รวมทุกจำนวนในวงเล็บ` : /[×÷]/.test(P.part) && P.val > 999 ? `ตั้ง${P.part.includes('×') ? 'คูณ' : 'หาร'} ${exprHTML(P.part)} ในกระดาษทด` : `คิด ${exprHTML(P.part)}` }));
+    slot.append(o.dec && !p4term(P.val) ? numOrFrac(sub, P.val, 'คิดเป็นเศษส่วน (ตัดทอนก่อนคูณได้)') : o.dec ? decAnswer(sub, P.val, { hint: /[×÷]/.test(T[P.ops[0]]) ? (T[P.ops[0]] === '×' ? 'คูณแบบจำนวนนับ แล้วนับตำแหน่งทศนิยมรวมของตัวตั้งและตัวคูณ' : 'ทำตัวหารให้เป็นจำนวนนับ (เลื่อนจุดทั้งสองจำนวนเท่ากัน) แล้วหาร') : 'ตั้งให้จุดตรงกัน แล้วบวก/ลบ' }) : o.frac ? numOrFrac(sub, P.val, hint) : answerBox(sub, String(P.val), { hint: P.ops.length > 1 ? `รวมทุกจำนวนในวงเล็บ` : /[×÷]/.test(P.part) && P.val > 999 ? `ตั้ง${P.part.includes('×') ? 'คูณ' : 'หาร'} ${exprHTML(P.part)} ในกระดาษทด` : `คิด ${exprHTML(P.part)}` }));
     if (last) { const r = ctx.onRight; ctx.onRight = () => { if (!done) { k++; addLog(P); apply(P); ask(); } r && r(); }; }
     if (!auto && ctx.say && k === 0) ctx.say('ใช่แล้ว! คิดส่วนนี้ก่อน'); };
   function tap(i) { if (pick || done) return; const { N, G } = nx(), P = N.find(x => x.ops.includes(i)); if (P) { sfx.tap(); return choose(P); }

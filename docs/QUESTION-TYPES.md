@@ -103,7 +103,7 @@
 | `Q.f4ToImp` | `{ w, n, d }` | [`grades/p4/p4f.js:65`](../src/grades/p4/p4f.js#L65) |
 | `Q.f4ToMix` | `{ n, d }` | [`grades/p4/p4f.js:67`](../src/grades/p4/p4f.js#L67) |
 | `Q.f6Mix` | `{ f }` | [`grades/p6/p6f.js:122`](../src/grades/p6/p6f.js#L122) |
-| `Q.f6Steps` | `{ expr }` | [`grades/p4/p4o.js:73`](../src/grades/p4/p4o.js#L73) |
+| `Q.f6Steps` | `{ expr }` | [`grades/p4/p4o.js:75`](../src/grades/p4/p4o.js#L75) |
 | `Q.family` | `{ a, b }` | [`engine/questions.js:447`](../src/engine/questions.js#L447) |
 | `Q.fCalc` | `{ expr, vis, hint }` | [`grades/p5/p5.js:190`](../src/grades/p5/p5.js#L190) |
 | `Q.fCmp` | `{ a, b, bars = false, hint }` | [`grades/p5/p5.js:163`](../src/grades/p5/p5.js#L163) |
@@ -234,9 +234,9 @@
 | `Q.p4Num` | `{ fig, q, a, hint, say: sy, unit = '' }` | [`grades/p4/p4n.js:158`](../src/grades/p4/p4n.js#L158) |
 | `Q.p4Pick` | `{ fig, q, opts, right, hint, say: sy, keep }` | [`grades/p4/p4n.js:154`](../src/grades/p4/p4n.js#L154) |
 | `Q.p4Seq` | `{ text, cards }` | [`grades/p4/p4b.js:221`](../src/grades/p4/p4b.js#L221) |
-| `Q.p4Steps` | `{ expr }` | [`grades/p4/p4o.js:63`](../src/grades/p4/p4o.js#L63) |
+| `Q.p4Steps` | `{ expr }` | [`grades/p4/p4o.js:65`](../src/grades/p4/p4o.js#L65) |
 | `Q.p4StM` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p4/p4m.js:287`](../src/grades/p4/p4m.js#L287) |
-| `Q.p4Story2` | `{ text, expr, wrong = [], unit = '', frac = false, dec = false }` | [`grades/p4/p4o.js:65`](../src/grades/p4/p4o.js#L65) |
+| `Q.p4Story2` | `{ text, expr, wrong = [], unit = '', frac = false, dec = false }` | [`grades/p4/p4o.js:67`](../src/grades/p4/p4o.js#L67) |
 | `Q.p4UnkM` | `st` | [`grades/p4/p4m.js:282`](../src/grades/p4/p4m.js#L282) |
 | `Q.p6Fig` | `{ fig, q, opts, right, hint, say: sy }` | [`grades/p6/p6p.js:96`](../src/grades/p6/p6p.js#L96) |
 | `Q.p6Num` | `{ q, a, unit = '', hint }` | [`grades/p6/p6p.js:93`](../src/grades/p6/p6p.js#L93) |
@@ -339,11 +339,11 @@
 | `Q.t4Tab` | `{ T, q, opts, right, hint }` | [`grades/p4/p4t.js:100`](../src/grades/p4/p4t.js#L100) |
 | `Q.t4TabDur` | `{ T, i }` | [`grades/p4/p4t.js:101`](../src/grades/p4/p4t.js#L101) |
 | `Q.t4YM` | `{ text, a, b }` | [`grades/p4/p4t.js:88`](../src/grades/p4/p4t.js#L88) |
-| `Q.t6Cls` | `{ B, C, by }` | [`grades/p6/p6t.js:233`](../src/grades/p6/p6t.js#L233) |
+| `Q.t6Cls` | `{ B, C, by }` | [`grades/p6/p6t.js:235`](../src/grades/p6/p6t.js#L235) |
 | `Q.t6Con` | `{ kind, v }` | [`grades/p6/p6t.js:158`](../src/grades/p6/p6t.js#L158) |
-| `Q.t6Find` | `{ B, C, ask = 0, names = ['ก', 'ข', 'ค'] }` | [`grades/p6/p6t.js:249`](../src/grades/p6/p6t.js#L249) |
-| `Q.t6Num` | `{ fig, q, a, unit, hint }` | [`grades/p6/p6t.js:255`](../src/grades/p6/p6t.js#L255) |
-| `Q.t6Part` | `{ B, C, base, ask }` | [`grades/p6/p6t.js:240`](../src/grades/p6/p6t.js#L240) |
+| `Q.t6Find` | `{ B, C, ask = 0, names = ['ก', 'ข', 'ค'] }` | [`grades/p6/p6t.js:251`](../src/grades/p6/p6t.js#L251) |
+| `Q.t6Num` | `{ fig, q, a, unit, hint }` | [`grades/p6/p6t.js:257`](../src/grades/p6/p6t.js#L257) |
+| `Q.t6Part` | `{ B, C, base, ask }` | [`grades/p6/p6t.js:242`](../src/grades/p6/p6t.js#L242) |
 | `Q.tallerWord` | `{ a, b }` | [`engine/questions.js:1266`](../src/engine/questions.js#L1266) |
 | `Q.tallyMake` | `{ n, label }` | [`engine/questions.js:946`](../src/engine/questions.js#L946) |
 | `Q.tallyRead` | `{ n, label }` | [`engine/questions.js:942`](../src/engine/questions.js#L942) |
