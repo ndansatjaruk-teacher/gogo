@@ -20590,7 +20590,16 @@ Object.assign(Q, {
     return { prompt: q, say: 'แต่งโจทย์ปัญหาจากประโยคสัญลักษณ์ เลือกคำให้ครบทุกช่อง', mount(bd, ctx) { const B = x3makeBoard(parts);
       bd.append(h('div', { class: 'colstack' }, h('div', { html: p4big(`<b class="num">${x3e(s)} = □</b>`) }), B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.inc) return x3inc(B, ctx, r.why); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; }
 });
-const x3calcQ = e => Q.s2two({ expr: e });
+/* v177: ระคน ป.3 ทีละขั้น — แต่ละขั้นทำบนกระดาน (ตั้งบวก/ลบ/คูณ · หารยาวเมื่อตัวหารหลักเดียว) แทนการพิมพ์ผลลัพธ์อย่างเดียว */
+function x3stepWork(ctx, expr, o = {}) { const st = exprStep(expr), lab = h('div', { class: 'p4steplab' }), line = h('div', { class: 'fbig s2line one-line', html: exprHTML(expr) }), slot = h('div', { class: 'x3ws' });
+  const board = (e, c) => { const m = e.replace(/,/g, '').match(/^(\d+) ([+−×÷]) (\d+)$/); if (!m) return answerBox(c, String(s2v(e)), {}); const a = +m[1], op = m[2], b = +m[3];
+    if (op === '÷') return b <= 9 ? d3Work(a, b, c, o.compact ? { short: true } : {}) : answerBox(c, String(a / b), { hint: `${fmt(b)} × อะไร = ${fmt(a)}` });
+    const w = h('div', { class: 'k3stcol' }); Q.colW({ nums: op === '×' && b > a ? [b, a] : [a, b], op }).mount(w, c); return w; };
+  const step2 = () => { sfx.pop(4); lab.innerHTML = `ขั้นที่ 2: ${exprHTML(st.src)}`; line.innerHTML = `${exprHTML(expr).replace(exprHTML(st.part), `<span class="s2hl">${fmt(s2v(st.part))}</span>`)}`; slot.replaceChildren(board(st.src, ctx)); ctx.say && ctx.say('ขั้นที่ 1 ถูกแล้ว ทำขั้นที่ 2 ต่อ'); };
+  const sub = { check: (ok, hn) => ok ? step2() : ctx.check(false, hn), say: t => ctx.say && ctx.say(t) };
+  lab.innerHTML = `ขั้นที่ 1: คำนวณ<b>ในวงเล็บ</b> ${exprHTML(st.part)}`; line.innerHTML = exprHTML(expr).replace(exprHTML(st.part), `<span class="s2hl">${exprHTML(st.part)}</span>`); slot.append(board(st.part, sub));
+  return h('div', { class: 'colstack p2q x3wk' }, o.compact ? null : line, lab, slot); } /* compact (ในโจทย์ปัญหา): ไม่ซ้ำประโยค · หารสั้นให้พอดีจอ */
+const x3calcQ = e => ({ prompt: `หาผลลัพธ์ ${exprHTML(e)}`, say: `หาผลลัพธ์ ${speakText(e)}`, __sig: 'x3c ' + e, mount(bd, ctx) { bd.append(x3stepWork(ctx, e)); } });
 const x3pickQ = (text, good, res) => { const opts = [good, ...s2wrong(good)].slice(0, 3).map(x => `${x3e(x)} = ${fmt(res)}`);
   return Q.p4Pick({ fig: `<div class="storybox">${text}</div>`, q: 'ข้อใดเป็นประโยคสัญลักษณ์ของสถานการณ์นี้', say: `${text.replace(/<[^>]+>/g, '')} ข้อใดเป็นประโยคสัญลักษณ์ของสถานการณ์นี้`, opts, right: opts[0], hint: 'เรื่องที่เกิดก่อนใส่ในวงเล็บ แล้วจึงทำขั้นที่สอง' }); };
 
@@ -20600,7 +20609,7 @@ Object.assign(Q, {
     return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: text.replace(/<[^>]+>/g, ''), mount(bd, ctx) {
       const lab = h('div', { class: 'p4steplab', html: '① เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' });
       const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดในวงเล็บก่อน'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · คำตอบมีหน่วยเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = '';
-        slot.append(s2twoBox(ctx, expr)); } };
+        slot.append(x3stepWork(ctx, expr, { compact: true })); } }; /* v177 */
       const ch = choices(sub, opts.map(o => ({ value: o, label: exprHTML(o) })), expr, { hint: 'เรื่องที่ต้องรู้ก่อนอยู่ในวงเล็บ · รวม/เพิ่ม → บวก · เหลือ → ลบ · หลายกลุ่มเท่ากัน → คูณ · แบ่งเท่า ๆ กัน → หาร' });
       ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); slot.append(ch);
       bd.append(h('div', { class: 'colstack x3st' }, h('div', { class: 'storybox', html: text }), lab, slot)); } }; }
@@ -20635,7 +20644,7 @@ const X3W_SIT = [X3B('ร้านอบขนมปังได้ 20 ถาด
   X3B('แผงผลไม้มีส้มเขียวหวาน 349 ลูก และส้มโอ 735 ลูก นำส้มโอไปทำยำ 100 ลูก แผงเหลือผลไม้ 984 ลูก', [349, 735, 100], 984, '(349 + 735) − 100'),
   X3B('ร้านจ่ายค่าเช่าที่ 10,100 บาท ซึ่งมากกว่าค่าน้ำค่าไฟ 1,160 บาท ร้านจ่ายสองรายการรวม 19,040 บาท', [10100, 10100, 1160], 19040, '10100 + (10100 − 1160)')]; // 
 const X3W_ST1 = [S2D('ห้องสมุดได้สมุดบริจาค 5 โหล (โหลละ 12 เล่ม) ครูซื้อเพิ่มให้อีก 70 เล่ม ห้องสมุดมีสมุดรวมกี่เล่ม', '(5 × 12) + 70', 'เล่ม'),
-  S2D('ป้าเก็บพริกได้ 416 เม็ด ใส่ถุง ถุงละ 4 เม็ด ขายถุงละ 29 บาท ป้าจะได้เงินรวมกี่บาท', '(416 ÷ 4) × 29', 'บาท'),
+  S2D('ป้าเก็บมะนาวได้ 416 ลูก ใส่ถุง ถุงละ 4 ลูก ขายถุงละ 29 บาท ป้าจะได้เงินรวมกี่บาท', '(416 ÷ 4) × 29', 'บาท'),
   S2D('สวนของยายเก็บเงาะได้ 63 กิโลกรัม ซึ่งมากกว่าลองกอง 19 กิโลกรัม ยายใส่ลองกองในถุง ถุงละ 2 กิโลกรัม จะได้ลองกองกี่ถุง', '(63 − 19) ÷ 2', 'ถุง'),
   S2D('น้ามีเงิน 22,500 บาท ไปกินอาหารญี่ปุ่นจานละ 300 บาท รวม 10 จาน น้าเหลือเงินเท่าไร', '22500 − (300 × 10)', 'บาท'),
   S2D('ฟาร์มเก็บไข่ได้ 1,250 ฟอง ไข่แตก 50 ฟอง ที่เหลือบรรจุแผง แผงละ 30 ฟอง ได้ไข่กี่แผง', '(1250 − 50) ÷ 30', 'แผง'),
@@ -20711,7 +20720,7 @@ const LESSONS_P3C13 = [
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', 'แม่ซื้อไข่ 4 แผง แผงละ 30 ฟอง ทำขนมไป 45 ฟอง เหลือไข่กี่ฟอง', s2eggs(4, 6, 'egg')], ['① ไข่ทั้งหมด', '4 × 30 = 120 ฟอง', p4pwSVG({ w: 120, p1: 45, p2: 75, unk: '2', l1: 'ทำขนม', l2: 'เหลือ', lw: 'ไข่ทั้งหมด' })], ['② เหลือ', '120 − 45 = 75 ฟอง', lbig('(4 × 30) − 45 = 75')]], 'ตอบ <b>75 ฟอง</b>'),
      T('อ่านโจทย์ แล้ว<b>เลือกประโยคสัญลักษณ์ทีละขั้น</b>', 'อ่านโจทย์ แล้วเลือกประโยคสัญลักษณ์ทีละขั้น', p4story('ชาวสวนเก็บมะพร้าว <b>540</b> ลูก แบ่งใส่เข่ง เข่งละ <b>9</b> ลูก ขายเข่งละ <b>120</b> บาท จะได้เงินกี่บาท', s2eggs(3, 3, 'coconut'),
        [{ q: 'ได้มะพร้าวกี่เข่ง', opts: ['540 ÷ 9', '540 × 9'], right: '540 ÷ 9', lab: 'จำนวนเข่ง', unit: 'เข่ง', why: 'แบ่งเข่งละ 9 ลูก → หาร' }, { q: 'ขายเข่งละ 120 บาท ได้เงินเท่าไร', opts: ['60 × 120', '60 + 120'], right: '60 × 120', lab: 'เงิน', unit: 'บาท', why: 'หลายเข่ง ราคาเท่ากัน → คูณ' }], 'ประโยคสัญลักษณ์ <b>(540 ÷ 9) × 120 = 7,200</b> · ตอบ 7,200 บาท'))],
-    () => { const S = pkF(X3W_ST1, 4); return [...S.map(o => Q.x3Story(o)), ...pkF(X3W_ST1, 3).map(x3firstQ), Q.p4Seq({ text: X3_SOL[0].text, cards: P4_SOLVE(X3_SOL[0]) })]; }), /* v142: เลือกประโยค → คิดทีละขั้น · ขั้นแรกหาอะไร · เรียงวิธีทำ */
+    () => { const S = pkF(X3W_ST1, 7); return [...S.slice(0, 4).map(o => Q.x3Story(o)), ...S.slice(4).map(x3firstQ), /* v177: ไม่ให้โจทย์เดียวกันมาสองแบบ */ Q.p4Seq({ text: X3_SOL[0].text, cards: P4_SOLVE(X3_SOL[0]) })]; }), /* v142: เลือกประโยค → คิดทีละขั้น · ขั้นแรกหาอะไร · เรียงวิธีทำ */
   L3X(5, 'ป่าโจทย์เปรียบเทียบ', 'โจทย์ปัญหาการบวก การลบ การคูณ และการหาร 2 ขั้นตอน (2)', 'โจทย์ 2 ขั้นตอน (2)', 'แก้โจทย์ปัญหา 2 ขั้นตอน ที่มีการเปรียบเทียบ และการแบ่ง',
     [...learnStep('โจทย์ที่มีคำว่า <b>มากกว่า · น้อยกว่า</b>', 'โจทย์ที่มีคำว่า มากกว่า น้อยกว่า', [
       { fig: p4cmpSVG({ big: 899, small: 549, unk: 'small', nb: 'เสื้อ', ns: 'กระโปรง' }), name: 'ถูกกว่า/น้อยกว่า → หาอีกจำนวนก่อน', text: 'ขั้นที่ 1: 899 − 350 = 549' },
@@ -20719,7 +20728,7 @@ const LESSONS_P3C13 = [
       { fig: lbig('(43,907 − 5,069) ÷ 2'), name: 'เหลือแล้วแบ่ง', text: 'หาเงินที่เหลือก่อน แล้วจึงหาร' }], 'หาจำนวนที่ยังไม่รู้ก่อน (ใส่วงเล็บ) แล้วทำขั้นที่ 2'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', 'ห้องสมุดมีหนังสือนิทาน 260 เล่ม หนังสือการ์ตูนน้อยกว่านิทาน 85 เล่ม มีหนังสือสองชนิดรวมกันกี่เล่ม', p4cmpSVG({ big: 260, small: 175, diff: 85, unk: 'small', nb: 'นิทาน', ns: 'การ์ตูน' })], ['① การ์ตูน', '260 − 85 = 175 เล่ม', p4cmpSVG({ big: 260, small: 175, diff: 85, nb: 'นิทาน', ns: 'การ์ตูน' })], ['② รวม', '260 + 175 = 435 เล่ม', lbig('260 + (260 − 85) = 435')]], 'ตอบ <b>435 เล่ม</b>'),
      T('ลองเรียงวิธีทำ', 'ลองเรียงวิธีทำ', el => el.append(simSeqSolve(X3_SOL[2])))],
-    () => { const S = pkF(X3W_ST2, 4); return [...S.map(o => Q.x3Story(o)), ...pkF(X3W_ST2, 3).map(x3firstQ), Q.p4Seq({ text: X3_SOL[1].text, cards: P4_SOLVE(X3_SOL[1]) })]; }), /* v142 */
+    () => { const S = pkF(X3W_ST2, 7); return [...S.slice(0, 4).map(o => Q.x3Story(o)), ...S.slice(4).map(x3firstQ), Q.p4Seq({ text: X3_SOL[1].text, cards: P4_SOLVE(X3_SOL[1]) })]; }), /* v142 */
   L3X(6, 'ป่านักแต่งโจทย์', 'การสร้างโจทย์ปัญหา 2 ขั้นตอน', 'สร้างโจทย์ปัญหา', 'สร้างโจทย์ปัญหา 2 ขั้นตอนจากประโยคสัญลักษณ์',
     [...learnStep('<b>แต่งโจทย์</b>จากประโยคสัญลักษณ์', 'แต่งโจทย์จากประโยคสัญลักษณ์', [
       { fig: lbig('1,000 − (3 × 250)'), name: 'อ่านในวงเล็บก่อน', text: '3 × 250 → ซื้อของ 3 ชิ้น ชิ้นละ 250 บาท' },
