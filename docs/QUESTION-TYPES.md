@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-379 types
+380 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -163,10 +163,11 @@
 | `Q.k7Count` | `{ shape, ask = 'ด้าน' }` | [`grades/p6/p6k.js:196`](../src/grades/p6/p6k.js#L196) |
 | `Q.k7Is` | `{ fig, kind }` | [`grades/p6/p6k.js:188`](../src/grades/p6/p6k.js#L188) |
 | `Q.k7Name` | `{ shape }` | [`grades/p6/p6k.js:192`](../src/grades/p6/p6k.js#L192) |
-| `Q.l3Conv` | `{ from, to }` | [`grades/p3/p3l.js:61`](../src/grades/p3/p3l.js#L61) |
-| `Q.l3Map` | `{ M, q, e, as }` | [`grades/p3/p3l.js:65`](../src/grades/p3/p3l.js#L65) |
-| `Q.l3Read` | `{ it }` | [`grades/p3/p3l.js:55`](../src/grades/p3/p3l.js#L55) |
-| `Q.l3Set` | `{ it, mm }` | [`grades/p3/p3l.js:58`](../src/grades/p3/p3l.js#L58) |
+| `Q.l3Conv` | `{ from, to }` | [`grades/p3/p3l.js:68`](../src/grades/p3/p3l.js#L68) |
+| `Q.l3Map` | `{ M, q, e, as }` | [`grades/p3/p3l.js:72`](../src/grades/p3/p3l.js#L72) |
+| `Q.l3Place` | `{ it }` | [`grades/p3/p3l.js:86`](../src/grades/p3/p3l.js#L86) |
+| `Q.l3Read` | `{ it }` | [`grades/p3/p3l.js:62`](../src/grades/p3/p3l.js#L62) |
+| `Q.l3Set` | `{ it, mm }` | [`grades/p3/p3l.js:65`](../src/grades/p3/p3l.js#L65) |
 | `Q.lCls` | `{ k }` | [`grades/p5/p5g.js:187`](../src/grades/p5/p5g.js#L187) |
 | `Q.lenDiff` | `{ a, b, unit = 'cm', vis = 'none', word }` | [`engine/questions.js:1277`](../src/engine/questions.js#L1277) |
 | `Q.lenExtreme` | `{ items, ask, unit, vis = 'len', max }` | [`engine/questions.js:1259`](../src/engine/questions.js#L1259) |
@@ -375,12 +376,12 @@
 | `Q.w2Read` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:137`](../src/grades/p2/p2w.js#L137) |
 | `Q.w2Set` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:143`](../src/grades/p2/p2w.js#L143) |
 | `Q.w2Story` | `{ text, a, b, op, m = 'kd', why }` | [`grades/p2/p2w.js:162`](../src/grades/p2/p2w.js#L162) |
-| `Q.w3Calc` | `{ a, b, op, m }` | [`grades/p3/p3w.js:74`](../src/grades/p3/p3w.js#L74) |
-| `Q.w3Conv` | `{ from, to }` | [`grades/p3/p3w.js:68`](../src/grades/p3/p3w.js#L68) |
-| `Q.w3Dig` | `{ g, m = 'kg', name }` | [`grades/p3/p3w.js:54`](../src/grades/p3/p3w.js#L54) |
-| `Q.w3Story` | `{ text, sent, wrong, g, m, unit }` | [`grades/p3/p3w.js:82`](../src/grades/p3/p3w.js#L82) |
-| `Q.w3Tool` | `{ name, kg }` | [`grades/p3/p3w.js:59`](../src/grades/p3/p3w.js#L59) |
-| `Q.w3Unit` | `{ text, right }` | [`grades/p3/p3w.js:63`](../src/grades/p3/p3w.js#L63) |
+| `Q.w3Calc` | `{ a, b, op, m }` | [`grades/p3/p3w.js:129`](../src/grades/p3/p3w.js#L129) |
+| `Q.w3Conv` | `{ from, to }` | [`grades/p3/p3w.js:123`](../src/grades/p3/p3w.js#L123) |
+| `Q.w3Dig` | `{ g, m = 'kg', name }` | [`grades/p3/p3w.js:109`](../src/grades/p3/p3w.js#L109) |
+| `Q.w3Story` | `{ text, sent, wrong, g, m, unit }` | [`grades/p3/p3w.js:136`](../src/grades/p3/p3w.js#L136) |
+| `Q.w3Tool` | `{ name, kg }` | [`grades/p3/p3w.js:114`](../src/grades/p3/p3w.js#L114) |
+| `Q.w3Unit` | `{ text, right }` | [`grades/p3/p3w.js:118`](../src/grades/p3/p3w.js#L118) |
 | `Q.whichPlace` | `{ n }` | [`engine/questions.js:589`](../src/engine/questions.js#L589) |
 | `Q.wordToNum` | `{ n }` | [`engine/questions.js:567`](../src/engine/questions.js#L567) |
 | `Q.writeDigits` | `{ n, from = 'word' }` | [`engine/questions.js:669`](../src/engine/questions.js#L669) |

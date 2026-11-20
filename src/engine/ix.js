@@ -90,6 +90,8 @@ function qSim(q, done, opt = {}) {
   if (G) { box.append(h6wait(), body); setFb(''); trackPick(body); q.mount(body, ctx); ixDropBlank(body); calcZoom(body); qLayout(body); requestAnimationFrame(() => fitBody(body)); return box; }
   box.append(h6wait(), bub, body); trackPick(body); q.mount(body, ctx); calcZoom(body); qsArrange(box, bub, body); qLayout(body); return box;
 }
+/* v136/137 (ผู้ใช้ขอ: หน้าฝึกจัดองค์ประกอบเหมือนในเกม): ลูกเจี๊ยบถามในกรอบคำพูดด้านบน คำถามไม่ซ้ำในการ์ด — ใช้ใน T(title, say, qPlay(q, doneText, lead)) */
+const qPlay = (q, done, lead) => el => { const Q2 = lead ? { ...q, prompt: `${lead} — ${q.prompt}` } : q; el.append(h('div', { class: 'colstack prac prac-game' }, qSim(Q2, done, { bub: window.__teachBub }))); };
 /* v97 practice layout (ผู้ใช้ขอ — ทุกบท): a question with a picture → picture LEFT · question small top-right · answer bottom-right;
    no picture → question on top, answers in the middle-to-bottom (no giant question text) */
 const QS_ANS = 'button, input, .keypad, .opts, .opt, .ans, .ans-slot, .slot, .ix-dz, [draggable], .seg, .fslots, .blank';

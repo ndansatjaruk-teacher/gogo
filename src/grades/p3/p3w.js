@@ -24,6 +24,61 @@ function w3ColHTML(a, b, op, m, o = {}) { const U = W3P[m].U, A = w3split(a, m),
   return `<table class="w2col"><tr class="hd"><td></td><td>${U[0]}</td><td>${U[1]}</td></tr><tr><td></td>${cell(A[0])}${cell(A[1])}</tr>
     <tr><td class="op">${op}</td>${op === '×' ? `<td></td>${cell(b)}` : cell(B[0]) + cell(B[1])}</tr><tr class="res"><td></td>${o.q ? '<td>?</td><td>?</td>' : cell(Rr[0]) + cell(Rr[1])}</tr></table>`; }
 
+/* ---------- v137 (ผู้ใช้ขอ: ให้เด็กตั้งบวก ลบ คูณ เองจริง ๆ) — ตารางตั้งหน่วยคู่ที่เด็กเติมเองทีละช่อง ----------
+   + : บวกหน่วยเล็ก → (ครบ R ทด 1) → บวกหน่วยใหญ่ (+ ที่ทด) · − : (ไม่พอ → กระจาย) → ลบหน่วยเล็ก → ลบหน่วยใหญ่ · × : คูณหน่วยเล็ก → (ทด) → คูณหน่วยใหญ่ + ที่ทด
+   คำตอบเขียนลงช่องในตารางเอง ผิดแต่ละขั้นบอกเหตุผล · เฉลยเติมตารางครบ · ใช้ทั้งบทน้ำหนักและบทความยาว */
+function w3Work(a, b, op, m, ctx, o = {}) {
+  const P = W3P[m], U = P.U, R = P.R, A = w3split(a, m), B = op === '×' ? [0, b] : w3split(b, m), res = w3split(op === '+' ? a + b : op === '−' ? a - b : a * b, m);
+  const T = []; let carry = 0, borrow = false;
+  if (op === '+') { const s1 = A[1] + B[1]; T.push({ t: 'n1', v: s1, lab: `บวก${U[1]}: <b>${fmt(A[1])} + ${fmt(B[1])}</b> = ?`, why: v => `${fmt(A[1])} + ${fmt(B[1])} ไม่เท่ากับ ${fmt(v)}` });
+    if (s1 >= R) { carry = 1; T.push({ t: 'c1', v: s1 - R, lab: `${fmt(s1)} ${U[1]} ครบ ${fmt(R)} → ทด <b>1 ${U[0]}</b> เหลือกี่${U[1]}`, why: v => `${fmt(R)} ${U[1]} = 1 ${U[0]} · ${fmt(s1)} − ${fmt(R)} ไม่เท่ากับ ${fmt(v)}` }); }
+    T.push({ t: 'n0', v: A[0] + B[0] + carry, lab: `บวก${U[0]}: <b>${fmt(A[0])} + ${fmt(B[0])}${carry ? ' + 1 (ที่ทด)' : ''}</b> = ?`, why: v => carry && v === A[0] + B[0] ? `อย่าลืมบวก 1 ${U[0]} ที่ทดมา` : `${fmt(A[0])} + ${fmt(B[0])}${carry ? ' + 1' : ''} ไม่เท่ากับ ${fmt(v)}` }); }
+  else if (op === '−') { let a1 = A[1], a0 = A[0];
+    if (A[1] < B[1]) { borrow = true; a1 = A[1] + R; a0 = A[0] - 1; T.push({ t: 'br', v: a1, lab: `${fmt(A[1])} − ${fmt(B[1])} ไม่พอ → กระจาย 1 ${U[0]} = ${fmt(R)} ${U[1]}: <b>${fmt(A[1])} + ${fmt(R)}</b> = ?`, why: v => `1 ${U[0]} = ${fmt(R)} ${U[1]} → ${fmt(A[1])} + ${fmt(R)} ไม่เท่ากับ ${fmt(v)}` }); }
+    T.push({ t: 'n1', v: a1 - B[1], lab: `ลบ${U[1]}: <b>${fmt(a1)} − ${fmt(B[1])}</b> = ?`, why: v => `${fmt(a1)} − ${fmt(B[1])} ไม่เท่ากับ ${fmt(v)}` });
+    T.push({ t: 'n0', v: a0 - B[0], lab: `ลบ${U[0]}: <b>${fmt(a0)} − ${fmt(B[0])}</b> = ?${borrow ? ` <small>(กระจายไปแล้ว ${fmt(A[0])} เหลือ ${fmt(a0)})</small>` : ''}`, why: v => borrow && v === A[0] - B[0] ? `กระจายไปแล้ว 1 ${U[0]} — ${fmt(A[0])} เหลือ ${fmt(a0)}` : `${fmt(a0)} − ${fmt(B[0])} ไม่เท่ากับ ${fmt(v)}` }); }
+  else { const p1 = A[1] * b; T.push({ t: 'n1', v: p1, lab: `คูณ${U[1]}: <b>${fmt(A[1])} × ${b}</b> = ?`, why: v => `${fmt(A[1])} × ${b} ไม่เท่ากับ ${fmt(v)}` });
+    if (p1 >= R) { carry = Math.floor(p1 / R); T.push({ t: 'c1', v: p1 % R, lab: `${fmt(p1)} ${U[1]} = <b>${carry} ${U[0]}</b> กับอีกกี่${U[1]}`, why: v => `${carry} ${U[0]} = ${fmt(carry * R)} ${U[1]} · ${fmt(p1)} − ${fmt(carry * R)} ไม่เท่ากับ ${fmt(v)}` }); }
+    T.push({ t: 'n0', v: A[0] * b + carry, lab: `คูณ${U[0]}: <b>${fmt(A[0])} × ${b}${carry ? ` + ${carry} (ที่ทด)` : ''}</b> = ?`, why: v => carry && v === A[0] * b ? `อย่าลืมบวก ${carry} ${U[0]} ที่ทดมา` : `${fmt(A[0])} × ${b}${carry ? ` + ${carry}` : ''} ไม่เท่ากับ ${fmt(v)}` }); }
+  let at = 0, typed = '', fin = false, hadWrong = false;
+  const fig = h('div', { class: 'w2colwrap w3wfig' }), lab = h('div', { class: 'p4steplab d3lab' }), kp = h('div', { class: 'keypad' });
+  const done = t => T.some((x, j) => x.t === t && (j < at || fin));
+  const paint = () => { const cur = fin ? {} : T[at] || {}, ask = v => `<span class="d3ask">${typed || '?'}</span>`, c = (v, cls = '') => `<td class="${cls}">${v}</td>`;
+    const r1 = done('c1') ? fmt(res[1]) : T.some(x => x.t === 'c1') ? (cur.t === 'c1' ? `<s class="w3tmp">${fmt(T.find(x => x.t === 'n1').v)}</s> ${ask()}` : (cur.t === 'n1' ? ask() : '')) : done('n1') ? fmt(res[1]) : cur.t === 'n1' ? ask() : '';
+    const r0 = done('n0') ? fmt(res[0]) : cur.t === 'n0' ? ask() : '';
+    const top0 = op === '−' ? (done('br') ? `<b class="w3new">${fmt(A[0] - 1)}</b>` : '') : (carry && done('c1') ? `<b class="w3cy">${carry}</b>` : '');
+    const top1 = op === '−' && T.some(x => x.t === 'br') ? (done('br') ? `<b class="w3new">${fmt(A[1] + R)}</b>` : cur.t === 'br' ? ask() : '') : '';
+    const sA0 = op === '−' && done('br') ? `<s>${fmt(A[0])}</s>` : fmt(A[0]), sA1 = op === '−' && done('br') ? `<s>${fmt(A[1])}</s>` : fmt(A[1]);
+    fig.innerHTML = `<table class="w2col w3w"><tr class="hd"><td></td><td>${U[0]}</td><td>${U[1]}</td></tr><tr class="cy"><td></td>${c(top0)}${c(top1)}</tr><tr><td></td>${c(sA0)}${c(sA1)}</tr>
+      <tr><td class="op">${op}</td>${op === '×' ? `<td></td>${c(b)}` : c(fmt(B[0])) + c(fmt(B[1]))}</tr><tr class="res"><td></td>${c(r0, cur.t === 'n0' ? 'on' : '')}${c(r1, cur.t === 'n1' || cur.t === 'c1' ? 'on' : '')}</tr></table>`;
+    kp.classList.toggle('d3off', fin);
+    lab.innerHTML = fin ? `= <b>${w3t(op === '+' ? a + b : op === '−' ? a - b : a * b, m)}</b>${shown ? '' : ' ✓'}` : cur.lab; };
+  let shown = false;
+  const next = () => { typed = ''; at++; sfx.pop(at + 2); if (hadWrong && ctx.say) { ctx.say('ถูกแล้ว ทำช่องต่อไปได้เลย'); hadWrong = false; } if (at >= T.length) { fin = true; paint(); ctx.check(true); return; } paint(); };
+  const enter = v => { const cur = T[at]; if (fin || !cur) return; if (v === cur.v) return next(); hadWrong = true; typed = ''; paint(); ctx.check(false, cur.why(v)); };
+  const key = d => h('button', { class: 'btn', onclick: e => { e.stopPropagation(); if (fin) return; sfx.tap(); typed = (typed + d).slice(-7).replace(/^0+(\d)/, '$1'); paint(); } }, d);
+  [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(key(d)));
+  kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: e => { e.stopPropagation(); typed = typed.slice(0, -1); paint(); } }, icon('left')), key(0),
+    h('button', { class: 'btn primary', 'aria-label': 'ตกลง', onclick: e => { e.stopPropagation(); if (typed !== '') enter(+typed); } }, icon('check')));
+  const panel = h('div', { class: 'ans ia d3ans' }, lab, kp); panel.reveal = () => { if (fin) return; fin = true; shown = true; at = T.length; paint(); };
+  paint(); return h('div', { class: 't6-q p4-q d3wq w3wq' }, fig, panel);
+}
+/* ÷ หน่วยคู่ (ผู้ใช้ขอ: ใช้หารยาวที่เพิ่งเรียน): ① เปลี่ยนเป็นหน่วยเล็ก ② หารยาวเองบนกระดาน ③ เปลี่ยนกลับเป็นหน่วยคู่ */
+function w3DivWork(a, b, m, ctx) { const P = W3P[m], U = P.U, n = Math.round(a / P.s), q = Math.round(n / b), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack w3dslot' });
+  const sub = f => ({ check: (ok, hn) => { if (!ok) return ctx.check(false, hn); f(); }, say: t => ctx.say && ctx.say(t) });
+  const s3 = () => { lab.innerHTML = `ขั้นที่ 3: ${fmt(q)} ${U[1]} = กี่${U[0]} กี่${U[1]}`; slot.innerHTML = ''; slot.append(duoInput(ctx, w3split(q * P.s, m), U, { pre: '', hint: `${fmt(P.R)} ${U[1]} = 1 ${U[0]}` })); };
+  const s2 = () => { sfx.pop(4); ctx.say && ctx.say('ถูกแล้ว! หารยาวต่อเลย'); lab.innerHTML = `ขั้นที่ 2: หารยาว <b>${fmt(n)} ÷ ${b}</b>`; slot.innerHTML = ''; const W = d3Work(n, b, ctx, { final: false, short: n > 9999, onDone: () => setTimeout(s3, 500) }); slot.append(W); };
+  lab.innerHTML = `ขั้นที่ 1: เปลี่ยนตัวตั้งให้เป็น<b>${U[1]}</b>ทั้งหมด`;
+  slot.append(h('div', { class: 'rowstack' }, answerBox(sub(s2), String(n), { hint: `1 ${U[0]} = ${fmt(P.R)} ${U[1]} → ${fmt(w3split(a, m)[0])} × ${fmt(P.R)} + ${fmt(w3split(a, m)[1])}` }), h('span', { class: 'cap', style: { fontSize: '20px' } }, U[1])));
+  return h('div', { class: 'colstack w3dq' }, lab, slot); } /* โจทย์อยู่ในกรอบคำพูดแล้ว ไม่พิมพ์ซ้ำ */
+/* v137 โจทย์ปัญหา: ตัวเลือกวิธีคิดครบ 3 ข้อ · แยกตัวเลขจากประโยคสัญลักษณ์เพื่อให้คิดในตาราง (ถ้าแยกไม่ได้ใช้ช่องตอบแบบเดิม) */
+const w3StoryOpts = (sent, wrong) => { const out = [...wrong], ops = [' + ', ' − ', ' × ', ' ÷ '], op = ops.find(o => sent.includes(o));
+  if (op) ops.filter(o => o !== op && !((op === ' + ' || op === ' − ') && (o === ' × ' || o === ' ÷ ')) && !((op === ' × ' || op === ' ÷ ') && o === ' − ')).forEach(o => { const t = sent.replace(op, o); if (out.length < 2 && t !== sent && !out.includes(t)) out.push(t); });
+  if (op === ' − ' && out.length < 2) { const [x, y] = sent.split(op); const t = `${y} − ${x}`; if (!out.includes(t)) out.push(t); }
+  return out.slice(0, 2); };
+const w3StoryJob = (sent, g, m) => { if (!m) return null; const op = ['+', '−', '×', '÷'].find(o => sent.includes(` ${o} `)); if (!op) return null;
+  const [L, R] = sent.split(` ${op} `), pv = t => { const v = typeof l3p === 'function' ? l3p(t) : 0; return v || w3p(t); }, a = pv(L), b = op === '×' || op === '÷' ? +R.replace(/,/g, '') : pv(R);
+  if (!a || !b || !Number.isFinite(b)) return null; const r = op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : a / b; return r === g ? { a, b, op } : null; };
 /* ---------- teaching sims ---------- */
 function simW3Tool(items) { // tap a thing, then tap the most suitable scale
   const box = h('div', { class: 'colstack' }, h6wait()), row = h('div', { class: 'rowstack w3items ia' }), tools = h('div', { class: 'rowstack w3tools ia', html: Object.keys(W3_TOOL).map(k => w3ToolCard(k)).join('') }), out = fNote(); let cur = null, good = 0;
@@ -74,16 +129,17 @@ Object.assign(Q, {
   w3Calc({ a, b, op, m }) { const r = op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : a / b, U = W3P[m].U;
     const q = op === '÷' ? `${w3t(a, m)} ÷ ${b} = ?` : op === '×' ? `${w3t(a, m)} × ${b} = ?` : `${w3t(a, m)} ${op} ${w3t(b, m)} = ?`;
     const hint = op === '÷' ? `เปลี่ยนเป็น${U[1]}ก่อน: ${fmt(a / W3P[m].s)} ${U[1]} ÷ ${b} แล้วเปลี่ยนกลับ` : op === '×' ? `คูณ${U[1]}ก่อน ครบ ${fmt(W3P[m].R)} ${U[1]} ทดเป็น 1 ${U[0]}` : op === '+' ? `บวก${U[1]}ก่อน ครบ ${fmt(W3P[m].R)} ${U[1]} ทด 1 ${U[0]}` : `ลบ${U[1]}ก่อน ไม่พอให้กระจาย 1 ${U[0]} = ${fmt(W3P[m].R)} ${U[1]}`;
-    return { prompt: q, say: q, mount(bd, ctx) { const fig = op === '÷' ? h('div', { class: 'fbig p4big', html: `<b class="num">${w3t(a, m)}</b> <span class="fop">÷</span> <b class="num">${b}</b>` }) : h('div', { class: 'w2colwrap', html: w3ColHTML(a, b, op, m, { q: true }) });
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, fig, duoInput(ctx, w3split(r, m), U, { pre: '', hint })));
-      ctx.onRight = () => { if (op !== '÷') fig.innerHTML = w3ColHTML(a, b, op, m); }; } };
+    return { prompt: op === '÷' ? `${q} <small>(เปลี่ยนหน่วย → หารยาว → เปลี่ยนกลับ)</small>` : `${q} <small>(เติมคำตอบลงในตารางทีละช่อง)</small>`, say: q, mount(bd, ctx) { /* v137: เด็กทำเองในตาราง / หารยาวเอง */
+      bd.append(op === '÷' ? w3DivWork(a, b, m, ctx) : w3Work(a, b, op, m, ctx)); void hint; } };
   },
   /* story: ① choose the way ② answer in the unit pair (or one unit) */
-  w3Story({ text, sent, wrong, g, m, unit }) {
+  w3Story({ text, sent, wrong, g, m, unit }) { /* v137: ตัวเลือกวิธีคิด 3 ข้อ (เดิม 2 ข้อ เดาถูกครึ่งหนึ่ง) · ขั้นที่ 2 ตั้งในตาราง/หารยาวเอง */
+    const W = w3StoryOpts(sent, wrong), job = w3StoryJob(sent, g, m);
     return { prompt: 'อ่านโจทย์ เลือกวิธีคิด แล้วหาคำตอบ', say: text, mount(bd, ctx) {
-      bd.append(h('div', { class: 't6-q p4-q p2q p2st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })),
-        tkTwoStep(ctx, 'ขั้นที่ 1: เลือก<b>วิธีคิด</b>', [sent, ...wrong], sent, 'รวม/เพิ่ม → บวก · เหลือ/ต่างกัน → ลบ · หลายเท่า → คูณ · แบ่งเท่า ๆ กัน → หาร',
-          () => m ? duoInput(ctx, w3split(g, m), W3P[m].U, { pre: '' }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(g / W3U[unit]), {}), h('span', { class: 'cap', style: { fontSize: '20px' } }, unit))))); } };
+      bd.append(h('div', { class: 't6-q p4-q p2q p2st w3st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })),
+        tkTwoStep(ctx, 'ขั้นที่ 1: เลือก<b>วิธีคิด</b>', [sent, ...W], sent, 'รวม/เพิ่ม/ยาวกว่า → บวก · เหลือ/ต่างกัน/สั้นกว่า → ลบ · หลายชิ้นเท่า ๆ กัน → คูณ · แบ่งเท่า ๆ กัน → หาร',
+          () => job ? (job.op === '÷' ? w3DivWork(job.a, job.b, m, ctx) : w3Work(job.a, job.b, job.op, m, ctx)) : m ? duoInput(ctx, w3split(g, m), W3P[m].U, { pre: '' }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(g / W3U[unit]), {}), h('span', { class: 'cap', style: { fontSize: '20px' } }, unit)),
+          `<b>${sent}</b> ✓ · ขั้นที่ 2: ${job && job.op === '÷' ? 'เปลี่ยนหน่วย หารยาว แล้วตอบ' : job ? 'คิดในตารางทีละช่อง' : 'หาคำตอบ'}`))); } };
   }
 });
 const W3W = ['มากกว่า', 'น้อยกว่า', 'เท่ากับ'];

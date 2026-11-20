@@ -206,7 +206,7 @@ const L3D = (no, place, title, short, goal, teach, game) => ({ id: 1300 + no, no
 /* v136 (ผู้ใช้ขอ: หน้าตัวอย่าง/ทำตาม จัดองค์ประกอบให้เหมือนในเกม) */
 const d3demo = (D, k, o = {}) => el => { let W; const btn = h('button', { class: 'btn info d3nx', onclick: e => { e.stopPropagation(); W.step(); } }, icon('right'), h('span', null, 'ขั้นต่อไป'));
   W = d3Work(D, k, null, { ...o, demo: true, final: false, onDone: () => { btn.remove(); teachDone(el); } }); W.panel.insertBefore(btn, W.panel.querySelector('.keypad')); el.append(h('div', { class: 'colstack prac prac-game d3demo-p' }, W)); };
-const d3play = (q, done, lead) => el => { const Q2 = lead ? { ...q, prompt: `${lead} — ${q.prompt}` } : q; el.append(h('div', { class: 'colstack prac prac-game' }, qSim(Q2, done, { bub: window.__teachBub }))); };
+const d3play = qPlay; /* v137: ย้ายไป engine/ix.js ให้ทุกบทใช้ได้ */
 const LESSONS_P3C8 = [
   L3D(1, 'ป่าแบ่งเท่า', 'การหาผลหารและเศษที่ตัวตั้งสองหลัก ตัวหารและผลหารหนึ่งหลักโดยการหารยาว (1)', 'หารยาว (1)', 'หาผลหารโดยการหารยาว เมื่อตัวตั้งสองหลัก ตัวหารและผลหารหนึ่งหลัก',
     [...learnStep('ยินดีต้อนรับสู่ <b>ป่าแบ่งเท่า</b>! รู้จัก<b>การหารยาว</b>', 'ยินดีต้อนรับสู่ป่าแบ่งเท่า รู้จักการหารยาว', [
