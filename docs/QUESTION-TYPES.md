@@ -73,12 +73,12 @@
 | `Q.dvStory` | `{ text, n, d, unit, unit2, fig }` | [`grades/p2/p2d.js:153`](../src/grades/p2/p2d.js#L153) |
 | `Q.dvUnk` | `{ a, b, c, pos }` | [`grades/p2/p2d.js:147`](../src/grades/p2/p2d.js#L147) |
 | `Q.e4Col` | `{ a, b, op }` | [`grades/p4/p4e.js:100`](../src/grades/p4/p4e.js#L100) |
-| `Q.e4Exp` | `{ s }` | [`grades/p4/p4e.js:129`](../src/grades/p4/p4e.js#L129) |
-| `Q.e4Frac` | `{ s }` | [`grades/p4/p4e.js:116`](../src/grades/p4/p4e.js#L116) |
+| `Q.e4Exp` | `{ s }` | [`grades/p4/p4e.js:131`](../src/grades/p4/p4e.js#L131) |
+| `Q.e4Frac` | `{ s }` | [`grades/p4/p4e.js:118`](../src/grades/p4/p4e.js#L118) |
 | `Q.e4Mix` | `{ expr }` | [`grades/p4/p4e.js:103`](../src/grades/p4/p4e.js#L103) |
-| `Q.e4Pic` | `{ n, unit }` | [`grades/p4/p4e.js:113`](../src/grades/p4/p4e.js#L113) |
-| `Q.e4Place` | `{ s, pos }` | [`grades/p4/p4e.js:125`](../src/grades/p4/p4e.js#L125) |
-| `Q.e4Read` | `{ s, to }` | [`grades/p4/p4e.js:119`](../src/grades/p4/p4e.js#L119) |
+| `Q.e4Pic` | `{ n, unit }` | [`grades/p4/p4e.js:115`](../src/grades/p4/p4e.js#L115) |
+| `Q.e4Place` | `{ s, pos }` | [`grades/p4/p4e.js:127`](../src/grades/p4/p4e.js#L127) |
+| `Q.e4Read` | `{ s, to }` | [`grades/p4/p4e.js:121`](../src/grades/p4/p4e.js#L121) |
 | `Q.estimate1kg` | `{ a, heavy }` | [`engine/questions.js:972`](../src/engine/questions.js#L972) |
 | `Q.evenOdd` | `{ n }` | [`engine/questions.js:618`](../src/engine/questions.js#L618) |
 | `Q.expand20` | `{ n, miss = 'u' }` | [`engine/questions.js:795`](../src/engine/questions.js#L795) |
