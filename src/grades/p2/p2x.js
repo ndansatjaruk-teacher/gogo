@@ -349,7 +349,7 @@ LESSONS_P2C5.splice(7, 0, { id: 938, bonus: true, place: 'ลานท่อง�
       { fig: lbig('② ปิดคำตอบ'), name: 'ซ่อนคำตอบ แล้วนึกให้ได้เอง', text: 'รอบแรกซ่อนครึ่งหนึ่ง รอบสองซ่อนทั้งหมด' },
       { fig: lbig('③ เกมทดสอบไว'), name: 'ข้อที่ตอบผิดจะกลับมาถามอีก', text: 'ตอบถูกบ่อย ๆ ข้อนั้นจะกลายเป็น<b>สีเขียว</b>ในสมุดสูตรคูณ' }], 'ฝึกวันละนิด ทุกวัน แล้วดูสมุดสูตรคูณเป็นสีเขียวทั้งหมด'),
     T('เลือกแม่ที่จะฝึก แล้วเลือกวิธีฝึก', 'เลือกแม่ที่จะฝึก แล้วเลือกวิธีฝึก', el => el.append(mtTrainer()))],
-  game: () => { const T2 = range(2, 12); return [Q.mtPop({ facts: mtFacts(T2, 5) }), ...mtFacts(T2, 4).map(([a, b]) => Q.mtFact({ a, b })), Q.mtPop({ facts: mtFacts(T2, 5) }), mtMatchQ(mtUniq(T2, 4)), Q.mtFill({ n: pick(range(3, 9)), ks: range(1, 12), blanks: shuffle(range(2, 12)).slice(0, 4).sort((x, y) => x - y) })]; } });
+  game: () => { const T2 = range(2, 12); return [Q.mtPop({ facts: mtFacts(T2, 5) }), ...mtFacts(T2, 5).map(([a, b]) => Q.mtFact({ a, b })), Q.mtPop({ facts: mtFacts(T2, 5) }), mtMatchQ(mtUniq(T2, 4)), Q.mtFill({ n: pick(range(3, 9)), ks: range(1, 12), blanks: shuffle(range(2, 12)).slice(0, 4).sort((x, y) => x - y) })]; } });
 
 /* ---------- boss 939: ข้อสอบท้ายบทการคูณ — แต่งใหม่ทั้งหมด ---------- */
 const MT_POST = [
