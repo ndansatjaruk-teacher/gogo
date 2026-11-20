@@ -21173,7 +21173,7 @@ Object.assign(Q, {
 /* other units (base = minutes for นาที/ชั่วโมง/วัน/สัปดาห์; months/years use their own base) */
 const T3U = { 'นาที': 1, 'ชั่วโมง': 60, 'วัน': 1440, 'สัปดาห์': 10080, 'เดือน': 1, 'ปี': 12 };
 const T3U_P = t => { let s = 0; String(t).replace(/([\d,]+)\s*(วัน|สัปดาห์|ปี|เดือน)/g, (m, n, u) => { s += +n.replace(/,/g, '') * T3U[u]; }); return s; };
-Object.assign(W3P, { dh: { U: ['วัน', 'ชั่วโมง'], R: 24, s: 60 }, wd: { U: ['สัปดาห์', 'วัน'], R: 7, s: 1440 }, ym: { U: ['ปี', 'เดือน'], R: 12, s: 1 } });
+Object.assign(W3P, { dh: { U: ['วัน', 'ชั่วโมง'], R: 24, s: 60 }, wd: { U: ['สัปดาห์', 'วัน'], R: 7, s: 1440 }, ym: { U: ['ปี', 'เดือน'], R: 12, s: 1 } }); /* v150 ป.4 เวลา: นาที|วินาที (เก็บเป็นวินาที) · เดือน|วัน (เก็บเป็นวัน, 1 เดือน = 30 วัน) */ Object.assign(W3P, { ms: { U: ['นาที', 'วินาที'], R: 60, s: 1 }, md: { U: ['เดือน', 'วัน'], R: 30, s: 1 } });
 const t3CmpQ = ([A, B]) => Q.p2cmpWord({ a: ['', A, t3p(A)], b: ['', B, t3p(B)], words: W3W, hint: 'เปลี่ยนเป็นนาทีทั้งคู่ก่อน (1 ชั่วโมง = 60 นาที) แล้วเปรียบเทียบ' });
 const t3SortQ = (items, q) => Q.ixSort({ q: q || 'เรียงจากใช้เวลาน้อยที่สุดไปมากที่สุด', items: items.map(([n, s]) => ({ label: `${n} ${s}`, v: t3p(s) })), dir: 'asc' });
 const t3RecQ = (R, kind, i) => { const [title, rows] = R, fig = `<div class="t3recw">${t3RecHTML(title, rows)}</div>`, r = rows[i];
@@ -22448,11 +22448,23 @@ function simT4Tab(T, ask) { // tap a row → its start, end and duration on the 
   box.append(fig, line, out); paint(); return box; }
 
 /* ---------- question types ---------- */
+/* v150: แปลงหน่วยเวลา ① เลือกวิธีคิด (× / ÷ ด้วยตัวเลขที่ถูก) ② หาคำตอบ — เดิมพิมพ์คำตอบอย่างเดียว */
+const t4how = (from, to, F) => { const P = t4parts(from), L = Object.keys(F).sort((a, b) => F[a] - F[b]), N = n => fmt(n);
+  const chain = (u1, u2) => { const i = L.indexOf(u1), j = L.indexOf(u2), out = []; if (i < j) for (let k = i; k < j; k++) out.push(['÷', F[L[k + 1]] / F[L[k]]]); else for (let k = i; k > j; k--) out.push(['×', F[L[k]] / F[L[k - 1]]]); return out; };
+  const pair = Array.isArray(to); let how, w1, w2;
+  if (pair) { const f = F[to[0]] / F[to[1]], n = P[0][0]; how = `${N(n)} ÷ ${N(f)}`; w1 = `${N(n)} × ${N(f)}`; w2 = f === 60 ? `${N(n)} ÷ 100` : `${N(n)} − ${N(f)}`; }
+  else { const parts = P.map(([n, u]) => [n, chain(u, to)]); how = parts.map(([n, c]) => N(n) + c.map(([o, f]) => ` ${o} ${N(f)}`).join('')).join(' + ');
+    w1 = how.includes('÷') ? how.replace(/÷/g, '×') : parts.map(([n, c]) => [N(n), ...c.map(([, f]) => N(f))].join(' + ')).join(' + ');
+    w2 = how.includes('60') ? how.replace(/60/g, '100') : how.replace(/[×÷]/g, o => o === '×' ? '÷' : '×'); }
+  return { how, opts: [...new Set([how, w1, w2])].filter(x => x !== how) }; };
 Object.assign(Q, {
   t4Conv({ from, to }) { const units = [...t4parts(from).map(x => x[1]), ...(Array.isArray(to) ? to : [to])], F = t4fam(units), v = t4val(from, F), pair = Array.isArray(to), q = `${from} คิดเป็น${pair ? `กี่${to[0]} กี่${to[1]}` : `กี่${to}`}`;
     const hint = T4_HINT[T4F.indexOf(F)];
-    return { prompt: q, say: q, __sig: `t4c ${from}>${to}`, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: p4big(`<b class="num">${from}</b> = ?`) }),
-      pair ? duoInput(ctx, t4split(v, to, F), to, { pre: '', hint }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(v / F[to]), { hint }), h('span', { class: 'cap', style: { fontSize: '22px' } }, to)))); } }; },
+    const H = t4how(from, to, F);
+    return { prompt: q, say: q, __sig: `t4c ${from}>${to}`, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q p2st f3-st' }, h('div', { class: 'p4-fig', html: p4big(`<b class="num">${from}</b> = ?`) }),
+      tkTwoStep(ctx, '① เลือกวิธีคิด', shuffle([H.how, ...H.opts]), H.how, hint + ' · หน่วยใหญ่ → หน่วยเล็ก ใช้ × · หน่วยเล็ก → หน่วยใหญ่ ใช้ ÷',
+        () => pair ? duoInput(ctx, t4split(v, to, F), to, { pre: '', hint: `${H.how} ได้ผลหารและเศษ` }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(v / F[to]), { hint: H.how }), h('span', { class: 'cap', style: { fontSize: '22px' } }, to)),
+        `<b>${H.how}</b> ✓ · ② หาคำตอบ${pair ? ' (ผลหาร · เศษ)' : ''}`))); } }; },
   t4Span({ text, d1, h1, d2, h2, mon }) { const D = (d2 - d1) * 24 + (h2 - h1), q = 'ใช้เวลากี่วัน กี่ชั่วโมง';
     return { prompt: q, say: text.replace(/<[^>]+>/g, ''), __sig: `t4s ${d1}.${h1}-${d2}.${h2}`, mount(bd, ctx) {
       const fig = `<div class="tk-rows"><div>เริ่ม <b>${d1} ${mon} เวลา ${pad2(h1)}.00 น.</b></div><div>สิ้นสุด <b>${d2} ${mon} เวลา ${pad2(h2)}.00 น.</b></div></div>`;
@@ -22475,11 +22487,11 @@ Object.assign(Q, {
     return { prompt: q, say: q, __sig: `t4u ${T.title.slice(0, 12)} ${i}`, mount(bd, ctx) {
       bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: `<div class="t4tabw">${t4TabHTML(T.title, T.head, T.rows.map(x => x.cells), { num: T.num })}</div>` }),
         d % 60 === 0 ? h('div', { class: 'rowstack' }, answerBox(ctx, String(d / 60), { hint: `${t4dot(r.a)} ถึง ${t4dot(r.b)}` }), h('span', { class: 'cap', style: { fontSize: '22px' } }, 'ชั่วโมง')) : duoInput(ctx, [Math.floor(d / 60), d % 60], ['ชั่วโมง', 'นาที'], { pre: '', hint: `นับจาก ${t4dot(r.a)} ทีละ 1 ชั่วโมง แล้วนับนาทีที่เหลือ${r.b < r.a ? ' (ข้ามเที่ยงคืน)' : ''}` }))); } }; },
-  t4Story({ text, how, opts, ans, units, pre }) {
+  t4Story({ text, how, opts, ans, units, pre, work }) {
     return { prompt: 'อ่านโจทย์ แล้วหาคำตอบ', say: text.replace(/<[^>]+>/g, ''), __sig: 't4s ' + text.slice(0, 40), mount(bd, ctx) {
       bd.append(h('div', { class: 't6-q p4-q p2q p2st f3-st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })),
         tkTwoStep(ctx, '① เลือกวิธีคิด', shuffle([how, ...opts]), how, 'อ่านว่าโจทย์ถามอะไร: เวลาสิ้นสุด → บวก · ต่างกัน/เหลือ → ลบ · ทุกวัน หลายครั้ง → คูณ · แบ่งเท่า ๆ กัน → หาร',
-          () => units.length > 1 ? duoInput(ctx, ans, units, { pre: pre || '', hint: how }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(ans[0]), { hint: how }), h('span', { class: 'cap', style: { fontSize: '22px' } }, units[0])), `<b>${how}</b> ✓ · ② หาคำตอบ`))); } }; }
+          () => work && typeof w3Work === 'function' ? w3Work(work[0], work[1], work[2], work[3], ctx) : /^[\d\s()+−×÷,]+$/.test(how) && typeof p4stepBox === 'function' ? p4stepBox(ctx, how) : units.length > 1 ? duoInput(ctx, ans, units, { pre: pre || '', hint: how }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(ans[0]), { hint: how }), h('span', { class: 'cap', style: { fontSize: '22px' } }, units[0])), `<b>${how}</b> ✓ · ② หาคำตอบ`))); } }; }
 });
 const t4SortQ = items => ({ ...Q.ixSort({ q: 'เรียงระยะเวลาจาก<b>น้อยไปมาก</b>', items: items.map(s => ({ label: s, v: t4val(s, t4fam(t4parts(s).map(x => x[1]))) })), dir: 'asc', hint: 'เปลี่ยนเป็นหน่วยเดียวกันทั้งหมดก่อน' }), __sig: 't4o ' + items.join() });
 const t4MatchQ = P => ({ ...Q.ixMatch({ q: 'จับคู่ระยะเวลาที่เท่ากัน', pairs: P, wide: true, hint: '1 นาที = 60 วินาที · 1 ชั่วโมง = 60 นาที · 1 วัน = 24 ชั่วโมง' }), __sig: 't4x ' + P.map(x => x[0]).join() });
@@ -22526,10 +22538,10 @@ const t4TabQs = T => { const r = pick(T.rows), k = rnd(0, 2), uniq = A => A.filt
   if (k === 1) return Q.t4Tab({ T, q: T.verb === 'ออก' ? `ข้อใด${T.verb}เวลา ${at(r)}` : `${T.date ? 'วันที่ ' : 'เวลา '}${at(r)} เป็น${T.noun || 'รายการ'}ใด`, opts: w3(T.rows.filter(x => at(x) !== at(r) || x === r).map(x => x.what), r.what), right: r.what, hint: 'หาเวลาในตาราง แล้วอ่านแถวเดียวกัน' });
   return Q.t4TabDur({ T, i: T.rows.indexOf(r) }); };
 /* word problems (P4: + − × ÷ with time) */
-const T4S = (text, how, opts, ans, units, pre) => ({ text, how, opts, ans, units, pre });
+const T4S = (text, how, opts, ans, units, pre, work) => ({ text, how, opts, ans, units, pre, work }); /* v150 work = [a, b, op, โหมด W3P] → ขั้นที่ 2 ตั้งบวก/ลบหน่วยคู่เอง */
 const t4StoryGen = () => { const k = rnd(0, 6), p = pick(T4_NAMES);
   if (k === 0) { const h = t4n(6, 15), m = pick([5, 10, 15, 20, 25, 35, 40, 45, 50]), dh = t4n(1, 3), dm = pick([10, 20, 25, 35, 40, 50]), e = T3(h, m) + dh * 60 + dm, [H, M] = t3clock(e);
-    return T4S(`${p}เริ่มทำงานบ้านเวลา ${t3dot(h, m)} ใช้เวลา ${dh} ชั่วโมง ${dm} นาที ${p}ทำงานบ้านเสร็จเวลาใด`, 'เวลาเริ่ม + เวลาที่ใช้', ['เวลาเริ่ม − เวลาที่ใช้', 'เวลาเริ่ม × เวลาที่ใช้'], [H, M], ['นาฬิกา', 'นาที'], 'เสร็จเวลา'); }
+    return T4S(`${p}เริ่มทำงานบ้านเวลา ${t3dot(h, m)} ใช้เวลา ${dh} ชั่วโมง ${dm} นาที ${p}ทำงานบ้านเสร็จเวลาใด`, 'เวลาเริ่ม + เวลาที่ใช้', ['เวลาเริ่ม − เวลาที่ใช้', 'เวลาเริ่ม × เวลาที่ใช้'], [H, M], ['นาฬิกา', 'นาที'], 'เสร็จเวลา', e < 1440 ? [T3(h, m), dh * 60 + dm, '+', 'hm'] : null); }
   if (k === 1) { const d = t4n(5, 9), r = t4n(10, 25) * 1000, late = t4n(1, 4);
     return T4S(`ผู้รับเหมาตกลงซ่อมถนนให้เสร็จใน ${d} วัน ถ้าเสร็จช้ากว่ากำหนดต้องจ่ายค่าปรับวันละ ${fmt(r)} บาท ผู้รับเหมาใช้เวลาจริง ${d + late} วัน ต้องจ่ายค่าปรับกี่บาท`, '(วันที่ใช้จริง − วันที่กำหนด) × ค่าปรับต่อวัน', ['วันที่ใช้จริง × ค่าปรับต่อวัน', 'วันที่กำหนด + ค่าปรับต่อวัน'], [late * r], ['บาท']); }
   if (k === 2) { const h = t4n(5, 9), m = pick([10, 15, 20, 30, 40, 45]), dd = pick([5, 6, 7]);
@@ -22537,11 +22549,11 @@ const t4StoryGen = () => { const k = rnd(0, 6), p = pick(T4_NAMES);
   if (k === 3) { const n = pick([6, 8, 9, 10, 12]), each = pick([10, 12, 15, 20]), tot = n * each;
     return T4S(`ข้อสอบมี ${n} ข้อ ให้เวลาทำทั้งหมด ${t4hm(tot)} ถ้าแบ่งเวลาเท่า ๆ กัน จะใช้เวลาทำข้อละกี่นาที`, `${tot} นาที ÷ ${n}`, [`${tot} นาที × ${n}`, `${tot} นาที − ${n}`], [each], ['นาที']); }
   if (k === 4) { const m1 = t4n(20, 45), s1 = t4n(10, 55), dm = t4n(3, 9), ds = t4n(5, 50), a = m1 * 60 + s1, b = a - dm * 60 - ds;
-    return T4S(`${p}วิ่งรอบสนามใช้เวลา ${m1} นาที ${s1} วินาที เพื่อนใช้เวลาน้อยกว่า ${p} ${dm} นาที ${ds} วินาที เพื่อนใช้เวลาเท่าใด`, 'เวลาของ' + p + ' − เวลาที่น้อยกว่า', ['เวลาของ' + p + ' + เวลาที่น้อยกว่า', 'เวลาของ' + p + ' × 2'], [Math.floor(b / 60), b % 60], ['นาที', 'วินาที']); }
+    return T4S(`${p}วิ่งรอบสนามใช้เวลา ${m1} นาที ${s1} วินาที เพื่อนใช้เวลาน้อยกว่า ${p} ${dm} นาที ${ds} วินาที เพื่อนใช้เวลาเท่าใด`, 'เวลาของ' + p + ' − เวลาที่น้อยกว่า', ['เวลาของ' + p + ' + เวลาที่น้อยกว่า', 'เวลาของ' + p + ' × 2'], [Math.floor(b / 60), b % 60], ['นาที', 'วินาที'], '', [a, dm * 60 + ds, '−', 'ms']); }
   if (k === 5) { const mo = t4n(2, 5), d = t4n(5, 25), mo2 = t4n(1, 2), d2 = t4n(10, 28), tot = (mo + mo2) * 30 + d + d2;
-    return T4S(`โรงงานใช้เวลาผลิตสินค้าล็อตแรก ${mo} เดือน ${d} วัน ล็อตที่สองใช้เวลา ${mo2} เดือน ${d2} วัน รวมใช้เวลาทั้งหมดกี่เดือน กี่วัน (1 เดือน = 30 วัน)`, 'เวลาล็อตแรก + เวลาล็อตที่สอง', ['เวลาล็อตแรก − เวลาล็อตที่สอง', 'เวลาล็อตแรก × 2'], [Math.floor(tot / 30), tot % 30], ['เดือน', 'วัน']); }
+    return T4S(`โรงงานใช้เวลาผลิตสินค้าล็อตแรก ${mo} เดือน ${d} วัน ล็อตที่สองใช้เวลา ${mo2} เดือน ${d2} วัน รวมใช้เวลาทั้งหมดกี่เดือน กี่วัน (1 เดือน = 30 วัน)`, 'เวลาล็อตแรก + เวลาล็อตที่สอง', ['เวลาล็อตแรก − เวลาล็อตที่สอง', 'เวลาล็อตแรก × 2'], [Math.floor(tot / 30), tot % 30], ['เดือน', 'วัน'], '', [mo * 30 + d, mo2 * 30 + d2, '+', 'md']); }
   const km = pick([120, 180, 240, 300, 360]), v = pick([60, 80, 90, 120].filter(x => km % x === 0 || (km * 60 / x) % 1 === 0));
-  return T4S(`รถยนต์วิ่งด้วยความเร็ว ${v} กิโลเมตรต่อชั่วโมง ระยะทาง ${km} กิโลเมตร ใช้เวลากี่นาที`, `${km} ÷ ${v} × 60`, [`${km} × ${v}`, `${km} − ${v}`], [km * 60 / v], ['นาที']); };
+  return T4S(`รถยนต์วิ่งด้วยความเร็ว ${v} กิโลเมตรต่อชั่วโมง ระยะทาง ${km} กิโลเมตร ใช้เวลากี่นาที`, `${km} × 60 ÷ ${v}`, [`${km} × ${v}`, `${km} − ${v}`], [km * 60 / v], ['นาที']); };
 const t4SeqGen = () => { const h = t4n(7, 10), m = pick([15, 20, 40, 45]), dh = t4n(1, 2), dm = pick([25, 30, 35, 50]), [H, M] = t3clock(T3(h, m) + dh * 60 + dm), p = pick(T4_NAMES);
   return Q.p4Seq({ text: `${p}เริ่มปั่นจักรยานเวลา ${t3dot(h, m)} ปั่นนาน ${dh} ชั่วโมง ${dm} นาที ${p}ปั่นเสร็จเวลาใด`, cards: [`เริ่มปั่นเวลา ${t3dot(h, m)}`, `ปั่นนาน ${dh} ชั่วโมง ${dm} นาที`, `${t3dot(h, m).replace(' น.', '')} + ${dh} ชั่วโมง ${dm} นาที = ${t3dot(H, M)}`, `ตอบ ปั่นเสร็จเวลา ${t3dot(H, M)}`] }); };
 
