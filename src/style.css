@@ -3739,3 +3739,5 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .t6-q .mnrow{max-width:min(640px,96%)}.t6-q .mnrow .mn-n{width:clamp(96px,12cqw,132px)}.t6-q .mnrow .mn-c{width:calc(var(--r) * 3.3px + 10px)}
 .t6-q.p2q .mnledw{min-width:min(520px,56cqw)}.t6-q.p2q .mnledw .mnled td{font-size:clamp(12px,1.5cqw,15px);padding:3px 6px}.t6-q.p2q .mnledw .mnled .hd td{font-size:clamp(11px,1.3cqw,13px)}
 .x3st{gap:8px}.x3st .storybox{font-size:clamp(17px,2.2cqw,21px);line-height:1.55;max-width:min(820px,94cqw)}.x3unit{font-size:20px!important;margin-left:6px}
+.k3zq{gap:10px}.k3zq .k3-eq{font-size:clamp(34px,5cqw,52px)}.k3stcol{display:flex;justify-content:center;width:100%}
+.f3-st.k3st2{flex-direction:column!important;gap:4px!important}.f3-st.k3st2 > .p4-fig .storybox{font-size:15px;padding:4px 12px;line-height:1.4}.f3-st.k3st2 .p4steplab{margin:0}
