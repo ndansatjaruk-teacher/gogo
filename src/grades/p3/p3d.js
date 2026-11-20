@@ -150,7 +150,10 @@ Object.assign(Q, {
   d3Unk({ a, b, c, pos }) { const x = pos === 0 ? a : b, L = pos === 0 ? '□' : fmt(a), R = pos === 1 ? '□' : b;
     return { prompt: `${L} ÷ ${R} = ${fmt(c)} — □ คือจำนวนใด`, say: `${pos === 0 ? 'อะไร' : thaiWords(a)} หารด้วย ${pos === 1 ? 'อะไร' : thaiWords(b)} เท่ากับ ${thaiWords(c)}`, mount(bd, ctx) {
       const hint = pos === 0 ? `ไม่รู้ตัวตั้ง → คูณ: ผลหาร × ตัวหาร = ${fmt(c)} × ${b}` : `ไม่รู้ตัวหาร → ${fmt(c)} × □ = ${fmt(a)} ลองคูณ ${fmt(c)} × 2, × 3, … จนได้ ${fmt(a)}`;
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'fbig p4big mt-big', html: `${L === '□' ? '<span class="fsign">□</span>' : L} <span class="fop">÷</span> ${R === '□' ? '<span class="fsign">□</span>' : R} <span class="fop">=</span> ${fmt(c)}` }), answerBox(ctx, String(x), { hint }))); } }; }
+      const right = pos === 0 ? `${fmt(c)} × ${b}` : `${fmt(a)} ÷ ${fmt(c)}`, opts = pos === 0 ? [right, `${fmt(c)} ÷ ${b}`, `${fmt(c)} + ${b}`] : [right, `${fmt(a)} × ${fmt(c)}`, `${fmt(a)} − ${fmt(c)}`];
+      const step2 = () => { if (pos === 0) { const w = h('div', { class: 'k3stcol' }); Q.colW({ nums: [c, b], op: '×' }).mount(w, ctx); return w; } return c <= 9 ? d3Work(a, c, ctx) : answerBox(ctx, String(x), { hint }); };
+      bd.append(h('div', { class: 't6-q p4-q p2q p2st f3-st b3uq' }, h('div', { class: 'fbig p4big mt-big', html: `${L === '□' ? '<span class="fsign">□</span>' : L} <span class="fop">÷</span> ${R === '□' ? '<span class="fsign">□</span>' : R} <span class="fop">=</span> ${fmt(c)}` }),
+        tkTwoStep(ctx, '① □ หาได้จากข้อใด', shuffle(opts), right, pos === 0 ? 'ไม่รู้ตัวตั้ง → ผลหาร × ตัวหาร' : 'ไม่รู้ตัวหาร → ตัวตั้ง ÷ ผลหาร', step2, `<b>□ = ${right}</b> ✓ · ② ${pos === 0 ? 'ตั้งคูณ' : c <= 9 ? 'หารยาว' : 'หาค่า □'}`))); } }; } /* v176: เลือกความสัมพันธ์ แล้วตั้งคูณ/หารยาวเอง */
 });
 
 const d3chkQ = ([D, k]) => { const q = Math.floor(D / k), r = D % k, right = `${fmt(q)} × ${k}${r ? ` + ${r}` : ''} = ${fmt(D)}`;

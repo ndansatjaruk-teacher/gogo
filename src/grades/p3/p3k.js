@@ -62,7 +62,9 @@ Object.assign(Q, {
         choices(ctx, ['>', '<', '='].map(v => ({ value: v, label: v })), right, { hint: 'สลับที่การคูณ ผลคูณเท่าเดิม · ถ้ามีจำนวนหนึ่งเท่ากัน ให้ดูอีกจำนวน' }))); } }; },
   k3Unk({ k, x, pos }) { const p = k * x, s = pos ? `${k} × □ = ${p}` : `□ × ${k} = ${p}`, q = 'หาจำนวนที่แทน □';
     return { prompt: q, say: `หาจำนวนที่แทนกรอบสี่เหลี่ยม ${pos ? `${thaiWords(k)} คูณ กรอบ` : `กรอบ คูณ ${thaiWords(k)}`} เท่ากับ ${thaiWords(p)}`, __sig: `k3u ${s}`, mount(bd, ctx) {
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: `<div class="fbig p4big">${p4uHTML(s)}</div>` }), answerBox(ctx, String(x), { hint: 'นึกถึงสูตรคูณ: จำนวนใดคูณแล้วได้ผลคูณนี้ (ลองค่าแล้วคูณตรวจ)' }))); } }; },
+      const right = `${fmt(p)} ÷ ${fmt(k)}`, hk = k % 100 === 0 ? `${k / 100} × อะไร = ${p / 100}` : `${fmt(k)} × อะไร = ${fmt(p)}`;
+      bd.append(h('div', { class: 't6-q p4-q p2q p2st f3-st b3uq' }, h('div', { class: 'p4-fig', html: `<div class="fbig p4big">${p4uHTML(s)}</div>` }),
+        tkTwoStep(ctx, '① □ หาได้จากข้อใด', shuffle([right, `${fmt(p)} × ${fmt(k)}`, `${fmt(p)} − ${fmt(k)}`]), right, 'ไม่รู้ตัวคูณ → ผลคูณ ÷ ตัวคูณที่รู้', () => answerBox(ctx, String(x), { hint: `คิด ${hk} (ท่องสูตรคูณ หรือลองคูณตรวจ)` }), `<b>□ = ${right}</b> ✓ · ② หาค่า □`))); } }; }, /* v176: เลือกความสัมพันธ์ก่อน */
   k3Story({ text, a, b, unit, wrong }) { const r = a * b, sent = `${fmt(a)} × ${fmt(b)} = □`;
     return { prompt: 'อ่านโจทย์ แล้วหาคำตอบ', say: text, __sig: 'k3s ' + text.slice(0, 40), mount(bd, ctx) {
       bd.append(h('div', { class: 't6-q p4-q p2q p2st f3-st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })),

@@ -165,7 +165,7 @@
 | `Q.k3Col` | `{ a, m, flip }` | [`grades/p3/p3k.js:43`](../src/grades/p3/p3k.js#L43) |
 | `Q.k3Groups` | `{ g, m, z }` | [`grades/p3/p3k.js:57`](../src/grades/p3/p3k.js#L57) |
 | `Q.k3Long` | `{ a, b }` | [`grades/p3/p3k.js:45`](../src/grades/p3/p3k.js#L45) |
-| `Q.k3Story` | `{ text, a, b, unit, wrong }` | [`grades/p3/p3k.js:66`](../src/grades/p3/p3k.js#L66) |
+| `Q.k3Story` | `{ text, a, b, unit, wrong }` | [`grades/p3/p3k.js:68`](../src/grades/p3/p3k.js#L68) |
 | `Q.k3Unk` | `{ k, x, pos }` | [`grades/p3/p3k.js:63`](../src/grades/p3/p3k.js#L63) |
 | `Q.k3Zero` | `{ a, b }` | [`grades/p3/p3k.js:47`](../src/grades/p3/p3k.js#L47) |
 | `Q.k7Ang` | `{ fig, a, q = 'หาผลบวกของขนาดของมุมภายในของรูปหลายเหลี่ยม', hint }` | [`grades/p6/p6k.js:200`](../src/grades/p6/p6k.js#L200) |
