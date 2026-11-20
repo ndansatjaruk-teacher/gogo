@@ -3707,6 +3707,31 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .keypad .btn.d3key{background:#FFE58A;transform:scale(.92);box-shadow:inset 0 0 0 3px #E3A21C}
 .d3ans .btn.d3nx{min-width:180px}
 .ql-grid .p4sd.d3sd,.d3wq .p4sd.d3sd{font-size:clamp(34px,4.6cqw,50px)}
+
+/* ---------- v137 ป.3 การวัดความยาว ---------- */
+.t6-q .p2ruler.l3ruler{width:min(980px,96cqw);max-height:none!important}
+.ql-grid .ql-top svg.l3ruler,.ql-grid .ql-left svg.l3ruler{max-height:none!important}
+.l3place .l3-n{font:800 22px var(--font-num);fill:#4A4560}.l3place .l3-u{font:700 16px var(--font);fill:#6B5A3E}
+.l3place .l3-rul{cursor:grab;touch-action:none}.l3place .l3-rul.ok > rect:first-child{stroke:#2FA36B;stroke-width:3}
+.l3pw{touch-action:none}
+.ans.l3wait{opacity:.35;pointer-events:none}
+.l3wait .keypad,.l3wait .mc-row,.ans.l3wait{opacity:.35;pointer-events:none}
+.w3w{font-size:clamp(26px,3.6cqw,40px)}.w3w td{min-width:clamp(64px,8cqw,96px);padding:4px 14px}.w3w tr.hd td{font-size:clamp(14px,1.7cqw,17px)}
+.w3w tr.cy td{font-size:.55em;height:1.2em;padding-top:0;padding-bottom:0}.w3w .w3cy{color:#E5505E}.w3w .w3new{color:#2F7FD8}
+.w3w s{text-decoration-color:#E5505E;text-decoration-thickness:3px;color:#8C86A3}.w3w .w3tmp{font-size:.6em}
+.w3w td.on{background:#FFF8D6;border-radius:8px}.w3w .d3ask{display:inline-block;min-width:1.2em;padding:0 .2em;color:#C2485A;background:#FFF3B0;border-radius:6px;box-shadow:inset 0 0 0 2px #E3A21C}
+.w3dq{gap:10px}.w3dslot .t6-q.d3wq{gap:clamp(16px,4cqw,48px)}
+.ql-grid.ql-side > .ql-top.p2mwrap{width:100%;justify-self:stretch}.ql-grid.ql-side > .ql-top.p2mwrap .p2map{width:min(600px,100%)}
+.ql-grid.ql-side .ql-top svg.p2map{max-height:min(62cqh,430px)!important}
+.ql-grid.ql-side > .ql-top:is(.p2mwrap,.p2wwrap){max-width:100%!important}
+.l3stair{display:grid;grid-template-columns:repeat(7,auto);column-gap:4px;align-items:start;justify-content:center;padding:6px 0 0}
+.l3st{grid-row:1;grid-column:calc(var(--i) * 2 + 1);min-width:clamp(96px,12cqw,140px);margin-top:calc(var(--i) * 46px);background:linear-gradient(#FFE9A8,#F9D36A);border:2px solid #E3A21C;border-radius:12px 12px 0 0;padding:10px 6px;display:flex;flex-direction:column;align-items:center;font:800 clamp(16px,2cqw,20px) var(--font);min-height:calc(170px - var(--i) * 46px)}
+.l3st small{font:700 14px var(--font);color:#8A6A1E}
+.l3arr{grid-row:1;grid-column:calc(var(--i) * 2 + 2);align-self:start;margin-top:calc(var(--i) * 46px + 34px);border:0;border-radius:14px;background:#fff;box-shadow:var(--e1);padding:6px 12px;display:flex;flex-direction:column;cursor:pointer;font:800 clamp(14px,1.7cqw,17px) var(--font-num)}
+.l3arr .dn{color:#2F7FD8}.l3arr .up{color:#C2485A}.l3arr.on{box-shadow:0 0 0 3px #2FA36B}
+.l3stick{height:auto;display:block;margin:4px auto}.l3-sl{font:800 15px var(--font);fill:#4A4560}
+.l3est{display:flex;align-items:flex-end;justify-content:center;gap:22px}.l3est .objs{display:flex;align-items:flex-end}.l3kid{display:flex;flex-direction:column;align-items:center;gap:2px}.l3kid small{font:700 13px var(--font);color:#6B6585}
+.w3st .storybox{font-size:clamp(17px,2.2cqw,21px);line-height:1.55}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -7837,6 +7862,8 @@ function qSim(q, done, opt = {}) {
   if (G) { box.append(h6wait(), body); setFb(''); trackPick(body); q.mount(body, ctx); ixDropBlank(body); calcZoom(body); qLayout(body); requestAnimationFrame(() => fitBody(body)); return box; }
   box.append(h6wait(), bub, body); trackPick(body); q.mount(body, ctx); calcZoom(body); qsArrange(box, bub, body); qLayout(body); return box;
 }
+/* v136/137 (ผู้ใช้ขอ: หน้าฝึกจัดองค์ประกอบเหมือนในเกม): ลูกเจี๊ยบถามในกรอบคำพูดด้านบน คำถามไม่ซ้ำในการ์ด — ใช้ใน T(title, say, qPlay(q, doneText, lead)) */
+const qPlay = (q, done, lead) => el => { const Q2 = lead ? { ...q, prompt: `${lead} — ${q.prompt}` } : q; el.append(h('div', { class: 'colstack prac prac-game' }, qSim(Q2, done, { bub: window.__teachBub }))); };
 /* v97 practice layout (ผู้ใช้ขอ — ทุกบท): a question with a picture → picture LEFT · question small top-right · answer bottom-right;
    no picture → question on top, answers in the middle-to-bottom (no giant question text) */
 const QS_ANS = 'button, input, .keypad, .opts, .opt, .ans, .ans-slot, .slot, .ix-dz, [draggable], .seg, .fslots, .blank';
@@ -15871,7 +15898,7 @@ const P4_S2SM = [
 /* ---------- lessons ---------- */
 const L4M = (no, place, title, short, goal, teach, game) => ({ id: 440 + no, place, title, short, tone: TONES5[(no + 4) % 6], goal, teach, game });
 const p4ldR = (D, k) => { const P = p4ldivPlan(D, k); return `${fmt(D)} ÷ ${fmt(k)} = <b>${fmt(P.q)}</b>${P.rem ? ` เศษ <b>${fmt(P.rem)}</b>` : ''}`; };
-const p4ldEx = (D, k, title) => T(`ตัวอย่างทีละขั้น: ${fmt(D)} ÷ ${fmt(k)}`, `ตัวอย่างทีละขั้น ${thaiWords(D)} หาร ${thaiWords(k)}`, p4ex(p4ldivRows(D, k), p4ldR(D, k) + (title || ''), '', () => h('div', { class: 'p4-fig', html: p4divFig(D, k) })));
+const p4ldEx = (D, k, title) => T(`ตัวอย่างทีละขั้น: ${fmt(D)} ÷ ${fmt(k)}`, `ตัวอย่างทีละขั้น ${thaiWords(D)} หาร ${thaiWords(k)}`, el => d3demo(D, k, { fin: p4ldR(D, k) + (title || '') })(el)); /* v137: กระดานเดียวกับเกม ทำให้ดูทีละขั้น (เดิมกระดานไม่ขยับ มีแต่รายการด้านขวา) */
 const p4divGame = list => list.map(([D, k]) => Q.p4Div({ D, k }));
 const LESSONS_P4C3 = [
   L4M(1, 'บ่อน้ำคูณทด', 'การคูณจำนวน 1 หลัก กับจำนวนมากกว่า 4 หลัก', 'คูณด้วย 1 หลัก', 'หาผลคูณของจำนวนหนึ่งหลักกับจำนวนที่มากกว่าสี่หลัก โดยการตั้งคูณ',
@@ -15901,7 +15928,7 @@ const LESSONS_P4C3 = [
     () => [...pkF(P4W3_DL, 4).map(([D, k]) => Q.p4Div({ D, k })), ...pkF(P4W3_DM, 2).map(([D, k]) => Q.p4Num({ fig: p4big(`<b class="num">${fmt(D)} ÷ ${k}</b> <b class="fop">=</b> <span class="fsign">?</span>`), q: 'หาผลหาร (คิดในใจ)', a: D / k, hint: `คิดจาก ${fmt(D / 10 ** ((String(D).match(/0*$/) || [''])[0].length))} ÷ ${k} แล้วเติม 0` }))]),
   L4M(7, 'เต็นท์หารสั้น', 'การหารที่ตัวตั้งมีมากกว่า 4 หลัก และตัวหารมี 1 หลัก ด้วยการหารสั้น', 'หารสั้น', 'หาผลหารและเศษ ด้วยการหารสั้น เมื่อตัวหารมีหนึ่งหลัก',
     [T('กด<b>หารหลักต่อไป</b> — เศษเขียนตัวเล็กไว้หน้าหลักถัดไป', 'กดหารหลักต่อไป เศษเขียนตัวเล็กไว้หน้าหลักถัดไป', el => el.append(simShortDiv4([[48756, 4], [92385, 7], [61209, 8]]))),
-     T('ตัวอย่างทีละขั้น: 74,368 ÷ 3', 'ตัวอย่างทีละขั้น', p4ex(p4ldivRows(74368, 3), p4ldR(74368, 3), '', () => p4wrap(p4sdivHTML(74368, 3, 4))))],
+     T('ตัวอย่างทีละขั้น: 74,368 ÷ 3', 'ตัวอย่างทีละขั้น', el => d3demo(74368, 3, { short: true, fin: p4ldR(74368, 3) })(el))],
     () => pkF(P4W3_DS, 6).map(([D, k]) => Q.p4Div({ D, k, fig: p4sdivHTML(D, k), label: 'หารสั้น' }))),
   L4M(8, 'บ่อน้ำหารสิบ', 'การหารที่ตัวหารมี 2 หลัก และเป็นพหุคูณของ 10 ด้วยการหารยาว', 'ตัวหารพหุคูณของ 10', 'หาผลหารและเศษ เมื่อตัวหารเป็นพหุคูณของ 10 ด้วยการหารยาว',
     [T('ตัวหารเป็นพหุคูณของ 10 — <b>คิดจากเลขหน้า 0</b> ช่วยเดาผลหาร', 'ตัวหารเป็นพหุคูณของสิบ คิดจากเลขหน้าศูนย์ช่วยเดาผลหาร', el => el.append(simLongDiv4([[45680, 20], [93870, 70]]))), p4ldEx(18650, 50, '<br>เช่น 186 ÷ 50 คิดจาก 18 ÷ 5 ได้ 3')],
@@ -19278,6 +19305,61 @@ function w3ColHTML(a, b, op, m, o = {}) { const U = W3P[m].U, A = w3split(a, m),
   return `<table class="w2col"><tr class="hd"><td></td><td>${U[0]}</td><td>${U[1]}</td></tr><tr><td></td>${cell(A[0])}${cell(A[1])}</tr>
     <tr><td class="op">${op}</td>${op === '×' ? `<td></td>${cell(b)}` : cell(B[0]) + cell(B[1])}</tr><tr class="res"><td></td>${o.q ? '<td>?</td><td>?</td>' : cell(Rr[0]) + cell(Rr[1])}</tr></table>`; }
 
+/* ---------- v137 (ผู้ใช้ขอ: ให้เด็กตั้งบวก ลบ คูณ เองจริง ๆ) — ตารางตั้งหน่วยคู่ที่เด็กเติมเองทีละช่อง ----------
+   + : บวกหน่วยเล็ก → (ครบ R ทด 1) → บวกหน่วยใหญ่ (+ ที่ทด) · − : (ไม่พอ → กระจาย) → ลบหน่วยเล็ก → ลบหน่วยใหญ่ · × : คูณหน่วยเล็ก → (ทด) → คูณหน่วยใหญ่ + ที่ทด
+   คำตอบเขียนลงช่องในตารางเอง ผิดแต่ละขั้นบอกเหตุผล · เฉลยเติมตารางครบ · ใช้ทั้งบทน้ำหนักและบทความยาว */
+function w3Work(a, b, op, m, ctx, o = {}) {
+  const P = W3P[m], U = P.U, R = P.R, A = w3split(a, m), B = op === '×' ? [0, b] : w3split(b, m), res = w3split(op === '+' ? a + b : op === '−' ? a - b : a * b, m);
+  const T = []; let carry = 0, borrow = false;
+  if (op === '+') { const s1 = A[1] + B[1]; T.push({ t: 'n1', v: s1, lab: `บวก${U[1]}: <b>${fmt(A[1])} + ${fmt(B[1])}</b> = ?`, why: v => `${fmt(A[1])} + ${fmt(B[1])} ไม่เท่ากับ ${fmt(v)}` });
+    if (s1 >= R) { carry = 1; T.push({ t: 'c1', v: s1 - R, lab: `${fmt(s1)} ${U[1]} ครบ ${fmt(R)} → ทด <b>1 ${U[0]}</b> เหลือกี่${U[1]}`, why: v => `${fmt(R)} ${U[1]} = 1 ${U[0]} · ${fmt(s1)} − ${fmt(R)} ไม่เท่ากับ ${fmt(v)}` }); }
+    T.push({ t: 'n0', v: A[0] + B[0] + carry, lab: `บวก${U[0]}: <b>${fmt(A[0])} + ${fmt(B[0])}${carry ? ' + 1 (ที่ทด)' : ''}</b> = ?`, why: v => carry && v === A[0] + B[0] ? `อย่าลืมบวก 1 ${U[0]} ที่ทดมา` : `${fmt(A[0])} + ${fmt(B[0])}${carry ? ' + 1' : ''} ไม่เท่ากับ ${fmt(v)}` }); }
+  else if (op === '−') { let a1 = A[1], a0 = A[0];
+    if (A[1] < B[1]) { borrow = true; a1 = A[1] + R; a0 = A[0] - 1; T.push({ t: 'br', v: a1, lab: `${fmt(A[1])} − ${fmt(B[1])} ไม่พอ → กระจาย 1 ${U[0]} = ${fmt(R)} ${U[1]}: <b>${fmt(A[1])} + ${fmt(R)}</b> = ?`, why: v => `1 ${U[0]} = ${fmt(R)} ${U[1]} → ${fmt(A[1])} + ${fmt(R)} ไม่เท่ากับ ${fmt(v)}` }); }
+    T.push({ t: 'n1', v: a1 - B[1], lab: `ลบ${U[1]}: <b>${fmt(a1)} − ${fmt(B[1])}</b> = ?`, why: v => `${fmt(a1)} − ${fmt(B[1])} ไม่เท่ากับ ${fmt(v)}` });
+    T.push({ t: 'n0', v: a0 - B[0], lab: `ลบ${U[0]}: <b>${fmt(a0)} − ${fmt(B[0])}</b> = ?${borrow ? ` <small>(กระจายไปแล้ว ${fmt(A[0])} เหลือ ${fmt(a0)})</small>` : ''}`, why: v => borrow && v === A[0] - B[0] ? `กระจายไปแล้ว 1 ${U[0]} — ${fmt(A[0])} เหลือ ${fmt(a0)}` : `${fmt(a0)} − ${fmt(B[0])} ไม่เท่ากับ ${fmt(v)}` }); }
+  else { const p1 = A[1] * b; T.push({ t: 'n1', v: p1, lab: `คูณ${U[1]}: <b>${fmt(A[1])} × ${b}</b> = ?`, why: v => `${fmt(A[1])} × ${b} ไม่เท่ากับ ${fmt(v)}` });
+    if (p1 >= R) { carry = Math.floor(p1 / R); T.push({ t: 'c1', v: p1 % R, lab: `${fmt(p1)} ${U[1]} = <b>${carry} ${U[0]}</b> กับอีกกี่${U[1]}`, why: v => `${carry} ${U[0]} = ${fmt(carry * R)} ${U[1]} · ${fmt(p1)} − ${fmt(carry * R)} ไม่เท่ากับ ${fmt(v)}` }); }
+    T.push({ t: 'n0', v: A[0] * b + carry, lab: `คูณ${U[0]}: <b>${fmt(A[0])} × ${b}${carry ? ` + ${carry} (ที่ทด)` : ''}</b> = ?`, why: v => carry && v === A[0] * b ? `อย่าลืมบวก ${carry} ${U[0]} ที่ทดมา` : `${fmt(A[0])} × ${b}${carry ? ` + ${carry}` : ''} ไม่เท่ากับ ${fmt(v)}` }); }
+  let at = 0, typed = '', fin = false, hadWrong = false;
+  const fig = h('div', { class: 'w2colwrap w3wfig' }), lab = h('div', { class: 'p4steplab d3lab' }), kp = h('div', { class: 'keypad' });
+  const done = t => T.some((x, j) => x.t === t && (j < at || fin));
+  const paint = () => { const cur = fin ? {} : T[at] || {}, ask = v => `<span class="d3ask">${typed || '?'}</span>`, c = (v, cls = '') => `<td class="${cls}">${v}</td>`;
+    const r1 = done('c1') ? fmt(res[1]) : T.some(x => x.t === 'c1') ? (cur.t === 'c1' ? `<s class="w3tmp">${fmt(T.find(x => x.t === 'n1').v)}</s> ${ask()}` : (cur.t === 'n1' ? ask() : '')) : done('n1') ? fmt(res[1]) : cur.t === 'n1' ? ask() : '';
+    const r0 = done('n0') ? fmt(res[0]) : cur.t === 'n0' ? ask() : '';
+    const top0 = op === '−' ? (done('br') ? `<b class="w3new">${fmt(A[0] - 1)}</b>` : '') : (carry && done('c1') ? `<b class="w3cy">${carry}</b>` : '');
+    const top1 = op === '−' && T.some(x => x.t === 'br') ? (done('br') ? `<b class="w3new">${fmt(A[1] + R)}</b>` : cur.t === 'br' ? ask() : '') : '';
+    const sA0 = op === '−' && done('br') ? `<s>${fmt(A[0])}</s>` : fmt(A[0]), sA1 = op === '−' && done('br') ? `<s>${fmt(A[1])}</s>` : fmt(A[1]);
+    fig.innerHTML = `<table class="w2col w3w"><tr class="hd"><td></td><td>${U[0]}</td><td>${U[1]}</td></tr><tr class="cy"><td></td>${c(top0)}${c(top1)}</tr><tr><td></td>${c(sA0)}${c(sA1)}</tr>
+      <tr><td class="op">${op}</td>${op === '×' ? `<td></td>${c(b)}` : c(fmt(B[0])) + c(fmt(B[1]))}</tr><tr class="res"><td></td>${c(r0, cur.t === 'n0' ? 'on' : '')}${c(r1, cur.t === 'n1' || cur.t === 'c1' ? 'on' : '')}</tr></table>`;
+    kp.classList.toggle('d3off', fin);
+    lab.innerHTML = fin ? `= <b>${w3t(op === '+' ? a + b : op === '−' ? a - b : a * b, m)}</b>${shown ? '' : ' ✓'}` : cur.lab; };
+  let shown = false;
+  const next = () => { typed = ''; at++; sfx.pop(at + 2); if (hadWrong && ctx.say) { ctx.say('ถูกแล้ว ทำช่องต่อไปได้เลย'); hadWrong = false; } if (at >= T.length) { fin = true; paint(); ctx.check(true); return; } paint(); };
+  const enter = v => { const cur = T[at]; if (fin || !cur) return; if (v === cur.v) return next(); hadWrong = true; typed = ''; paint(); ctx.check(false, cur.why(v)); };
+  const key = d => h('button', { class: 'btn', onclick: e => { e.stopPropagation(); if (fin) return; sfx.tap(); typed = (typed + d).slice(-7).replace(/^0+(\d)/, '$1'); paint(); } }, d);
+  [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(key(d)));
+  kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: e => { e.stopPropagation(); typed = typed.slice(0, -1); paint(); } }, icon('left')), key(0),
+    h('button', { class: 'btn primary', 'aria-label': 'ตกลง', onclick: e => { e.stopPropagation(); if (typed !== '') enter(+typed); } }, icon('check')));
+  const panel = h('div', { class: 'ans ia d3ans' }, lab, kp); panel.reveal = () => { if (fin) return; fin = true; shown = true; at = T.length; paint(); };
+  paint(); return h('div', { class: 't6-q p4-q d3wq w3wq' }, fig, panel);
+}
+/* ÷ หน่วยคู่ (ผู้ใช้ขอ: ใช้หารยาวที่เพิ่งเรียน): ① เปลี่ยนเป็นหน่วยเล็ก ② หารยาวเองบนกระดาน ③ เปลี่ยนกลับเป็นหน่วยคู่ */
+function w3DivWork(a, b, m, ctx) { const P = W3P[m], U = P.U, n = Math.round(a / P.s), q = Math.round(n / b), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack w3dslot' });
+  const sub = f => ({ check: (ok, hn) => { if (!ok) return ctx.check(false, hn); f(); }, say: t => ctx.say && ctx.say(t) });
+  const s3 = () => { lab.innerHTML = `ขั้นที่ 3: ${fmt(q)} ${U[1]} = กี่${U[0]} กี่${U[1]}`; slot.innerHTML = ''; slot.append(duoInput(ctx, w3split(q * P.s, m), U, { pre: '', hint: `${fmt(P.R)} ${U[1]} = 1 ${U[0]}` })); };
+  const s2 = () => { sfx.pop(4); ctx.say && ctx.say('ถูกแล้ว! หารยาวต่อเลย'); lab.innerHTML = `ขั้นที่ 2: หารยาว <b>${fmt(n)} ÷ ${b}</b>`; slot.innerHTML = ''; const W = d3Work(n, b, ctx, { final: false, short: n > 9999, onDone: () => setTimeout(s3, 500) }); slot.append(W); };
+  lab.innerHTML = `ขั้นที่ 1: เปลี่ยนตัวตั้งให้เป็น<b>${U[1]}</b>ทั้งหมด`;
+  slot.append(h('div', { class: 'rowstack' }, answerBox(sub(s2), String(n), { hint: `1 ${U[0]} = ${fmt(P.R)} ${U[1]} → ${fmt(w3split(a, m)[0])} × ${fmt(P.R)} + ${fmt(w3split(a, m)[1])}` }), h('span', { class: 'cap', style: { fontSize: '20px' } }, U[1])));
+  return h('div', { class: 'colstack w3dq' }, lab, slot); } /* โจทย์อยู่ในกรอบคำพูดแล้ว ไม่พิมพ์ซ้ำ */
+/* v137 โจทย์ปัญหา: ตัวเลือกวิธีคิดครบ 3 ข้อ · แยกตัวเลขจากประโยคสัญลักษณ์เพื่อให้คิดในตาราง (ถ้าแยกไม่ได้ใช้ช่องตอบแบบเดิม) */
+const w3StoryOpts = (sent, wrong) => { const out = [...wrong], ops = [' + ', ' − ', ' × ', ' ÷ '], op = ops.find(o => sent.includes(o));
+  if (op) ops.filter(o => o !== op && !((op === ' + ' || op === ' − ') && (o === ' × ' || o === ' ÷ ')) && !((op === ' × ' || op === ' ÷ ') && o === ' − ')).forEach(o => { const t = sent.replace(op, o); if (out.length < 2 && t !== sent && !out.includes(t)) out.push(t); });
+  if (op === ' − ' && out.length < 2) { const [x, y] = sent.split(op); const t = `${y} − ${x}`; if (!out.includes(t)) out.push(t); }
+  return out.slice(0, 2); };
+const w3StoryJob = (sent, g, m) => { if (!m) return null; const op = ['+', '−', '×', '÷'].find(o => sent.includes(` ${o} `)); if (!op) return null;
+  const [L, R] = sent.split(` ${op} `), pv = t => { const v = typeof l3p === 'function' ? l3p(t) : 0; return v || w3p(t); }, a = pv(L), b = op === '×' || op === '÷' ? +R.replace(/,/g, '') : pv(R);
+  if (!a || !b || !Number.isFinite(b)) return null; const r = op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : a / b; return r === g ? { a, b, op } : null; };
 /* ---------- teaching sims ---------- */
 function simW3Tool(items) { // tap a thing, then tap the most suitable scale
   const box = h('div', { class: 'colstack' }, h6wait()), row = h('div', { class: 'rowstack w3items ia' }), tools = h('div', { class: 'rowstack w3tools ia', html: Object.keys(W3_TOOL).map(k => w3ToolCard(k)).join('') }), out = fNote(); let cur = null, good = 0;
@@ -19328,16 +19410,17 @@ Object.assign(Q, {
   w3Calc({ a, b, op, m }) { const r = op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : a / b, U = W3P[m].U;
     const q = op === '÷' ? `${w3t(a, m)} ÷ ${b} = ?` : op === '×' ? `${w3t(a, m)} × ${b} = ?` : `${w3t(a, m)} ${op} ${w3t(b, m)} = ?`;
     const hint = op === '÷' ? `เปลี่ยนเป็น${U[1]}ก่อน: ${fmt(a / W3P[m].s)} ${U[1]} ÷ ${b} แล้วเปลี่ยนกลับ` : op === '×' ? `คูณ${U[1]}ก่อน ครบ ${fmt(W3P[m].R)} ${U[1]} ทดเป็น 1 ${U[0]}` : op === '+' ? `บวก${U[1]}ก่อน ครบ ${fmt(W3P[m].R)} ${U[1]} ทด 1 ${U[0]}` : `ลบ${U[1]}ก่อน ไม่พอให้กระจาย 1 ${U[0]} = ${fmt(W3P[m].R)} ${U[1]}`;
-    return { prompt: q, say: q, mount(bd, ctx) { const fig = op === '÷' ? h('div', { class: 'fbig p4big', html: `<b class="num">${w3t(a, m)}</b> <span class="fop">÷</span> <b class="num">${b}</b>` }) : h('div', { class: 'w2colwrap', html: w3ColHTML(a, b, op, m, { q: true }) });
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, fig, duoInput(ctx, w3split(r, m), U, { pre: '', hint })));
-      ctx.onRight = () => { if (op !== '÷') fig.innerHTML = w3ColHTML(a, b, op, m); }; } };
+    return { prompt: op === '÷' ? `${q} <small>(เปลี่ยนหน่วย → หารยาว → เปลี่ยนกลับ)</small>` : `${q} <small>(เติมคำตอบลงในตารางทีละช่อง)</small>`, say: q, mount(bd, ctx) { /* v137: เด็กทำเองในตาราง / หารยาวเอง */
+      bd.append(op === '÷' ? w3DivWork(a, b, m, ctx) : w3Work(a, b, op, m, ctx)); void hint; } };
   },
   /* story: ① choose the way ② answer in the unit pair (or one unit) */
-  w3Story({ text, sent, wrong, g, m, unit }) {
+  w3Story({ text, sent, wrong, g, m, unit }) { /* v137: ตัวเลือกวิธีคิด 3 ข้อ (เดิม 2 ข้อ เดาถูกครึ่งหนึ่ง) · ขั้นที่ 2 ตั้งในตาราง/หารยาวเอง */
+    const W = w3StoryOpts(sent, wrong), job = w3StoryJob(sent, g, m);
     return { prompt: 'อ่านโจทย์ เลือกวิธีคิด แล้วหาคำตอบ', say: text, mount(bd, ctx) {
-      bd.append(h('div', { class: 't6-q p4-q p2q p2st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })),
-        tkTwoStep(ctx, 'ขั้นที่ 1: เลือก<b>วิธีคิด</b>', [sent, ...wrong], sent, 'รวม/เพิ่ม → บวก · เหลือ/ต่างกัน → ลบ · หลายเท่า → คูณ · แบ่งเท่า ๆ กัน → หาร',
-          () => m ? duoInput(ctx, w3split(g, m), W3P[m].U, { pre: '' }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(g / W3U[unit]), {}), h('span', { class: 'cap', style: { fontSize: '20px' } }, unit))))); } };
+      bd.append(h('div', { class: 't6-q p4-q p2q p2st w3st' }, h('div', { class: 'p4-fig' }, h('div', { class: 'storybox', html: text })),
+        tkTwoStep(ctx, 'ขั้นที่ 1: เลือก<b>วิธีคิด</b>', [sent, ...W], sent, 'รวม/เพิ่ม/ยาวกว่า → บวก · เหลือ/ต่างกัน/สั้นกว่า → ลบ · หลายชิ้นเท่า ๆ กัน → คูณ · แบ่งเท่า ๆ กัน → หาร',
+          () => job ? (job.op === '÷' ? w3DivWork(job.a, job.b, m, ctx) : w3Work(job.a, job.b, job.op, m, ctx)) : m ? duoInput(ctx, w3split(g, m), W3P[m].U, { pre: '' }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(g / W3U[unit]), {}), h('span', { class: 'cap', style: { fontSize: '20px' } }, unit)),
+          `<b>${sent}</b> ✓ · ขั้นที่ 2: ${job && job.op === '÷' ? 'เปลี่ยนหน่วย หารยาว แล้วตอบ' : job ? 'คิดในตารางทีละช่อง' : 'หาคำตอบ'}`))); } };
   }
 });
 const W3W = ['มากกว่า', 'น้อยกว่า', 'เท่ากับ'];
@@ -20254,11 +20337,18 @@ function simL3Walk() { // walk 100 m per tap → 1 km = 1,000 m
     out.innerHTML = `เดินแล้ว <b>${fmt(m)} เมตร</b>${m >= 1000 ? ` = <b>${l3t(m * 1000, 'kmm')}</b>` : ''}${m === 1000 ? '<br>1,000 เมตร = 1 กิโลเมตร!' : ''}`; if (m >= 1000) teachDone(box); };
   const go = h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); if (m >= 1500) return; m += 100; sfx.pop(m / 100 % 8 + 1); draw(); } }, icon('right'), 'เดิน 100 เมตร');
   draw(); box.append(fig, go, out); return box; }
-function simL3Chain() { // unit ladder: tap a step to see × / ÷
-  const box = h('div', { class: 'colstack' }, h6wait()), out = fNote(), seen = new Set(), S = [['กิโลเมตร', 'เมตร', 1000], ['เมตร', 'เซนติเมตร', 100], ['เซนติเมตร', 'มิลลิเมตร', 10]];
-  const row = h('div', { class: 'l3chain ia' }, ...S.map(([a, b, k], i) => h('button', { class: 'l3step', html: `<b>1 ${a}</b><i>= ${fmt(k)} ${b}</i>`, onclick: e => { e.stopPropagation(); seen.add(i); sfx.pop(i + 2); e.currentTarget.classList.add('on');
-    out.innerHTML = `1 ${a} = ${fmt(k)} ${b}<br>${a} → ${b}: <b>× ${fmt(k)}</b> · ${b} → ${a}: <b>÷ ${fmt(k)}</b>`; if (seen.size >= 3) teachDone(box); } })));
-  out.innerHTML = 'แตะแต่ละขั้นของบันไดหน่วย'; box.append(row, out); return box; }
+function simL3Chain() { // v137 (ผู้ใช้ขอ: บันไดหน่วยให้เป็นภาพ) — บันได 4 ขั้น กม. → ม. → ซม. → มม. แตะลูกศรระหว่างขั้น
+  const box = h('div', { class: 'colstack' }, h6wait()), out = fNote(), seen = new Set(), N = ['กิโลเมตร', 'เมตร', 'เซนติเมตร', 'มิลลิเมตร'], K = [1000, 100, 10];
+  const st = h('div', { class: 'l3stair ia' });
+  N.forEach((n, i) => { st.append(h('div', { class: 'l3st', style: { '--i': i } }, h('b', null, n), h('small', null, ['กม.', 'ม.', 'ซม.', 'มม.'][i])));
+    if (i < 3) st.append(h('button', { class: 'l3arr', style: { '--i': i }, html: `<span class="dn">× ${fmt(K[i])} ↘</span><span class="up">↖ ÷ ${fmt(K[i])}</span>`, onclick: e => { e.stopPropagation(); seen.add(i); sfx.pop(i + 2); e.currentTarget.classList.add('on');
+      out.innerHTML = `1 ${N[i]} = <b>${fmt(K[i])} ${N[i + 1]}</b><br>ลงบันได (${N[i]} → ${N[i + 1]}) <b>× ${fmt(K[i])}</b> · ขึ้นบันได (${N[i + 1]} → ${N[i]}) <b>÷ ${fmt(K[i])}</b>`; if (seen.size >= 3) teachDone(box); } })); });
+  out.innerHTML = 'แตะลูกศรระหว่างขั้นบันไดทีละขั้น'; box.append(st, out); return box; }
+/* ไม้เมตร (แถบแดงขาวทุก 10 ซม.) — ใช้ในหน้ารู้จักเมตร */
+function l3StickSVG(cm) { const W = 220, n = Math.floor(cm / 100), r = cm % 100, tw = (n + r / 100) * W + 20; let s = '';
+  for (let k = 0; k < n + (r ? 1 : 0); k++) { const L = k < n ? 100 : r, x = 10 + k * W; for (let j = 0; j < L / 10; j++) s += `<rect x="${x + j * W / 10}" y="18" width="${Math.min(W / 10, (L - j * 10) / 100 * W)}" height="26" fill="${j % 2 ? '#fff' : '#E5505E'}"/>`;
+    s += `<rect x="${x}" y="18" width="${L / 100 * W}" height="26" fill="none" stroke="#7A2E36" stroke-width="2" rx="2"/><text x="${x + L / 200 * W}" y="62" text-anchor="middle" class="l3-sl">${k < n ? '1 ม.' : r + ' ซม.'}</text>`; }
+  return `<svg viewBox="0 0 ${tw} 72" class="l3stick" style="width:min(${Math.round(tw * 1.3)}px,96%)" aria-hidden="true">${s}</svg>`; }
 function simL3Guess(items) { // guess with body units, then measure
   const box = h('div', { class: 'colstack' }, h6wait()), out = fNote(); let k = 0, g = 0; const fig = h('div', { class: 'pw-fig' }), lab = h('div', { class: 'fbig' });
   let wait = false; const show = () => { wait = false; if (k >= items.length) return; const [name, e, cm, step] = items[k]; /* v134: กด “วัดจริง” ซ้ำเร็ว ๆ เคยทำให้ items[k] เกินรายการแล้ว error */ g = step * 2; fig.innerHTML = objRow(e, 1, { size: '96px' }).outerHTML + `<div class="cap">${name}</div>`; lab.innerHTML = `คาดคะเน: <b class="num">${mcTxt(g)}</b> <small>(ทีละ ${step} ซม.)</small>`; out.innerHTML = 'ใช้ เพิ่ม/ลด คาดคะเน แล้วกด “วัดจริง”<br>1 คืบ ≈ 15 ซม. · 1 ก้าว ≈ 50 ซม. · กางแขน ≈ 1 เมตร'; };
@@ -20273,9 +20363,9 @@ Object.assign(Q, {
   l3Read({ it }) { const mm = it.b - it.a, q = `${it.name}ยาวกี่เซนติเมตร กี่มิลลิเมตร`;
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig p2rwrap', html: l3RulerSVG(it, { max: it.max }) }),
       duoInput(ctx, [Math.floor(mm / 10), mm % 10], ['เซนติเมตร', 'มิลลิเมตร'], { pre: '', hint: it.a ? `ปลายอยู่ที่ ${l3len(it.b)} เริ่มที่ ${l3len(it.a)} → ลบกัน` : 'นับขีดยาว = เซนติเมตร แล้วนับขีดเล็กต่อ = มิลลิเมตร' }))); } }; },
-  l3Set({ it, mm }) { const q = `ลากปลาย${it.name}ให้ยาว ${l3len(mm).replace('ซม.', 'เซนติเมตร').replace('มม.', 'มิลลิเมตร')}`;
-    return { prompt: q, say: q, mount(bd, ctx) { const lab = h('div', { class: 'fbig' }), R = l3RulerDrag({ ...it, b: it.a + 25 }, { max: it.max }, v => { lab.innerHTML = `ตอนนี้ยาว <b class="num">${l3len(v)}</b>`; });
-      lab.innerHTML = `ตอนนี้ยาว <b class="num">${l3len(25)}</b>`; bd.append(h('div', { class: 'colstack' }, R, lab, checkButton('ตรวจคำตอบ', () => { const v = R.val(); ctx.check(v === mm, v > mm ? `ยาวเกินไป ${v - mm} มิลลิเมตร` : `ยังขาดอีก ${mm - v} มิลลิเมตร`); }))); } }; },
+  l3Set({ it, mm }) { const q = `ลากปลาย${it.name}ให้ยาว ${l3txt(mm)}`; /* v137: ไม่บอกความยาวสด ๆ — เด็กต้องอ่านไม้บรรทัดเอง */
+    return { prompt: q, say: q, mount(bd, ctx) { const lab = h('div', { class: 'p4steplab' }), R = l3RulerDrag({ ...it, b: it.a + 25 }, { max: it.max }, () => {});
+      lab.innerHTML = `ลากจุดสีแดง ให้ปลาย${it.name}ตรงกับ <b>${l3txt(mm)}</b> บนไม้บรรทัด`; bd.append(h('div', { class: 'colstack' }, R, lab, checkButton('ตรวจคำตอบ', () => { const v = R.val(); if (v === mm) lab.innerHTML = `ยาว <b>${l3txt(v)}</b> ✓`; ctx.check(v === mm, `ตอนนี้ยาว ${l3txt(v)} — ${v > mm ? 'ยาวเกินไป' : 'ยังสั้นไป'} ${v > mm ? v - mm : mm - v} มิลลิเมตร (ขีดเล็ก 1 ช่อง = 1 มิลลิเมตร)`); }))); } }; },
   l3Conv({ from, to }) { const v = l3p(from), pair = !!W3P[to], q = `${from} เท่ากับ${pair ? `กี่${W3P[to].U[0]} กี่${W3P[to].U[1]}` : `กี่${to}`}`, U = pair ? W3P[to] : null;
     const hint = pair ? `1 ${U.U[0]} = ${fmt(U.R)} ${U.U[1]}` : '1 กิโลเมตร = 1,000 เมตร · 1 เมตร = 100 เซนติเมตร · 1 เซนติเมตร = 10 มิลลิเมตร';
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: p4big(`<b class="num">${from}</b> = ?`) }),
@@ -20284,6 +20374,29 @@ Object.assign(Q, {
     return { prompt: q + ' <small>(แตะถนนเพื่อทำเครื่องหมายได้)</small>', say: q, mount(bd, ctx) { const f = h('div', { class: 'p4-fig p2mwrap ia', html: p2mapSVG(M) }); p2mapTap(f);
       bd.append(h('div', { class: 't6-q p4-q p2q' }, f, as === 'kmm' ? duoInput(ctx, w3split(m * 1000, 'kmm'), W3P.kmm.U, { pre: '', hint: 'บวกระยะทางของถนนที่ผ่าน แล้วเปลี่ยน 1,000 เมตร เป็น 1 กิโลเมตร' }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(m), { hint: 'ดูตัวเลขบนถนนที่ผ่าน (กิโลเมตร × 1,000 = เมตร)' }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เมตร')))); } }; }
 });
+/* ---------- v137 (ผู้ใช้ขอ: ให้วัดจริง) — เลื่อนไม้บรรทัดให้ 0 ตรงปลายของ แล้วอ่านความยาว ---------- */
+const l3txt = mm => [Math.floor(mm / 10) ? `${Math.floor(mm / 10)} เซนติเมตร` : '', mm % 10 ? `${mm % 10} มิลลิเมตร` : ''].filter(Boolean).join(' ') || '0 มิลลิเมตร';
+function l3PlaceSVG(it, off, o = {}) { const max = o.max || 12, S = max * 10 + 60, W = 1000, x0 = 14, u = (W - 28) / S, X = v => x0 + v * u, P = it.p, L = it.b - it.a, ry = 62; let s = '';
+  s += `<g transform="translate(${X(P)} 10)">${it.k === 'ribbon' ? `<rect width="${L * u}" height="26" y="8" rx="5" fill="${PAL[it.col || 'pink'][1]}" stroke="${PAL[it.col || 'pink'][3]}" stroke-width="2"/>` : p2obj(it.k, L * u, 44, it.col)}</g>`;
+  s += `<line x1="${X(P)}" x2="${X(P)}" y1="50" y2="${ry}" class="p2r-g a"/><line x1="${X(P + L)}" x2="${X(P + L)}" y1="50" y2="${ry}" class="p2r-g b"/>`;
+  s += `<g class="l3-rul${off === P ? ' ok' : ''}"><rect x="${X(off) - 16}" y="${ry}" width="${max * 10 * u + 32}" height="66" rx="6" fill="#FFF3B0" stroke="#E3A21C" stroke-width="2"/>`;
+  for (let v = 0; v <= max * 10; v++) { const Lt = v % 10 ? v % 5 ? 10 : 16 : 24; s += `<line x1="${X(off + v)}" x2="${X(off + v)}" y1="${ry}" y2="${ry + Lt}" stroke="#4A4560" stroke-width="${v % 10 ? 1.1 : 2}"/>`; if (!(v % 10)) s += `<text x="${X(off + v)}" y="${ry + 46}" text-anchor="middle" class="l3-n">${v / 10}</text>`; }
+  s += `<text x="${X(off + max * 10) + 12}" y="${ry + 60}" text-anchor="end" class="l3-u">ซม.</text><rect x="${X(off) - 16}" y="${ry}" width="${max * 10 * u + 32}" height="66" fill="transparent" class="l3-grab"/></g>`;
+  return `<svg viewBox="0 0 ${W} 136" class="p2ruler l3ruler l3place" aria-hidden="true">${s}</svg>`; }
+Object.assign(Q, {
+  l3Place({ it }) { const L = it.b - it.a, q = `วัด${it.name}: เลื่อนไม้บรรทัดให้ <b>0</b> ตรงปลาย${it.name} แล้วอ่านความยาว`;
+    return { prompt: q, say: `วัด${it.name} เลื่อนไม้บรรทัดให้ศูนย์ตรงปลาย${it.name} แล้วอ่านความยาว`, mount(bd, ctx) { const max = it.max || Math.max(8, Math.ceil(L / 10) + 2), S = max * 10 + 60, P = Math.min(it.p, 50); let off = it.off ?? (P > 30 ? 2 : 56), ok = false;
+      const wrap = h('div', { class: 'p2rwrap ia rvl l3pw' }), lab = h('div', { class: 'p4steplab l3plab', html: 'ลากไม้บรรทัดไปทางซ้าย–ขวา ให้ขีด <b>0</b> ตรงเส้นประที่ปลาย' + it.name });
+      const ans = duoInput(ctx, [Math.floor(L / 10), L % 10], ['เซนติเมตร', 'มิลลิเมตร'], { pre: '', hint: 'นับขีดยาวที่มีตัวเลข = เซนติเมตร แล้วนับขีดเล็กต่อ = มิลลิเมตร (ถ้าไม่มีให้กด 0)' }); ans.classList.add('l3wait');
+      const draw = () => { wrap.innerHTML = l3PlaceSVG({ ...it, p: P }, off, { max }); };
+      const done = () => { if (ok) return; ok = true; sfx.ok(); lab.innerHTML = `✓ 0 ตรงปลาย${it.name}แล้ว — <b>อ่านความยาว</b>`; ans.classList.remove('l3wait'); ctx.say && ctx.say('วางไม้บรรทัดถูกแล้ว อ่านความยาวได้เลย'); };
+      wrap.addEventListener('pointerdown', e => { if (ok || !e.target.closest('.l3-rul')) return; e.preventDefault(); e.stopPropagation(); const svg = wrap.firstChild, u = (1000 - 28) / S, k = 1000 / svg.getBoundingClientRect().width, x1 = e.clientX, o1 = off; /* ไม่ใช้ getScreenCTM — ผิดเมื่อการ์ดถูกย่อด้วย zoom */
+        const mv = ev => { const v = Math.max(0, Math.min(S - max * 10, Math.round(o1 + (ev.clientX - x1) * k / u))); if (v !== off) { off = v; draw(); } };
+        const up = () => { document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); if (Math.abs(off - P) <= 2) { off = P; draw(); done(); } else { sfx.tap(); lab.innerHTML = `ยังไม่ตรง — ขีด <b>0</b> ต้องอยู่ตรงปลาย${it.name} (เส้นประ${off > P ? 'ทางซ้าย' : 'ทางขวา'})`; } };
+        document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up); });
+      wrap.reveal = () => { off = P; draw(); ok = true; ans.classList.remove('l3wait'); };
+      draw(); bd.append(h('div', { class: 't6-q p4-q l3pq' }, wrap, lab, ans)); } }; }
+});
 const L3W_LONG = ['ยาวกว่า', 'สั้นกว่า', 'ยาวเท่ากับ'], L3W_TALL = ['สูงกว่า', 'เตี้ยกว่า', 'สูงเท่ากับ'];
 const l3CmpQ = ([A, B, tall]) => Q.p2cmpWord({ a: ['', A, l3p(A)], b: ['', B, l3p(B)], words: tall ? L3W_TALL : L3W_LONG, hint: 'เปลี่ยนเป็นหน่วยเดียวกันก่อน แล้วเปรียบเทียบ' });
 const l3SortQ = (items, q) => Q.ixSort({ q: q || 'เรียงจากสั้นที่สุดไปยาวที่สุด', items: items.map(([n, s]) => ({ label: `${n} ${s}`, v: l3p(s) })), dir: 'asc' });
@@ -20291,10 +20404,20 @@ const l3WhichQ = ([n1, s1, n2, s2, ask]) => { const a = l3p(s1), b = l3p(s2), bi
   return Q.p4Pick({ fig: `<div class="storybox">${n1} ${s1}<br>${n2} ${s2}</div>`, q: `สิ่งใด${ask}`, opts: [n1, n2], right, keep: true, hint: 'เปลี่ยนให้เป็นหน่วยเดียวกันก่อน แล้วจึงเปรียบเทียบ' }); };
 const l3UnitQ = ([t, u]) => Q.p4Pick({ fig: p4big(t.replace('…', '<b class="blank">?</b>')), q: 'ควรเติมหน่วยใด', say: t.replace('…', '') + ' ควรเติมหน่วยใด', opts: ['มิลลิเมตร', 'เซนติเมตร', 'เมตร', 'กิโลเมตร'], right: u, keep: true, hint: 'ของบางมาก → มิลลิเมตร · ของเล็ก → เซนติเมตร · ของสูงใหญ่ → เมตร · ระยะทางไกล → กิโลเมตร' });
 const L3S = (text, sent, wrong, g, m) => ({ text, sent, wrong, g, m });
+const l3SentQ = s => { const o = [s.sent, ...w3StoryOpts(s.sent, s.wrong)]; return Q.p4Pick({ fig: `<div class="storybox">${s.text}</div>`, q: 'ข้อใดเป็น<b>วิธีคิด</b>ของโจทย์นี้', opts: o, right: s.sent, hint: 'รวม/ยาวกว่า → บวก · เหลือ/ต่างกัน → ลบ · หลายชิ้นเท่า ๆ กัน → คูณ · แบ่งเท่า ๆ กัน → หาร' }); };
 
+/* v137 คำถามสั้นให้เกมหลากหลาย: ทด · กระจาย · ขั้นแรกของการหาร */
+const l3CarryQ = m => { const U = W3P[m].U, R = W3P[m].R, s1 = R + (m === 'cmm' ? 3 : m === 'mcm' ? 25 : 120); return Q.p4Pick({ fig: p4big(`บวก${U[1]}ได้ <b class="num">${fmt(s1)}</b> ${U[1]}`), q: 'ต้องเขียนอย่างไร',
+  opts: [`เขียน ${fmt(s1 - R)} ${U[1]} ทด 1 ${U[0]}`, `เขียน ${fmt(s1)} ${U[1]}`, `เขียน 1 ${U[1]} ทด ${fmt(s1 - R)} ${U[0]}`], right: `เขียน ${fmt(s1 - R)} ${U[1]} ทด 1 ${U[0]}`, hint: `${fmt(R)} ${U[1]} = 1 ${U[0]}` }); };
+const l3BorrowQ = m => { const U = W3P[m].U, R = W3P[m].R, x = m === 'cmm' ? [3, 8] : m === 'mcm' ? [25, 60] : [150, 700]; return Q.p4Pick({ fig: p4big(`ลบ${U[1]}: <b class="num">${x[0]} − ${x[1]}</b>`), q: 'ลบไม่พอ ต้องทำอย่างไร',
+  opts: [`กระจาย 1 ${U[0]} = ${fmt(R)} ${U[1]}`, `สลับเป็น ${x[1]} − ${x[0]}`, `กระจาย 1 ${U[0]} = ${fmt(R / 10)} ${U[1]}`], right: `กระจาย 1 ${U[0]} = ${fmt(R)} ${U[1]}`, hint: `1 ${U[0]} = ${fmt(R)} ${U[1]}` }); };
+const l3DivFirstQ = ([a, b, m]) => { const U = W3P[m].U; return Q.p4Pick({ fig: p4big(`<b class="num">${l3t(a, m)} ÷ ${b}</b>`), q: 'ขั้นแรกควรทำอย่างไร', opts: [`เปลี่ยนเป็น${U[1]}ทั้งหมดก่อน`, `หาร${U[0]}กับ${U[1]}แยกกันเลย`, `คูณด้วย ${b} ก่อน`], right: `เปลี่ยนเป็น${U[1]}ทั้งหมดก่อน`, hint: 'เปลี่ยนเป็นหน่วยเล็ก → หาร → เปลี่ยนกลับ' }); };
+const l3Small = ([a, , m]) => Math.round(a / W3P[m].s) <= 9999; /* หารยาว ป.3 ตัวตั้งไม่เกิน 4 หลัก */
 /* ---------- data ---------- */
 const L3W_RUL = [{ k: 'pencil', name: 'ดินสอ', a: 0, b: 73, col: 'mint' }, { k: 'brush', name: 'พู่กัน', a: 0, b: 92, col: 'yellow' }, { k: 'eraser', name: 'ยางลบ', a: 0, b: 34 }, { k: 'pen', name: 'ปากกา', a: 0, b: 108 },
   { k: 'sharpener', name: 'กบเหลาดินสอ', a: 10, b: 37 }, { k: 'pencil', name: 'ดินสอสี', a: 20, b: 87, col: 'coral' }, { k: 'ribbon', name: 'ริบบิ้น', a: 0, b: 53, col: 'lilac' }, { k: 'pen', name: 'ปากกาไฮไลต์', a: 0, b: 40 }]; // Word (วาดใหม่ ค่าใกล้เคียง)
+const L3W_PLACE = [{ k: 'pencil', name: 'ดินสอ', a: 0, b: 73, col: 'mint', p: 30 }, { k: 'eraser', name: 'ยางลบ', a: 0, b: 34, p: 52 }, { k: 'brush', name: 'พู่กัน', a: 0, b: 92, col: 'yellow', p: 26 }, { k: 'pen', name: 'ปากกา', a: 0, b: 108, p: 40 },
+  { k: 'sharpener', name: 'กบเหลาดินสอ', a: 0, b: 27, p: 60 }, { k: 'ribbon', name: 'ริบบิ้น', a: 0, b: 56, col: 'lilac', p: 44 }, { k: 'pencil', name: 'ดินสอสี', a: 0, b: 67, col: 'coral', p: 36 }]; /* v137 วัดเอง */
 const L3W_SET = [34, 40, 53, 73, 58, 66]; // Word : 3 ซม. 4 มม. · 4 ซม. 0 มม. · 5 ซม. 3 มม. · 7 ซม. 3 มม.
 const L3W_WALL = { items: [{ e: 'giraffe', name: 'ยีราฟ', cm: 285 }, { e: 'goat', name: 'แพะภูเขา', cm: 135 }, { e: 'pig', name: 'หมูป่า', cm: 90 }, { e: 'ostrich', name: 'นกกระจอกเทศ', cm: 210 }], o: { max: 300, mc: true } }; // Word 
 const L3T_WALL = [{ e: 'elephant', name: 'ช้าง', cm: 260 }, { e: 'lion', name: 'สิงโต', cm: 120 }, { e: 'girl', name: 'น้องฟ้า', cm: 135 }];
@@ -20311,9 +20434,12 @@ const L3W_EST = [['ชนิดาสูง 130 เซนติเมตร ย�
   ['มุกดามีไม้บรรทัดยาว 30 เซนติเมตร ซึ่งยาวกว่าหนังสือ มุกดาคาดคะเนว่าหนังสือยาว 500 มิลลิเมตร', 0, '500 มม. = 50 ซม. ยาวกว่าไม้บรรทัด จึงเป็นไปไม่ได้'],
   ['ไม้เมตรสั้นกว่ากรอบหน้าต่าง กมลจึงคาดคะเนว่ากรอบหน้าต่างกว้าง 1 เมตร 50 เซนติเมตร', 1, 'กว้างกว่า 1 เมตร → 1 ม. 50 ซม. เป็นไปได้'],
   ['เชือกยาว 1 เมตร 20 เซนติเมตร โต๊ะสูงน้อยกว่าเชือก ปุยฝ้ายคาดคะเนว่าโต๊ะสูง 100 เซนติเมตร', 1, 'โต๊ะเตี้ยกว่า 120 ซม. → 100 ซม. เป็นไปได้'],
-  ['ชายสูง 150 เซนติเมตร และสูงกว่าเจน ชายเดาว่าเจนสูง 1 เมตร 60 เซนติเมตร', 0, 'มาลีเตี้ยกว่า 150 ซม. แต่ 160 ซม. สูงกว่า'],
-  ['ยางลบหนา 10 เซนติเมตร คลิปหนีบกระดาษเล็กกว่ายางลบ ต้นข้าวคาดคะเนว่าคลิปกว้าง 200 มิลลิเมตร', 0, '200 มม. = 20 ซม. ใหญ่กว่าหนังสือ']]; // (เปลี่ยนชื่อตัวละครการ์ตูนเป็นชื่อไทย)
-const L3_EST = [['ประตูห้องเรียนสูงประมาณเท่าไร', 'door', '2 เมตร', ['20 เมตร', '20 เซนติเมตร']], ['ดินสอ 1 แท่งยาวประมาณเท่าไร', 'pencil', '18 เซนติเมตร', ['18 เมตร', '18 มิลลิเมตร']], ['ต้นไม้ใหญ่สูงประมาณเท่าไร', 'tree', '8 เมตร', ['8 เซนติเมตร', '8 กิโลเมตร']], ['แมวสูงประมาณเท่าไร', 'cat', '30 เซนติเมตร', ['3 เมตร', '30 มิลลิเมตร']], ['แก้วน้ำสูงประมาณเท่าไร', 'mug', '10 เซนติเมตร', ['1 เมตร', '10 มิลลิเมตร']]];
+  ['ต้นสูง 150 เซนติเมตร และสูงกว่าเจน ต้นคาดคะเนว่าเจนสูง 1 เมตร 60 เซนติเมตร', 0, 'เจนเตี้ยกว่า 150 ซม. แต่ 160 ซม. สูงกว่า 150 ซม.'],
+  ['หนังสือหนา 3 เซนติเมตร ยางลบบางกว่าหนังสือ ต้นข้าวคาดคะเนว่ายางลบหนา 50 มิลลิเมตร', 0, '50 มม. = 5 ซม. หนากว่าหนังสือ จึงเป็นไปไม่ได้']]; // (เปลี่ยนชื่อตัวละครการ์ตูนเป็นชื่อไทย)
+const L3_EST = [['ประตูห้องเรียนสูงประมาณเท่าไร', 'door', '2 เมตร', ['20 เมตร', '20 เซนติเมตร'], 200], ['ดินสอ 1 แท่งยาวประมาณเท่าไร', 'pencil', '18 เซนติเมตร', ['18 เมตร', '18 มิลลิเมตร']], ['ต้นไม้ใหญ่สูงประมาณเท่าไร', 'tree', '8 เมตร', ['8 เซนติเมตร', '8 กิโลเมตร'], 800], ['แมวสูงประมาณเท่าไร', 'cat', '30 เซนติเมตร', ['3 เมตร', '30 มิลลิเมตร'], 30], ['แก้วน้ำสูงประมาณเท่าไร', 'mug', '10 เซนติเมตร', ['1 เมตร', '10 มิลลิเมตร']]];
+/* v137: มีเด็กสูง 130 ซม. ยืนข้าง ๆ ให้เทียบขนาด (ไม่ใช่รูปลอย ๆ) */
+const l3EstFig = (e, cm) => { if (!cm) return objRow(e, 1, { size: '92px' }).outerHTML; const sc = 220 / Math.max(cm, 130), px = v => `${Math.max(34, Math.round(v * sc))}px`;
+  return `<div class="l3est">${objRow(e, 1, { size: px(cm) }).outerHTML}<div class="l3kid">${objRow('kid1', 1, { size: px(130) }).outerHTML}<small>เด็กสูง 130 ซม.</small></div></div>`; };
 const L3W_CONV1 = [['76 มิลลิเมตร', 'cmm'], ['542 มิลลิเมตร', 'cmm'], ['1,845 มิลลิเมตร', 'cmm'], ['413 เซนติเมตร', 'mcm'], ['3,789 เซนติเมตร', 'mcm'], ['305 เซนติเมตร', 'mcm'], ['93 เซนติเมตร', 'มิลลิเมตร'], ['59 เมตร 42 เซนติเมตร', 'มิลลิเมตร'], ['56 เมตร 12 เซนติเมตร', 'เซนติเมตร'],
   ['127 เมตร 1 เซนติเมตร', 'เซนติเมตร'], ['30 มิลลิเมตร', 'เซนติเมตร'], ['8 เซนติเมตร', 'มิลลิเมตร'], ['45 เซนติเมตร', 'มิลลิเมตร'], ['4 เมตร 83 เซนติเมตร', 'เซนติเมตร'], ['780 เซนติเมตร', 'mcm']]; // Word 
 const L3W_CONV2 = [['2 กิโลเมตร 650 เมตร', 'เมตร'], ['7 กิโลเมตร 420 เมตร', 'เมตร'], ['24 เซนติเมตร 1 มิลลิเมตร', 'มิลลิเมตร'], ['52 เมตร 67 เซนติเมตร', 'เซนติเมตร'], ['6,460 มิลลิเมตร', 'เซนติเมตร'], ['3,781 เมตร', 'kmm'], ['79,361 เมตร', 'kmm'], ['61,002 เมตร', 'kmm'],
@@ -20321,9 +20447,9 @@ const L3W_CONV2 = [['2 กิโลเมตร 650 เมตร', 'เมตร
 const L3W_CMP = [['459 เมตร', '346 เมตร', 1], ['32 เซนติเมตร 4 มิลลิเมตร', '28 เซนติเมตร 1 มิลลิเมตร'], ['1 เมตร 10 เซนติเมตร', '1 เมตร 90 เซนติเมตร', 1], ['209 มิลลิเมตร', '228 มิลลิเมตร'], ['19 เซนติเมตร', '180 มิลลิเมตร'],
   ['18 มิลลิเมตร', '1 เซนติเมตร 8 มิลลิเมตร'], ['23 เมตร', '2,300 เซนติเมตร', 1], ['4,050 เซนติเมตร', '45 เมตร'], ['29 เซนติเมตร 5 มิลลิเมตร', '290 มิลลิเมตร']]; // 
 const L3W_WHICH = [['ปากกา', 'ยาว 14 เซนติเมตร 6 มิลลิเมตร', 'ดินสอ', 'ยาว 138 มิลลิเมตร', 'ยาวกว่า'], ['โต๊ะ', 'สูง 90 เซนติเมตร 5 มิลลิเมตร', 'เก้าอี้', 'สูง 1 เมตร 5 มิลลิเมตร', 'สูงกว่า'], ['ทางไปโรงพยาบาล', 'ยาว 5 กิโลเมตร 500 เมตร', 'ทางไปตลาด', 'ยาว 2,800 เมตร', 'สั้นกว่า'],
-  ['ตึกที่ 1', 'สูง 1,400 เมตร', 'ตึกที่ 2', 'สูง 80,000 เซนติเมตร', 'สูงกว่า'], ['เชือกเส้นเอ', 'ยาว 2 เมตร', 'เชือกเส้นบี', 'ยาว 190 เซนติเมตร', 'สั้นกว่า'], ['ไม้บรรทัด', 'ยาว 300 มิลลิเมตร', 'สันหนังสือ', 'ยาว 32 เซนติเมตร', 'ยาวกว่า'],
-  ['ประตู', 'สูง 197 เซนติเมตร', 'หน้าต่าง', 'กว้าง 2 เมตร', 'ยาวกว่า'], ['ถนนเข้าหมู่บ้าน', 'ยาว 1,560 เมตร', 'กำแพงโรงงาน', 'ยาว 2 กิโลเมตร', 'ยาวกว่า']]; // Word 
-const L3W_SORT = [[['เชือกแดง', '2 เมตร 5 เซนติเมตร'], ['เชือกเขียว', '250 เซนติเมตร'], ['เชือกฟ้า', '2,020 มิลลิเมตร']], [['ถนนสายเอ', '3 กิโลเมตร 50 เมตร'], ['ถนนสายบี', '3,500 เมตร'], ['ถนนสายซี', '3,005 เมตร']]];
+  ['ตึกหลังที่ 1', 'สูง 140 เมตร', 'ตึกหลังที่ 2', 'สูง 8,000 เซนติเมตร', 'สูงกว่า'], ['เชือกสีแดง', 'ยาว 2 เมตร', 'เชือกสีฟ้า', 'ยาว 190 เซนติเมตร', 'สั้นกว่า'], ['ไม้บรรทัด', 'ยาว 300 มิลลิเมตร', 'สันหนังสือ', 'ยาว 32 เซนติเมตร', 'ยาวกว่า'],
+  ['ประตู', 'สูง 197 เซนติเมตร', 'ตู้เสื้อผ้า', 'สูง 2 เมตร', 'สูงกว่า'], ['ถนนเข้าหมู่บ้าน', 'ยาว 1,560 เมตร', 'กำแพงโรงงาน', 'ยาว 2 กิโลเมตร', 'ยาวกว่า']]; // Word 
+const L3W_SORT = [[['เชือกแดง', '2 เมตร 5 เซนติเมตร'], ['เชือกเขียว', '250 เซนติเมตร'], ['เชือกฟ้า', '2,020 มิลลิเมตร']], [['ถนนสาย ก', '3 กิโลเมตร 50 เมตร'], ['ถนนสาย ข', '3,500 เมตร'], ['ถนนสาย ค', '3,005 เมตร']]];
 const L3W_ADD = [[L3_MM(68, 5), L3_MM(21, 3), 'cmm'], [L3_KM(380, 837), L3_KM(479, 254), 'kmm'], [L3_KM(493, 924), L3_KM(315, 538), 'kmm'], [L3_MM(35, 7), L3_MM(8, 5), 'cmm'], [L3_CM(59, 56), L3_CM(53, 87), 'mcm'], [L3_KM(2, 567), L3_KM(6, 453), 'kmm'], [L3_KM(65, 900), L3_KM(17, 400), 'kmm'], [L3_MM(54, 8), L3_MM(31, 6), 'cmm']]; // Word 
 const L3W_SUB = [[L3_MM(57, 4), L3_MM(39, 2), 'cmm'], [L3_CM(72, 35), L3_CM(46, 67), 'mcm'], [L3_CM(83, 70), L3_CM(13, 27), 'mcm'], [L3_MM(78, 5), L3_MM(56, 3), 'cmm'], [L3_CM(74), L3_CM(43, 25), 'mcm'], [L3_KM(4, 213), L3_KM(3, 657), 'kmm'], [L3_MM(78), L3_MM(42, 6), 'cmm'], [L3_KM(19, 500), L3_KM(7, 600), 'kmm']]; // Word 
 const L3W_MUL = [[L3_MM(21, 9), 4, 'cmm'], [L3_MM(62, 4), 8, 'cmm'], [L3_KM(24, 100), 5, 'kmm'], [L3_KM(59, 400), 9, 'kmm'], [L3_MM(17, 4), 4, 'cmm'], [L3_MM(45, 7), 8, 'cmm'], [L3_CM(164, 58), 3, 'mcm'], [L3_CM(123, 76), 6, 'mcm'], [L3_KM(12, 32), 5, 'kmm'], [L3_KM(26, 745), 9, 'kmm']]; // Word 
@@ -20334,11 +20460,11 @@ const L3W_ST1 = [L3S('ทางเดินริมแม่น้ำยาว 
   L3S('หอคอยแห่งแรกสูง 544 เมตร 20 เซนติเมตร หอคอยแห่งที่สองสูง 90 เมตร 82 เซนติเมตร หอคอยแห่งแรกสูงกว่าเท่าใด', '544 ม. 20 ซม. − 90 ม. 82 ซม.', ['544 ม. 20 ซม. + 90 ม. 82 ซม.'], L3_CM(453, 38), 'mcm'),
   L3S('วันเสาร์พ่อขับรถได้ 85 กิโลเมตร 140 เมตร วันอาทิตย์ขับได้ 60 กิโลเมตร 160 เมตร วันเสาร์ขับได้ไกลกว่าเท่าไร', '85 กม. 140 ม. − 60 กม. 160 ม.', ['85 กม. 140 ม. + 60 กม. 160 ม.'], L3_KM(24, 980), 'kmm'),
   L3S('ยายมีลูกไม้ยาว 46 เซนติเมตร ซื้อมาเพิ่ม 30 เซนติเมตร 5 มิลลิเมตร ยายมีลูกไม้รวมยาวเท่าไร', '46 ซม. + 30 ซม. 5 มม.', ['30 ซม. 5 มม. − 46 ซม.'], L3_MM(76, 5), 'cmm'),
-  L3S('ร้านมีสายไฟยาว 1060 เมตร 53 เซนติเมตร ขายไป 140 เมตร เหลือสายไฟยาวเท่าไร', '1060 ม. 53 ซม. − 140 ม.', ['1060 ม. 53 ซม. + 140 ม.'], L3_CM(920, 53), 'mcm'),
+  L3S('ร้านมีสายไฟยาว 1,060 เมตร 53 เซนติเมตร ขายไป 140 เมตร เหลือสายไฟยาวเท่าไร', '1,060 ม. 53 ซม. − 140 ม.', ['1,060 ม. 53 ซม. + 140 ม.'], L3_CM(920, 53), 'mcm'),
   L3S('ทางจักรยานยาว 8 กิโลเมตร 312 เมตร มีช่วงที่กำลังซ่อม 2 กิโลเมตร 664 เมตร ช่วงที่ไม่ได้ซ่อมยาวเท่าไร', '8 กม. 312 ม. − 2 กม. 664 ม.', ['8 กม. 312 ม. + 2 กม. 664 ม.'], L3_KM(5, 648), 'kmm')]; // Word 
-const L3W_ST2 = [L3S('ร้านซื้อผ้าไหมม้วนละ 3300 เซนติเมตร 6 มิลลิเมตร มา 3 ม้วน ร้านได้ผ้าไหมยาวรวมเท่าไร', '3300 ซม. 6 มม. × 3', ['3300 ซม. 6 มม. ÷ 3'], L3_MM(9901, 8), 'cmm'),
+const L3W_ST2 = [L3S('ร้านซื้อผ้าไหมม้วนละ 33 เมตร 6 เซนติเมตร มา 3 ม้วน ร้านได้ผ้าไหมยาวรวมเท่าไร', '33 ม. 6 ซม. × 3', ['33 ม. 6 ซม. ÷ 3'], L3_CM(99, 18), 'mcm'),
   L3S('ดินสอยาวด้ามละ 10 เซนติเมตร 7 มิลลิเมตร วางเรียงกัน 6 ด้าม ยาวทั้งหมดเท่าไร', '10 ซม. 7 มม. × 6', ['10 ซม. 7 มม. ÷ 6'], L3_MM(64, 2), 'cmm'),
-  L3S('ผมยาวขึ้นเดือนละ 2 เซนติเมตร 8 มิลลิเมตร ผ่านไป 4 เดือน ผมยาวขึ้นเท่าไร', '2 ซม. 8 มม. × 4', ['2 ซม. 8 มม. + 4'], L3_MM(11, 2), 'cmm'),
+  L3S('ต้นกล้าสูงขึ้นสัปดาห์ละ 2 เซนติเมตร 8 มิลลิเมตร ผ่านไป 4 สัปดาห์ ต้นกล้าสูงขึ้นเท่าไร', '2 ซม. 8 มม. × 4', ['2 ซม. 8 มม. + 4'], L3_MM(11, 2), 'cmm'),
   L3S('เสื้อกีฬา 1 ตัว ใช้แถบสะท้อนแสงยาว 5 เซนติเมตร 6 มิลลิเมตร ถ้าเย็บเสื้อ 45 ตัว ต้องใช้แถบสะท้อนแสงยาวเท่าไร', '5 ซม. 6 มม. × 45', ['5 ซม. 6 มม. ÷ 45'], L3_MM(252, 0), 'cmm'),
   { text: 'ช่างนนท์ต้องทาสีถนนยาว 774 เมตร ทาสีได้วันละ 9 เมตร ช่างนนท์ใช้เวลาทาสีถนนกี่วัน', sent: '774 ÷ 9', wrong: ['774 × 9', '774 − 9'], g: 86, m: null, unit: 'วัน' },
   { text: 'สวนสาธารณะ 1 รอบยาว 4 กิโลเมตร นักวิ่งวิ่งได้ทั้งหมด 20,000 เมตร นักวิ่งวิ่งได้กี่รอบ', sent: '20,000 ÷ 4,000', wrong: ['20,000 × 4', '20,000 − 4,000'], g: 5, m: null, unit: 'รอบ' },
@@ -20346,7 +20472,7 @@ const L3W_ST2 = [L3S('ร้านซื้อผ้าไหมม้วนล�
   L3S('ยายมีเชือกปอยาว 330 เมตร 12 เซนติเมตร แบ่งให้หลาน 2 คนเท่า ๆ กัน ได้คนละเท่าไร', '330 ม. 12 ซม. ÷ 2', ['330 ม. 12 ซม. × 2'], L3_CM(165, 6), 'mcm'),
   L3S('กระเบื้องหนาแผ่นละ 2 เซนติเมตร 7 มิลลิเมตร วางซ้อนกัน 6 แผ่น หนาทั้งหมดเท่าไร', '2 ซม. 7 มม. × 6', ['2 ซม. 7 มม. ÷ 6'], L3_MM(16, 2), 'cmm'),
   L3S('เมย์วิ่งรอบสวน 5 รอบเท่า ๆ กัน รวมระยะทาง 5 กิโลเมตร 455 เมตร รอบละเท่าไร', '5 กม. 455 ม. ÷ 5', ['5 กม. 455 ม. × 5'], L3_KM(1, 91), 'kmm'),
-  L3S('ไม้ไผ่ยาว 678 เมตร 54 เซนติเมตร แบ่งเป็น 3 ท่อนยาวเท่า ๆ กัน ได้ท่อนละเท่าไร', '678 ม. 54 ซม. ÷ 3', ['678 ม. 54 ซม. × 3'], L3_CM(226, 18), 'mcm')]; // Word 
+  L3S('รั้วยาว 678 เมตร 54 เซนติเมตร แบ่งให้คนงาน 3 คนทาสีคนละเท่า ๆ กัน ได้คนละกี่เมตร กี่เซนติเมตร', '678 ม. 54 ซม. ÷ 3', ['678 ม. 54 ซม. × 3'], L3_CM(226, 18), 'mcm')]; // Word 
 
 /* ---------- lessons ---------- */
 const L3L = (no, place, title, short, goal, teach, game) => ({ id: 1320 + no, no, place, title, short, tone: TONES5[(no + 2) % 6], goal, teach, game, learned: true });
@@ -20357,12 +20483,13 @@ const LESSONS_P3C9 = [
       { fig: l3RulerSVG({ k: 'eraser', a: 0, b: 26 }, { max: 4 }), name: 'อ่านเซนติเมตรก่อน แล้วนับมิลลิเมตรต่อ', text: '2 เซนติเมตร กับอีก 6 มิลลิเมตร<br>= 2 ซม. 6 มม.' },
       { fig: l3RulerSVG({ k: 'sharpener', a: 10, b: 35 }, { max: 4 }), name: 'ไม่เริ่มที่ 0 ก็วัดได้', text: 'ปลาย − จุดเริ่ม: 35 − 10 = 25 มม. = 2 ซม. 5 มม.' }], '1 เซนติเมตร = 10 มิลลิเมตร · เขียนย่อ ซม. และ มม.'),
      pexStep('ตัวอย่างทีละขั้น: ดินสอยาวเท่าไร', 'ตัวอย่างทีละขั้น', [['① วางให้ปลายตรง 0', 'ปลายดินสออีกข้างเลย 6 ซม.', l3RulerSVG({ k: 'pencil', a: 0, b: 64, col: 'coral' }, { max: 8 })], ['② นับขีดเล็กต่อ', 'เลย 6 ไปอีก 4 ขีดเล็ก = 4 มม.', null], ['③ ตอบ', '6 เซนติเมตร 4 มิลลิเมตร = 64 มิลลิเมตร', null]], 'ดินสอยาว <b>6 ซม. 4 มม.</b>'),
-     T('ลองลากปลายริบบิ้น', 'ลองลากปลายริบบิ้น', el => el.append(simL3Ruler({ k: 'ribbon', name: 'ริบบิ้น', a: 0, b: 42, col: 'coral' }, { max: 10 })))],
-    () => [...pkF(L3W_RUL, 3).map(it => Q.l3Read({ it: { ...it, max: 12 } })), ...pkF(L3W_SET, 2).map(mm => Q.l3Set({ it: { k: 'ribbon', name: 'ริบบิ้น', a: 0, col: pick(['mint', 'sky', 'lilac']), max: 10 }, mm }))]),
+     T('ลองลากปลายริบบิ้น', 'ลองลากปลายริบบิ้น', el => el.append(simL3Ruler({ k: 'ribbon', name: 'ริบบิ้น', a: 0, b: 42, col: 'coral' }, { max: 10 }))),
+     T('ลองวัดเอง', 'ลองวัดเอง วางไม้บรรทัดให้ศูนย์ตรงปลาย แล้วอ่านความยาว', qPlay(Q.l3Place({ it: { k: 'pencil', name: 'ดินสอ', a: 0, b: 58, col: 'sky', p: 34 } }), 'วางให้ 0 ตรงปลายก่อนทุกครั้ง', 'ลองวัดเอง'))],
+    () => [...pkF(L3W_PLACE, 3).map(it => Q.l3Place({ it })), ...pkF(L3W_RUL, 3).map(it => Q.l3Read({ it: { ...it, max: 12 } })), ...pkF(L3W_SET, 2).map(mm => Q.l3Set({ it: { k: 'ribbon', name: 'ริบบิ้น', a: 0, col: pick(['mint', 'sky', 'lilac']), max: 10 }, mm }))]), /* v137: วางไม้บรรทัดเอง 3 · อ่าน 3 · ลากให้ยาวตามที่กำหนด 2 */
   L3L(2, 'ป่าไม้เมตร', 'ความยาวเป็นเมตรและเซนติเมตร', 'ม. และ ซม.', 'วัดและบอกความยาวเป็นเมตรและเซนติเมตร',
     [...learnStep('รู้จัก<b>เมตร</b>', 'รู้จักเมตร', [
-      { fig: lbig('1 เมตร = 100 เซนติเมตร'), name: 'ของยาว ๆ วัดเป็นเมตร', text: 'ไม้เมตร 1 อันยาว 100 ซม.' },
-      { fig: lbig('235 ซม. = 2 ม. 35 ซม.'), name: 'แยกทีละ 100', text: '235 = 200 + 35 · 200 ซม. = 2 ม.' },
+      { fig: l3StickSVG(100), name: 'ไม้เมตร 1 อัน = 1 เมตร = 100 เซนติเมตร', text: 'แถบสีละ 10 ซม. — 10 แถบ = 100 ซม. · ของยาว ๆ วัดเป็นเมตร' },
+      { fig: l3StickSVG(235), name: '235 ซม. = 2 ม. 35 ซม.', text: 'ไม้เมตร 2 อัน (200 ซม.) กับอีก 35 ซม.' },
       { fig: lbig('ม. · ซม.'), name: 'เขียนย่อ', text: 'เมตร = ม. · เซนติเมตร = ซม.' }], '1 เมตร = 100 เซนติเมตร'),
      pexStep('ตัวอย่างทีละขั้น: ช้างสูงเท่าไร', 'ตัวอย่างทีละขั้น', [['① อ่านค่าบนไม้วัด', 'ยอดหลังช้างตรง 260 ซม.', p2wallSVG(L3T_WALL, { max: 300, guides: true })], ['② แยก 100', '260 = 200 + 60', null], ['③ เปลี่ยนหน่วย', '200 ซม. = 2 ม. → 2 ม. 60 ซม.', null]], 'ช้างสูง <b>2 เมตร 60 เซนติเมตร</b>'),
      T('ลองสร้างความยาวด้วยไม้เมตร', 'ลองสร้างความยาวด้วยไม้เมตร', el => el.append(simMeterBuild([135, 208])))],
@@ -20383,7 +20510,7 @@ const LESSONS_P3C9 = [
       { fig: p2toolLab('tape'), name: 'สายวัดตัว', text: 'โค้งได้ วัดรอบตัว รอบแขน รอบต้นไม้' },
       { fig: p2toolLab('reel'), name: 'สายวัดชนิดตลับ', text: 'ยาวหลายเมตร เช่น ประตู หน้าต่าง กระดาน' }], 'สั้น → ไม้บรรทัด · โค้ง → สายวัดตัว · ยาวมาก → สายวัดชนิดตลับ'),
      pexStep('ตัวอย่างทีละขั้น: วัดรอบโอ่งน้ำ', 'ตัวอย่างทีละขั้น', [['① ดูลักษณะ', 'รอบโอ่ง = เส้นโค้ง', p2toolLab('tape')], ['② เลือกเครื่องมือ', 'ต้องโค้งตามได้ → สายวัดตัว', null], ['③ เลือกหน่วย', 'ยาวไม่ถึงหลายเมตร → เซนติเมตร', null]], 'ใช้ <b>สายวัดตัว</b> วัดเป็น<b>เซนติเมตร</b>'),
-     T('ลองจัดหน่วยให้เหมาะ', 'ลองจัดหน่วยให้เหมาะ', el => el.append(qSim(Q.ixGroup({ q: 'แตะสิ่งที่วัด แล้วแตะหน่วยที่เหมาะสม', bins: ['มิลลิเมตร', 'เซนติเมตร', 'เมตร', 'กิโลเมตร'], items: [{ label: 'ความหนาของเหรียญ', bin: 0, why: 'บางมาก → มิลลิเมตร' }, { label: 'ความยาวของช้อน', bin: 1, why: 'ของเล็ก → เซนติเมตร' }, { label: 'ความสูงของเสาไฟ', bin: 2, why: 'สูงใหญ่ → เมตร' }, { label: 'ระยะทางไปต่างจังหวัด', bin: 3, why: 'ไกลมาก → กิโลเมตร' }] }), 'ถูกต้อง!')))],
+     T('ลองจัดหน่วยให้เหมาะ', 'ลองจัดหน่วยให้เหมาะ', qPlay(Q.ixGroup({ q: 'แตะสิ่งที่วัด แล้วแตะหน่วยที่เหมาะสม', bins: ['มิลลิเมตร', 'เซนติเมตร', 'เมตร', 'กิโลเมตร'], items: [{ label: 'ความหนาของเหรียญ', bin: 0, why: 'บางมาก → มิลลิเมตร' }, { label: 'ความยาวของช้อน', bin: 1, why: 'ของเล็ก → เซนติเมตร' }, { label: 'ความสูงของเสาไฟ', bin: 2, why: 'สูงใหญ่ → เมตร' }, { label: 'ระยะทางไปต่างจังหวัด', bin: 3, why: 'ไกลมาก → กิโลเมตร' }] }), '', 'ลองจัดหน่วยให้เหมาะ'))],
     () => [...pkF(L3W_TOOL, 3).map(([task, ok, opts]) => Q.p2tool({ task, ok, opts })), ...pkF(L3W_UNIT, 2).map(l3UnitQ)]),
   L3L(5, 'ป่าคาดคะเน', 'การคาดคะเนความยาวเป็นเมตร และเป็นเซนติเมตร', 'คาดคะเนความยาว', 'คาดคะเนความยาวเป็นเมตรและเซนติเมตร',
     [...learnStep('<b>คาดคะเนความยาว</b>', 'คาดคะเนความยาว', [
@@ -20393,7 +20520,7 @@ const LESSONS_P3C9 = [
      pexStep('ตัวอย่างทีละขั้น: โต๊ะยาวประมาณเท่าไร', 'ตัวอย่างทีละขั้น', [['① ใช้คืบวัด', 'โต๊ะยาว 8 คืบ', lbig('8 คืบ')], ['② 1 คืบ ≈ 15 ซม.', '8 × 15 = 120 ซม.', null], ['③ คาดคะเน', 'ประมาณ 1 ม. 20 ซม.', null]], 'โต๊ะยาว<b>ประมาณ 1 เมตร 20 เซนติเมตร</b>'),
      T('ลองคาดคะเนแล้ววัดจริง', 'ลองคาดคะเนแล้ววัดจริง', el => el.append(simL3Guess([['ประตูห้องเรียน', 'door', 205, 10], ['ต้นไม้ในโรงเรียน', 'tree', 450, 50]])))],
     () => [Q.ixGroup({ q: 'การคาดคะเนนี้สมเหตุสมผลหรือไม่', bins: ['สมเหตุสมผล ✓', 'ไม่สมเหตุสมผล ✗'], items: pkF(L3W_EST, 3).map(([t, ok, why]) => ({ label: t, bin: ok ? 0 : 1, why })) }),
-      ...pkF(L3_EST, 3).map(([q, e, r, w]) => Q.p4Pick({ fig: objRow(e, 1, { size: '92px' }).outerHTML, q, opts: [r, ...w], right: r, hint: 'เทียบกับความยาวที่รู้ เช่น ไม้บรรทัด 30 ซม. ประตูสูง 2 ม.' })),
+      ...pkF(L3_EST, 3).map(([q, e, r, w, cm]) => Q.p4Pick({ fig: l3EstFig(e, cm), q, opts: [r, ...w], right: r, hint: 'เทียบกับความยาวที่รู้ เช่น เด็กสูงประมาณ 130 ซม. ไม้บรรทัด 30 ซม. ประตูสูง 2 ม.' })),
       Q.ixGroup({ q: 'การคาดคะเนนี้สมเหตุสมผลหรือไม่', bins: ['สมเหตุสมผล ✓', 'ไม่สมเหตุสมผล ✗'], items: pkF(L3W_EST, 3).map(([t, ok, why]) => ({ label: t, bin: ok ? 0 : 1, why })) })]),
   L3L(6, 'ป่าบันไดหน่วย', 'ความสัมพันธ์ระหว่างหน่วยความยาว', 'ความสัมพันธ์ของหน่วย', 'เปลี่ยนหน่วยความยาว กิโลเมตร เมตร เซนติเมตร มิลลิเมตร',
     [...learnStep('<b>บันไดหน่วยความยาว</b>', 'บันไดหน่วยความยาว', [
@@ -20402,48 +20529,48 @@ const LESSONS_P3C9 = [
       { fig: lbig('1 ซม. = 10 มม.'), name: 'เซนติเมตร → มิลลิเมตร', text: '× 10 · กลับทางใช้หาร' }], 'หน่วยใหญ่ → หน่วยเล็ก คูณ · หน่วยเล็ก → หน่วยใหญ่ หาร'),
      pexStep('ตัวอย่างทีละขั้น: 3 เมตร 25 เซนติเมตร = ? มิลลิเมตร', 'ตัวอย่างทีละขั้น', [['① เมตร → เซนติเมตร', '3 ม. = 300 ซม. → 300 + 25 = 325 ซม.', lbig('3 ม. 25 ซม. = 325 ซม.')], ['② เซนติเมตร → มิลลิเมตร', '325 × 10 = 3,250 มม.', lbig('325 ซม. = 3,250 มม.')]], '= <b>3,250 มิลลิเมตร</b>'),
      T('ลองแตะบันไดหน่วย', 'ลองแตะบันไดหน่วย', el => el.append(simL3Chain())),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.l3Conv({ from: '2,075 เมตร', to: 'kmm' }), 'ถูกต้อง!')))],
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.l3Conv({ from: '2,075 เมตร', to: 'kmm' }), '', 'ลองทำเอง'))],
     () => [...pkF(L3W_CONV1, 3).map(([from, to]) => Q.l3Conv({ from, to })), ...pkF(L3W_CONV2, 2).map(([from, to]) => Q.l3Conv({ from, to }))]),
   L3L(7, 'ป่าเทียบความยาว', 'การเปรียบเทียบความยาว', 'เปรียบเทียบความยาว', 'เปรียบเทียบความยาวที่มีหน่วยต่างกัน',
     [...learnStep('<b>เปรียบเทียบความยาว</b>', 'เปรียบเทียบความยาว', [
       { fig: lbig('19 ซม. ? 180 มม.'), name: 'หน่วยต่างกัน → เปลี่ยนให้เหมือนกันก่อน', text: '19 ซม. = 190 มม.' },
       { fig: lbig('190 มม. > 180 มม.'), name: 'แล้วจึงเปรียบเทียบ', text: '19 ซม. ยาวกว่า 180 มม.' },
       { fig: lbig('ยาวกว่า · สั้นกว่า · สูงกว่า · เตี้ยกว่า'), name: 'ใช้คำให้เหมาะ', text: 'ความสูงใช้ สูงกว่า / เตี้ยกว่า' }], 'เปลี่ยนเป็นหน่วยเดียวกัน → เปรียบเทียบ'),
-     pexStep('ตัวอย่างทีละขั้น: เชือกเอ 2 ม. กับเชือกบี 190 ซม.', 'ตัวอย่างทีละขั้น', [['① เปลี่ยนหน่วย', '2 ม. = 200 ซม.', p4cmpSVG({ big: 200, small: 190, nb: 'เชือกเอ', ns: 'เชือกบี' })], ['② เปรียบเทียบ', '200 > 190', null]], 'เชือกเอ<b>ยาวกว่า</b>เชือกบี 10 ซม.'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(l3CmpQ(['3 เมตร', '270 เซนติเมตร']), 'ถูกต้อง!')))],
+     pexStep('ตัวอย่างทีละขั้น: เชือกสีแดง 2 ม. กับเชือกสีฟ้า 190 ซม.', 'ตัวอย่างทีละขั้น', [['① เปลี่ยนหน่วย', '2 ม. = 200 ซม.', p4cmpSVG({ big: 200, small: 190, nb: 'เชือกสีแดง', ns: 'เชือกสีฟ้า' })], ['② เปรียบเทียบ', '200 > 190', null]], 'เชือกสีแดง<b>ยาวกว่า</b>เชือกสีฟ้า 10 ซม.'),
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(l3CmpQ(['3 เมตร', '270 เซนติเมตร']), '', 'ลองทำเอง'))],
     () => [...pkF(L3W_CMP, 3).map(l3CmpQ), l3WhichQ(pick(L3W_WHICH.filter((x, i) => i !== 4))), l3SortQ(pick(L3W_SORT))]),
   L3L(8, 'ป่าบวกลบความยาว', 'การบวกและการลบเกี่ยวกับความยาว', 'บวก ลบ ความยาว', 'บวกและลบความยาวที่มีสองหน่วย',
     [...learnStep('<b>บวก ลบ ความยาว</b>', 'บวก ลบ ความยาว', [
       { fig: w3ColHTML(L3_MM(35, 7), L3_MM(8, 5), '+', 'cmm', { q: true }), name: 'ตั้งหน่วยให้ตรงกัน', text: 'เริ่มคิดที่หน่วยเล็กก่อน' },
       { fig: lbig('7 + 5 = 12 มม. → ทด 1 ซม.'), name: 'ครบ 10 มม. ทด 1 ซม.', text: 'ครบ 100 ซม. ทด 1 ม. · ครบ 1,000 ม. ทด 1 กม.' },
-      { fig: lbig('35 − 67 ไม่ได้ → กระจาย 1 ม. = 100 ซม.'), name: 'ลบไม่พอ → กระจาย', text: '135 − 67 = 68 ซม.' }], 'หน่วยเล็กก่อน · ครบทด · ไม่พอกระจาย'),
+      { fig: w3ColHTML(L3_CM(72, 35), L3_CM(46, 67), '−', 'mcm', { q: true }), name: 'ลบไม่พอ → กระจาย 1 ม. = 100 ซม.', text: '35 − 67 ไม่ได้ → 135 − 67 = 68 ซม. · เมตรเหลือ 71' }], 'หน่วยเล็กก่อน · ครบทด · ไม่พอกระจาย'),
      pexStep('ตัวอย่างทีละขั้น: 72 ม. 35 ซม. − 46 ม. 67 ซม.', 'ตัวอย่างทีละขั้น', [['① เซนติเมตร', '35 − 67 ไม่ได้ → กระจาย: 135 − 67 = 68', w3ColHTML(L3_CM(72, 35), L3_CM(46, 67), '−', 'mcm', { q: true })], ['② เมตร', '71 − 46 = 25', w3ColHTML(L3_CM(72, 35), L3_CM(46, 67), '−', 'mcm')]], '= <b>25 ม. 68 ซม.</b>'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.w3Calc({ a: L3_MM(26, 8), b: L3_MM(14, 5), op: '+', m: 'cmm' }), 'ถูกต้อง!')))],
-    () => [...pkF(L3W_ADD.filter((x, i) => i !== 3), 3).map(([a, b, m]) => Q.w3Calc({ a, b, op: '+', m })), ...pkF(L3W_SUB.filter((x, i) => i !== 1), 2).map(([a, b, m]) => Q.w3Calc({ a, b, op: '−', m }))]),
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.w3Calc({ a: L3_MM(26, 8), b: L3_MM(14, 5), op: '+', m: 'cmm' }), '', 'ลองทำเอง'))],
+    () => [...pkF(L3W_ADD.filter((x, i) => i !== 3), 3).map(([a, b, m]) => Q.w3Calc({ a, b, op: '+', m })), ...pkF(L3W_SUB.filter((x, i) => i !== 1), 3).map(([a, b, m]) => Q.w3Calc({ a, b, op: '−', m })), l3CarryQ(pick(['cmm', 'mcm', 'kmm'])), l3BorrowQ(pick(['cmm', 'mcm', 'kmm']))]), /* v137: ตั้งในตาราง 6 · ทด · กระจาย */
   L3L(9, 'ป่าคูณหารความยาว', 'การคูณและการหารเกี่ยวกับความยาว', 'คูณ หาร ความยาว', 'คูณและหารความยาวที่มีสองหน่วย',
     [...learnStep('<b>คูณ หาร ความยาว</b>', 'คูณ หาร ความยาว', [
       { fig: w3ColHTML(L3_MM(17, 4), 4, '×', 'cmm', { q: true }), name: 'คูณหน่วยเล็กก่อน', text: '4 × 4 = 16 มม. = 1 ซม. 6 มม. → เขียน 6 ทด 1' },
       { fig: lbig('17 × 4 + 1 = 69 ซม.'), name: 'คูณหน่วยใหญ่ แล้วบวกที่ทด', text: '= 69 ซม. 6 มม.' },
       { fig: lbig('81 ม. 27 ซม. = 8,127 ซม. → ÷ 3'), name: 'หาร: เปลี่ยนเป็นหน่วยเล็กก่อน', text: '8,127 ÷ 3 = 2,709 ซม. = 27 ม. 9 ซม.' }], 'คูณ: หน่วยเล็กก่อนแล้วทด · หาร: เปลี่ยนเป็นหน่วยเล็ก แล้วเปลี่ยนกลับ'),
-     pexStep('ตัวอย่างทีละขั้น: 8 กม. 452 ม. ÷ 2', 'ตัวอย่างทีละขั้น', [['① เปลี่ยนเป็นเมตร', '8 กม. 452 ม. = 8,452 ม.', lbig('8,452 ม.')], ['② หาร', '8,452 ÷ 2 = 4,226 ม.', mtGroupsSVG(2, 1, 'flag', { box: 'plate', size: 26 })], ['③ เปลี่ยนกลับ', '4,226 ม. = 4 กม. 226 ม.', null]], '= <b>4 กม. 226 ม.</b>'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.w3Calc({ a: L3_MM(13, 6), b: 5, op: '×', m: 'cmm' }), 'ถูกต้อง!')))],
-    () => [...pkF(L3W_MUL.filter((x, i) => i !== 4), 2).map(([a, b, m]) => Q.w3Calc({ a, b, op: '×', m })), ...pkF(L3W_DIV.filter((x, i) => i !== 8 && i !== 10), 2).map(([a, b, m]) => Q.w3Calc({ a, b, op: '÷', m })), Q.ixMatch({ q: 'จับคู่โจทย์กับผลลัพธ์', pairs: pkF(L3W_MATCH, 4) })]),
+     pexStep('ตัวอย่างทีละขั้น: 8 กม. 452 ม. ÷ 2', 'ตัวอย่างทีละขั้น', [['① เปลี่ยนเป็นเมตร', '8 กม. = 8,000 ม. → 8,000 + 452 = 8,452 ม.', lbig('8 กม. 452 ม. = 8,452 ม.')], ['② หารยาว', '8,452 ÷ 2 = 4,226 ม.', `<div class="d3fig">${d3BoardHTML(8452, 2, 99, 'q')}</div>`], ['③ เปลี่ยนกลับ', '4,226 ม. = 4 กม. 226 ม.', lbig('4,226 ม. = 4 กม. 226 ม.')]], '= <b>4 กม. 226 ม.</b>'),
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.w3Calc({ a: L3_MM(13, 6), b: 5, op: '×', m: 'cmm' }), '', 'ลองทำเอง'))],
+    () => [...pkF(L3W_MUL.filter((x, i) => i !== 4), 3).map(([a, b, m]) => Q.w3Calc({ a, b, op: '×', m })), ...pkF(L3W_DIV.filter((x, i) => i !== 8 && i !== 10 && l3Small(x)), 2).map(([a, b, m]) => Q.w3Calc({ a, b, op: '÷', m })), l3DivFirstQ(pick(L3W_DIV)), l3CarryQ(pick(['cmm', 'mcm'])), Q.ixMatch({ q: 'จับคู่โจทย์กับผลลัพธ์', pairs: pkF(L3W_MATCH, 3) })]), /* v137: คูณในตาราง 3 · หารยาว 2 · ขั้นแรกของการหาร · ทด · จับคู่ 3 คู่ */
   L3L(10, 'ป่าโจทย์ความยาว', 'โจทย์ปัญหาเกี่ยวกับความยาว (1)', 'โจทย์ปัญหา (1)', 'แก้โจทย์ปัญหาการบวกและการลบเกี่ยวกับความยาว',
     [...learnStep('ขั้นตอน<b>แก้โจทย์ปัญหาความยาว</b>', 'ขั้นตอนแก้โจทย์ปัญหาความยาว', [
       { fig: lbig('ถาม? บอก?'), name: '① อ่านโจทย์', text: 'ยาวรวม · ยาวกว่า · เหลือ · ต่างกัน' },
       { fig: p4cmpSVG({ big: 498, small: 464, diff: 34, unk: 'big', nb: 'โบว์ดำ', ns: 'โบว์แดง', fv: v => l3len(v) }), name: '② แผนภาพ', text: 'ยาวกว่า → นำมาบวก · เหลือ/ต่างกัน → ลบ' },
       { fig: lbig('ตอบพร้อมหน่วย'), name: '③ คำนวณแล้วตอบ', text: 'เช่น 49 ซม. 8 มม.' }], 'ถาม → บอก → เลือกวิธี → คำนวณ → ตอบพร้อมหน่วย'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', 'ถนนยาว 9 กม. 567 ม. ชำรุด 1 กม. 743 ม. ไม่ชำรุดยาวเท่าไร', p4pwSVG({ w: 9567, p1: 1743, p2: 7824, unk: '2', l1: 'ชำรุด', l2: 'ไม่ชำรุด', lw: 'ถนนทั้งหมด', fv: v => `${Math.floor(v / 1000)} กม. ${v % 1000} ม.` })], ['① วิธีคิด', 'เหลือ → ลบ', w3ColHTML(L3_KM(9, 567), L3_KM(1, 743), '−', 'kmm', { q: true })], ['② คำนวณ', 'กระจาย 1 กม. = 1,000 ม.: 1,567 − 743 = 824 · 8 − 1 = 7', w3ColHTML(L3_KM(9, 567), L3_KM(1, 743), '−', 'kmm')]], 'ตอบ <b>7 กม. 824 ม.</b>'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.w3Story(L3S('ดินสอสีม่วงยาว 38 เซนติเมตร 2 มิลลิเมตร ดินสอสีเขียวสั้นกว่า 3 เซนติเมตร 2 มิลลิเมตร ดินสอสีเขียวยาวเท่าไร', '38 ซม. 2 มม. − 3 ซม. 2 มม.', ['38 ซม. 2 มม. + 3 ซม. 2 มม.'], L3_MM(35), 'cmm')), 'ถูกต้อง!')))],
-    () => pkF(L3W_ST1.filter((s, i) => i !== 6), 4).map(s => Q.w3Story(s))),
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.w3Story(L3S('ดินสอสีม่วงยาว 38 เซนติเมตร 2 มิลลิเมตร ดินสอสีเขียวสั้นกว่า 3 เซนติเมตร 2 มิลลิเมตร ดินสอสีเขียวยาวเท่าไร', '38 ซม. 2 มม. − 3 ซม. 2 มม.', ['38 ซม. 2 มม. + 3 ซม. 2 มม.'], L3_MM(35), 'cmm')), '', 'ลองทำเอง'))],
+    () => { const S = pkF(L3W_ST1.filter((s, i) => i !== 6), 6); return [...S.slice(0, 4).map(s => Q.w3Story(s)), ...S.slice(4).map(l3SentQ), l3CarryQ(pick(['cmm', 'kmm'])), l3BorrowQ(pick(['mcm', 'kmm']))]; }), /* v137 */
   L3L(11, 'ป่าโจทย์คูณหาร', 'โจทย์ปัญหาเกี่ยวกับความยาว (2)', 'โจทย์ปัญหา (2)', 'แก้โจทย์ปัญหาการคูณและการหารเกี่ยวกับความยาว',
     [...learnStep('โจทย์<b>คูณ หาร</b>ความยาว', 'โจทย์คูณ หาร ความยาว', [
       { fig: mtGroupsSVG(6, 1, 'pencil', { size: 22 }), name: 'หลายชิ้นยาวเท่ากัน → คูณ', text: '10 ซม. 7 มม. × 6 ด้าม' },
-      { fig: mtGroupsSVG(2, 1, 'flag', { box: 'plate', size: 22 }), name: 'แบ่งเท่า ๆ กัน → หาร', text: '478 ม. 48 ซม. ÷ 2 คน' },
+      { fig: l3StickSVG(240) + '<div class="cap">แบ่งเชือกให้ 2 คน คนละเท่า ๆ กัน</div>', name: 'แบ่งเท่า ๆ กัน → หาร', text: '478 ม. 48 ซม. ÷ 2 คน' },
       { fig: lbig('20,000 ม. ÷ 4,000 ม. = 5 รอบ'), name: 'หาว่ากี่ครั้ง/กี่รอบ → หาร', text: 'เปลี่ยนเป็นหน่วยเดียวกันก่อน' }], 'ยาวเท่ากันหลายชิ้น → คูณ · แบ่งเท่า ๆ กัน → หาร'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', 'กระเบื้องหนาแผ่นละ 2 ซม. 7 มม. ซ้อนกัน 6 แผ่น หนาเท่าไร', mtGroupsSVG(6, 1, 'book', { size: 20 })], ['① วิธีคิด', '6 แผ่นหนาเท่ากัน → คูณ', w3ColHTML(L3_MM(2, 7), 6, '×', 'cmm', { q: true })], ['② คำนวณ', '7 × 6 = 42 มม. = 4 ซม. 2 มม. · 2 × 6 + 4 = 16', w3ColHTML(L3_MM(2, 7), 6, '×', 'cmm')]], 'ตอบ <b>16 ซม. 2 มม.</b>'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.w3Story(L3S('ไม้บรรทัดยาวอันละ 30 เซนติเมตร 5 มิลลิเมตร วางต่อกัน 4 อัน ยาวทั้งหมดเท่าไร', '30 ซม. 5 มม. × 4', ['30 ซม. 5 มม. ÷ 4'], L3_MM(122), 'cmm')), 'ถูกต้อง!')))],
-    () => pkF(L3W_ST2.filter(s => s !== L3W_ST2[8]), 4).map(s => Q.w3Story(s)))
+     T('ลองทำเอง', 'ลองทำเอง', qPlay(Q.w3Story(L3S('ไม้บรรทัดยาวอันละ 30 เซนติเมตร 5 มิลลิเมตร วางต่อกัน 4 อัน ยาวทั้งหมดเท่าไร', '30 ซม. 5 มม. × 4', ['30 ซม. 5 มม. ÷ 4'], L3_MM(122), 'cmm')), '', 'ลองทำเอง'))],
+    () => { const S = pkF(L3W_ST2.filter(s => s !== L3W_ST2[8] && (!s.m || s.unit || l3Small([s.g * (s.sent.includes('÷') ? +s.sent.split('÷')[1].replace(/,/g, '') : 1), 0, s.m]))), 6); return [...S.slice(0, 4).map(s => Q.w3Story(s)), ...S.slice(4).map(l3SentQ), l3DivFirstQ(pick(L3W_DIV))]; }) /* v137 */
 ];
 
 /* ---------- boss ---------- */
@@ -20457,17 +20584,17 @@ const EXAM_P3C9 = d6spread([
   { q: 'วัดรอบลำต้นของต้นมะม่วง ควรใช้เครื่องมือใด', opts: ['สายวัดตัว', 'ไม้บรรทัด', 'ไม้เมตร', 'สายวัดชนิดตลับ'], a: 0, lv: 1324 },
   { q: 'ระยะทางจากกรุงเทพฯ ไปพัทยาประมาณ 252 … ควรเติมหน่วยใด', opts: ['กิโลเมตร', 'เมตร', 'เซนติเมตร', 'มิลลิเมตร'], a: 0, lv: 1324 },
   { q: 'ข้อใดเป็นการคาดคะเนที่สมเหตุสมผล', opts: ['ประตูห้องเรียนสูงประมาณ 2 เมตร', 'ดินสอยาวประมาณ 2 เมตร', 'แมวสูงประมาณ 3 เมตร', 'แก้วน้ำสูงประมาณ 1 เมตร'], a: 0, lv: 1325 },
-  { q: 'หนังสือหนา 10 เซนติเมตร ดินสอเล็กกว่าหนังสือ การคาดคะเนว่าดินสอกว้าง 200 มิลลิเมตร เป็นอย่างไร', opts: ['ไม่สมเหตุสมผล เพราะ 200 มม. = 20 ซม.', 'สมเหตุสมผล', 'ไม่สมเหตุสมผล เพราะ 200 มม. = 2 ซม.'], a: 0, lv: 1325 },
+  { q: 'หนังสือหนา 3 เซนติเมตร ยางลบบางกว่าหนังสือ การคาดคะเนว่ายางลบหนา 50 มิลลิเมตร เป็นอย่างไร', opts: ['ไม่สมเหตุสมผล เพราะ 50 มม. = 5 ซม.', 'สมเหตุสมผล', 'ไม่สมเหตุสมผล เพราะ 50 มม. = 50 ซม.'], a: 0, lv: 1325 },
   { q: '59 เมตร 42 เซนติเมตร เท่ากับกี่มิลลิเมตร', opts: ['59,420 มิลลิเมตร', '5,942 มิลลิเมตร', '594,200 มิลลิเมตร', '59,042 มิลลิเมตร'], a: 0, lv: 1326 },
   l3X('79,361 เมตร เท่ากับเท่าไร', L3_KM(79, 361), 'kmm', [L3_KM(7, 936)], 1326),
   { q: '19 เซนติเมตร … 180 มิลลิเมตร ควรเติมคำใด', opts: ['ยาวกว่า', 'สั้นกว่า', 'ยาวเท่ากับ'], a: 0, lv: 1327 },
-  { q: 'อาคาร A สูง 23 เมตร … อาคาร B สูง 2,300 เซนติเมตร ควรเติมคำใด', opts: ['สูงเท่ากับ', 'สูงกว่า', 'เตี้ยกว่า'], a: 0, lv: 1327 },
+  { q: 'อาคารหลังที่ 1 สูง 23 เมตร … อาคารหลังที่ 2 สูง 2,300 เซนติเมตร ควรเติมคำใด', opts: ['สูงเท่ากับ', 'สูงกว่า', 'เตี้ยกว่า'], a: 0, lv: 1327 },
   l3X('72 ม. 35 ซม. − 46 ม. 67 ซม. = ?', L3_CM(25, 68), 'mcm', [L3_CM(26, 68), L3_CM(26, 32)], 1328),
   l3X('380 กม. 837 ม. + 479 กม. 254 ม. = ?', L3_KM(860, 91), 'kmm', [L3_KM(859, 91), L3_KM(860, 1091)], 1328),
   l3X('62 ซม. 4 มม. × 8 = ?', L3_MM(499, 2), 'cmm', [L3_MM(496, 32), L3_MM(498, 2)], 1329),
   l3X('13 กม. 248 ม. ÷ 4 = ?', L3_KM(3, 312), 'kmm', [L3_KM(3, 62)], 1329),
   l3X('โบว์แดงยาว 46 ซม. 4 มม. โบว์ดำยาวกว่า 3 ซม. 4 มม. โบว์ดำยาวเท่าใด', L3_MM(49, 8), 'cmm', [L3_MM(43, 0)], 1330),
-  l3X('เอขับรถได้ 68 กม. 800 ม. บีขับได้ 45 กม. 600 ม. เอขับได้ไกลกว่าบีเท่าไร', L3_KM(23, 200), 'kmm', [L3_KM(114, 400)], 1330),
+  l3X('พ่อขับรถได้ 68 กม. 800 ม. ลุงขับได้ 45 กม. 600 ม. พ่อขับได้ไกลกว่าลุงเท่าไร', L3_KM(23, 200), 'kmm', [L3_KM(114, 400)], 1330),
   l3X('ดินสอยาวด้ามละ 10 ซม. 7 มม. วางเรียงกัน 6 ด้าม ยาวทั้งหมดเท่าไร', L3_MM(64, 2), 'cmm', [L3_MM(60, 42)], 1331)]);
 LESSONS_P3C9.push({ id: 1339, boss: true, place: 'ป่าไม้บรรทัดยักษ์', title: 'ด่านบอส: ป.3 บทที่ 9 การวัดความยาว', short: 'ด่านบอส · ข้อสอบ', tone: 'yellow',
   goal: 'คำถามท้ายบท 20 ข้อ (วัด ซม. มม. · ม. ซม. · กม. ม. · เลือกเครื่องมือและหน่วย · คาดคะเน · เปลี่ยนหน่วย · เปรียบเทียบ · บวก ลบ คูณ หาร · โจทย์ปัญหา) ตอบถูก 10 ข้อขึ้นไปเพื่อชนะบอส',
@@ -20682,7 +20809,7 @@ const L3D = (no, place, title, short, goal, teach, game) => ({ id: 1300 + no, no
 /* v136 (ผู้ใช้ขอ: หน้าตัวอย่าง/ทำตาม จัดองค์ประกอบให้เหมือนในเกม) */
 const d3demo = (D, k, o = {}) => el => { let W; const btn = h('button', { class: 'btn info d3nx', onclick: e => { e.stopPropagation(); W.step(); } }, icon('right'), h('span', null, 'ขั้นต่อไป'));
   W = d3Work(D, k, null, { ...o, demo: true, final: false, onDone: () => { btn.remove(); teachDone(el); } }); W.panel.insertBefore(btn, W.panel.querySelector('.keypad')); el.append(h('div', { class: 'colstack prac prac-game d3demo-p' }, W)); };
-const d3play = (q, done, lead) => el => { const Q2 = lead ? { ...q, prompt: `${lead} — ${q.prompt}` } : q; el.append(h('div', { class: 'colstack prac prac-game' }, qSim(Q2, done, { bub: window.__teachBub }))); };
+const d3play = qPlay; /* v137: ย้ายไป engine/ix.js ให้ทุกบทใช้ได้ */
 const LESSONS_P3C8 = [
   L3D(1, 'ป่าแบ่งเท่า', 'การหาผลหารและเศษที่ตัวตั้งสองหลัก ตัวหารและผลหารหนึ่งหลักโดยการหารยาว (1)', 'หารยาว (1)', 'หาผลหารโดยการหารยาว เมื่อตัวตั้งสองหลัก ตัวหารและผลหารหนึ่งหลัก',
     [...learnStep('ยินดีต้อนรับสู่ <b>ป่าแบ่งเท่า</b>! รู้จัก<b>การหารยาว</b>', 'ยินดีต้อนรับสู่ป่าแบ่งเท่า รู้จักการหารยาว', [
@@ -27647,12 +27774,13 @@ L3W_ST1.push(XS('เชือกสีแดงยาว 3 เมตร 45 เ�
   XS('ดินสอยาว 17 เซนติเมตร 5 มิลลิเมตร ปากกายาว 14 เซนติเมตร 8 มิลลิเมตร ดินสอยาวกว่าปากกาเท่าไร', '17 ซม. 5 มม. − 14 ซม. 8 มม.', ['17 ซม. 5 มม. + 14 ซม. 8 มม.'], 27, 'cmm'),
   XS('บ้านถึงตลาด 2 กิโลเมตร 650 เมตร ตลาดถึงวัด 1 กิโลเมตร 780 เมตร บ้านถึงวัดผ่านตลาดรวมเท่าไร', '2 กม. 650 ม. + 1 กม. 780 ม.', ['2 กม. 650 ม. − 1 กม. 780 ม.'], 4430000, 'kmm'),
   XS('ถนนยาว 8 กิโลเมตร ซ่อมแล้ว 3 กิโลเมตร 275 เมตร ยังไม่ได้ซ่อมอีกเท่าไร', '8 กม. − 3 กม. 275 ม.', ['8 กม. + 3 กม. 275 ม.'], 4725000, 'kmm'));
-const L3X_MAP = { W: L3_MAP.W, H: L3_MAP.H, nodes: Object.fromEntries(Object.entries(L3_MAP.nodes).map(([k, v]) => [k, [v[0], v[1], { home: 'บ้านต้น', shop: 'ตลาด', school: 'วัด', park: 'สนามกีฬา', hosp: 'ไปรษณีย์' }[k] || v[2], ...v.slice(3)]])),
+const L3X_MAP = { W: L3_MAP.W, H: L3_MAP.H, nodes: Object.fromEntries(Object.entries(L3_MAP.nodes).map(([k, v]) => [k, [v[0], v[1], { home: 'บ้านต้น', shop: 'ตลาด', school: 'วัด', park: 'สนามกีฬา', hosp: 'โรงพยาบาล' }[k] || v[2], ...v.slice(3)]])),
   edges: L3_MAP.edges.map((e, i) => [e[0], e[1], [450, 1200, 2350, 650, 1800][i], ...e.slice(3)]) };
-const L3X_MAPQ = [['ต้นเดินจากบ้านไปตลาด เป็นระยะทางกี่เมตร', [0], 'm'], ['จากบ้านต้นไปวัด เป็นระยะทางกี่กิโลเมตร กี่เมตร', [1], 'kmm'], ['จากวัดไปไปรษณีย์ เป็นระยะทางกี่กิโลเมตร กี่เมตร', [2], 'kmm'],
-  ['จากไปรษณีย์ไปสนามกีฬา เป็นระยะทางกี่เมตร', [3], 'm'], ['จากตลาดไปสนามกีฬา เป็นระยะทางกี่กิโลเมตร กี่เมตร', [4], 'kmm'], ['จากบ้านต้นไปวัด แล้วต่อไปไปรษณีย์ รวมกี่กิโลเมตร กี่เมตร', [1, 2], 'kmm'],
-  ['จากตลาดผ่านบ้านต้นไปวัด รวมกี่กิโลเมตร กี่เมตร', [0, 1], 'kmm'], ['จากสนามกีฬาไปไปรษณีย์ แล้วไปวัด รวมกี่กิโลเมตร กี่เมตร', [3, 2], 'kmm']];
-XG(1323, () => [...pkF(L3_MAPQ, 2).map(([q, e, as]) => Q.l3Map({ M: L3_MAP, q, e, as })), ...pkF(L3X_MAPQ, 3).map(([q, e, as]) => Q.l3Map({ M: L3X_MAP, q, e, as }))]);
+const L3X_MAPQ = [['ต้นเดินจากบ้านไปตลาด เป็นระยะทางกี่เมตร', [0], 'm'], ['จากบ้านต้นไปวัด เป็นระยะทางกี่กิโลเมตร กี่เมตร', [1], 'kmm'], ['จากวัดไปโรงพยาบาล เป็นระยะทางกี่กิโลเมตร กี่เมตร', [2], 'kmm'],
+  ['จากโรงพยาบาลไปสนามกีฬา เป็นระยะทางกี่เมตร', [3], 'm'], ['จากตลาดไปสนามกีฬา เป็นระยะทางกี่กิโลเมตร กี่เมตร', [4], 'kmm'], ['จากบ้านต้นไปวัด แล้วต่อไปโรงพยาบาล รวมกี่กิโลเมตร กี่เมตร', [1, 2], 'kmm'],
+  ['จากตลาดผ่านบ้านต้นไปวัด รวมกี่กิโลเมตร กี่เมตร', [0, 1], 'kmm'], ['จากสนามกีฬาไปโรงพยาบาล แล้วไปวัด รวมกี่กิโลเมตร กี่เมตร', [3, 2], 'kmm']];
+XG(1323, () => [...pkF(L3_MAPQ, 2).map(([q, e, as]) => Q.l3Map({ M: L3_MAP, q, e, as })), ...pkF(L3X_MAPQ, 3).map(([q, e, as]) => Q.l3Map({ M: L3X_MAP, q, e, as })), /* v137: ไอคอนเป็นโรงพยาบาล ชื่อจึงเป็นโรงพยาบาล · เพิ่มเปลี่ยนหน่วย กม.↔ม. และเลือกหน่วย */
+  ...pkF([['2,800 เมตร', 'kmm'], ['3,150 เมตร', 'kmm'], ['1,045 เมตร', 'kmm'], ['4 กิโลเมตร 300 เมตร', 'เมตร'], ['2 กิโลเมตร 75 เมตร', 'เมตร']], 2).map(([from, to]) => Q.l3Conv({ from, to })), l3UnitQ(pick([['ระยะทางจากบ้านไปโรงเรียน 2 …', 'กิโลเมตร'], ['สนามฟุตบอลยาว 100 …', 'เมตร'], ['พ่อขับรถไปต่างจังหวัด 150 …', 'กิโลเมตร']]))]);
 /* ---------- ป.4 ---------- */
 const P4X_PICS = [[['house', 'บ้าน', 2450000], ['car', 'รถยนต์', 865000]], [['boat', 'เรือประมง', 1375000], ['truck', 'รถบรรทุก', 2190000]], [['pyramid', 'ที่ดินริมทะเลทราย', 5600000], ['camel', 'อูฐ', 148000]]];
 XG(433, () => shuffle([...P4_PICS, ...P4X_PICS].flatMap(p => ['sub', 'sum', 'diff'].map(k => [p, k]))).slice(0, 5).map(([p, k]) => p4picQ(p, k)));
@@ -28664,10 +28792,10 @@ function qLayout(body) {
     const left = items.filter(c => !tops.includes(c) && c !== H && getComputedStyle(c).display !== 'none');
     /* layout fits the question (ผู้ใช้ขอ): a tall / squarish picture on a wide screen → picture LEFT, answer top-right, keypad bottom-right;
        wide strips, stories and text stay on top (problem → answer → keypad) */
-    const figAsp = c => { const all = [...c.querySelectorAll('svg:not(.icon):not(.ic), img, canvas, table')].filter(n => !n.parentElement.closest('svg, table')), sv = c.querySelector('svg:not(.icon):not(.ic), img, canvas, table, .p4col, .ldiv, .d3sd'); if (!sv) return 0; if (all.length > 1 && !sv.matches('.p4col, .ldiv, .d3sd') && !c.querySelector('.p4col, .ldiv, .d3sd')) return -1; if (sv.matches('.p4col, .ldiv, .d3sd')) return 1; /* v136: กระดานหารสั้นของ ป.3 วางซ้ายเหมือนหารยาว */ const vb = sv.viewBox && sv.viewBox.baseVal;
+    const figAsp = c => { const all = [...c.querySelectorAll('svg:not(.icon):not(.ic), img, canvas, table')].filter(n => !n.parentElement.closest('svg, table')), sv = c.querySelector('.w3w, svg:not(.icon):not(.ic), img, canvas, table, .p4col, .ldiv, .d3sd'); if (!sv) return 0; if (all.length > 1 && !sv.matches('.p4col, .ldiv, .d3sd, .w3w') && !c.querySelector('.p4col, .ldiv, .d3sd, .w3w')) return -1; if (sv.matches('.p4col, .ldiv, .d3sd, .w3w')) return 1; /* v136: กระดานหารสั้นของ ป.3 วางซ้ายเหมือนหารยาว */ const vb = sv.viewBox && sv.viewBox.baseVal;
       if (vb && vb.width) return vb.height / vb.width; const r = sv.getBoundingClientRect(); return r.width ? r.height / r.width : 0; };
     const textLen = c => [...c.querySelectorAll('.storybox, p, .word')].reduce((a, n) => a + n.textContent.trim().length, 0);
-    const side = body.clientWidth >= 700 && body.clientWidth > body.clientHeight * 1.12 && tops.length <= 2 && tops.every(c => figAsp(c) >= .45 || (figAsp(c) === 0 && c.textContent.trim().length < 40 && tops.some(t => figAsp(t) >= .45))) && tops.reduce((a, c) => a + textLen(c), 0) < 120 && !root.querySelector('.p2st') && (!root.querySelector('.p4steplab') || tops.some(t => t.querySelector('.p4col, .ldiv, .d3sd')) || root.classList.contains('ql-pref-side'));
+    const side = body.clientWidth >= 700 && body.clientWidth > body.clientHeight * 1.12 && tops.length <= 2 && tops.every(c => figAsp(c) >= .45 || (figAsp(c) === 0 && c.textContent.trim().length < 40 && tops.some(t => figAsp(t) >= .45))) && tops.reduce((a, c) => a + textLen(c), 0) < 120 && !root.querySelector('.p2st') && (!root.querySelector('.p4steplab') || tops.some(t => t.querySelector('.p4col, .ldiv, .d3sd, .w3w')) || root.classList.contains('ql-pref-side'));
     if (side) { root.classList.add('ql-side'); const n = left.length + 1;
       tops.forEach((c, i) => { c.classList.add('ql-top'); c.style.gridRow = tops.length === 1 ? `1 / span ${n}` : i ? `2 / span ${n - 1}` : '1'; });
       left.forEach((c, i) => { c.classList.add('ql-left'); c.style.gridRow = String(1 + i); });
@@ -28683,7 +28811,7 @@ function qLayout(body) {
 /* − / + magnifier on column calculations (ตั้งบวก ลบ คูณ) so children can zoom just the working area and write over it with ทด */
 let CALCZ = 2; const CALCZ_L = [.5, .75, 1, 1.25, 1.5, 1.75, 2]; // v108 (ผู้ใช้ขอ): 50 – 200 %
 function calcZoom(body) {
-  const SEL = 'table.w2col, .p4col, table.mtcol, .p2mc', t0 = body.querySelector(SEL); if (!t0 || t0.closest('.czhost')) return; const host = t0.parentElement; host.classList.add('czhost');
+  const SEL = 'table.w2col:not(.w3w), .p4col, table.mtcol, .p2mc', t0 = body.querySelector(SEL); /* v137: ตารางที่เด็กเติมเอง (.w3w) ใหญ่อยู่แล้ว ไม่ต้องมีปุ่มย่อขยาย */ if (!t0 || t0.closest('.czhost')) return; const host = t0.parentElement; host.classList.add('czhost');
   const lab = h('span', { class: 'cz-l' }), bar = h('div', { class: 'czbar ia' }, h('button', { class: 'cz-b', 'aria-label': 'ย่อ', onclick: e => { e.stopPropagation(); CALCZ = Math.max(0, CALCZ - 1); sfx.tap(); apply(); } }, '−'), lab,
     h('button', { class: 'cz-b', 'aria-label': 'ขยาย', onclick: e => { e.stopPropagation(); CALCZ = Math.min(CALCZ_L.length - 1, CALCZ + 1); sfx.tap(); apply(); } }, '+'));
   const apply = () => { const t = host.querySelector(SEL); if (t) t.style.zoom = CALCZ_L[CALCZ]; if (!bar.isConnected) host.prepend(bar); lab.replaceChildren(icon('zoom'), h('b', null, `${Math.round(CALCZ_L[CALCZ] * 100)}%`)); padsResize(body); dispatchEvent(new Event('layoutzoom')); };
