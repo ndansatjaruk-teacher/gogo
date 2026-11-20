@@ -3742,3 +3742,6 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .k3zq{gap:10px}.k3zq .k3-eq{font-size:clamp(34px,5cqw,52px)}.k3stcol{display:flex;justify-content:center;width:100%}
 .f3-st.k3st2{flex-direction:column!important;gap:4px!important}.f3-st.k3st2 > .p4-fig .storybox{font-size:15px;padding:4px 12px;line-height:1.4}.f3-st.k3st2 .p4steplab{margin:0}
 .f3calcfig{display:flex;flex-direction:column;align-items:center;gap:6px}.f3calcfig .f3-bar-svg{width:min(460px,52cqw);height:auto}
+/* v146 ป.4 */
+.p4lnq{width:min(640px,90cqw);height:auto}.p4ln-t{font:800 18px var(--font-num);fill:#2B2550}.p4ln-m{font:800 15px var(--font-num);fill:#E5505E}.p4ln-n{font:900 20px var(--font-num);fill:#2F7FD8}
+.t6-q .abacus svg{width:clamp(220px,32cqw,320px)}
