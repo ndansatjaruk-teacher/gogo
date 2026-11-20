@@ -3763,6 +3763,17 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .p4slog:empty{display:none}
 .p4slog .fstep-row{font-size:clamp(18px,2.4cqw,24px)}
 .x3st.p4s2on>.storybox{font-size:17px;padding:6px 14px}
+
+/* ---------- v151 P4 ch6: f4Work — บวก/ลบเศษส่วนทีละขั้น ---------- */
+.f4work{gap:6px;align-items:center}
+.f4wrows:empty{display:none}
+.f4wrows{gap:2px;align-items:center}
+.f4wrow{font-size:clamp(20px,2.6cqw,28px);opacity:.85}
+.f4wrow .f4ok{color:#1F9D6B;font-size:.8em}
+.f4wcur{font-size:clamp(28px,3.8cqw,42px)}
+.f4wpic{gap:4px}
+.f4st.p4s2on>.storybox{font-size:17px;padding:6px 14px}
+.f4wcur .ans-slot{min-width:1.6em;height:1.15em;font-size:1em;padding:0 .12em;border-radius:12px;display:inline-flex;align-items:center;justify-content:center}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -22751,6 +22762,45 @@ const f4Cmp = (a, b, bars) => ({ ...Q.fCmp({ a, b, bars }), __sig: `f4c ${a}|${b
 const f4Ord = (list, dir) => ({ ...Q.fOrder({ list, dir }), __sig: `f4o ${dir} ${list.join()}` });
 const f4Calc = (expr, vis) => ({ ...Q.fCalc({ expr, vis, hint: 'ทำตัวส่วนให้เท่ากันก่อน (คูณตัวส่วนที่น้อยกว่า) แล้วบวก/ลบตัวเศษ · ตอบเป็นเศษส่วนอย่างต่ำ' }), __sig: `f4a ${expr}` });
 const f4Story = s => ({ ...Q.fStory(s), __sig: 'f4t ' + s.text.slice(0, 40) });
+/* v151 (ผู้ใช้ขอ: เด็กทำเองทีละขั้น) — f4Work: บวก/ลบเศษส่วน จำนวนคละ ทีละขั้น
+   ① จำนวนคละ → เศษเกิน ② ทำตัวส่วนให้เท่ากัน (เติม □) ③ บวก/ลบตัวเศษ ④ ทำเป็นจำนวนคละ/อย่างต่ำ (ถ้าต้องทำ) · ขั้นที่ทำแล้วเรียงไว้ด้านบน */
+const f4lit = x => { const m = String(x).trim().match(/^(?:(\d+) )?(\d+)\/(\d+)$/); return { w: +(m[1] || 0), n: +m[2], d: +m[3] }; };
+const f4H = (w, n, d) => `<span class="fr">${w ? `<b class="fw">${w}</b>` : ''}${fqHTML(n === '□' ? P4BOX : n, d)}</span>`;
+function f4Plan(expr) { const [A, op, B] = expr.split(/ ([+−]) /), a = f4lit(A), b = f4lit(B), L = Math.max(a.d, b.d), S = [];
+  const N1 = a.w * a.d + a.n, N2 = b.w * b.d + b.n;
+  if (a.w) S.push({ lab: `เปลี่ยน ${f4H(a.w, a.n, a.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(a.w, a.n, a.d)} = ${f4H(0, '□', a.d)}`, ans: N1, hint: `${a.w} × ${a.d} + ${a.n}` });
+  if (b.w) S.push({ lab: `เปลี่ยน ${f4H(b.w, b.n, b.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(b.w, b.n, b.d)} = ${f4H(0, '□', b.d)}`, ans: N2, hint: `${b.w} × ${b.d} + ${b.n}` });
+  const X = N1 * L / a.d, Y = N2 * L / b.d;
+  if (a.d !== L) S.push({ lab: `ทำ<b>ตัวส่วนให้เท่ากัน</b> (เป็น ${L})`, html: `${f4H(0, N1, a.d)} = ${f4H(0, '□', L)}`, ans: X, hint: `${a.d} × ${L / a.d} = ${L} → ตัวเศษก็ต้อง × ${L / a.d}` });
+  if (b.d !== L) S.push({ lab: `ทำ<b>ตัวส่วนให้เท่ากัน</b> (เป็น ${L})`, html: `${f4H(0, N2, b.d)} = ${f4H(0, '□', L)}`, ans: Y, hint: `${b.d} × ${L / b.d} = ${L} → ตัวเศษก็ต้อง × ${L / b.d}` });
+  const R = op === '+' ? X + Y : X - Y;
+  S.push({ lab: `ตัวส่วนเท่ากันแล้ว <b>${op === '+' ? 'บวก' : 'ลบ'}ตัวเศษ</b> (ตัวส่วนคงเดิม)`, html: `${f4H(0, X, L)} <b class="fop">${op}</b> ${f4H(0, Y, L)} = ${f4H(0, '□', L)}`, ans: R, hint: `${X} ${op} ${Y}` });
+  const g = gcdN(R, L);
+  if (R && (g > 1 || R >= L)) S.push({ lab: R % L === 0 ? 'เขียนเป็น<b>จำนวนนับ</b>' : R > L ? 'เขียนเป็น<b>จำนวนคละ</b> (เศษส่วนอย่างต่ำ)' : 'ทำเป็น<b>เศษส่วนอย่างต่ำ</b>', html: `${f4H(0, R, L)} = ?`, fin: Rr(R, L), whole: R % L === 0 ? R / L : null,
+    hint: R >= L ? `${R} ÷ ${L} ได้ ${Math.floor(R / L)} เศษ ${R % L}${gcdN(R % L, L) > 1 ? ` แล้วทำเศษส่วนให้อย่างต่ำ (หารด้วย ${gcdN(R % L, L)})` : ''}` : `หารทั้งตัวเศษและตัวส่วนด้วย ${g}` });
+  return { S, a, b, op, L }; }
+function f4Work(expr, ctx, o = {}) { const P = f4Plan(expr), S = P.S; let k = 0;
+  const rows = h('div', { class: 'colstack f4wrows' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack f4wslot' });
+  const top = h('div', { class: 'fbig f4wtop', html: `${exprHTML(expr)} <b class="fop">=</b> <span class="fsign">?</span>` });
+  const fill = (s, v) => s.html.replace(P4BOX, `<b class="num">${v}</b>`);
+  const run = () => { slot.innerHTML = ''; const s = S[k], last = k === S.length - 1; lab.innerHTML = `ขั้นที่ ${k + 1}: ${s.lab}`;
+    const sub = last ? ctx : { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(Math.min(8, k + 3)); rows.append(h('div', { class: 'f3-eq f4wrow', html: fill(s, s.ans) + ' <span class="f4ok">✓</span>' })); k++; ctx.say && k === 1 && ctx.say('ถูกแล้ว! ทำขั้นต่อไป'); run(); }, say: ctx.say };
+    const cur = h('div', { class: 'f3-eq f4-fill f4wcur', html: s.html }), A = s.fin ? (s.whole != null ? answerBox(sub, String(s.whole), { hint: s.hint }) : fracAnswer(sub, s.fin, { hint: s.hint })) : answerBox(sub, String(s.ans), { hint: s.hint });
+    const sl = !s.fin && A.querySelector('.ans-slot'), hole = cur.querySelector('.p4box'); if (sl && hole) hole.replaceWith(sl); /* ช่องคำตอบอยู่ในเศษส่วนเลย (เหมือน fEquiv) */
+    slot.append(cur, A);
+    if (last) ctx.onRight = () => { const q = top.querySelector('.fsign'); if (q) q.outerHTML = rHTML(exprEval(expr)); }; };
+  run(); return h('div', { class: 'colstack p2q f4work' }, top, o.pic || null, rows, lab, slot); }
+Object.assign(Q, {
+  f4Calc2({ expr, bars }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้น`, say: `หาผลลัพธ์ ${exprSay(expr)}`, __sig: 'f4w ' + expr, mount(bd, ctx) {
+    let pic = null; if (bars) { const P = f4Plan(expr); pic = h('div', { class: 'colstack f4wpic' }, fracBars(Rr(P.a.w * P.a.d + P.a.n, P.a.d), { col: 'a', sm: true }), fracBars(Rr(P.b.w * P.b.d + P.b.n, P.b.d), { col: 'b', sm: true })); }
+    bd.append(f4Work(expr, ctx, { pic })); } }; },
+  f4Story2({ text, expr, wrong = [], unit = '' }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
+    return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: FXsay(text), __sig: 'f4t ' + text.slice(0, 40), mount(bd, ctx) {
+      const lab = h('div', { class: 'p4steplab', html: '① เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' }), box = h('div', { class: 'colstack x3st f4st' });
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; box.classList.add('p4s2on'); slot.append(f4Work(expr, ctx)); slot.querySelector('.f4wtop').remove(); } };
+      const ch = choices(sub, opts.map(o => ({ value: o, label: exprHTML(o) })), expr, { hint: 'รวม/เพิ่ม → บวก · เหลือ/ต่างกัน → ลบ' }); ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); slot.append(ch);
+      box.append(h('div', { class: 'storybox', html: FX(text) }), lab, slot); bd.append(box); } }; }
+});
 
 /* ---------- random data ---------- */
 const f4pp = () => { const d = rnd(5, 12), n = rnd(1, d - 1); return [n, d]; };
@@ -22903,14 +22953,14 @@ const LESSONS_P4C6 = [
       { fig: f4bars({ n: 1, d: 4 }, { col: 'a', d: 8, n: 2 }) + f4bars({ n: 3, d: 8 }, { col: 'b' }), name: 'ทำตัวส่วนให้เท่ากัน', text: '[1/4] = [2/8] → [2/8] + [3/8] = [5/8]' }], 'ทำตัวส่วนให้เท่ากัน แล้วบวกตัวเศษ'),
      pexStep('ตัวอย่างทีละขั้น: 2/3 + 5/6', 'ตัวอย่างทีละขั้น', [['① ตัวส่วนเท่ากัน', `${f4F(2, 3)} = ${f4F(4, 6)}`, f4bars({ n: 4, d: 6 }, { col: 'a' })], ['② บวกตัวเศษ', `${f4F(4, 6)} + ${f4F(5, 6)} = ${f4F(9, 6)}`, f4bars({ n: 9, d: 6 }, { col: 'c' })], ['③ อย่างต่ำ / จำนวนคละ', `${f4F(9, 6)} = ${f4F(3, 2)} = ${f4M(1, 1, 2)}`, null]], `= <b>${f4M(1, 1, 2)}</b>`),
      T('ลองทำตัวส่วนให้เท่ากันแล้วบวก', 'ลองทำตัวส่วนให้เท่ากันแล้วบวก', el => el.append(simAddBars('3/10', '2/5', '+')))],
-    () => f4N(6, (_, i) => f4Calc(f4addPair('+'), i < 2 ? 'bars' : null))),
+    () => f4N(6, (_, i) => Q.f4Calc2({ expr: f4addPair('+'), bars: i < 2 }))), /* v151: ทำทีละขั้น */
   L4F(14, 'บ่อแบ่งเศษส่วน', 'การลบเศษส่วนที่ตัวส่วนไม่เท่ากันโดยตัวส่วนตัวหนึ่งเป็นพหุคูณของตัวส่วนอีกตัวหนึ่ง', 'ลบ (ตัวส่วนเป็นพหุคูณ)', 'ลบเศษส่วนที่ตัวส่วนตัวหนึ่งเป็นพหุคูณของอีกตัวหนึ่ง และตอบเป็นเศษส่วนอย่างต่ำ',
     [...learnStep('<b>ลบ</b>เศษส่วนตัวส่วนไม่เท่ากัน', 'ลบเศษส่วนตัวส่วนไม่เท่ากัน', [
       { fig: f4bars({ n: 5, d: 6 }, { col: 'a' }) + f4bars({ n: 1, d: 3 }, { col: 'b' }), name: 'ชิ้นคนละขนาด', text: '[5/6] − [1/3]' },
       { fig: f4bars({ n: 5, d: 6 }, { col: 'a' }) + f4bars({ n: 1, d: 3 }, { col: 'b', d: 6, n: 2 }), name: 'ทำตัวส่วนให้เท่ากัน', text: '[5/6] − [2/6] = [3/6] = [1/2]' }], 'ทำตัวส่วนให้เท่ากัน แล้วลบตัวเศษ · ตอบเป็นอย่างต่ำ'),
      pexStep('ตัวอย่างทีละขั้น: 9/10 − 2/5', 'ตัวอย่างทีละขั้น', [['① ตัวส่วนเท่ากัน', `${f4F(2, 5)} = ${f4F(4, 10)}`, f4bars({ n: 4, d: 10 }, { col: 'b' })], ['② ลบตัวเศษ', `${f4F(9, 10)} − ${f4F(4, 10)} = ${f4F(5, 10)}`, f4bars({ n: 5, d: 10 }, { col: 'c' })], ['③ อย่างต่ำ', `${f4F(5, 10)} = ${f4F(1, 2)}`, null]], `= <b>${f4F(1, 2)}</b>`),
      T('ลองทำตัวส่วนให้เท่ากันแล้วลบ', 'ลองทำตัวส่วนให้เท่ากันแล้วลบ', el => el.append(simAddBars('7/8', '1/4', '−')))],
-    () => f4N(6, (_, i) => f4Calc(f4addPair('−'), i < 2 ? 'bars' : null))),
+    () => f4N(6, (_, i) => Q.f4Calc2({ expr: f4addPair('−'), bars: i < 2 }))), /* v151 */
   L4F(15, 'คาราวานจำนวนคละ', 'การบวก การลบเศษส่วน จำนวนคละ', 'บวก ลบ จำนวนคละ', 'บวกและลบจำนวนคละ (ตัวส่วนเท่ากัน หรือตัวหนึ่งเป็นพหุคูณของอีกตัวหนึ่ง)',
     [...learnStep('<b>บวก</b>จำนวนคละ', 'บวกจำนวนคละ', [
       { fig: p4big(`${f4M(2, 1, 4)} + ${f4M(1, 3, 8)}`), name: 'จำนวนนับบวกจำนวนนับ', text: '2 + 1 = 3' },
@@ -22920,28 +22970,28 @@ const LESSONS_P4C6 = [
        { fig: p4big(`${f4M(3, 7, 6)} − ${f4M(1, 3, 6)} = ${f4M(2, 4, 6)}`), name: 'กระจาย 1 = [6/6]', text: '[4 1/6] = [3 7/6] → ได้ [2 4/6] = [2 2/3]' }], 'ถ้าเศษส่วนลบไม่พอ กระจาย 1 จากจำนวนนับ'),
      pexStep('ตัวอย่างทีละขั้น: 4 1/6 − 1 1/2', 'ตัวอย่างทีละขั้น', [['① ตัวส่วนเท่ากัน', `${f4M(1, 1, 2)} = ${f4M(1, 3, 6)}`, f4bars({ n: 25, d: 6 }, { col: 'a' })], ['② เศษส่วนลบไม่พอ กระจาย 1', `${f4M(4, 1, 6)} = ${f4M(3, 7, 6)}`, null], ['③ ลบ', `${f4M(3, 7, 6)} − ${f4M(1, 3, 6)} = ${f4M(2, 4, 6)} = ${f4M(2, 2, 3)}`, f4bars({ n: 16, d: 6 }, { col: 'c' })]], `= <b>${f4M(2, 2, 3)}</b>`),
      T('ลองบวกจำนวนคละ', 'ลองบวกจำนวนคละ', el => el.append(simMixed('2 1/4', '1 5/8', '+')))],
-    () => f4N(6, () => f4Calc(f4mixPair()))),
+    () => f4N(6, () => Q.f4Calc2({ expr: f4mixPair() }))), /* v151 */
   L4F(16, 'เนินโจทย์ตัวส่วนเท่า', 'โจทย์ปัญหาการบวกและการลบเศษส่วนที่มีตัวส่วนเท่ากัน', 'โจทย์ (ตัวส่วนเท่ากัน)', 'แก้โจทย์ปัญหาการบวกและการลบเศษส่วนที่ตัวส่วนเท่ากัน',
     [...learnStep('<b>โจทย์ปัญหา</b>เศษส่วน', 'โจทย์ปัญหาเศษส่วน', [
       { fig: `<div class="storybox">${FX('มีน้ำปลา [5/9] ขวด ใช้ไป [2/9] ขวด เหลือกี่ขวด')}</div>`, name: '① โจทย์ถามอะไร', text: 'เหลือ → ลบ' },
       { fig: p4big(`${f4F(5, 9)} − ${f4F(2, 9)} = ${f4F(3, 9)} = ${f4F(1, 3)}`), name: '② คำนวณแล้วทำเป็นอย่างต่ำ', text: 'ตอบ [1/3] ขวด' }], 'รวม/ทั้งหมด → บวก · เหลือ/มากกว่า → ลบ'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', FX('ปิ่นกินเค้ก [3/10] ก้อน ปูกินอีก [5/10] ก้อน รวมกินกี่ก้อน'), f4bars({ n: 3, d: 10 }, { col: 'a' })], ['① ประโยคสัญลักษณ์', FX('[3/10] + [5/10] = □ (รวมกัน → บวก)'), f4bars({ n: 8, d: 10 }, { col: 'c' })], ['② คำนวณ อย่างต่ำ', FX('[8/10] = [4/5]'), null]], `กินรวมกัน <b>${f4F(4, 5)}</b> ก้อน`),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(f4Story(F4S('ข้าวเหนียว [4/7] กิโลกรัม ซื้อเพิ่ม [2/7] กิโลกรัม มีข้าวเหนียวกี่กิโลกรัม', '4/7 + 2/7', ['4/7 − 2/7'], 'กิโลกรัม')), 'ถูกต้อง!')))],
-    () => pkF(F4_ST1, 5).map(f4Story)),
+    () => pkF(F4_ST1, 6).map(s => Q.f4Story2(s))), /* v151 */
   L4F(17, 'เนินโจทย์พหุคูณ', 'โจทย์ปัญหาการบวกและการลบเศษส่วนที่มีตัวส่วนตัวหนึ่งเป็นพหุคูณของตัวส่วนอีกตัวหนึ่ง', 'โจทย์ (ตัวส่วนเป็นพหุคูณ)', 'แก้โจทย์ปัญหาการบวกและการลบเศษส่วนที่ตัวส่วนตัวหนึ่งเป็นพหุคูณของอีกตัวหนึ่ง',
     [...learnStep('โจทย์ <b>ตัวส่วนไม่เท่ากัน</b>', 'โจทย์ตัวส่วนไม่เท่ากัน', [
       { fig: `<div class="storybox">${FX('น้ำผลไม้ [3/4] ลิตร ดื่มไป [3/8] ลิตร เหลือกี่ลิตร')}</div>`, name: '① ประโยคสัญลักษณ์', text: '[3/4] − [3/8] = □' },
       { fig: p4big(`${f4F(6, 8)} − ${f4F(3, 8)} = ${f4F(3, 8)}`), name: '② ทำตัวส่วนให้เท่ากัน', text: 'ตอบ [3/8] ลิตร' }], 'เขียนประโยคสัญลักษณ์ → ตัวส่วนเท่ากัน → คำนวณ → อย่างต่ำ'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', FX('เส้นทางยาว [9/10] กิโลเมตร เดินไปแล้ว [2/5] กิโลเมตร ต้องเดินอีกกี่กิโลเมตร'), f4bars({ n: 9, d: 10 }, { col: 'a' })], ['① ประโยคสัญลักษณ์', FX('[9/10] − [2/5] = □'), null], ['② ตัวส่วนเท่ากัน', FX('[2/5] = [4/10] → [9/10] − [4/10] = [5/10]'), f4bars({ n: 5, d: 10 }, { col: 'c' })], ['③ อย่างต่ำ', FX('[5/10] = [1/2]'), null]], `เดินอีก <b>${f4F(1, 2)}</b> กิโลเมตร`),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(f4Story(F4S('ปลาวิ่ง [1/2] กิโลเมตร แล้วเดินอีก [1/4] กิโลเมตร ไปได้ทั้งหมดกี่กิโลเมตร', '1/2 + 1/4', ['1/2 − 1/4'], 'กิโลเมตร')), 'ถูกต้อง!')))],
-    () => pkF(F4_ST2, 5).map(f4Story)),
+    () => pkF(F4_ST2, 6).map(s => Q.f4Story2(s))), /* v151 */
   L4F(18, 'ยอดเนินจำนวนคละ', 'โจทย์ปัญหาการบวกและการลบเศษส่วน จำนวนคละ', 'โจทย์จำนวนคละ', 'แก้โจทย์ปัญหาการบวกและการลบจำนวนคละ',
     [...learnStep('โจทย์ <b>จำนวนคละ</b>', 'โจทย์จำนวนคละ', [
       { fig: `<div class="storybox">${FX('หมู [2 1/4] กิโลกรัม ไก่ [1 1/2] กิโลกรัม รวมกี่กิโลกรัม')}</div>`, name: '① ประโยคสัญลักษณ์', text: '[2 1/4] + [1 1/2] = □' },
       { fig: p4big(`${f4M(2, 1, 4)} + ${f4M(1, 2, 4)} = ${f4M(3, 3, 4)}`), name: '② จำนวนนับ + เศษส่วน', text: 'ตอบ [3 3/4] กิโลกรัม' }], 'จำนวนนับบวกจำนวนนับ เศษส่วนบวกเศษส่วน'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', FX('ถังมีน้ำ [5 3/4] ลิตร ใช้ไป [2 1/8] ลิตร เหลือกี่ลิตร'), f4bars({ n: 46, d: 8 }, { col: 'a' })], ['① ประโยคสัญลักษณ์', FX('[5 3/4] − [2 1/8] = □'), null], ['② ตัวส่วนเท่ากัน', FX('[5 6/8] − [2 1/8] = [3 5/8]'), f4bars({ n: 29, d: 8 }, { col: 'c' })]], `เหลือน้ำ <b>${f4M(3, 5, 8)}</b> ลิตร`),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(f4Story(F4S('แป้ง [3 1/2] กิโลกรัม ใช้ไป [1 1/4] กิโลกรัม เหลือแป้งกี่กิโลกรัม', '3 1/2 − 1 1/4', ['3 1/2 + 1 1/4'], 'กิโลกรัม')), 'ถูกต้อง!')))],
-    () => pkF(F4_ST3, 5).map(f4Story))
+    () => pkF(F4_ST3, 6).map(s => Q.f4Story2(s)))
 ];
 
 /* ---------- boss ---------- */
