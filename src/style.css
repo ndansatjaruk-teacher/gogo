@@ -3729,3 +3729,5 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .w3digfig{display:flex;flex-direction:column;align-items:center}.w3digob{margin-bottom:-34px;position:relative;z-index:1}
 .w3toolob{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:6px}.w3toolob b{font:800 clamp(17px,2.2cqw,22px) var(--font)}
 .w3errfig{display:flex;flex-direction:column;align-items:center;gap:8px}.w3errfig .w2fig svg{width:min(260px,40cqw)!important;height:auto!important;max-height:52cqh}
+.w3fit{display:flex;flex-direction:column;align-items:center;gap:8px}.w3fitl{display:flex;gap:18px;font:800 clamp(14px,1.7cqw,17px) var(--font)}.w3fitl .ok{color:#2FA36B}.w3fitl .no{color:#C2485A}
+.w3fitl span{white-space:nowrap}
