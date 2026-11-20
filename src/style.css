@@ -3745,3 +3745,14 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 /* v146 ป.4 */
 .p4lnq{width:min(640px,90cqw);height:auto}.p4ln-t{font:800 18px var(--font-num);fill:#2B2550}.p4ln-m{font:800 15px var(--font-num);fill:#E5505E}.p4ln-n{font:900 20px var(--font-num);fill:#2F7FD8}
 .t6-q .abacus svg{width:clamp(220px,32cqw,320px)}
+
+/* ---------- v149 P4 ch4: p4stepBox — แตะเครื่องหมายที่ต้องคิดก่อน แล้วพิมพ์ผล ---------- */
+.p4sline{display:flex;align-items:center;justify-content:center;gap:.22em;flex-wrap:nowrap}
+.p4sline .p4sop{font:inherit;font-weight:800;background:#fff;border:2px dashed #d9cbb0;border-radius:12px;padding:0 .18em;min-width:1.25em;cursor:pointer;line-height:1.2}
+.p4sline .p4sop:hover{border-color:#f0b429;background:#fffbea}
+.p4sline .p4sop.on{background:#fff3c4;border-style:solid;border-color:#f0b429}
+.p4sline.lock .p4sop:not(.on){border-color:transparent;background:transparent;cursor:default}
+.p4sline .p4shl{background:#fff3c4;border-radius:8px}
+.p4slog:empty{display:none}
+.p4slog .fstep-row{font-size:clamp(18px,2.4cqw,24px)}
+.x3st.p4s2on>.storybox{font-size:17px;padding:6px 14px}
