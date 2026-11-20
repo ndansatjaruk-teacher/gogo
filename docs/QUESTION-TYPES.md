@@ -92,14 +92,14 @@
 | `Q.f3Shade` | `{ n, d, kind }` | [`grades/p3/p3f.js:89`](../src/grades/p3/p3f.js#L89) |
 | `Q.f3Story` | `{ text, sent, wrong, n, d, unit }` | [`grades/p3/p3f.js:105`](../src/grades/p3/p3f.js#L105) |
 | `Q.f3Write` | `{ n, d, kind }` | [`grades/p3/p3f.js:87`](../src/grades/p3/p3f.js#L87) |
-| `Q.f4Calc2` | `{ expr, bars, lcm }` | [`grades/p4/p4f.js:115`](../src/grades/p4/p4f.js#L115) |
+| `Q.f4Calc2` | `{ expr, bars, lcm }` | [`grades/p4/p4f.js:128`](../src/grades/p4/p4f.js#L128) |
 | `Q.f4Eq` | `{ n, d, k, mode, ask }` | [`grades/p4/p4f.js:69`](../src/grades/p4/p4f.js#L69) |
 | `Q.f4Fill` | `{ tpl, ans, hint }` | [`grades/p4/p4f.js:63`](../src/grades/p4/p4f.js#L63) |
 | `Q.f4MixPic` | `{ w, n, d }` | [`grades/p4/p4f.js:59`](../src/grades/p4/p4f.js#L59) |
 | `Q.f4Pic` | `{ n, d, kind }` | [`grades/p4/p4f.js:57`](../src/grades/p4/p4f.js#L57) |
 | `Q.f4Set` | `{ d, per, n }` | [`grades/p4/p4f.js:61`](../src/grades/p4/p4f.js#L61) |
 | `Q.f4Simp` | `{ n, d }` | [`grades/p4/p4f.js:71`](../src/grades/p4/p4f.js#L71) |
-| `Q.f4Story2` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p4/p4f.js:118`](../src/grades/p4/p4f.js#L118) |
+| `Q.f4Story2` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p4/p4f.js:131`](../src/grades/p4/p4f.js#L131) |
 | `Q.f4ToImp` | `{ w, n, d }` | [`grades/p4/p4f.js:65`](../src/grades/p4/p4f.js#L65) |
 | `Q.f4ToMix` | `{ n, d }` | [`grades/p4/p4f.js:67`](../src/grades/p4/p4f.js#L67) |
 | `Q.f6Mix` | `{ f }` | [`grades/p6/p6f.js:122`](../src/grades/p6/p6f.js#L122) |

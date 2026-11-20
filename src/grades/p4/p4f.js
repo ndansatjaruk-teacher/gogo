@@ -100,10 +100,23 @@ function f4Plan(expr, o = {}) { const [A, op, B] = expr.split(/ ([+−]) /), a =
   if (R && (g > 1 || R >= L)) S.push({ lab: R % L === 0 ? 'เขียนเป็น<b>จำนวนนับ</b>' : R > L ? 'เขียนเป็น<b>จำนวนคละ</b> (เศษส่วนอย่างต่ำ)' : 'ทำเป็น<b>เศษส่วนอย่างต่ำ</b>', html: `${f4H(0, R, L)} = ?`, fin: Rr(R, L), whole: R % L === 0 ? R / L : null,
     hint: R >= L ? `${R} ÷ ${L} ได้ ${Math.floor(R / L)} เศษ ${R % L}${gcdN(R % L, L) > 1 ? ` แล้วทำเศษส่วนให้อย่างต่ำ (หารด้วย ${gcdN(R % L, L)})` : ''}` : `หารทั้งตัวเศษและตัวส่วนด้วย ${g}` });
   return { S, a, b, op, L }; }
-function f4Work(expr, ctx, o = {}) { const P = f4Plan(expr, o), S = P.S; let k = 0;
+/* v163 ป.5: คูณ/หารเศษส่วน จำนวนคละ ทีละขั้น — ① คละ → เศษเกิน ② (หาร) ส่วนกลับของตัวหาร ③ เศษคูณเศษ (ส่วนคูณส่วนให้เห็น) ④ ทำอย่างต่ำ/คละ */
+function f5Plan(expr) { const [A, op, B] = expr.split(/ ([×÷]) /), a = f4lit(A), b = f4lit(B), S = [];
+  const F = (n, d) => d === 1 ? `<b class="num">${n}</b>` : f4H(0, n, d);
+  if (a.w && a.n) S.push({ lab: `เปลี่ยน ${f4H(a.w, a.n, a.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(a.w, a.n, a.d)} = ${f4H(0, '□', a.d)}`, ans: a.w * a.d + a.n, hint: `${a.w} × ${a.d} + ${a.n}` });
+  if (b.w && b.n) S.push({ lab: `เปลี่ยน ${f4H(b.w, b.n, b.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(b.w, b.n, b.d)} = ${f4H(0, '□', b.d)}`, ans: b.w * b.d + b.n, hint: `${b.w} × ${b.d} + ${b.n}` });
+  const X = { n: a.w * a.d + a.n, d: a.d }; let Y = { n: b.w * b.d + b.n, d: b.d };
+  if (op === '÷') { const R = Rr(Y.d, Y.n); S.push({ lab: 'หารด้วยเศษส่วน = คูณด้วย<b>ส่วนกลับ</b>ของตัวหาร', html: `ส่วนกลับของ ${F(Y.n, Y.d)} = ?`, fin: R, imp: true, whole: R.d === 1 ? R.n : null, hint: 'สลับตัวเศษกับตัวส่วน (จำนวนนับ n = n/1)' }); Y = { n: R.n, d: R.d }; }
+  const N = X.n * Y.n, D = X.d * Y.d;
+  S.push({ lab: '<b>เศษคูณเศษ</b> ส่วนคูณส่วน', html: `${F(X.n, X.d)} <b class="fop">×</b> ${F(Y.n, Y.d)} = ${D === 1 ? P4BOX : f4H(0, '□', D)}`, ans: N, hint: `${X.n} × ${Y.n}` });
+  const g = gcdN(N, D);
+  if (D > 1 && (g > 1 || N >= D)) S.push({ lab: N % D === 0 ? 'เขียนเป็น<b>จำนวนนับ</b>' : N > D ? 'เขียนเป็น<b>จำนวนคละ</b> (เศษส่วนอย่างต่ำ)' : 'ทำเป็น<b>เศษส่วนอย่างต่ำ</b>', html: `${f4H(0, N, D)} = ?`, fin: Rr(N, D), whole: N % D === 0 ? N / D : null,
+    hint: N >= D ? `${N} ÷ ${D} ได้ ${Math.floor(N / D)} เศษ ${N % D}${gcdN(N % D, D) > 1 ? ` แล้วทำเศษส่วนให้อย่างต่ำ (หารด้วย ${gcdN(N % D, D)})` : ''}` : `หารทั้งตัวเศษและตัวส่วนด้วย ${g}` });
+  return { S, a, b, op }; }
+function f4Work(expr, ctx, o = {}) { const P = /[×÷]/.test(expr) ? f5Plan(expr) : f4Plan(expr, o), S = P.S; let k = 0;
   const rows = h('div', { class: 'colstack f4wrows' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack f4wslot' });
   const top = h('div', { class: 'fbig f4wtop', html: `${exprHTML(expr)} <b class="fop">=</b> <span class="fsign">?</span>` });
-  const fill = (s, v) => s.html.replace(P4BOX, `<b class="num">${v}</b>`);
+  const fill = (s, v) => s.fin ? s.html.replace(/= \?$/, '= ' + rHTML(s.fin, !s.imp)) : s.html.replace(P4BOX, `<b class="num">${v}</b>`);
   const run = () => { slot.innerHTML = ''; const s = S[k], last = k === S.length - 1; lab.innerHTML = `ขั้นที่ ${k + 1}: ${s.lab}`;
     const sub = last ? ctx : { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(Math.min(8, k + 3)); rows.append(h('div', { class: 'f3-eq f4wrow', html: fill(s, s.ans) + ' <span class="f4ok">✓</span>' })); k++; ctx.say && k === 1 && ctx.say('ถูกแล้ว! ทำขั้นต่อไป'); run(); }, say: ctx.say };
     const cur = h('div', { class: 'f3-eq f4-fill f4wcur', html: s.html }), A = s.fin ? (s.whole != null ? answerBox(sub, String(s.whole), { hint: s.hint }) : fracAnswer(sub, s.fin, { hint: s.hint })) : answerBox(sub, String(s.ans), { hint: s.hint });
