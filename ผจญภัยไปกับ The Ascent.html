@@ -3667,6 +3667,34 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 }
 /* v134: รูปเล็กในการ์ด (เช่น ภาชนะในการ์ดความจุ) ไม่ถูกขยายเต็มช่องภาพด้านซ้ายของตัวอย่างฝึก (.qs-l svg … !important) */
 .qs-l .p2card svg.vcont,.qs-l .vcard svg{width:48px!important;height:60px!important;max-height:none}
+
+/* ---------- v135 P3 ch8: กระดานหารที่เด็กเขียนเอง (d3Work) ---------- */
+.d3wq{align-items:center}
+.d3w .ld-c.d3tap,.d3sd .dd.d3tap{cursor:pointer;background:#F1ECFF;border-radius:8px 8px 0 0;box-shadow:inset 0 0 0 2px #B9A6F5;transition:background .15s}
+.d3w .ld-c.d3tap:hover,.d3sd .dd.d3tap:hover{background:#E2D8FF}
+.d3w .ld-c.d3used{color:#8C86A3}
+.d3w .ld-c.d3used::after{content:'↓';position:absolute;right:-.12em;bottom:-.5em;font-size:.5em;color:var(--coral-2)}
+.ld-c .d3typ,.ld-c.d3typ{color:#6A3FD0}
+.d3sd .d3ask{color:#C2485A;background:#FFF3B0;border-radius:6px;box-shadow:inset 0 0 0 2px #E3A21C}
+.d3sd .dd.d3hi{background:#E6F4FF;border-radius:6px 6px 0 0}
+.d3sd .d3rem{font-size:.62em;color:var(--coral-2);white-space:nowrap;padding-left:.5em;align-self:center}
+.d3sd .dd sup.d3ask{padding:0 .15em;left:-.3em}
+.d3lab{max-width:min(340px,40cqw);text-align:center;line-height:1.4}
+.d3tip{font:600 clamp(14px,1.7cqw,17px)/1.35 var(--font);color:#6B6585;max-width:min(320px,38cqw);text-align:center}
+.d3tip:empty{display:none}
+.keypad.d3off{opacity:.35;pointer-events:none}
+.d3stq{gap:8px}.d3stq .storybox{max-width:min(760px,94cqw)}
+.x3gap[data-no]{border:2px dashed #DCD2F7;border-radius:14px;padding:4px 6px 4px 30px;position:relative;margin:4px 0}
+.x3gap[data-no]::before{content:attr(data-no);position:absolute;left:6px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;background:#8C6BE8;color:#fff;font:800 12px/18px var(--font-num);text-align:center}
+.x3make.ok .x3gap{border-color:transparent}
+.x3need{animation:x3shake .45s}
+@keyframes x3shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.ldiv .ld-c.sg{background:none;box-shadow:none;border-radius:0;padding:0 .2em 0 0}
+.t6-q.p4-q.d3wq{flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:center;gap:clamp(20px,5cqw,64px)}
+.t6-q.p4-q.d3wq > .d3fig{flex:0 1 auto;max-width:62%}
+.d3stq .t6-q.p4-q.d3wq{gap:clamp(16px,4cqw,48px)}
+.d3stq .storybox{font-size:clamp(17px,2.3cqw,22px);line-height:1.55;padding:8px 16px}
+.d3stq > .p4steplab{font-size:clamp(15px,1.9cqw,18px)}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -20017,28 +20045,30 @@ function x3fillBoard(tpl, res, pool) { const T = tpl.split(' '), slots = T.map(t
       const f = fill.get(i), s = h('button', { class: 's2slot n' + (f ? ' filled' : '') }, f ? fmt(f.v) : ''); s.onclick = e => { e.stopPropagation(); if (row.dataset.done || !f) return; f.b.classList.remove('used'); fill.delete(i); sfx.tap(); draw(); }; row.append(s); });
     row.append(h('b', { class: 's2eq' }, '='), h('span', { class: 's2res' }, fmt(res))); };
   const el = h('div', { class: 'colstack s2b' }, row, h('div', { class: 'cap ixcap' }, 'แตะตัวเลขลงช่องให้ได้ผลลัพธ์ · แตะช่องเพื่อเอาออก'), cards);
-  el.check = () => { if (T.some((t, i) => t === '□' && !fill.has(i))) return { ok: false, why: 'ใส่ตัวเลขให้ครบทุกช่องก่อน' };
+  el.check = () => { if (T.some((t, i) => t === '□' && !fill.has(i))) return { ok: false, inc: true, why: 'ใส่ตัวเลขให้ครบทุกช่องก่อน' };
     const e = T.map((t, i) => t === '□' ? fill.get(i).v : t).join(' ').replace(/\( /g, '(').replace(/ \)/g, ')'); let v; try { v = x3v(e); } catch (_) { v = NaN; }
     return { ok: v === res, why: `${exprHTML(e)} ได้ ${Number.isFinite(v) ? fmt(v) : 'หารไม่ลงตัว'} ไม่ใช่ ${fmt(res)} — ลองคิดในวงเล็บก่อน` }; };
   el.done = () => { row.dataset.done = 1; row.classList.add('ok'); }; draw(); return el; }
 /* ---------- build a story for a number sentence: pick the phrase for every gap ---------- */
+/* v135: กดตรวจตอนยังไม่ครบ → เตือนเฉย ๆ ไม่นับเป็นตอบผิด */
+const x3inc = (B, ctx, why) => { sfx.no(); B.querySelectorAll('.x3gap, .x3box').forEach(g => { g.classList.remove('x3need'); void g.offsetWidth; g.classList.add('x3need'); }); ctx.say ? ctx.say(why) : null; };
 function x3makeBoard(parts) { const out = h('div', { class: 'x3make' }), pick = new Map();
   parts.forEach((p, i) => { if (typeof p === 'string') return out.append(h('span', { html: p }));
-    const sl = h('span', { class: 'x3gap ia' }), opts = shuffle(p[0].slice()), redraw = () => { sl.innerHTML = ''; opts.forEach(o => sl.append(h('button', { class: 'x3chip' + (pick.get(i) === o ? ' on' : ''), onclick: e => { e.stopPropagation(); if (out.dataset.done) return; pick.set(i, o); sfx.tap(); redraw(); } }, o))); };
+    const no = parts.slice(0, i + 1).filter(x => typeof x !== 'string').length, sl = h('span', { class: 'x3gap ia', 'data-no': no }), opts = shuffle(p[0].slice()), redraw = () => { sl.innerHTML = ''; opts.forEach(o => sl.append(h('button', { class: 'x3chip' + (pick.get(i) === o ? ' on' : ''), onclick: e => { e.stopPropagation(); if (out.dataset.done) return; pick.set(i, o); sfx.tap(); redraw(); } }, o))); };
     redraw(); out.append(sl); });
-  out.check = () => { const gaps = parts.map((p, i) => [p, i]).filter(([p]) => typeof p !== 'string'); if (gaps.some(([, i]) => !pick.has(i))) return { ok: false, why: 'เลือกคำให้ครบทุกช่องก่อน' };
+  out.check = () => { const gaps = parts.map((p, i) => [p, i]).filter(([p]) => typeof p !== 'string'); if (gaps.some(([, i]) => !pick.has(i))) return { ok: false, inc: true, why: 'เลือกคำให้ครบทุกช่องก่อน' };
     const bad = gaps.find(([p, i]) => pick.get(i) !== p[1]); return { ok: !bad, why: bad ? (bad[0][2] || 'อ่านประโยคสัญลักษณ์อีกครั้ง') : '' }; };
   out.done = () => { out.dataset.done = 1; out.classList.add('ok'); out.querySelectorAll('.x3chip:not(.on)').forEach(b => b.remove()); };
   return out; }
 Object.assign(Q, {
   x3Fill({ tpl, res, pool }) { const q = 'เติมตัวเลขลงในช่องว่าง ให้ได้ผลลัพธ์ตามที่กำหนด';
-    return { prompt: q, say: q, mount(bd, ctx) { const B = x3fillBoard(tpl, res, shuffle(pool.slice())); bd.append(h('div', { class: 'colstack' }, B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; },
+    return { prompt: q, say: q, mount(bd, ctx) { const B = x3fillBoard(tpl, res, shuffle(pool.slice())); bd.append(h('div', { class: 'colstack' }, B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.inc) return x3inc(B, ctx, r.why); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; },
   x3Cmp({ L, R }) { const vL = x3v(L), vR = x3v(R), right = vL > vR ? '>' : vL < vR ? '<' : '=', q = 'เติมเครื่องหมาย &gt; &lt; หรือ = <small>(ลองเทียบโดยไม่ต้องคำนวณทั้งหมด)</small>';
     return { prompt: q, say: 'เติมเครื่องหมาย มากกว่า น้อยกว่า หรือ เท่ากับ', mount(bd, ctx) { bd.append(h('div', { class: 'colstack x3cmp' }, h('div', { class: 'x3cmpL', html: `<span>${exprHTML(L)}</span><b class="blank">?</b><span>${exprHTML(R)}</span>` }),
       choices(ctx, ['>', '<', '='].map(v => ({ value: v, label: v })), right, { hint: 'ดูว่าส่วนที่เหมือนกันคืออะไร แล้วเทียบเฉพาะส่วนที่ต่างกัน' }))); } }; },
   x3Make({ s, parts, ask }) { const q = `แต่งโจทย์ปัญหาจากประโยคสัญลักษณ์ ${x3e(s)} = □`;
     return { prompt: q, say: 'แต่งโจทย์ปัญหาจากประโยคสัญลักษณ์ เลือกคำให้ครบทุกช่อง', mount(bd, ctx) { const B = x3makeBoard(parts);
-      bd.append(h('div', { class: 'colstack' }, h('div', { html: p4big(`<b class="num">${x3e(s)} = □</b>`) }), B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; }
+      bd.append(h('div', { class: 'colstack' }, h('div', { html: p4big(`<b class="num">${x3e(s)} = □</b>`) }), B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.inc) return x3inc(B, ctx, r.why); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; }
 });
 const x3calcQ = e => Q.s2two({ expr: e });
 const x3pickQ = (text, good, res) => { const opts = [good, ...s2wrong(good)].slice(0, 3).map(x => `${x3e(x)} = ${fmt(res)}`);
@@ -20433,7 +20463,8 @@ LESSONS_P3C9.push({ id: 1339, boss: true, place: 'ป่าไม้บรรท
 
 /* =========================================================
    GRADE 3 · CHAPTER 8 — การหาร  (ป่าดิบชื้น · ภาคเรียนที่ 2 · เมือง 57 · ด่าน 1301–1309 · บอส 1319)
-   reuses: p4ldivPlan / simLongDiv4 / p4sdivHTML / simShortDiv4 / Q.p4Div (p4m) · Q.dvRem / Q.dvUnk / Q.dvStory / dvLeft (p2d) · Q.x3Make (p3x)
+   reuses: p4ldivPlan (p4m) · Q.dvRem / dvLeft / dvPicQ / duoInput (p2d) · Q.x3Make (p3x) · Q.p4Pick (p4n)
+   v135: d3Work = กระดานหารยาว/หารสั้นที่เด็กทำเองทุกขั้น (แตะหลักเริ่ม → ผลหาร → คูณ → ลบ → แตะดึงลง) ใช้ทั้งหน้าฝึก เกม และขั้นที่ 2 ของโจทย์ปัญหา
    NEW: Q.d3Long — the child does the long division step by step (quotient digit → product shown → remainder → bring down)
         Q.d3Short — short division, one quotient digit at a time (remainders appear as small numbers)
    ========================================================= */
@@ -20455,42 +20486,137 @@ function d3BoardHTML(D, k, pos, phase, o = {}) { // pos = index in S being asked
   return `<div class="ldiv d3b" style="--rows:${R};grid-template-columns:auto repeat(${nd},var(--ldw))">${cells}</div>`;
 }
 /* small keypad (class keypad → qLayout puts it bottom-right) */
-function d3Pad(onEnter) { let v = ''; const slot = h('div', { class: 'ans-slot d3slot' }, '?'), kp = h('div', { class: 'keypad' });
-  const set = x => { v = x; slot.textContent = v === '' ? '?' : fmt(+v); slot.classList.toggle('filled', v !== ''); };
-  [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: () => { sfx.tap(); set((v + d).slice(-6).replace(/^0+(\d)/, '$1')); } }, d)));
-  kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: () => { sfx.tap(); set(v.slice(0, -1)); } }, icon('left')), h('button', { class: 'btn', onclick: () => { sfx.tap(); set((v + '0').slice(-6).replace(/^0+(\d)/, '$1')); } }, '0'),
-    h('button', { class: 'btn primary', 'aria-label': 'ตกลง', onclick: () => { if (v === '') return; onEnter(+v, () => set('')); } }, icon('check')));
-  return { slot, kp, clear: () => set('') }; }
+/* ---------- v135 (ผู้ใช้ขอ: ให้เด็ก “หารยาวเองจริง ๆ” ทุกขั้น) — กระดานหารที่เด็กเขียนเองบนกระดาน ----------
+   หารยาว: ① แตะตัวเลขที่จะเริ่มหาร ② ผลหาร (เขียนบนหลักนั้น) ③ คูณ (เขียนใต้) ④ ลบ ⑤ แตะตัวเลขถัดไปเพื่อดึงลง → ทำซ้ำ
+   หารสั้น: ① แตะตัวเลขที่จะเริ่มหาร ② ผลหาร (ใต้เส้น) ③ เศษตัวเล็กหน้าหลักถัดไป → ทำซ้ำ ④ เศษสุดท้าย
+   ผิดแต่ละขั้นบอกเหตุผลจริง (เช่น 7 × 6 = 42 มากกว่า 40) · เฉลย (ผิดครบ 3 ครั้ง) เติมกระดานให้ครบ · o.final === false → ไม่จบข้อเอง (ใช้ในโจทย์ปัญหา) */
+const D3_PLACE = ['หลักหน่วย', 'หลักสิบ', 'หลักร้อย', 'หลักพัน', 'หลักหมื่น'];
+function d3Work(D, k, ctx, o = {}) {
+  const P = p4ldivPlan(D, k), nd = P.digs.length, f = Math.max(0, P.steps.findIndex(s => !s.quiet)), short = !!o.short, guide = !!o.guide, place = i => D3_PLACE[nd - 1 - i];
+  /* ลำดับงานทั้งหมดของข้อนี้ */
+  const tasks = [{ t: 'start' }];
+  for (let i = f; i < nd; i++) { const s = P.steps[i];
+    tasks.push({ t: 'q', i });
+    if (short) { if (i < nd - 1 && s.rem > 0) tasks.push({ t: 'c', i }); }
+    else { if (!s.quiet) tasks.push({ t: 'm', i }, { t: 's', i }); if (i < nd - 1) tasks.push({ t: 'b', i: i + 1 }); } }
+  if (short && P.rem > 0) tasks.push({ t: 'r' });
+  let at = 0, typed = '', fin = false, hadWrong = false, startPick = -1, busy = false, shown = false; const ok = new Set(); /* ok = งานที่เสร็จแล้ว (index) */
+  const fig = h('div', { class: 'p4-fig d3fig d3wfig' }), lab = h('div', { class: 'p4steplab d3lab' }), tip = h('div', { class: 'd3tip' }), kp = h('div', { class: 'keypad' });
+  const done = j => j < at || fin;
+  /* ข้อมูลที่แสดงได้ตามความคืบหน้า */
+  const qShown = i => tasks.some((x, j) => x.t === 'q' && x.i === i && done(j));
+  /* แถวล่าสุดของหารยาวเมื่อมีผลหาร 0 คั่น: คำนวณตัวเลขที่อยู่ในแถวทำงานจากขั้นที่เสร็จ */
+  const workRows = () => { const out = []; let cur = null; /* {v, end} */
+    for (let i = f; i < nd; i++) { const s = P.steps[i], jm = tasks.findIndex(x => x.t === 'm' && x.i === i), js = tasks.findIndex(x => x.t === 's' && x.i === i), jb = tasks.findIndex(x => x.t === 'b' && x.i === i + 1);
+      if (!s.quiet) { if (jm >= 0 && done(jm)) out.push({ k: 'p', v: s.prod, end: i }); else if (jm >= 0 && at === jm && !fin) { out.push({ k: 'ap', end: i, w: String(s.prod).length }); break; } else break;
+        if (done(js)) { cur = { k: 'c', v: s.rem, end: i }; out.push(cur); } else if (at === js && !fin) { out.push({ k: 'as', end: i, w: String(s.rem).length }); break; } else break; }
+      if (jb >= 0 && done(jb)) { if (cur) { cur.v = cur.v * 10 + P.digs[i + 1]; cur.end = i + 1; } }
+      else if (jb >= 0) break; }
+    if (fin || at >= tasks.length) { const last = out[out.length - 1]; if (last && last.k === 'c') last.last = true; }
+    return out; };
+  const longHTML2 = () => { let cells = ''; const put = (r, c, t, cls = '') => { cells += `<span class="ld-c ${cls}" style="grid-row:${r};grid-column:${c}">${t}</span>`; };
+    const T = fin ? {} : (tasks[at] || {}), live = v => `<span class="d3typ">${v}</span>`;
+    for (let i = f; i < nd; i++) { if (qShown(i)) put(1, 2 + i, P.steps[i].q, 'q'); else if (T.t === 'q' && T.i === i) put(1, 2 + i, typed ? live(typed) : '?', 'd3ask'); }
+    put(2, 1, fmt(k), 'dv');
+    const sel = done(0) ? f : startPick;
+    P.digs.forEach((d, i) => { const used = tasks.some((x, j) => x.t === 'b' && x.i === i && done(j)), tap = (T.t === 'start') || (T.t === 'b' && !used && i > f);
+      put(2, 2 + i, d, 'dd' + ((!done(0) && sel >= 0 && i <= sel) || (T.t === 'q' && T.i === f && i <= f) ? ' d3hi' : '') + (tap ? ' d3tap' : '') + (used ? ' d3used' : '') + `" data-i="${i}`); });
+    let row = 3; workRows().forEach(r => { const box = (w, end, v, cls) => { const vs = v == null ? '' : String(v), W = Math.max(w, vs.length || 1); for (let j = 0; j < W; j++) { const c = 2 + end - W + 1 + j, ch = vs ? (j >= W - vs.length ? vs[j - (W - vs.length)] : '') : (j === W - 1 ? '?' : ''); put(row, c, ch, cls + (vs ? ' d3typ' : '')); } };
+      if (r.k === 'p') { put(row, 1, '−', 'sg'); const vs = String(r.v); [...vs].forEach((c, j) => put(row, 2 + r.end - vs.length + 1 + j, c, 'pr ul')); }
+      else if (r.k === 'ap') { put(row, 1, '−', 'sg'); box(r.w, r.end, typed, 'd3ask ul'); }
+      else if (r.k === 'c') { const vs = String(r.v); [...vs].forEach((c, j) => put(row, 2 + r.end - vs.length + 1 + j, c, 'rm' + (r.last ? ' last' : ''))); }
+      else if (r.k === 'as') box(r.w, r.end, typed, 'd3ask');
+      row++; });
+    const R = 2 + 2 * P.steps.slice(f).filter(x => !x.quiet).length;
+    return `<div class="ldiv d3b d3w" style="--rows:${R};grid-template-columns:auto repeat(${nd},var(--ldw))">${cells}</div>`; };
+  const shortHTML = () => { const T = fin ? {} : (tasks[at] || {}); let s = `<div class="p4sd d3sd" style="grid-template-columns:auto repeat(${nd},1.25em) auto"><span class="dv">${k} )</span>`;
+    const sel = done(0) ? f : startPick;
+    P.digs.forEach((d, i) => { const jc = tasks.findIndex(x => x.t === 'c' && x.i === i - 1); let sup = '';
+      if (jc >= 0 && done(jc)) sup = `<sup>${P.steps[i - 1].rem}</sup>`; else if (jc >= 0 && T.t === 'c' && T.i === i - 1) sup = `<sup class="d3ask">${typed || '?'}</sup>`;
+      s += `<span class="dd${(!done(0) && sel >= 0 && i <= sel) || ((T.t === 'q' || T.t === 'c') && (T.i === i || (T.i === f && i <= f))) ? ' d3hi' : ''}${T.t === 'start' ? ' d3tap' : ''}" data-i="${i}">${sup}${d}</span>`; });
+    s += '<span></span><span></span>';
+    P.digs.forEach((d, i) => { s += i < f ? '<span class="qq"></span>' : qShown(i) ? `<span class="qq">${P.steps[i].q}</span>` : T.t === 'q' && T.i === i ? `<span class="qq d3ask">${typed || '?'}</span>` : '<span class="qq"></span>'; });
+    const jr = tasks.findIndex(x => x.t === 'r'); s += jr >= 0 && done(jr) ? `<span class="d3rem">เศษ ${P.rem}</span>` : T.t === 'r' ? `<span class="d3rem">เศษ <b class="d3ask">${typed || '?'}</b></span>` : '<span></span>';
+    return s + '</div>'; };
+  const say1 = t => { if (hadWrong && ctx.say) { ctx.say(t); hadWrong = false; } };
+  const paint = () => { fig.innerHTML = short ? shortHTML() : longHTML2(); const T = tasks[at];
+    fig.querySelectorAll('.d3tap').forEach(c => c.onclick = e => { e.stopPropagation(); tapDigit(+c.dataset.i); });
+    kp.classList.toggle('d3off', fin || !T || T.t === 'start' || T.t === 'b');
+    if (fin) { lab.innerHTML = `${fmt(D)} ÷ ${fmt(k)} = <b>${fmt(P.q)}</b>${P.rem ? ` เศษ <b>${fmt(P.rem)}</b>` : ''}${shown ? '' : ' ✓'}`; tip.textContent = ''; return; }
+    const s = T.i != null ? P.steps[Math.min(T.i, nd - 1)] : null;
+    if (T.t === 'start') { lab.innerHTML = 'เริ่มหารที่ตัวเลขไหน? <b>แตะตัวเลขของตัวตั้ง</b>'; tip.textContent = guide ? `ตัวเลขที่เริ่มหารต้องมีค่าไม่น้อยกว่า ${k} ถ้าหลักแรกน้อยกว่า ${k} ให้ใช้สองหลัก` : ''; }
+    else if (T.t === 'q') { lab.innerHTML = `<b>${fmt(s.cur)} ÷ ${k}</b> ได้เท่าไร — เขียนผลหาร${short ? 'ใต้' : 'บน'}${place(T.i)}`; tip.textContent = guide ? (s.cur < k ? `${s.cur} น้อยกว่า ${k} หารไม่ได้ → ผลหารเป็น 0` : `ท่องแม่ ${k}: ${k} × อะไรได้ใกล้ ${s.cur} ที่สุดแต่ไม่เกิน`) : ''; }
+    else if (T.t === 'm') { lab.innerHTML = `คูณ: <b>${s.q} × ${k}</b> = ? — เขียนผลคูณใต้ ${fmt(s.cur)}`; tip.textContent = guide ? 'ผลหารที่เพิ่งเขียน × ตัวหาร' : ''; }
+    else if (T.t === 's') { lab.innerHTML = `ลบ: <b>${fmt(s.cur)} − ${fmt(s.prod)}</b> = ?`; tip.textContent = guide ? `ผลลบต้องน้อยกว่า ${k}` : ''; }
+    else if (T.t === 'b') { lab.innerHTML = 'ดึงตัวเลขหลักถัดไปลงมา — <b>แตะตัวเลขนั้นที่ตัวตั้ง</b>'; tip.textContent = guide ? `ตัวถัดไปทางขวาคือ ${P.digs[T.i]} (${place(T.i)})` : ''; }
+    else if (T.t === 'c') { lab.innerHTML = `${fmt(s.cur)} ÷ ${k} ได้ ${s.q} <b>เหลือเศษเท่าไร</b> — เขียนตัวเล็กหน้าเลขถัดไป`; tip.textContent = guide ? `${fmt(s.cur)} − ${s.q * k}` : ''; }
+    else if (T.t === 'r') { lab.innerHTML = '<b>เหลือเศษเท่าไร</b>'; tip.textContent = guide ? `${fmt(P.steps[nd - 1].cur)} − ${P.steps[nd - 1].prod}` : ''; } };
+  const wrong = why => { hadWrong = true; typed = ''; paint(); ctx.check(false, why); };
+  const next = () => { typed = ''; at++; sfx.pop(Math.min(8, at % 8 + 1)); if (at >= tasks.length) { fin = true; paint(); if (o.final !== false) ctx.check(true); o.onDone && o.onDone(P); return; } say1('ถูกแล้ว ทำขั้นต่อไปได้เลย'); paint(); };
+  function tapDigit(i) { const T = tasks[at]; if (fin || !T) return;
+    if (T.t === 'start') { if (busy) return; startPick = i; const v = +P.digs.slice(0, i + 1).join('');
+      if (i === f) { busy = true; paint(); return setTimeout(() => { busy = false; next(); }, 350); }
+      if (v < k) return wrong(`${fmt(v)} น้อยกว่า ${k} หารไม่ได้ ต้องใช้ตัวเลขหลักถัดไปด้วย`);
+      return wrong(`${+P.digs.slice(0, f + 1).join('')} ก็หารด้วย ${k} ได้แล้ว เริ่มหารที่ ${+P.digs.slice(0, f + 1).join('')} ได้เลย`); }
+    if (T.t === 'b') { if (i === T.i) return next(); return wrong(i < T.i ? `ตัวเลข ${P.digs[i]} ใช้ไปแล้ว ต้องดึงตัวถัดไปทางขวา` : `ต้องดึงทีละหลักตามลำดับ — ตัวถัดไปคือ${place(T.i)}`); } }
+  function enter(v) { const T = tasks[at]; if (fin || !T) return; const s = T.i != null ? P.steps[Math.min(T.i, nd - 1)] : null;
+    if (T.t === 'q') { if (v === s.q) return next();
+      return wrong(v * k > s.cur ? `${v} × ${k} = ${v * k} มากกว่า ${fmt(s.cur)} — ผลหารต้องน้อยกว่า ${v}` : `${v} × ${k} = ${v * k} เหลือ ${fmt(s.cur - v * k)} ซึ่งยังไม่น้อยกว่า ${k} แบ่งได้อีก — ผลหารต้องมากกว่า ${v}`); }
+    if (T.t === 'm') { if (v === s.prod) return next(); return wrong(`${s.q} × ${k} ไม่เท่ากับ ${fmt(v)} — ลองท่องแม่ ${k} อีกครั้ง`); }
+    if (T.t === 's') { if (v === s.rem) return next(); return wrong(`${fmt(s.cur)} − ${fmt(s.prod)} ไม่เท่ากับ ${fmt(v)}${v >= k ? ` (และเศษต้องน้อยกว่า ${k})` : ''}`); }
+    if (T.t === 'c') { if (v === s.rem) return next(); return wrong(`${s.q} × ${k} = ${s.q * k} · ${fmt(s.cur)} − ${s.q * k} ไม่เท่ากับ ${v}`); }
+    if (T.t === 'r') { if (v === P.rem) return next(); return wrong(`${fmt(P.steps[nd - 1].cur)} − ${P.steps[nd - 1].prod} ไม่เท่ากับ ${v}`); } }
+  [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: e => { e.stopPropagation(); if (kp.classList.contains('d3off')) return; sfx.tap(); typed = (typed + d).slice(-6).replace(/^0+(\d)/, '$1'); paint(); } }, d)));
+  kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: e => { e.stopPropagation(); typed = typed.slice(0, -1); paint(); } }, icon('left')),
+    h('button', { class: 'btn', onclick: e => { e.stopPropagation(); if (kp.classList.contains('d3off')) return; sfx.tap(); typed = (typed + '0').slice(-6).replace(/^0+(\d)/, '$1'); paint(); } }, '0'),
+    h('button', { class: 'btn primary', 'aria-label': 'ตกลง', onclick: e => { e.stopPropagation(); if (typed === '') return; enter(+typed); } }, icon('check')));
+  const panel = h('div', { class: 'ans ia d3ans' }, lab, tip, kp);
+  panel.reveal = () => { if (fin) return; fin = true; shown = true; at = tasks.length; paint(); };
+  paint(); const wrap = h('div', { class: 't6-q p4-q d3wq' + (short ? ' d3short' : '') }, fig, panel); wrap.panel = panel; return wrap;
+}
 Object.assign(Q, {
-  /* long division done by the child: every quotient digit (0 too) and every remainder */
-  d3Long({ D, k }) { const P = d3Plan(D, k), S = P.S, q = `ตั้งหารยาว ${fmt(D)} ÷ ${fmt(k)}`;
-    return { prompt: `${q} <small>(ทำทีละขั้น)</small>`, say: `ตั้งหารยาว ${thaiWords(D)} หาร ${thaiWords(k)} ทำทีละขั้น`, mount(bd, ctx) { let pos = 0, phase = 'q';
-      const fig = h('div', { class: 'p4-fig d3fig' }), lab = h('div', { class: 'p4steplab' }), msg = h('div', { class: 'pad-msg' });
-      const paint = () => { fig.innerHTML = d3BoardHTML(D, k, pos, phase, { P }); if (pos >= S.length) { lab.innerHTML = `${fmt(D)} ÷ ${fmt(k)} = <b>${fmt(P.q)}</b>${P.rem ? ` เศษ <b>${fmt(P.rem)}</b>` : ''} ✓`; return; }
-        const s = S[pos]; lab.innerHTML = phase === 'q' ? `<b>${fmt(s.cur)} ÷ ${fmt(k)}</b> ได้เท่าไร? <small>(ผลหารหลักนี้)</small>` : `${fmt(s.q)} × ${fmt(k)} = ${fmt(s.prod)} · <b>${fmt(s.cur)} − ${fmt(s.prod)}</b> = ?`; };
-      const pad = d3Pad((v, clr) => { const s = S[pos];
-        if (phase === 'q') { if (v !== s.q) { clr(); return ctx.check(false, s.cur < k ? `${fmt(s.cur)} น้อยกว่า ${fmt(k)} หารไม่ได้ → ผลหารหลักนี้เป็น 0` : `ท่องแม่ ${fmt(k)}: ${fmt(k)} × ? ได้ใกล้ ${fmt(s.cur)} ที่สุดแต่ไม่เกิน`); }
-          sfx.pop(pos + 2); clr(); if (s.quiet) pos++; else phase = 'r'; }
-        else { if (v !== s.rem) { clr(); return ctx.check(false, `${fmt(s.cur)} − ${fmt(s.prod)} (ลบแล้วต้องน้อยกว่าตัวหาร ${fmt(k)})`); } sfx.pop(pos + 3); clr(); pos++; phase = 'q'; }
-        paint(); if (pos >= S.length) { pad.kp.classList.add('d3done'); ctx.check(true); } });
-      paint(); bd.append(h('div', { class: 't6-q p4-q' }, fig, h('div', { class: 'ans ia d3ans' }, lab, pad.slot, pad.kp, msg))); } };
-  },
-  /* short division: quotient digits one at a time, then the remainder */
-  d3Short({ D, k }) { const P = d3Plan(D, k), S = P.S, q = `หารสั้น ${fmt(D)} ÷ ${fmt(k)}`;
-    return { prompt: `${q} <small>(ใส่ผลหารทีละหลัก)</small>`, say: `หารสั้น ${thaiWords(D)} หาร ${thaiWords(k)}`, mount(bd, ctx) { let pos = 0; const n = S.length + (P.rem ? 1 : 0);
-      const fig = h('div', { class: 'p4-fig p4colwrap' }), lab = h('div', { class: 'p4steplab' }), msg = h('div', { class: 'pad-msg' });
-      const paint = () => { fig.innerHTML = p4sdivHTML(D, k, pos < S.length ? P.f + pos - 1 : P.digs.length - 1);
-        lab.innerHTML = pos < S.length ? `<b>${fmt(S[pos].cur)} ÷ ${fmt(k)}</b> ได้เท่าไร? <small>(เศษเขียนตัวเล็กหน้าหลักถัดไป)</small>` : pos < n ? `เหลือเศษเท่าไร?` : `${fmt(D)} ÷ ${fmt(k)} = <b>${fmt(P.q)}</b>${P.rem ? ` เศษ <b>${P.rem}</b>` : ''} ✓`; };
-      const pad = d3Pad((v, clr) => { if (pos < S.length) { const s = S[pos]; if (v !== s.q) { clr(); return ctx.check(false, s.cur < k ? `${fmt(s.cur)} น้อยกว่า ${fmt(k)} → ใส่ 0` : `${fmt(k)} × ? ได้ใกล้ ${fmt(s.cur)} ที่สุดแต่ไม่เกิน`); } }
-        else if (v !== P.rem) { clr(); return ctx.check(false, `ดูเศษของหลักสุดท้าย: ${fmt(S[S.length - 1].cur)} − ${fmt(S[S.length - 1].prod)}`); }
-        sfx.pop(pos + 2); clr(); pos++; paint(); if (pos >= n) ctx.check(true); });
-      paint(); bd.append(h('div', { class: 't6-q p4-q' }, fig, h('div', { class: 'ans ia d3ans' }, lab, pad.slot, pad.kp, msg))); } };
-  }
+  /* v135: เด็กหารยาว/หารสั้นเองทุกขั้นบนกระดาน */
+  d3Long({ D, k, guide }) { const q = `หารยาว ${fmt(D)} ÷ ${fmt(k)}`;
+    return { prompt: q, say: `หารยาว ${thaiWords(D)} หารด้วย ${thaiWords(k)} ทำเองทีละขั้น`, mount(bd, ctx) { bd.append(d3Work(D, k, ctx, { guide })); } }; },
+  d3Short({ D, k, guide }) { const q = `หารสั้น ${fmt(D)} ÷ ${fmt(k)}`;
+    return { prompt: q, say: `หารสั้น ${thaiWords(D)} หารด้วย ${thaiWords(k)}`, mount(bd, ctx) { bd.append(d3Work(D, k, ctx, { short: true, guide })); } }; },
+  /* โจทย์ปัญหา: ① เลือกประโยคสัญลักษณ์ ② หารยาวเอง ③ ตอบพร้อมหน่วย */
+  d3Story({ text, n, d, unit, unit2 }) { const q = Math.floor(n / d), r = n % d;
+    return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ หารยาว แล้วตอบ', say: text, mount(bd, ctx) {
+      const story = h('div', { class: 'storybox d3story', html: text }), slot = h('div', { class: 'colstack d3slot2' }), lab = h('div', { class: 'p4steplab', html: 'ขั้นที่ 1: เลือก<b>ประโยคสัญลักษณ์</b>' });
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(4); lab.innerHTML = `<b>${fmt(n)} ÷ ${d} = □</b> ✓ · ขั้นที่ 2: <b>หารยาว</b>`; ctx.say && ctx.say('ใช่แล้ว! หารยาวหาคำตอบ');
+        slot.innerHTML = ''; const W = d3Work(n, d, ctx, { final: false, onDone: () => { lab.innerHTML = `ขั้นที่ 3: <b>ตอบ</b>ให้ตรงคำถาม`; W.panel.innerHTML = '';
+          W.panel.append(r ? (D2 => { const row = D2.querySelector('.mc-row'); row && row.children[3] && row.insertBefore(h('span', { class: 'mc-u' }, 'เหลือ'), row.children[3]); return D2; })(duoInput(ctx, [q, r], [unit, unit2 || unit], { pre: 'ได้', hint: `ผลหารคือสิ่งที่ “ได้” · เศษคือสิ่งที่ “เหลือ”` }))
+            : h('div', { class: 'rowstack' }, h('span', { class: 'cap', style: { fontSize: '20px' } }, 'ตอบ'), answerBox(ctx, String(q), { hint: 'ผลหารที่ได้จากการหารยาว' }), h('span', { class: 'cap', style: { fontSize: '20px' } }, unit))); } });
+        slot.append(W); } };
+      slot.append(choices(sub, shuffle([`${fmt(n)} ÷ ${d}`, `${fmt(n)} × ${d}`, `${fmt(n)} − ${d}`]).map(x => ({ value: x, label: x })), `${fmt(n)} ÷ ${d}`, { hint: 'แบ่งเท่า ๆ กัน / จัดกลุ่มละเท่า ๆ กัน → หาร' }));
+      bd.append(h('div', { class: 'colstack d3stq' }, story, lab, slot)); } }; },
+  /* ตัวไม่ทราบค่า: คิดด้วยการคูณ (ป.3 ตัวหารหนึ่งหลัก) */
+  d3Unk({ a, b, c, pos }) { const x = pos === 0 ? a : b, L = pos === 0 ? '□' : fmt(a), R = pos === 1 ? '□' : b;
+    return { prompt: `${L} ÷ ${R} = ${fmt(c)} — □ คือจำนวนใด`, say: `${pos === 0 ? 'อะไร' : thaiWords(a)} หารด้วย ${pos === 1 ? 'อะไร' : thaiWords(b)} เท่ากับ ${thaiWords(c)}`, mount(bd, ctx) {
+      const hint = pos === 0 ? `ไม่รู้ตัวตั้ง → คูณ: ผลหาร × ตัวหาร = ${fmt(c)} × ${b}` : `ไม่รู้ตัวหาร → ${fmt(c)} × □ = ${fmt(a)} ลองคูณ ${fmt(c)} × 2, × 3, … จนได้ ${fmt(a)}`;
+      bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'fbig p4big mt-big', html: `${L === '□' ? '<span class="fsign">□</span>' : L} <span class="fop">÷</span> ${R === '□' ? '<span class="fsign">□</span>' : R} <span class="fop">=</span> ${fmt(c)}` }), answerBox(ctx, String(x), { hint }))); } }; }
 });
+
 const d3chkQ = ([D, k]) => { const q = Math.floor(D / k), r = D % k, right = `${fmt(q)} × ${k}${r ? ` + ${r}` : ''} = ${fmt(D)}`;
   return Q.p4Pick({ fig: p4big(`<b class="num">${fmt(D)} ÷ ${k} = ${fmt(q)}${r ? ` เศษ ${r}` : ''}</b>`), q: 'ข้อใดใช้ตรวจคำตอบนี้ได้ถูกต้อง', opts: [right, `${fmt(q)} + ${k} = ${fmt(q + k)}`, `${fmt(D)} × ${k} = ${fmt(D * k)}`], right, hint: 'ผลหาร × ตัวหาร + เศษ = ตัวตั้ง' }); };
 const d3remQ = ([D, k]) => { const q = Math.floor(D / k), r = D % k, right = `${q} เศษ ${r}`, w = [`${q - 1} เศษ ${r + k}`, `${q + 1} เศษ ${r}`].filter(x => x !== right);
   return Q.p4Pick({ fig: p4big(`<b class="num">${D} ÷ ${k}</b>`), q: 'ข้อใดถูกต้อง <small>(เศษต้องน้อยกว่าตัวหาร)</small>', opts: [right, ...w], right, hint: `เศษต้องน้อยกว่า ${k} · ${k} × ${q} = ${k * q}` }); };
+/* v135: คำถามสั้นให้เกมหลากหลายตรงกับที่สอน */
+const D3_PARTS = ['ตัวตั้ง', 'ตัวหาร', 'ผลหาร'];
+const d3partQ = ([D, k], w) => { const q = D / k, v = [D, k, q], ask = w ?? pick([0, 1, 2]); return Q.p4Pick({ fig: p4big(`<b class="num">${fmt(D)} ÷ ${k} = ${fmt(q)}</b>`), q: `จำนวนใดเป็น<b>${D3_PARTS[ask]}</b>`, opts: v.map(fmt), right: fmt(v[ask]), hint: 'ตัวตั้ง ÷ ตัวหาร = ผลหาร' }); };
+const d3startQ = ([D, k]) => { const P = p4ldivPlan(D, k), f = Math.max(0, P.steps.findIndex(s => !s.quiet)), pre = i => String(+P.digs.slice(0, i + 1).join('')), opts = [...new Set([0, 1, 2].map(i => pre(Math.min(i, P.digs.length - 1))))];
+  return Q.p4Pick({ fig: p4big(`<b class="num">${fmt(D)} ÷ ${k}</b>`), q: 'หารยาวข้อนี้ต้อง<b>เริ่มหาร</b>ที่จำนวนใด', opts, right: pre(f), hint: `เริ่มที่จำนวนแรกทางซ้ายที่ไม่น้อยกว่า ${k}` }); };
+const d3digQ = ([D, k]) => { const n = String(Math.floor(D / k)).length, o = [...new Set([n - 1, n, n + 1].filter(x => x > 0))].map(x => `${x} หลัก`);
+  return Q.p4Pick({ fig: p4big(`<b class="num">${fmt(D)} ÷ ${k}</b>`), q: 'ผลหารของข้อนี้มี<b>กี่หลัก</b>', opts: o, right: `${n} หลัก`, hint: `ดูหลักแรกทางซ้าย: ${String(D)[0]} ${+String(D)[0] >= k ? 'หารด้วย ' + k + ' ได้ → ผลหารมีหลักเท่าตัวตั้ง' : 'น้อยกว่า ' + k + ' → ผลหารมีหลักน้อยกว่าตัวตั้ง 1 หลัก'}` }); };
+const d3estQ = ([D, k]) => { const q = Math.floor(D / k), m = 10 ** (String(q).length - 1), a = Math.round(q / m) * m, o = [a, a * 10, Math.max(1, a / 10)].map(x => `ประมาณ ${fmt(x)}`);
+  return Q.p4Pick({ fig: p4big(`<b class="num">${fmt(D)} ÷ ${k}</b>`), q: 'ผลหารของข้อนี้<b>ประมาณ</b>เท่าใด', opts: [...new Set(o)], right: o[0], hint: `ประมาณตัวตั้งให้เป็นจำนวนเต็มร้อยหรือเต็มพันที่หาร ${k} ง่าย ๆ แล้วหาร` }); };
+const d3unkHowQ = ([a, b, c, pos]) => Q.p4Pick({ fig: p4big(`<b class="num">${pos === 0 ? '□' : fmt(a)} ÷ ${pos === 1 ? '□' : b} = ${fmt(c)}</b>`), q: 'หาค่า □ ด้วยวิธีใด',
+  opts: pos === 0 ? [`${fmt(c)} × ${b}`, `${fmt(c)} ÷ ${b}`, `${fmt(c)} + ${b}`] : [`หาจำนวนที่ ${fmt(c)} × □ = ${fmt(a)}`, `${fmt(a)} × ${fmt(c)}`, `${fmt(a)} − ${fmt(c)}`], right: pos === 0 ? `${fmt(c)} × ${b}` : `หาจำนวนที่ ${fmt(c)} × □ = ${fmt(a)}`, hint: 'ตัวตั้ง = ผลหาร × ตัวหาร' });
+const d3sentQ = s => Q.p4Pick({ fig: `<div class="storybox">${s.text}</div>`, q: 'ข้อใดเป็น<b>ประโยคสัญลักษณ์</b>ของโจทย์นี้', opts: [`${fmt(s.n)} ÷ ${s.d} = □`, `${fmt(s.n)} × ${s.d} = □`, `${fmt(s.n)} − ${s.d} = □`], right: `${fmt(s.n)} ÷ ${s.d} = □`, hint: 'แบ่งเท่า ๆ กัน / จัดกลุ่มละเท่า ๆ กัน → หาร' });
+const d3leftQ = s => { const q = Math.floor(s.n / s.d), r = s.n % s.d, u2 = s.unit2 || s.unit; return Q.p4Pick({ fig: `<div class="storybox">${s.text}</div><div class="cap">${fmt(s.n)} ÷ ${s.d} = ${fmt(q)} เศษ ${r}</div>`, q: 'ข้อใดตอบ<b>สิ่งที่เหลือ</b>ได้ถูกต้อง', opts: [`เหลือ ${r} ${u2}`, `เหลือ ${fmt(q)} ${u2}`, `เหลือ ${s.d} ${u2}`], right: `เหลือ ${r} ${u2}`, hint: 'เศษคือสิ่งที่เหลือหลังจากแบ่งแล้ว' }); };
+const D3_SHORTWHY = [Q.p4Pick({ q: 'หารสั้น เขียน<b>เศษ</b>ไว้ที่ใด', opts: ['ตัวเล็กหน้าตัวเลขหลักถัดไป', 'ใต้ผลหาร', 'ข้างตัวหาร'], right: 'ตัวเล็กหน้าตัวเลขหลักถัดไป', hint: 'เศษรวมกับหลักถัดไปเป็นจำนวนใหม่' }),
+  Q.p4Pick({ q: 'หารสั้น<b>ต่าง</b>จากหารยาวอย่างไร', opts: ['หารสั้นคิดคูณและลบในใจ ไม่ต้องเขียนลงมา', 'หารสั้นใช้ได้เฉพาะตัวตั้งสองหลัก', 'หารสั้นหาเศษไม่ได้'], right: 'หารสั้นคิดคูณและลบในใจ ไม่ต้องเขียนลงมา' })];
 
 /* ---------- data ---------- */
 const DP = s => s.split(' ').map(x => x.split('÷').map(v => +v.replace(/,/g, '')));
@@ -20507,12 +20633,12 @@ const D3W_UNK = [[62, 2, 31, 1], [90, 6, 15, 0], [145, 5, 29, 1], [738, 9, 82, 0
 const D3S = (text, n, d, unit, unit2) => ({ text, n, d, unit, unit2 });
 const D3W_ST1 = [D3S('ครูมีลูกโป่ง 245 ลูก ผูกเป็นพวง พวงละ 7 ลูก ครูผูกลูกโป่งได้กี่พวง', 245, 7, 'พวง'), D3S('ร้านขายกระเป๋าไป 4 ใบ ราคาเท่ากันทุกใบ ได้เงิน 388 บาท กระเป๋าราคาใบละกี่บาท', 388, 4, 'บาท'),
   D3S('โรงเรียนมีนักเรียน 486 คน จัดแถวแถวละ 6 คน จัดได้กี่แถว', 486, 6, 'แถว'), D3S('ชาวสวนมีส้ม 1,248 ผล บรรจุถุงละ 8 ผล ได้ส้มกี่ถุง', 1248, 8, 'ถุง'),
-  D3S('ครูมีดินสอ 720 แท่ง แบ่งให้ 5 ห้องเท่า ๆ กัน ได้ห้องละกี่แท่ง', 720, 5, 'แท่ง'), D3S('รถตู้ 1 คันนั่งได้ 9 คน มีคนไปเที่ยว 117 คน พอดีกับรถตู้กี่คัน', 117, 9, 'คัน'),
+  D3S('ครูมีดินสอ 720 แท่ง แบ่งให้ 5 ห้องเท่า ๆ กัน ได้ห้องละกี่แท่ง', 720, 5, 'แท่ง'), D3S('รถตู้ 1 คันนั่งได้ 9 คน มีคนไปเที่ยว 117 คน ต้องใช้รถตู้กี่คัน', 117, 9, 'คัน'),
   D3S('ร้านมีไข่ไก่ 2,736 ฟอง ใส่กล่องละ 6 ฟอง ได้ไข่ไก่กี่กล่อง', 2736, 6, 'กล่อง'), D3S('เชือกยาว 952 เมตร ตัดเป็นเส้น เส้นละ 7 เมตร ได้เชือกกี่เส้น', 952, 7, 'เส้น'),
   D3S('แม่ทำขนม 375 ชิ้น ใส่กล่องละ 5 ชิ้น ได้ขนมกี่กล่อง', 375, 5, 'กล่อง'), D3S('ปู่มีเงิน 4,500 บาท แบ่งให้หลาน 4 คนเท่า ๆ กัน หลานได้คนละกี่บาท', 4500, 4, 'บาท')]; // แต่งเพิ่ม
 const D3W_ST2 = [D3S('ครูมีปากกา 197 ด้าม แจกนักเรียน 5 กลุ่ม กลุ่มละเท่า ๆ กัน ได้กลุ่มละกี่ด้าม และเหลือปากกากี่ด้าม', 197, 5, 'ด้าม'),
   D3S('ร้านมีริบบิ้นสีทองยาว 495 เมตร ตัดขายเส้นละ 8 เมตร ขายได้กี่เส้น และเหลือริบบิ้นยาวกี่เมตร', 495, 8, 'เส้น', 'เมตร'), D3S('มีส้ม 250 ผล ใส่ถุงละ 6 ผล ได้ส้มกี่ถุง และเหลือส้มกี่ผล', 250, 6, 'ถุง', 'ผล'),
-  D3S('มีลูกปัด 1,000 เม็ด ร้อยสร้อยเส้นละ 7 เม็ด ได้สร้อยกี่เส้น และเหลือลูกปัดกี่เม็ด', 1000, 7, 'เส้น', 'เม็ด'), D3S('นักเรียน 130 คน นั่งโต๊ะละ 4 คน เต็มโต๊ะได้กี่โต๊ะ และเหลือนักเรียนกี่คน', 130, 4, 'โต๊ะ', 'คน'),
+  D3S('มีลูกปัด 1,000 เม็ด ร้อยสร้อยข้อมือเส้นละ 9 เม็ด ได้สร้อยข้อมือกี่เส้น และเหลือลูกปัดกี่เม็ด', 1000, 9, 'เส้น', 'เม็ด'), D3S('นักเรียน 130 คน นั่งโต๊ะละ 4 คน นั่งได้เต็มกี่โต๊ะ และเหลือนักเรียนกี่คน', 130, 4, 'โต๊ะ', 'คน'),
   D3S('มีไข่ 347 ฟอง ใส่กล่องละ 6 ฟอง ได้ไข่กี่กล่อง และเหลือไข่กี่ฟอง', 347, 6, 'กล่อง', 'ฟอง'), D3S('มีเงิน 950 บาท ซื้อปากกาด้ามละ 8 บาท ได้ปากกากี่ด้าม และเหลือเงินกี่บาท', 950, 8, 'ด้าม', 'บาท'),
   D3S('กระดาษ 2,500 แผ่น แบ่งให้ 3 ห้องเท่า ๆ กัน ได้ห้องละกี่แผ่น และเหลือกี่แผ่น', 2500, 3, 'แผ่น')]; // แต่งเพิ่ม
 const D3W_MAKE = [{ s: '134 ÷ 2', parts: ['มีลูกอม 134 เม็ด', [['แบ่งให้ 2 คน คนละเท่า ๆ กัน', 'ซื้อเพิ่มอีก 2 เม็ด'], 'แบ่งให้ 2 คน คนละเท่า ๆ กัน', '÷ 2 คือแบ่งเป็น 2 ส่วนเท่า ๆ กัน'], [['ได้คนละกี่เม็ด', 'มีลูกอมทั้งหมดกี่เม็ด'], 'ได้คนละกี่เม็ด', 'ถามสิ่งที่ได้หลังแบ่ง']] },
@@ -20532,70 +20658,70 @@ const LESSONS_P3C8 = [
       { fig: lbig('ตัวตั้ง ÷ ตัวหาร = ผลหาร'), name: 'ชื่อของแต่ละส่วน', text: '24 = ตัวตั้ง · 4 = ตัวหาร · 6 = ผลหาร' },
       { fig: d3BoardHTML(24, 4, 1, 'q'), name: 'การหารยาว', text: 'ตัวหารอยู่ซ้าย ตัวตั้งอยู่ใต้เส้น ผลหารอยู่บนเส้น<br>ตรวจ: 6 × 4 = 24' }], 'ตัวตั้ง ÷ ตัวหาร = ผลหาร · ตรวจคำตอบด้วย ผลหาร × ตัวหาร'),
      pexStep('ตัวอย่างทีละขั้น: 56 ÷ 8', 'ตัวอย่างทีละขั้น', d3ex(56, 8), '56 ÷ 8 = <b>7</b> · ตรวจ 7 × 8 = 56'),
-     T('ลองดูการหารยาวทีละขั้น', 'ลองดูการหารยาวทีละขั้น', el => el.append(simLongDiv4([[63, 9], [35, 7]]))),
+     T('ลองทำตามไปด้วยกัน — ทำเองทุกขั้น มีคำแนะนำ', 'ลองทำตามไปด้วยกัน ทำเองทุกขั้น', el => el.append(qSim(Q.d3Long({ D: 63, k: 9, guide: true }), 'ทำเองครบทุกขั้นแล้ว'))),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Long({ D: 42, k: 6 }), 'ถูกต้อง!')))],
-    () => [...d3pick(D3W_1, 4).map(([D, k]) => Q.d3Long({ D, k })), d3chkQ(pick(D3W_1))]),
+    () => [...d3pick(D3W_1, 3).map(([D, k]) => Q.d3Long({ D, k })), d3chkQ(pick(D3W_1)), ...d3pick(D3W_1.filter(([D, k]) => D / k !== k), 2).map((x, j) => d3partQ(x, j ? 2 : pick([0, 1]))), dvPicQ(pick(DVW_GRP), 'group'), dvPicQ(pick(DVW_SHR), 'share')]), /* v135: หารยาว 3 · ตรวจคำตอบ · ชื่อส่วน 2 · ความหมายของการหาร 2 */
   L3D(2, 'ป่าเศษเหลือ', 'การหาผลหารและเศษที่ตัวตั้งสองหลัก ตัวหารและผลหารหนึ่งหลักโดยการหารยาว (2)', 'หารยาว มีเศษ', 'หาผลหารและเศษ เมื่อหารไม่ลงตัว',
     [...learnStep('<b>หารไม่ลงตัว มีเศษ</b>', 'หารไม่ลงตัว มีเศษ', [
       { fig: dvLeft(23, 5, 'cookie', { box: 'bag', size: 14 }), name: 'แบ่งแล้วเหลือ = เศษ', text: 'คุกกี้ 23 ชิ้น ใส่ถุงละ 5 ชิ้น ได้ 4 ถุง เหลือ 3 ชิ้น<br>23 ÷ 5 = 4 เศษ 3' },
       { fig: lbig('เศษ < ตัวหาร'), name: 'เศษต้องน้อยกว่าตัวหารเสมอ', text: 'ถ้าเศษ ≥ ตัวหาร แปลว่ายังแบ่งได้อีก' },
       { fig: lbig('4 × 5 + 3 = 23'), name: 'ตรวจคำตอบ', text: 'ผลหาร × ตัวหาร + เศษ = ตัวตั้ง' }], 'หารไม่ลงตัว → มีเศษ · เศษน้อยกว่าตัวหาร'),
      pexStep('ตัวอย่างทีละขั้น: 38 ÷ 7', 'ตัวอย่างทีละขั้น', d3ex(38, 7), '38 ÷ 7 = <b>5 เศษ 3</b> · ตรวจ 5 × 7 + 3 = 38'),
-     T('ลองดูการหารยาวที่มีเศษ', 'ลองดูการหารยาวที่มีเศษ', el => el.append(simLongDiv4([[43, 6], [26, 4]]))),
+     T('ลองทำตามไปด้วยกัน — หารยาวที่มีเศษ', 'ลองทำตามไปด้วยกัน หารยาวที่มีเศษ', el => el.append(qSim(Q.d3Long({ D: 43, k: 6, guide: true }), 'ทำเองครบทุกขั้นแล้ว'))),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Long({ D: 34, k: 8 }), 'ถูกต้อง!')))],
-    () => [...d3pick(D3W_R1, 3).map(([D, k]) => Q.d3Long({ D, k })), (([D, k]) => Q.dvRem({ n: D, d: k }))(pick(D3W_R1.filter(([D]) => D <= 40))), d3remQ(pick(D3W_R1))]),
+    () => [...d3pick(D3W_R1, 3).map(([D, k]) => Q.d3Long({ D, k })), (([D, k]) => Q.dvRem({ n: D, d: k }))(pick(D3W_R1.filter(([D]) => D <= 40))), d3remQ(pick(D3W_R1)), d3chkQ(pick(D3W_R1))]),
   L3D(3, 'ป่าผลหารสองหลัก', 'การหาผลหารและเศษที่ตัวตั้งสองหลัก ตัวหารหนึ่งหลักและผลหารสองหลักโดยการหารยาว', 'ผลหาร 2 หลัก', 'หารยาวเมื่อผลหารมีสองหลัก',
     [...learnStep('<b>ผลหารสองหลัก</b>', 'ผลหารสองหลัก', [
       { fig: d3BoardHTML(72, 3, 0, 'q'), name: 'เริ่มหารที่หลักสิบ', text: '7 ÷ 3 ได้ 2 → เขียน 2 ไว้บนหลักสิบ' },
       { fig: d3BoardHTML(72, 3, 1, 'q'), name: 'ลบแล้วดึงหลักหน่วยลงมา', text: '7 − 6 = 1 ดึง 2 ลงมา ได้ 12' },
       { fig: d3BoardHTML(72, 3, 2, 'q'), name: 'หารต่อ', text: '12 ÷ 3 = 4 → 72 ÷ 3 = 24' }], 'หาร → คูณ → ลบ → ดึงลง ทำซ้ำจนครบทุกหลัก'),
      pexStep('ตัวอย่างทีละขั้น: 85 ÷ 6', 'ตัวอย่างทีละขั้น', d3ex(85, 6), '85 ÷ 6 = <b>14 เศษ 1</b>'),
-     T('ลองดูการหารยาวทีละขั้น', 'ลองดูการหารยาวทีละขั้น', el => el.append(simLongDiv4([[68, 4], [95, 8]]))),
+     T('ลองทำตามไปด้วยกัน — ทำเองทุกขั้น มีคำแนะนำ', 'ลองทำตามไปด้วยกัน ทำเองทุกขั้น', el => el.append(qSim(Q.d3Long({ D: 68, k: 4, guide: true }), 'ทำเองครบทุกขั้นแล้ว'))),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Long({ D: 58, k: 4 }), 'ถูกต้อง!')))],
-    () => [...d3pick(D3W_2, 2).map(([D, k]) => Q.d3Long({ D, k })), ...d3pick(D3W_2R, 2).map(([D, k]) => Q.d3Long({ D, k })), d3chkQ(pick(D3W_2R))]),
+    () => [...d3pick(D3W_2, 2).map(([D, k]) => Q.d3Long({ D, k })), ...d3pick(D3W_2R, 2).map(([D, k]) => Q.d3Long({ D, k })), d3chkQ(pick(D3W_2R)), d3digQ(pick([...D3W_2, ...D3W_1])), d3remQ(pick(D3W_2R)), d3startQ(pick(D3W_2R))]),
   L3D(4, 'ป่าสามหลัก', 'การหาผลหารและเศษที่ตัวตั้งสามหลักและตัวหารหนึ่งหลักโดยการหารยาว', 'ตัวตั้ง 3 หลัก', 'หารยาวเมื่อตัวตั้งมีสามหลัก',
     [...learnStep('ตัวตั้ง<b>สามหลัก</b>', 'ตัวตั้งสามหลัก', [
       { fig: d3BoardHTML(612, 6, 0, 'q'), name: 'เริ่มที่หลักซ้ายสุดที่หารได้', text: '6 ÷ 6 = 1 · หลักร้อยหารได้' },
       { fig: d3BoardHTML(125, 4, 0, 'q'), name: 'หลักแรกน้อยกว่าตัวหาร → ใช้สองหลัก', text: '1 ÷ 4 ไม่ได้ → ใช้ 12 ÷ 4' },
       { fig: d3BoardHTML(612, 6, 1, 'q'), name: 'ดึงลงมาแล้วยังหารไม่ได้ → ใส่ 0', text: '1 ÷ 6 ไม่ได้ → ผลหารหลักนั้นเป็น 0' }], 'หลักไหนหารไม่ได้ ใส่ 0 ในผลหาร แล้วดึงหลักถัดไปลงมา'),
      pexStep('ตัวอย่างทีละขั้น: 428 ÷ 4', 'ตัวอย่างทีละขั้น', d3ex(428, 4), '428 ÷ 4 = <b>107</b>'),
-     T('ลองดูการหารยาวทีละขั้น', 'ลองดูการหารยาวทีละขั้น', el => el.append(simLongDiv4([[738, 6], [254, 3]]))),
+     T('ลองทำตามไปด้วยกัน — ตัวตั้งสามหลัก', 'ลองทำตามไปด้วยกัน ตัวตั้งสามหลัก', el => el.append(qSim(Q.d3Long({ D: 254, k: 3, guide: true }), 'ทำเองครบทุกขั้นแล้ว'))),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Long({ D: 315, k: 5 }), 'ถูกต้อง!')))],
-    () => [...d3pick(D3W_3, 4).map(([D, k]) => Q.d3Long({ D, k })), (([D, k]) => Q.p4Div({ D, k }))(pick(D3W_3))]),
+    () => [...d3pick(D3W_3, 4).map(([D, k]) => Q.d3Long({ D, k })), ...d3pick(D3W_3.filter(([D, k]) => +String(D)[0] < k), 1).map(d3startQ), d3startQ(pick(D3W_3.filter(([D, k]) => +String(D)[0] >= k))), d3digQ(pick(D3W_3)), d3chkQ(pick(D3W_3))]), /* v135: ไม่มีข้อพิมพ์คำตอบอย่างเดียวแล้ว */
   L3D(5, 'ป่าสี่หลัก', 'การหาผลหารและเศษที่ตัวตั้งสี่หลักและตัวหารหนึ่งหลักโดยการหารยาว', 'ตัวตั้ง 4 หลัก', 'หารยาวเมื่อตัวตั้งมีสี่หลัก',
     [...learnStep('ตัวตั้ง<b>สี่หลัก</b>', 'ตัวตั้งสี่หลัก', [
       { fig: d3BoardHTML(5184, 4, 0, 'q'), name: 'ทำเหมือนเดิม แต่หลายรอบขึ้น', text: 'หาร → คูณ → ลบ → ดึงลง' },
       { fig: lbig('ผลหารมี 3 หรือ 4 หลัก'), name: 'ประมาณผลหารก่อน', text: '5,184 ÷ 4 ≈ 5,000 ÷ 4 ≈ 1,000 กว่า' },
       { fig: lbig('1,296 × 4 = 5,184'), name: 'ตรวจคำตอบด้วยการคูณ', text: 'ผลหาร × ตัวหาร + เศษ = ตัวตั้ง' }], 'หลายหลักก็ทำทีละหลัก ประมาณก่อน ตรวจด้วยการคูณ'),
      pexStep('ตัวอย่างทีละขั้น: 2,947 ÷ 7', 'ตัวอย่างทีละขั้น', d3ex(2947, 7), '2,947 ÷ 7 = <b>421</b>'),
-     T('ลองดูการหารยาวทีละขั้น', 'ลองดูการหารยาวทีละขั้น', el => el.append(simLongDiv4([[3804, 6], [7215, 5]]))),
+     T('ลองทำตามไปด้วยกัน — ตัวตั้งสี่หลัก', 'ลองทำตามไปด้วยกัน ตัวตั้งสี่หลัก', el => el.append(qSim(Q.d3Long({ D: 3804, k: 6, guide: true }), 'ทำเองครบทุกขั้นแล้ว'))),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Long({ D: 1736, k: 8 }), 'ถูกต้อง!')))],
-    () => [...d3pick(D3W_4, 3).map(([D, k]) => Q.d3Long({ D, k })), ...d3pick(D3W_4, 2).map(([D, k]) => Q.p4Div({ D, k }))]),
+    () => [...d3pick(D3W_4, 3).map(([D, k]) => Q.d3Long({ D, k })), ...d3pick(D3W_4, 2).map(d3estQ), d3digQ(pick(D3W_4)), d3chkQ(pick(D3W_4)), d3startQ(pick(D3W_4.filter(([D, k]) => +String(D)[0] < k)))]), /* v135: หาร 4 หลักแค่ 3 ข้อ + ประมาณ/จำนวนหลัก/ตรวจ */
   L3D(6, 'ป่าหารสั้น', 'การหาผลหารและเศษที่ตัวตั้งไม่เกินสี่หลักและตัวหารหนึ่งหลักโดยการหารสั้น', 'หารสั้น', 'หาผลหารและเศษโดยการหารสั้น',
     [...learnStep('<b>การหารสั้น</b>', 'การหารสั้น', [
       { fig: `<div class="p4colwrap">${p4sdivHTML(846, 3, -1)}</div>`, name: 'เขียนสั้นกว่าหารยาว', text: 'ตัวหารอยู่ซ้าย ผลหารเขียนใต้เส้น' },
       { fig: `<div class="p4colwrap">${p4sdivHTML(846, 3, 0)}</div>`, name: 'เศษเขียนตัวเล็กหน้าหลักถัดไป', text: '8 ÷ 3 = 2 เศษ 2 → เขียน 2 ตัวเล็กหน้า 4 อ่านเป็น 24' },
       { fig: `<div class="p4colwrap">${p4sdivHTML(846, 3, 2)}</div>`, name: 'หารต่อจนครบ', text: '24 ÷ 3 = 8 · 6 ÷ 3 = 2 → 282' }], 'หารสั้น = คิดในใจ เศษเขียนตัวเล็กหน้าหลักถัดไป'),
      pexStep('ตัวอย่างทีละขั้น: 715 ÷ 4', 'ตัวอย่างทีละขั้น', [['① 7 ÷ 4', 'ได้ 1 เศษ 3', `<div class="p4colwrap">${p4sdivHTML(715, 4, 0)}</div>`], ['② 31 ÷ 4', 'ได้ 7 เศษ 3', `<div class="p4colwrap">${p4sdivHTML(715, 4, 1)}</div>`], ['③ 35 ÷ 4', 'ได้ 8 เศษ 3', `<div class="p4colwrap">${p4sdivHTML(715, 4, 2)}</div>`]], '715 ÷ 4 = <b>178 เศษ 3</b>'),
-     T('ลองดูการหารสั้นทีละขั้น', 'ลองดูการหารสั้นทีละขั้น', el => el.append(simShortDiv4([[924, 4], [6375, 5]]))),
+     T('ลองทำตามไปด้วยกัน — หารสั้น', 'ลองทำตามไปด้วยกัน หารสั้น', el => el.append(qSim(Q.d3Short({ D: 924, k: 4, guide: true }), 'ทำเองครบทุกขั้นแล้ว'))),
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Short({ D: 568, k: 4 }), 'ถูกต้อง!')))],
-    () => [...d3pick(D3W_S, 3).map(([D, k]) => Q.d3Short({ D, k })), ...d3pick(D3W_S4, 2).map(([D, k]) => Q.d3Short({ D, k }))]),
+    () => [...d3pick(D3W_S, 3).map(([D, k]) => Q.d3Short({ D, k })), ...d3pick(D3W_S4, 2).map(([D, k]) => Q.d3Short({ D, k })), ...D3_SHORTWHY, d3remQ(pick(D3W_S))]),
   L3D(7, 'ป่าตัวไม่รู้ค่า', 'การหาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การหาร', 'ตัวไม่ทราบค่า', 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การหาร',
     [...learnStep('<b>ตัวไม่ทราบค่า</b>ในการหาร', 'ตัวไม่ทราบค่าในการหาร', [
       { fig: lbig('□ ÷ 4 = 12'), name: 'ไม่รู้ตัวตั้ง → คูณ', text: 'ตัวตั้ง = ผลหาร × ตัวหาร → 12 × 4 = 48' },
       { fig: lbig('36 ÷ □ = 9'), name: 'ไม่รู้ตัวหาร → หาร', text: 'ตัวหาร = ตัวตั้ง ÷ ผลหาร → 36 ÷ 9 = 4' },
       { fig: lbig('48 ÷ 4 = 12 ✓'), name: 'แทนค่าตรวจ', text: 'ใส่คำตอบใน □ แล้วคำนวณดูว่าเป็นจริง' }], 'ไม่รู้ตัวตั้ง → คูณ · ไม่รู้ตัวหาร → หาร'),
      pexStep('ตัวอย่างทีละขั้น: □ ÷ 7 = 35', 'ตัวอย่างทีละขั้น', [['① □ อยู่ตรงไหน', '□ คือตัวตั้ง', lbig('□ ÷ 7 = 35')], ['② ใช้การคูณ', '35 × 7 = 245', mtGroupsSVG(7, 1, 'coin', { box: 'plate', size: 20 })], ['③ ตรวจ', '245 ÷ 7 = 35 ✓', lbig('245 ÷ 7 = 35')]], '□ = <b>245</b>'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.dvUnk({ a: 156, b: 4, c: 39, pos: 1 }), 'ถูกต้อง!')))],
-    () => pkF(D3W_UNK, 5).map(([a, b, c, pos]) => Q.dvUnk({ a, b, c, pos }))),
+     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Unk({ a: 156, b: 4, c: 39, pos: 1 }), '39 × 4 = 156')))],
+    () => [...pkF(D3W_UNK, 5).map(([a, b, c, pos]) => Q.d3Unk({ a, b, c, pos })), ...pkF(D3W_UNK, 2).map(d3unkHowQ), d3chkQ(pick(D3W_3))]),
   L3D(8, 'ป่าโจทย์หาร', 'โจทย์ปัญหาการหาร (1)', 'โจทย์ปัญหา (1)', 'แก้โจทย์ปัญหาการหารที่หารลงตัว',
     [...learnStep('ขั้นตอน<b>แก้โจทย์ปัญหาการหาร</b>', 'ขั้นตอนแก้โจทย์ปัญหาการหาร', [
       { fig: mtGroupsSVG(3, 5, 'apple', { size: 16 }), name: 'แบ่งเท่า ๆ กัน / จัดกลุ่มละเท่ากัน → หาร', text: 'ใส่ถุงละ… แบ่งให้…คนละเท่า ๆ กัน' },
       { fig: lbig('ประโยคสัญลักษณ์ → หารยาว'), name: 'เขียนประโยคสัญลักษณ์แล้วหาคำตอบ', text: '315 ÷ 7 = □' },
       { fig: lbig('ตอบพร้อมหน่วย'), name: 'ตอบให้ตรงคำถาม', text: 'กี่แจกัน · กี่บาท · กี่ถุง' }], 'อ่าน → หาร → ตอบพร้อมหน่วย'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', 'มีมะม่วง 156 ผล ใส่ตะกร้าละ 4 ผล ได้มะม่วงกี่ตะกร้า', mtGroupsSVG(4, 3, 'mango', { box: 'plate', size: 16 })], ['① ประโยคสัญลักษณ์', 'ตะกร้าละ 4 → 156 ÷ 4 = □', d3BoardHTML(156, 4, 0, 'q')], ['② หารยาว', '156 ÷ 4 = 39', d3BoardHTML(156, 4, 9, 'q')]], 'ตอบ <b>39 ตะกร้า</b>'),
-     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.dvStory(D3S('มีลูกโป่ง 96 ลูก แบ่งให้เด็ก 8 คนเท่า ๆ กัน ได้คนละกี่ลูก', 96, 8, 'ลูก')), 'ถูกต้อง!')))],
-    () => pkF(D3W_ST1, 5).map(s => Q.dvStory(s))),
+     T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.d3Story(D3S('มีลูกโป่ง 96 ลูก แบ่งให้เด็ก 8 คนเท่า ๆ กัน ได้คนละกี่ลูก', 96, 8, 'ลูก')), 'ทำเองครบทุกขั้นแล้ว')))],
+    () => { const S = pkF(D3W_ST1, 8); return [...S.slice(0, 4).map(s => Q.d3Story(s)), ...S.slice(4, 6).map(d3sentQ), ...S.slice(6).map(x => d3chkQ([x.n, x.d]))]; }), /* v135: เลือกประโยค → หารยาว → ตอบ */
   L3D(9, 'ป่าโจทย์มีเศษ', 'โจทย์ปัญหาการหาร (2)', 'โจทย์ปัญหา (2)', 'แก้โจทย์ปัญหาการหารที่มีเศษ และสร้างโจทย์ปัญหาการหาร',
     [...learnStep('โจทย์ที่<b>มีเศษ</b>', 'โจทย์ที่มีเศษ', [
       { fig: dvLeft(26, 4, 'egg', { box: 'bag', size: 12 }), name: 'เศษ = สิ่งที่เหลือ', text: 'ไข่ 26 ฟอง ใส่กล่องละ 4 ฟอง ได้ 6 กล่อง เหลือ 2 ฟอง' },
@@ -20603,7 +20729,7 @@ const LESSONS_P3C8 = [
       { fig: lbig('134 ÷ 2 → แต่งโจทย์'), name: 'สร้างโจทย์จากประโยคสัญลักษณ์', text: 'ตัวตั้ง = ของทั้งหมด · ตัวหาร = จำนวนคน/กลุ่ม' }], 'มีเศษ → ตอบทั้ง “ได้” และ “เหลือ”'),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['โจทย์', 'มีขนม 125 ชิ้น ใส่กล่องละ 6 ชิ้น ได้กี่กล่อง เหลือกี่ชิ้น', dvLeft(20, 6, 'cookie', { box: 'bag', size: 12 })], ['① หาร', '125 ÷ 6', d3BoardHTML(125, 6, 0, 'q')], ['② ผลลัพธ์', '125 ÷ 6 = 20 เศษ 5', d3BoardHTML(125, 6, 9, 'q')]], 'ได้ <b>20 กล่อง</b> เหลือ <b>5 ชิ้น</b>'),
      T('ลองแต่งโจทย์', 'ลองแต่งโจทย์', el => el.append(qSim(Q.x3Make({ s: '96 ÷ 4', parts: ['มีดอกไม้ 96 ดอก', [['จัดใส่แจกันละ 4 ดอก', 'ซื้อมาเพิ่ม 4 ดอก'], 'จัดใส่แจกันละ 4 ดอก', '÷ 4 คือจัดกลุ่มละ 4'], [['ได้ดอกไม้กี่แจกัน', 'มีดอกไม้ทั้งหมดกี่ดอก'], 'ได้ดอกไม้กี่แจกัน', 'ถามจำนวนกลุ่ม']] }), 'ถูกต้อง!')))],
-    () => [...pkF(D3W_ST2, 3).map(s => Q.dvStory(s)), ...pkF(D3W_MAKE, 2).map(o => Q.x3Make(o))])
+    () => { const S = pkF(D3W_ST2, 6); return [...S.slice(0, 3).map(s => Q.d3Story(s)), ...S.slice(3, 5).map(d3leftQ), d3sentQ(S[5]), ...pkF(D3W_MAKE, 2).map(o => Q.x3Make(o))]; })
 ];
 
 /* ---------- boss: from the practice · d6spread · every item tagged lv ---------- */
@@ -20618,7 +20744,7 @@ const EXAM_P3C8 = d6spread([
   { q: '62 ÷ □ = 31 จำนวนใน □ คือข้อใด', opts: ['2', '31', '93', '1,922'], a: 0, lv: 1307 }, { q: '□ ÷ 9 = 82 จำนวนใน □ คือข้อใด', opts: ['738', '91', '73', '9'], a: 0, lv: 1307 },
   { q: 'นุ้ยมีดอกไม้ 315 ดอก จัดใส่แจกันละ 7 ดอก นุ้ยจัดดอกไม้ได้กี่แจกัน', opts: ['45 แจกัน', '44 แจกัน', '308 แจกัน', '322 แจกัน'], a: 0, lv: 1308 },
   { q: 'จ๋าขายเสื้อ 4 ตัว ราคาเท่ากัน ได้เงิน 396 บาท เสื้อราคาตัวละกี่บาท', opts: ['99 บาท', '98 บาท', '392 บาท', '1,584 บาท'], a: 0, lv: 1308 },
-  { q: 'ครูมีปากกา 182 ด้าม แจก 5 กลุ่มเท่า ๆ กัน ได้กลุ่มละกี่ด้าม เหลือกี่ด้าม', opts: ['คนละ 36 เล่ม เหลือ 2 เล่ม', 'คนละ 35 เล่ม เหลือ 7 เล่ม', 'คนละ 37 เล่ม เหลือ 0 เล่ม', 'คนละ 36 เล่ม เหลือ 5 เล่ม'], a: 0, lv: 1309 },
+  { q: 'ครูมีปากกา 182 ด้าม แจก 5 กลุ่มเท่า ๆ กัน ได้กลุ่มละกี่ด้าม เหลือกี่ด้าม', opts: ['กลุ่มละ 36 ด้าม เหลือ 2 ด้าม', 'กลุ่มละ 35 ด้าม เหลือ 7 ด้าม', 'กลุ่มละ 37 ด้าม เหลือ 0 ด้าม', 'กลุ่มละ 36 ด้าม เหลือ 5 ด้าม'], a: 0, lv: 1309 },
   { q: 'แม่ค้ามีโบว์ยาว 515 เมตร ตัดขายเส้นละ 8 เมตร ขายได้กี่เส้น เหลือกี่เมตร', opts: ['64 เส้น เหลือ 3 เมตร', '63 เส้น เหลือ 11 เมตร', '65 เส้น เหลือ 0 เมตร', '64 เส้น เหลือ 8 เมตร'], a: 0, lv: 1309 },
   { q: 'ประโยคสัญลักษณ์ 448 ÷ 8 = □ ตรงกับโจทย์ข้อใด', opts: ['มีไข่ 448 ฟอง ใส่กล่องละ 8 ฟอง ได้กี่กล่อง', 'มีไข่ 448 ฟอง ซื้อเพิ่ม 8 ฟอง มีไข่กี่ฟอง', 'มีไข่ 8 กล่อง กล่องละ 448 ฟอง มีไข่กี่ฟอง'], a: 0, lv: 1309 }]);
 LESSONS_P3C8.push({ id: 1319, boss: true, place: 'ป่าหารยักษ์', title: 'ด่านบอส: ป.3 บทที่ 8 การหาร', short: 'ด่านบอส · ข้อสอบ', tone: 'yellow',
