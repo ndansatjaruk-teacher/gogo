@@ -201,7 +201,7 @@ Object.assign(Q, {
   fOf({ f, n, e = 'coin', unit = '' }) {
     const r = FR(f), ans = rMul(r, Rr(n));
     return { prompt: `${FX(`[${f}]`)} ของ ${n} เท่ากับเท่าไร?`, say: `${FXsay(`[${f}]`)} ของ ${n} เท่ากับเท่าไร`,
-      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig' + (fNoPic() ? ' fq5' : ''), html: `${litHTML(litParse(f).lit)} <b class="fop">ของ</b> <span class="num">${n}</span> <b class="fop">=</b> <span class="fsign">?</span>` }) : n <= 40 && n % r.d === 0 ? groupSet(e, n, r.d, r.n) : null, h('div', { class: 'rowstack' }, numOrFrac(ctx, ans, `แบ่ง ${n} เป็น ${r.d} ส่วนเท่า ๆ กัน (${n} ÷ ${r.d}) แล้วเอามา ${r.n} ส่วน`), unit ? h('span', { class: 'cap', style: { fontSize: '20px' } }, unit) : null)); } };
+      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig' + (fNoPic() ? ' fq5' : ''), html: `${litHTML(litParse(f).lit)} <b class="fop">ของ</b> <span class="num">${n}</span> <b class="fop">=</b> <span class="fsign">?</span>` }) : n <= 40 && n % r.d === 0 ? groupSet(e, n, r.d, r.n) : '', h('div', { class: 'rowstack' }, numOrFrac(ctx, ans, `แบ่ง ${n} เป็น ${r.d} ส่วนเท่า ๆ กัน (${n} ÷ ${r.d}) แล้วเอามา ${r.n} ส่วน`), unit ? h('span', { class: 'cap', style: { fontSize: '20px' } }, unit) : null)); } };
   },
   /* reciprocal */
   fRecip({ f }) {
@@ -225,7 +225,7 @@ Object.assign(Q, {
     for (let j = 1; j < toks.length - 1; j++) if (toks[j].op && '+−×÷'.includes(toks[j].op) && toks[j - 1].lit && toks[j + 1].lit) parts.push(`${tokSrc([toks[j - 1]])} ${toks[j].op} ${tokSrc([toks[j + 1]])}`);
     const opts = shuffle([...new Set([right, ...parts])]).slice(0, 3); if (!opts.includes(right)) opts[0] = right;
     return { prompt: `${exprHTML(expr)}<br>ต้องคำนวณส่วนใด<span class="hl">ก่อน</span>?`, say: 'ต้องคำนวณส่วนใดก่อน',
-      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig fq5', html: exprHTML(expr) }) : null, choices(ctx, shuffle(opts).map(o => ({ value: o, label: exprHTML(o) })), right, { hint: 'ลำดับ: ในวงเล็บก่อน → คูณ หาร (ซ้ายไปขวา) → บวก ลบ (ซ้ายไปขวา)' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); } };
+      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig fq5', html: exprHTML(expr) }) : '', choices(ctx, shuffle(opts).map(o => ({ value: o, label: exprHTML(o) })), right, { hint: 'ลำดับ: ในวงเล็บก่อน → คูณ หาร (ซ้ายไปขวา) → บวก ลบ (ซ้ายไปขวา)' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); } };
   },
   /* equivalent fraction: a/b = ?/D  (whole-number answer) */
   fEquiv({ a, D }) {

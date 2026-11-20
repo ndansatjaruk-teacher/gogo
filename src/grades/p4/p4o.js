@@ -17,52 +17,59 @@ function p4firstQ(expr) { // which part first? candidates = every neighbouring p
 const p4tok = e => e.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').replace(/,/g, '').trim().split(/\s+/);
 const P4OPF = { '+': (a, b) => a + b, '−': (a, b) => a - b, '×': (a, b) => a * b, '÷': (a, b) => a / b };
 const p4isOp = t => /^[+−×÷]$/.test(t);
-function p4nextOps(T) {
+/* v157: โหมดเศษส่วน (ป.6 ระคน) — โทเค็นเป็นข้อความ "1 1/2" · ค่าเป็นจำนวนตรรกยะ (p5 rAdd…) */
+const P4NUM = { v: t => +t, op: (o, a, b) => P4OPF[o](a, b), s: v => String(v), html: t => fmt(+t), vh: v => fmt(v) };
+const P4FRN = { v: t => litR(litParse(t).lit), op: (o, a, b) => o === '+' ? rAdd(a, b) : o === '−' ? rSub(a, b) : o === '×' ? rMul(a, b) : rDiv(a, b), s: r => rText(r), html: t => litHTML(litParse(t).lit), vh: r => rHTML(r) };
+const p4tokF = e => exprTokens(e).map(k => k.lit ? tokSrc([k]) : k.op);
+function p4nextOps(T, F = P4NUM) {
   const G = []; for (let i = 0; i < T.length; i++) if (T[i] === '(') { let j = i + 1; while (T[j] !== ')' && T[j] !== '(') j++; if (T[j] === ')') G.push([i + 1, j - 1]); }
   const segs = G.length ? G : [[0, T.length - 1]], out = [];
   segs.forEach(([a, b]) => { const ops = []; for (let k = a + 1; k < b; k += 2) ops.push(k);
-    if (ops.length > 1 && ops.every(k => T[k] === '+')) return out.push({ ops, lo: a, hi: b, val: ops.reduce((t, k) => t + +T[k + 1], +T[a]), part: T.slice(a, b + 1).join(' ') });
+    if (ops.length > 1 && ops.every(k => T[k] === '+')) return out.push({ ops, lo: a, hi: b, val: ops.reduce((t, k) => F.op('+', t, F.v(T[k + 1])), F.v(T[a])), part: T.slice(a, b + 1).join(' ') });
     const md = ops.filter(k => T[k] === '×' || T[k] === '÷'), cand = md.length ? md.filter(k => k - 2 < a || T[k - 2] === '+' || T[k - 2] === '−') : ops.slice(0, 1);
-    cand.forEach(k => out.push({ ops: [k], lo: k - 1, hi: k + 1, val: P4OPF[T[k]](+T[k - 1], +T[k + 1]), part: `${T[k - 1]} ${T[k]} ${T[k + 1]}` })); });
+    cand.forEach(k => out.push({ ops: [k], lo: k - 1, hi: k + 1, val: F.op(T[k], F.v(T[k - 1]), F.v(T[k + 1])), part: `${T[k - 1]} ${T[k]} ${T[k + 1]}` })); });
   return { N: out, G }; }
 function p4stepBox(ctx, expr, o = {}) {
-  let T = p4tok(expr), k = 0, pick = null, done = false;
+  const F = o.frac ? P4FRN : P4NUM, nx = () => p4nextOps(T, F); let T = o.frac ? p4tokF(expr) : p4tok(expr), k = 0, pick = null, done = false;
   const line = h('div', { class: 'fbig p4sline one-line' }), log = h('div', { class: 'colstack fsteps p4slog' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'p4sslot' });
   const draw = () => { line.innerHTML = ''; line.classList.toggle('lock', !!pick || done);
     T.forEach((t, i) => { if (p4isOp(t)) line.append(h('button', { class: 'fop p4sop' + (pick && pick.ops.includes(i) ? ' on' : ''), onclick: e => { e.stopPropagation(); tap(i); } }, t));
       else if (t === '(' || t === ')') line.append(h('b', { class: 'fop p4spar' + (pick && (i === pick.lo - 1 || i === pick.hi + 1) && T[pick.lo - 1] === '(' && T[pick.hi + 1] === ')' ? ' p4shl' : '') }, t));
-      else line.append(h('b', { class: 'num' + (pick && i >= pick.lo && i <= pick.hi ? ' p4shl' : '') }, fmt(+t))); });
+      else line.append(h('b', { class: 'num' + (pick && i >= pick.lo && i <= pick.hi ? ' p4shl' : ''), html: F.html(t) })); });
     if (!done) line.append(h('b', { class: 'fop' }, '='), h('span', { class: 'fsign' }, '?')); };
-  const apply = P => { T = [...T.slice(0, P.lo), String(P.val), ...T.slice(P.hi + 1)];
+  const apply = P => { T = [...T.slice(0, P.lo), F.s(P.val), ...T.slice(P.hi + 1)];
     for (let i = 1; i < T.length - 1; i++) if (T[i - 1] === '(' && T[i + 1] === ')') { T.splice(i + 1, 1); T.splice(i - 1, 1); i = 0; } };
-  const addLog = P => log.append(h('div', { class: 'fstep-row' }, h('span', { class: 'ms-lab' }, `ขั้นที่ ${k}`), h('span', { html: `${exprHTML(P.part)} <b class="fop">=</b> <b class="num">${fmt(P.val)}</b> ✓` })));
+  const addLog = P => log.append(h('div', { class: 'fstep-row' }, h('span', { class: 'ms-lab' }, `ขั้นที่ ${k}`), h('span', { html: `${exprHTML(P.part)} <b class="fop">=</b> <b class="num">${F.vh(P.val)}</b> ✓` })));
   const ask = () => { slot.innerHTML = ''; pick = null; draw();
-    if (T.length === 1) { done = true; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${fmt(+T[0])}</b>`; return; }
-    const { N } = p4nextOps(T), nOps = T.filter(p4isOp).length;
+    if (T.length === 1) { done = true; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${F.html(T[0])}</b>`; return; }
+    const { N } = nx(), nOps = T.filter(p4isOp).length;
     if (nOps === 1 || (N.length === 1 && N[0].ops.length === nOps)) return choose(N[0], true);
     lab.innerHTML = `ขั้นที่ ${k + 1}: แตะ<b>เครื่องหมาย</b>ที่ต้องคิดก่อน`; };
   const choose = (P, auto) => { pick = P; draw(); const last = T.length === P.hi - P.lo + 1;
     lab.innerHTML = `ขั้นที่ ${k + 1}: ${exprHTML(P.part)} = ?`;
     const sub = last ? ctx : { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); k++; sfx.pop(Math.min(8, k + 2)); addLog(P); apply(P); ask(); }, say: ctx.say };
-    slot.append(answerBox(sub, String(P.val), { hint: P.ops.length > 1 ? `รวมทุกจำนวนในวงเล็บ` : /[×÷]/.test(P.part) && P.val > 999 ? `ตั้ง${P.part.includes('×') ? 'คูณ' : 'หาร'} ${exprHTML(P.part)} ในกระดาษทด` : `คิด ${exprHTML(P.part)}` }));
+    const hint = o.frac ? (P.ops.length > 1 ? 'ทำตัวส่วนให้เท่ากัน แล้วรวมทุกจำนวนในวงเล็บ' : /[+−]/.test(T[P.ops[0]]) ? 'ทำตัวส่วนให้เท่ากัน (ใช้ ค.ร.น.) แล้วบวก/ลบตัวเศษ' : T[P.ops[0]] === '×' ? 'เปลี่ยนจำนวนคละเป็นเศษเกิน แล้วเศษคูณเศษ ส่วนคูณส่วน' : 'หารด้วยเศษส่วน = คูณด้วยส่วนกลับของตัวหาร') : null;
+    slot.append(o.frac ? numOrFrac(sub, P.val, hint) : answerBox(sub, String(P.val), { hint: P.ops.length > 1 ? `รวมทุกจำนวนในวงเล็บ` : /[×÷]/.test(P.part) && P.val > 999 ? `ตั้ง${P.part.includes('×') ? 'คูณ' : 'หาร'} ${exprHTML(P.part)} ในกระดาษทด` : `คิด ${exprHTML(P.part)}` }));
     if (last) { const r = ctx.onRight; ctx.onRight = () => { if (!done) { k++; addLog(P); apply(P); ask(); } r && r(); }; }
     if (!auto && ctx.say && k === 0) ctx.say('ใช่แล้ว! คิดส่วนนี้ก่อน'); };
-  function tap(i) { if (pick || done) return; const { N, G } = p4nextOps(T), P = N.find(x => x.ops.includes(i)); if (P) { sfx.tap(); return choose(P); }
+  function tap(i) { if (pick || done) return; const { N, G } = nx(), P = N.find(x => x.ops.includes(i)); if (P) { sfx.tap(); return choose(P); }
     const inG = G.some(([a, b]) => i > a && i < b), t = T[i];
     ctx.check(false, G.length && !inG ? `${t} อยู่นอกวงเล็บ — ต้องคิดในวงเล็บก่อน` : (t === '+' || t === '−') && N.some(x => /[×÷]/.test(T[x.ops[0]])) ? `ต้องคูณ หาร ก่อน แล้วจึง${t === '+' ? 'บวก' : 'ลบ'}` : 'บวก ลบ (หรือ คูณ หาร) ทำจากซ้ายไปขวา — เริ่มที่เครื่องหมายทางซ้ายก่อน'); }
   const wrap = h('div', { class: 'colstack p2q p4sbox ans' }, line, log, lab, slot);
-  wrap.reveal = () => { while (T.length > 1) { const P = p4nextOps(T).N[0]; k++; addLog(P); apply(P); } slot.innerHTML = ''; done = true; pick = null; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${fmt(+T[0])}</b>`; };
+  wrap.reveal = () => { while (T.length > 1) { const P = nx().N[0]; k++; addLog(P); apply(P); } slot.innerHTML = ''; done = true; pick = null; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${F.html(T[0])}</b>`; };
   ask(); return wrap; }
 Object.assign(Q, {
   p4Steps({ expr }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้นตามลำดับ`, say: `หาผลลัพธ์ ${speakText(expr)}`, __sig: 'p4st ' + expr, mount(bd, ctx) { bd.append(p4stepBox(ctx, expr)); } }; },
   /* โจทย์ 2 ขั้นตอน/ค่าเฉลี่ย: ① เลือกประโยคสัญลักษณ์ ② คิดทีละขั้น */
-  p4Story2({ text, expr, wrong = [], unit = '' }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
-    return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: text.replace(/<[^>]+>/g, ''), __sig: 'p4s2 ' + expr, mount(bd, ctx) {
+  p4Story2({ text, expr, wrong = [], unit = '', frac = false }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
+    return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: frac ? FXsay(text) : text.replace(/<[^>]+>/g, ''), __sig: 'p4s2 ' + expr, mount(bd, ctx) {
       const lab = h('div', { class: 'p4steplab', html: '① เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' });
-      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; slot.append(p4stepBox(ctx, expr)); const X = bd.querySelector('.x3st'); X && X.classList.add('p4s2on'); } };
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; slot.append(p4stepBox(ctx, expr, { frac })); const X = bd.querySelector('.x3st'); X && X.classList.add('p4s2on'); } };
       const ch = choices(sub, opts.map(o => ({ value: o, label: exprHTML(o) })), expr, { hint: 'เรื่องที่ต้องรู้ก่อนอยู่ในวงเล็บ · รวม/เพิ่ม → บวก · เหลือ → ลบ · หลายกลุ่มเท่ากัน → คูณ · แบ่งเท่า ๆ กัน → หาร' });
       ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); slot.append(ch);
-      bd.append(h('div', { class: 'colstack x3st' }, h('div', { class: 'storybox', html: text }), lab, slot)); } }; }
+      bd.append(h('div', { class: 'colstack x3st' }, h('div', { class: 'storybox', html: frac ? FX(text) : text }), lab, slot)); } }; },
+  /* v157: ป.6 ระคนเศษส่วน — แตะเครื่องหมาย แล้วตอบเป็นเศษส่วน/จำนวนคละทีละขั้น */
+  f6Steps({ expr }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้นตามลำดับ`, say: `หาผลลัพธ์ ${exprSay(expr)}`, __sig: 'f6st ' + expr, mount(bd, ctx) { bd.append(p4stepBox(ctx, expr, { frac: true })); } }; }
 });
 const p4calcQ = expr => Q.p4Steps({ expr }); /* v149: เดิม Q.dCalc พิมพ์คำตอบสุดท้ายอย่างเดียว */
 const p4boxQ = s => Q.p4Num({ fig: p4big(p4box(s)), q: 'เติมจำนวนใน □ ให้ถูกต้อง', say: 'เติมจำนวนในช่องให้ถูกต้อง', a: p4boxSolve(s), hint: 'คิดลำดับการคำนวณ (วงเล็บ → คูณ หาร → บวก ลบ) แล้วลองแทนค่าตรวจ' });

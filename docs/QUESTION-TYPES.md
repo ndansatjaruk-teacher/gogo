@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-391 types
+392 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -91,17 +91,18 @@
 | `Q.f3Shade` | `{ n, d, kind }` | [`grades/p3/p3f.js:89`](../src/grades/p3/p3f.js#L89) |
 | `Q.f3Story` | `{ text, sent, wrong, n, d, unit }` | [`grades/p3/p3f.js:105`](../src/grades/p3/p3f.js#L105) |
 | `Q.f3Write` | `{ n, d, kind }` | [`grades/p3/p3f.js:87`](../src/grades/p3/p3f.js#L87) |
-| `Q.f4Calc2` | `{ expr, bars }` | [`grades/p4/p4f.js:113`](../src/grades/p4/p4f.js#L113) |
+| `Q.f4Calc2` | `{ expr, bars, lcm }` | [`grades/p4/p4f.js:115`](../src/grades/p4/p4f.js#L115) |
 | `Q.f4Eq` | `{ n, d, k, mode, ask }` | [`grades/p4/p4f.js:69`](../src/grades/p4/p4f.js#L69) |
 | `Q.f4Fill` | `{ tpl, ans, hint }` | [`grades/p4/p4f.js:63`](../src/grades/p4/p4f.js#L63) |
 | `Q.f4MixPic` | `{ w, n, d }` | [`grades/p4/p4f.js:59`](../src/grades/p4/p4f.js#L59) |
 | `Q.f4Pic` | `{ n, d, kind }` | [`grades/p4/p4f.js:57`](../src/grades/p4/p4f.js#L57) |
 | `Q.f4Set` | `{ d, per, n }` | [`grades/p4/p4f.js:61`](../src/grades/p4/p4f.js#L61) |
 | `Q.f4Simp` | `{ n, d }` | [`grades/p4/p4f.js:71`](../src/grades/p4/p4f.js#L71) |
-| `Q.f4Story2` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p4/p4f.js:116`](../src/grades/p4/p4f.js#L116) |
+| `Q.f4Story2` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p4/p4f.js:118`](../src/grades/p4/p4f.js#L118) |
 | `Q.f4ToImp` | `{ w, n, d }` | [`grades/p4/p4f.js:65`](../src/grades/p4/p4f.js#L65) |
 | `Q.f4ToMix` | `{ n, d }` | [`grades/p4/p4f.js:67`](../src/grades/p4/p4f.js#L67) |
 | `Q.f6Mix` | `{ f }` | [`grades/p6/p6f.js:122`](../src/grades/p6/p6f.js#L122) |
+| `Q.f6Steps` | `{ expr }` | [`grades/p4/p4o.js:72`](../src/grades/p4/p4o.js#L72) |
 | `Q.family` | `{ a, b }` | [`engine/questions.js:447`](../src/engine/questions.js#L447) |
 | `Q.fCalc` | `{ expr, vis, hint }` | [`grades/p5/p5.js:190`](../src/grades/p5/p5.js#L190) |
 | `Q.fCmp` | `{ a, b, bars = false, hint }` | [`grades/p5/p5.js:163`](../src/grades/p5/p5.js#L163) |
@@ -232,9 +233,9 @@
 | `Q.p4Num` | `{ fig, q, a, hint, say: sy, unit = '' }` | [`grades/p4/p4n.js:158`](../src/grades/p4/p4n.js#L158) |
 | `Q.p4Pick` | `{ fig, q, opts, right, hint, say: sy, keep }` | [`grades/p4/p4n.js:154`](../src/grades/p4/p4n.js#L154) |
 | `Q.p4Seq` | `{ text, cards }` | [`grades/p4/p4b.js:221`](../src/grades/p4/p4b.js#L221) |
-| `Q.p4Steps` | `{ expr }` | [`grades/p4/p4o.js:57`](../src/grades/p4/p4o.js#L57) |
+| `Q.p4Steps` | `{ expr }` | [`grades/p4/p4o.js:62`](../src/grades/p4/p4o.js#L62) |
 | `Q.p4StM` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p4/p4m.js:287`](../src/grades/p4/p4m.js#L287) |
-| `Q.p4Story2` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p4/p4o.js:59`](../src/grades/p4/p4o.js#L59) |
+| `Q.p4Story2` | `{ text, expr, wrong = [], unit = '', frac = false }` | [`grades/p4/p4o.js:64`](../src/grades/p4/p4o.js#L64) |
 | `Q.p4UnkM` | `st` | [`grades/p4/p4m.js:282`](../src/grades/p4/p4m.js#L282) |
 | `Q.p6Fig` | `{ fig, q, opts, right, hint, say: sy }` | [`grades/p6/p6p.js:96`](../src/grades/p6/p6p.js#L96) |
 | `Q.p6Num` | `{ q, a, unit = '', hint }` | [`grades/p6/p6p.js:93`](../src/grades/p6/p6p.js#L93) |
