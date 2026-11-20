@@ -27,28 +27,30 @@ function x3fillBoard(tpl, res, pool) { const T = tpl.split(' '), slots = T.map(t
       const f = fill.get(i), s = h('button', { class: 's2slot n' + (f ? ' filled' : '') }, f ? fmt(f.v) : ''); s.onclick = e => { e.stopPropagation(); if (row.dataset.done || !f) return; f.b.classList.remove('used'); fill.delete(i); sfx.tap(); draw(); }; row.append(s); });
     row.append(h('b', { class: 's2eq' }, '='), h('span', { class: 's2res' }, fmt(res))); };
   const el = h('div', { class: 'colstack s2b' }, row, h('div', { class: 'cap ixcap' }, 'แตะตัวเลขลงช่องให้ได้ผลลัพธ์ · แตะช่องเพื่อเอาออก'), cards);
-  el.check = () => { if (T.some((t, i) => t === '□' && !fill.has(i))) return { ok: false, why: 'ใส่ตัวเลขให้ครบทุกช่องก่อน' };
+  el.check = () => { if (T.some((t, i) => t === '□' && !fill.has(i))) return { ok: false, inc: true, why: 'ใส่ตัวเลขให้ครบทุกช่องก่อน' };
     const e = T.map((t, i) => t === '□' ? fill.get(i).v : t).join(' ').replace(/\( /g, '(').replace(/ \)/g, ')'); let v; try { v = x3v(e); } catch (_) { v = NaN; }
     return { ok: v === res, why: `${exprHTML(e)} ได้ ${Number.isFinite(v) ? fmt(v) : 'หารไม่ลงตัว'} ไม่ใช่ ${fmt(res)} — ลองคิดในวงเล็บก่อน` }; };
   el.done = () => { row.dataset.done = 1; row.classList.add('ok'); }; draw(); return el; }
 /* ---------- build a story for a number sentence: pick the phrase for every gap ---------- */
+/* v135: กดตรวจตอนยังไม่ครบ → เตือนเฉย ๆ ไม่นับเป็นตอบผิด */
+const x3inc = (B, ctx, why) => { sfx.no(); B.querySelectorAll('.x3gap, .x3box').forEach(g => { g.classList.remove('x3need'); void g.offsetWidth; g.classList.add('x3need'); }); ctx.say ? ctx.say(why) : null; };
 function x3makeBoard(parts) { const out = h('div', { class: 'x3make' }), pick = new Map();
   parts.forEach((p, i) => { if (typeof p === 'string') return out.append(h('span', { html: p }));
-    const sl = h('span', { class: 'x3gap ia' }), opts = shuffle(p[0].slice()), redraw = () => { sl.innerHTML = ''; opts.forEach(o => sl.append(h('button', { class: 'x3chip' + (pick.get(i) === o ? ' on' : ''), onclick: e => { e.stopPropagation(); if (out.dataset.done) return; pick.set(i, o); sfx.tap(); redraw(); } }, o))); };
+    const no = parts.slice(0, i + 1).filter(x => typeof x !== 'string').length, sl = h('span', { class: 'x3gap ia', 'data-no': no }), opts = shuffle(p[0].slice()), redraw = () => { sl.innerHTML = ''; opts.forEach(o => sl.append(h('button', { class: 'x3chip' + (pick.get(i) === o ? ' on' : ''), onclick: e => { e.stopPropagation(); if (out.dataset.done) return; pick.set(i, o); sfx.tap(); redraw(); } }, o))); };
     redraw(); out.append(sl); });
-  out.check = () => { const gaps = parts.map((p, i) => [p, i]).filter(([p]) => typeof p !== 'string'); if (gaps.some(([, i]) => !pick.has(i))) return { ok: false, why: 'เลือกคำให้ครบทุกช่องก่อน' };
+  out.check = () => { const gaps = parts.map((p, i) => [p, i]).filter(([p]) => typeof p !== 'string'); if (gaps.some(([, i]) => !pick.has(i))) return { ok: false, inc: true, why: 'เลือกคำให้ครบทุกช่องก่อน' };
     const bad = gaps.find(([p, i]) => pick.get(i) !== p[1]); return { ok: !bad, why: bad ? (bad[0][2] || 'อ่านประโยคสัญลักษณ์อีกครั้ง') : '' }; };
   out.done = () => { out.dataset.done = 1; out.classList.add('ok'); out.querySelectorAll('.x3chip:not(.on)').forEach(b => b.remove()); };
   return out; }
 Object.assign(Q, {
   x3Fill({ tpl, res, pool }) { const q = 'เติมตัวเลขลงในช่องว่าง ให้ได้ผลลัพธ์ตามที่กำหนด';
-    return { prompt: q, say: q, mount(bd, ctx) { const B = x3fillBoard(tpl, res, shuffle(pool.slice())); bd.append(h('div', { class: 'colstack' }, B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; },
+    return { prompt: q, say: q, mount(bd, ctx) { const B = x3fillBoard(tpl, res, shuffle(pool.slice())); bd.append(h('div', { class: 'colstack' }, B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.inc) return x3inc(B, ctx, r.why); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; },
   x3Cmp({ L, R }) { const vL = x3v(L), vR = x3v(R), right = vL > vR ? '>' : vL < vR ? '<' : '=', q = 'เติมเครื่องหมาย &gt; &lt; หรือ = <small>(ลองเทียบโดยไม่ต้องคำนวณทั้งหมด)</small>';
     return { prompt: q, say: 'เติมเครื่องหมาย มากกว่า น้อยกว่า หรือ เท่ากับ', mount(bd, ctx) { bd.append(h('div', { class: 'colstack x3cmp' }, h('div', { class: 'x3cmpL', html: `<span>${exprHTML(L)}</span><b class="blank">?</b><span>${exprHTML(R)}</span>` }),
       choices(ctx, ['>', '<', '='].map(v => ({ value: v, label: v })), right, { hint: 'ดูว่าส่วนที่เหมือนกันคืออะไร แล้วเทียบเฉพาะส่วนที่ต่างกัน' }))); } }; },
   x3Make({ s, parts, ask }) { const q = `แต่งโจทย์ปัญหาจากประโยคสัญลักษณ์ ${x3e(s)} = □`;
     return { prompt: q, say: 'แต่งโจทย์ปัญหาจากประโยคสัญลักษณ์ เลือกคำให้ครบทุกช่อง', mount(bd, ctx) { const B = x3makeBoard(parts);
-      bd.append(h('div', { class: 'colstack' }, h('div', { html: p4big(`<b class="num">${x3e(s)} = □</b>`) }), B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; }
+      bd.append(h('div', { class: 'colstack' }, h('div', { html: p4big(`<b class="num">${x3e(s)} = □</b>`) }), B, checkButton('ตรวจคำตอบ', () => { const r = B.check(); if (r.inc) return x3inc(B, ctx, r.why); if (r.ok) B.done(); ctx.check(r.ok, r.why); }))); } }; }
 });
 const x3calcQ = e => Q.s2two({ expr: e });
 const x3pickQ = (text, good, res) => { const opts = [good, ...s2wrong(good)].slice(0, 3).map(x => `${x3e(x)} = ${fmt(res)}`);
