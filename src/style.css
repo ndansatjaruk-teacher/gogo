@@ -3735,3 +3735,6 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .t6-q svg.v3jug,.ql-grid .ql-top svg.v3jug,.ql-grid .ql-left svg.v3jug{height:clamp(230px,56cqh,400px)!important;max-height:none!important;width:auto!important}
 .t6-q .v3jugw svg.v3jug{height:clamp(230px,56cqh,400px)!important}
 .v3ref svg{width:56px;height:auto}
+/* v141 ป.3 เงิน: เงินและสมุดบัญชีในเกมใหญ่ขึ้น */
+.t6-q .mnrow{max-width:min(640px,96%)}.t6-q .mnrow .mn-n{width:clamp(96px,12cqw,132px)}.t6-q .mnrow .mn-c{width:calc(var(--r) * 3.3px + 10px)}
+.t6-q.p2q .mnledw{min-width:min(520px,56cqw)}.t6-q.p2q .mnledw .mnled td{font-size:clamp(12px,1.5cqw,15px);padding:3px 6px}.t6-q.p2q .mnledw .mnled .hd td{font-size:clamp(11px,1.3cqw,13px)}
