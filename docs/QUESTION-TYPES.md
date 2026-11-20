@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-381 types
+383 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -28,6 +28,8 @@
 | `Q.addFact` | `{ a, b, frame = false, pen, vert = false }` | [`engine/questions.js:274`](../src/engine/questions.js#L274) |
 | `Q.addSteps` | `{ a, b }` | [`engine/questions.js:1319`](../src/engine/questions.js#L1319) |
 | `Q.arrange` | `{ clues, answer, slotLabel }` | [`engine/questions.js:1067`](../src/engine/questions.js#L1067) |
+| `Q.b3Story` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p3/p3b.js:23`](../src/grades/p3/p3b.js#L23) |
+| `Q.b3Unk` | `st` | [`grades/p3/p3b.js:28`](../src/grades/p3/p3b.js#L28) |
 | `Q.balanceCmp` | `{ a, b, rel }` | [`engine/questions.js:960`](../src/engine/questions.js#L960) |
 | `Q.basketCount` | `{ e, name, n, unit = 'ผล' }` | [`engine/questions.js:1202`](../src/engine/questions.js#L1202) |
 | `Q.between` | `{ lo, hi }` | [`engine/questions.js:750`](../src/engine/questions.js#L750) |
@@ -87,7 +89,7 @@
 | `Q.f3Part` | `{ n, d, ask }` | [`grades/p3/p3f.js:96`](../src/grades/p3/p3f.js#L96) |
 | `Q.f3Read` | `{ n, d, to }` | [`grades/p3/p3f.js:92`](../src/grades/p3/p3f.js#L92) |
 | `Q.f3Shade` | `{ n, d, kind }` | [`grades/p3/p3f.js:89`](../src/grades/p3/p3f.js#L89) |
-| `Q.f3Story` | `{ text, sent, wrong, n, d, unit }` | [`grades/p3/p3f.js:104`](../src/grades/p3/p3f.js#L104) |
+| `Q.f3Story` | `{ text, sent, wrong, n, d, unit }` | [`grades/p3/p3f.js:105`](../src/grades/p3/p3f.js#L105) |
 | `Q.f3Write` | `{ n, d, kind }` | [`grades/p3/p3f.js:87`](../src/grades/p3/p3f.js#L87) |
 | `Q.f4Eq` | `{ n, d, k, mode, ask }` | [`grades/p4/p4f.js:69`](../src/grades/p4/p4f.js#L69) |
 | `Q.f4Fill` | `{ tpl, ans, hint }` | [`grades/p4/p4f.js:63`](../src/grades/p4/p4f.js#L63) |
