@@ -10,6 +10,7 @@
    python3 tests/smoke.py --grade <ชั้นที่แก้>
    ```
    แล้วเปิด `dist/index.html` ลองเล่นจริงที่ขนาดจอไอแพด (1180×820) — ดูว่าทุกหน้า **พอดีจอไม่ต้องเลื่อน**
+   ถ้าแก้หรือเพิ่มโจทย์ ป.1–ป.3 ให้รัน `python3 tests/range.py --grade <ชั้น>` — รายงานตัวเลขที่เกินหลักสูตร (ป.1 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000 รวมผลระหว่างทาง) ต้องขึ้น "no plain-number hits"
    ถ้าแก้หรือเพิ่มด่าน ให้รัน `python3 tests/audit.py --lesson <id>` ด้วย — บอตจะตอบทุกข้อ ตรวจว่าตอบถูกแล้วผ่าน หน้าจอไม่ล้น และเกมมีครบ 8 ข้อ
 4. เปิด Pull Request → GitHub Actions รัน build + smoke test ทุกด่าน (ถ้าแก้ `p5q.js` จะรันเทสกระดานสร้างรูปด้วย) ต้องผ่านก่อน merge
 5. **ไม่ต้อง commit ไฟล์ `ผจญภัยไปกับ The Ascent.html`** — หลัง merge เข้า `main` GitHub Actions สร้างและ commit ให้เอง (`.github/workflows/publish.yml`)

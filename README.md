@@ -26,6 +26,7 @@ open dist/index.html                # (Windows: start dist\index.html · Linux: 
 pip install playwright && python3 -m playwright install chromium
 python3 tests/smoke.py --grade 5             # เปิดทุกหน้าบทเรียนและทุกข้อในเกมของ ป.5 — ต้องไม่มี error
 python3 tests/smoke.py                       # ทุกชั้น (~4 นาที)
+python3 tests/range.py --grade 2             # ตัวเลขในโจทย์เกินหลักสูตรของชั้นไหม (ป.1–ป.3)
 python3 tests/construction/edge_cases.py     # กระดานสร้างรูป ป.5 (ไม้บรรทัด/โปรแทรกเตอร์/วงเวียน)
 python3 tests/audit.py --grade 5             # เล่นจริงทุกข้อแบบนักเรียน: ตอบถูกได้ไหม · พอดีจอไหม · ปุ่ม “ถัดไป” ปลดล็อกได้ไหม · เกมครบ 8 ข้อไหม (ช้า ~25 นาที/ชั้น)
 ```
@@ -42,7 +43,7 @@ src/
 tools/
   build.py          รวม src/ → dist/index.html  (--check = ตรวจ syntax ด้วย Node · --publish = ไฟล์ที่ root)
   catalog.py        สร้าง docs/QUESTION-TYPES.md ใหม่
-tests/              smoke.py (ทุกด่าน ไม่มี error) · audit.py (เล่นจริงแบบนักเรียน) · construction/ (กระดานสร้างรูป ป.5)
+tests/              smoke.py (ทุกด่าน ไม่มี error) · range.py (ตัวเลขเกินหลักสูตร ป.1–ป.3) · audit.py (เล่นจริงแบบนักเรียน) · construction/ (กระดานสร้างรูป ป.5)
 docs/
   ADDING-A-LESSON.md  วิธีเพิ่มด่าน/บทใหม่ ← เริ่มอ่านที่นี่
   FILES.md            แผนที่ไฟล์ทุกไฟล์
