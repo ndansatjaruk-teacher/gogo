@@ -10,7 +10,7 @@
 const g4Tot = T => ({ r: T.rows.map(([, v]) => v.reduce((a, b) => a + b, 0)), c: T.cols.map((_, j) => T.rows.reduce((a, [, v]) => a + v[j], 0)) });
 const g4All = T => g4Tot(T).r.reduce((a, b) => a + b, 0);
 function g4TwHTML(T, o = {}) { const t = g4Tot(T), tot = T.total !== false, bl = o.blank || [], hl = o.hl || [], cell = (key, v) => bl.includes(key) ? `<td class="n g4-b" data-k="${key}"></td>` : `<td class="n${hl.includes(key) ? ' on' : ''}" data-k="${key}">${fmt(v)}</td>`;
-  let s = `<div class="g4tw">${T.title && !o.notitle ? `<div class="pc3-tt">${T.title}</div>` : ''}<table><tr class="hd"><td rowspan="2">${T.rowH}</td><td colspan="${T.cols.length + (tot ? 1 : 0)}">จำนวน (${T.unit})</td></tr><tr class="hd">${T.cols.map(c => `<td>${c}</td>`).join('')}${tot ? '<td>รวม</td>' : ''}</tr>`;
+  let s = `<div class="g4tw">${T.title && !o.notitle ? `<div class="pc3-tt">${T.title}</div>` : ''}<table><tr class="hd"><td rowspan="2">${T.rowH}</td><td colspan="${T.cols.length + (tot ? 1 : 0)}">${T.unit === 'บาท' ? 'ราคา' : 'จำนวน'} (${T.unit})</td></tr><tr class="hd">${T.cols.map(c => `<td>${c}</td>`).join('')}${tot ? '<td>รวม</td>' : ''}</tr>`;
   T.rows.forEach(([n, v], i) => { s += `<tr><td class="rh${hl.includes('r' + i) ? ' on' : ''}" data-k="r${i}">${n}</td>${v.map((x, j) => cell(`${i},${j}`, x)).join('')}${tot ? cell(`${i},t`, t.r[i]) : ''}</tr>`; });
   if (tot) s += `<tr class="tot"><td>รวม</td>${t.c.map((x, j) => cell(`t,${j}`, x)).join('')}${cell('t,t', g4All(T))}</tr>`;
   return s + '</table></div>'; }
@@ -46,7 +46,7 @@ const g4barRand = (i, o = {}) => { const [title, yName, xName, cats0, unit, step
 const g4cat = (C, i) => String(C.cats[i]);
 const g4V = (C, i) => C.series[0].v[i];
 /* ป.4 บท 10 (ผู้ใช้ขอ): table / chart on the LEFT, answer on the RIGHT (unit beside the ? slot, keypad under it) — on every screen, portrait too */
-const g4Ans = (ctx, a, hint, unit) => { const an = decAnswer(ctx, DQ(String(a).replace(/,/g, '')), { hint }), sl = an.querySelector(':scope > .ans-slot');
+const g4Ans = (ctx, a, hint, unit) => { const v = String(a).replace(/,/g, ''), an = /^\d+$/.test(v) ? answerBox(ctx, v, { hint }) : decAnswer(ctx, DQ(v), { hint }), sl = an.querySelector(':scope > .ans-slot'); /* v155: คำตอบจำนวนนับไม่ต้องมีปุ่มจุด */
   if (unit && sl) { const row = h('div', { class: 'ans-urow' }); sl.replaceWith(row); row.append(sl, h('span', { class: 'cap g4u' }, unit)); } return an; };
 const g4Side = (left, ...right) => h('div', { class: 'g4sd' }, h('div', { class: 'g4sd-l' }, left), h('div', { class: 'g4sd-r' }, ...right));
 const g4SideAsk = (C, q, a, unit, hint, sig) => ({ prompt: q, say: q.replace(/<[^>]+>/g, ''), __sig: sig, mount(bd, ctx) { bd.append(g4Side(dataChart(C), g4Ans(ctx, a, hint, unit))); } });
@@ -115,7 +115,7 @@ Object.assign(Q, {
     return me; },
   /* one bar hidden: the total is known */
   g4Hidden({ C, i }) { const vs = C.series[0].v, tot = vs.reduce((a, b) => a + b, 0), C2 = { ...C, series: [{ name: '', v: vs.map((v, k) => k === i ? null : v) }], nolab: false };
-    const q = `${C.title} รวมทั้งหมด <b>${fmt(tot)}</b> ${C.unit} · แท่งของ<b>${g4cat(C, i)}</b>ถูกซ่อนไว้ มีจำนวนเท่าใด`;
+    const q = `แท่งของ<b>${g4cat(C, i)}</b>ถูกซ่อนไว้ ถ้า${C.title}รวมทั้งหมด <b>${fmt(tot)}</b> ${C.unit} ${g4cat(C, i)}มีจำนวนเท่าใด`; /* v155: เดิมขึ้นต้นด้วยชื่อแผนภูมิ → promptOnce คิดว่าโจทย์อยู่ในการ์ดแล้ว ตัดเหลือ “อ่านโจทย์ แล้วตอบ” จนโจทย์หาย */
     const me = { prompt: q, say: q.replace(/<[^>]+>/g, ''), __sig: `g4h ${C.title} ${vs} ${i}`, mount(bd, ctx) { const ch = dataChart(C2, { st: { hlc: [i] } });
       const ans = g4Ans(ctx, vs[i], 'นำผลรวมทั้งหมด ลบด้วยค่าของแท่งอื่นทุกแท่ง', C.unit);
       ctx.onRight = () => { if (ch.isConnected) ch.replaceWith(dataChart(C, { st: { hl: [i + ':0'] } })); }; bd.append(g4Side(ch, ans)); } };
@@ -162,7 +162,7 @@ const g4tallyQ = () => { const P = pick([['ผลไม้ที่ชอบ', '
   const counts = P[2].map(() => P[3].map(() => rnd(1, 5))), S = g4survey(`ผลสำรวจ${P[0]}ของนักเรียน`, P[1], P[2], P[3], 'คน', counts), keys = []; P[2].forEach((_, i) => P[3].forEach((_, j) => keys.push(`${i},${j}`)));
   return Q.g4TwTally({ S, give: pkF(keys, 2) }); };
 /* word problems with a table / chart in the story box */
-const g4FigStory = (fig, text, expr, wrong, unit) => { const base = Q.dStory(D6S(text, expr, wrong, unit));
+const g4FigStory = (fig, text, expr, wrong, unit) => { const base = Q.p4Story2(D6S(text, expr, wrong, unit)); /* v155: ② คิดทีละขั้นบน p4stepBox */
   return { ...base, prompt: text, say: text.replace(/<[^>]+>/g, ''), __sig: 'g4x ' + text.replace(/<[^>]+>/g, '').slice(0, 60) + fig.length,
     mount(bd, ctx) { const tmp = h('div'); base.mount(tmp, ctx); const col = tmp.firstElementChild, sb = col.querySelector('.storybox'); if (sb) sb.remove(); // the question is already in the bubble
       bd.append(g4Side(h('div', { class: 'p4-fig', html: fig }), ...col.childNodes)); } }; };

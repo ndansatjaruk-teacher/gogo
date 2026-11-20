@@ -816,7 +816,7 @@ const qText = d => { const w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT
 /* the question text already printed in the card → the bubble only says what to do (ผู้ใช้เจอโจทย์ 2 ครั้งในหน้าเดียว) */
 function promptOnce(q) { if (!q || q.__p1) return q; q.__p1 = 1; try { qSig(q); const p = String(q.prompt || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); if (p.length <= 25) return q;
     const tx = String(q.__txt || '').slice(String(q.prompt || '').length + String(q.say || '').length + 2).replace(/\s+/g, ' ');
-    if (tx.includes(p.slice(0, 25))) { q.say = q.say || p; q.prompt = 'อ่านโจทย์ แล้วตอบ'; } } catch (_) { } return q; }
+    if (tx.includes(p.slice(0, 25)) && tx.includes(p.slice(-12))) { q.say = q.say || p; q.prompt = 'อ่านโจทย์ แล้วตอบ'; } } catch (_) { } return q; } /* v155: ต้องเจอทั้งต้นและท้ายโจทย์ในการ์ด (เดิมดูแค่ 25 ตัวแรก — ชื่อแผนภูมิตรงกับต้นโจทย์ ทำให้โจทย์หาย) */
 function qSig(q) {
   /* v108: a preset __sig still gets its text read once (the duplicate-wording test needs the numbers) */
   if (q.__sig && q.__txt != null) return q.__sig; const W = window, keep = { say: W.say, st: W.setTimeout, si: W.setInterval, raf: W.requestAnimationFrame }, fx = {};
