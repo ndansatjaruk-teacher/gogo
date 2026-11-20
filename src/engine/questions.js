@@ -464,11 +464,17 @@ Object.assign(Q, {
   /* answer by tapping where you land on the number line */
   lineSub({ a, b }) {
     return {
-      prompt: `<span class="hl">${a} − ${b}</span> แตะจำนวนบนเส้นจำนวนที่เป็นคำตอบ`, say: `${WORD[a]} ลบ ${WORD[b]} แตะคำตอบบนเส้นจำนวน`,
-      mount(bd, ctx) {
-        const nl = numberLine(0, 10, { hi: [a] }); nl.classList.add('ia', 'tapline');
-        nl.querySelectorAll('.tick').forEach((t, n) => { t.onclick = e => { e.stopPropagation(); if (nl.dataset.done) return; const ok = n === a - b; if (ok) { nl.dataset.done = 1; t.classList.add('hi2'); } else { t.classList.remove('wrongtick'); void t.offsetWidth; t.classList.add('wrongtick'); } ctx.check(ok, `เริ่มที่ ${a} แล้วกระโดดไปทางซ้าย ${b} ช่อง`); }; });
-        bd.append(h('div', { class: 'colstack' }, eqRow([a, '−', b, '=', '?'], { sm: true }), nl, h('div', { class: 'cap' }, 'ลบ = กระโดดไปทางซ้าย')));
+      prompt: `<span class="hl">${a} − ${b}</span> เริ่มที่ ${a} แล้วแตะกระโดดไปทางซ้ายทีละ 1 ช่อง`, say: `${WORD[a]} ลบ ${WORD[b]} เริ่มที่ ${WORD[a]} แล้วแตะกระโดดไปทางซ้ายทีละหนึ่งช่อง`,
+      mount(bd, ctx) { /* v167 (ผู้ใช้ขอ: ทำจริงบนเส้นจำนวน) — เด็กกระโดดเองทีละช่อง นับครบ b ครั้งจึงได้คำตอบ (เดิมแตะคำตอบเลย) */
+        const nl = numberLine(0, 10, { hi: [a] }), e = eqRow([a, '−', b, '=', '?'], { sm: true }); nl.classList.add('ia', 'tapline', 'hopline'); let cur = a, k = 0;
+        const T = [...nl.querySelectorAll('.tick')];
+        T.forEach((t, n) => { t.onclick = ev => { ev.stopPropagation(); if (nl.dataset.done) return;
+          if (n === cur - 1) { k++; cur = n; t.classList.add('hop'); t.dataset.k = k; sfx.pop(Math.min(8, k + 2));
+            if (k === b) { nl.dataset.done = 1; t.classList.add('hi2'); e.fill && e.fill(a - b); ctx.check(true); } return; }
+          t.classList.remove('wrongtick'); void t.offsetWidth; t.classList.add('wrongtick');
+          ctx.check(false, n >= cur ? `ลบต้องกระโดดไปทาง<b>ซ้าย</b> — จาก ${cur} ช่องถัดไปคือ ${cur - 1}` : `กระโดดทีละ 1 ช่องนะ — จาก ${cur} ช่องถัดไปคือ ${cur - 1}`); }; });
+        ctx.onRight = () => { nl.dataset.done = 1; for (let j = 1; j <= b; j++) { const t = T[a - j]; t.classList.add('hop'); t.dataset.k = j; } T[a - b].classList.add('hi2'); e.fill && e.fill(a - b); };
+        bd.append(h('div', { class: 'colstack' }, e, nl, h('div', { class: 'cap' }, `ลบ ${b} = กระโดดไปทางซ้าย ${b} ครั้ง`)));
       }
     };
   },
