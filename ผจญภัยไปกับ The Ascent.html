@@ -8168,7 +8168,7 @@ Object.assign(Q, {
   fOf({ f, n, e = 'coin', unit = '' }) {
     const r = FR(f), ans = rMul(r, Rr(n));
     return { prompt: `${FX(`[${f}]`)} ของ ${n} เท่ากับเท่าไร?`, say: `${FXsay(`[${f}]`)} ของ ${n} เท่ากับเท่าไร`,
-      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig' + (fNoPic() ? ' fq5' : ''), html: `${litHTML(litParse(f).lit)} <b class="fop">ของ</b> <span class="num">${n}</span> <b class="fop">=</b> <span class="fsign">?</span>` }) : n <= 40 && n % r.d === 0 ? groupSet(e, n, r.d, r.n) : null, h('div', { class: 'rowstack' }, numOrFrac(ctx, ans, `แบ่ง ${n} เป็น ${r.d} ส่วนเท่า ๆ กัน (${n} ÷ ${r.d}) แล้วเอามา ${r.n} ส่วน`), unit ? h('span', { class: 'cap', style: { fontSize: '20px' } }, unit) : null)); } };
+      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig' + (fNoPic() ? ' fq5' : ''), html: `${litHTML(litParse(f).lit)} <b class="fop">ของ</b> <span class="num">${n}</span> <b class="fop">=</b> <span class="fsign">?</span>` }) : n <= 40 && n % r.d === 0 ? groupSet(e, n, r.d, r.n) : '', h('div', { class: 'rowstack' }, numOrFrac(ctx, ans, `แบ่ง ${n} เป็น ${r.d} ส่วนเท่า ๆ กัน (${n} ÷ ${r.d}) แล้วเอามา ${r.n} ส่วน`), unit ? h('span', { class: 'cap', style: { fontSize: '20px' } }, unit) : null)); } };
   },
   /* reciprocal */
   fRecip({ f }) {
@@ -8192,7 +8192,7 @@ Object.assign(Q, {
     for (let j = 1; j < toks.length - 1; j++) if (toks[j].op && '+−×÷'.includes(toks[j].op) && toks[j - 1].lit && toks[j + 1].lit) parts.push(`${tokSrc([toks[j - 1]])} ${toks[j].op} ${tokSrc([toks[j + 1]])}`);
     const opts = shuffle([...new Set([right, ...parts])]).slice(0, 3); if (!opts.includes(right)) opts[0] = right;
     return { prompt: `${exprHTML(expr)}<br>ต้องคำนวณส่วนใด<span class="hl">ก่อน</span>?`, say: 'ต้องคำนวณส่วนใดก่อน',
-      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig fq5', html: exprHTML(expr) }) : null, choices(ctx, shuffle(opts).map(o => ({ value: o, label: exprHTML(o) })), right, { hint: 'ลำดับ: ในวงเล็บก่อน → คูณ หาร (ซ้ายไปขวา) → บวก ลบ (ซ้ายไปขวา)' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); } };
+      mount(bd, ctx) { bd.append(fNoPic() ? h('div', { class: 'fbig fq5', html: exprHTML(expr) }) : '', choices(ctx, shuffle(opts).map(o => ({ value: o, label: exprHTML(o) })), right, { hint: 'ลำดับ: ในวงเล็บก่อน → คูณ หาร (ซ้ายไปขวา) → บวก ลบ (ซ้ายไปขวา)' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); } };
   },
   /* equivalent fraction: a/b = ?/D  (whole-number answer) */
   fEquiv({ a, D }) {
@@ -11284,30 +11284,29 @@ const LESSONS_P6C2 = [
     T('ปรับเศษส่วนสองจำนวน — ใช้ <b>ค.ร.น.</b> ทำตัวส่วนให้เท่ากัน แล้ว<b>บวกตัวเศษ</b>', 'ปรับเศษส่วนสองจำนวน ใช้ คอรอนอ ทำตัวส่วนให้เท่ากัน แล้วบวกตัวเศษ', el => el.append(simFrac2({ a: '2/3', b: '1/4', op: '+' }))),
     T('การลบก็เหมือนกัน — ลองปรับดู', 'การลบก็เหมือนกัน ลองปรับดู', el => el.append(simFrac2({ a: '5/6', b: '3/8', op: '−' }))),
     T('ตัวอย่างทีละขั้น: [7/10] + [5/6]', 'ตัวอย่างทีละขั้น เจ็ดส่วนสิบ บวก ห้าส่วนหก', el => el.append(dcWalk(FX('[7/10] + [5/6]'), [['① ค.ร.น. ของ 10 และ 6', '= 30'], ['② ทำตัวส่วนเป็น 30', '[21/30] + [25/30]'], ['③ บวกตัวเศษ', '[46/30]'], ['④ ทำเป็นอย่างต่ำ / จำนวนคละ', '[46/30] = [23/15] = [1 8/15]']], FX('[7/10] + [5/6] = [1 8/15]'), 'ได้ หนึ่งเศษแปดส่วนสิบห้า')))],
-    () => [...F6W_ADD.map(expr => Q.fCalc({ expr, vis: 'bars' })), ...pkF(F6W_SUB, 3).map(expr => Q.fCalc({ expr }))]),
+    () => [...F6W_ADD.map((expr, i) => Q.f4Calc2({ expr, lcm: true, bars: i < 2 })), ...pkF(F6W_SUB, 3).map(expr => Q.f4Calc2({ expr, lcm: true }))]), /* v157: ทำทีละขั้น (หา ค.ร.น. → ทำส่วนเท่า → บวก/ลบ → อย่างต่ำ) */
   L6F(6, 20, 'ค่ายพักจำนวนคละ', 'การบวก การลบจำนวนคละโดยใช้ความรู้เรื่อง ค.ร.น.', 'บวก ลบ จำนวนคละ', 'บวก ลบ จำนวนคละ: จำนวนนับกับจำนวนนับ เศษส่วนกับเศษส่วน (ทดเมื่อเกิน 1 · ยืม 1 เมื่อเศษส่วนไม่พอลบ)', [
     T('บวกจำนวนคละ: <b>จำนวนนับ + จำนวนนับ</b> · <b>เศษส่วน + เศษส่วน</b> ถ้าเกิน 1 ให้ทด — กดทีละขั้น หรือเปลี่ยนโจทย์', 'บวกจำนวนคละ จำนวนนับบวกจำนวนนับ เศษส่วนบวกเศษส่วน ถ้าเกินหนึ่งให้ทด', el => el.append(simMixParts([['2 3/4', '1 2/3'], ['3 1/6', '2 3/8'], ['1 5/9', '4 2/3']], '+'))),
     T('ลบจำนวนคละ: ถ้าเศษส่วนตัวตั้ง<b>น้อยกว่า</b> ให้<b>ยืม 1</b> จากจำนวนนับ', 'ลบจำนวนคละ ถ้าเศษส่วนตัวตั้งน้อยกว่า ให้ยืมหนึ่งจากจำนวนนับ', el => el.append(simMixParts([['4 1/6', '1 3/4'], ['5 2/3', '2 1/5'], ['3 1/4', '1 5/6']], '−'))),
     T('อีกวิธี: ทำเป็น<b>เศษเกิน</b>ก่อน แล้วบวกลบ', 'อีกวิธี ทำเป็นเศษเกินก่อน แล้วบวกลบ', el => el.append(dcWalk(FX('[3 1/5] − [1 1/2]'), [['① เขียนเป็นเศษเกิน', '[16/5] − [3/2]'], ['② ค.ร.น. ของ 5 และ 2', '= 10 → [32/10] − [15/10]'], ['③ ลบตัวเศษ', '[17/10]'], ['④ เขียนเป็นจำนวนคละ', '[1 7/10]']], FX('[3 1/5] − [1 1/2] = [1 7/10]'), 'ได้ หนึ่งเศษเจ็ดส่วนสิบ')))],
-    () => [...pkF(F6W_MADD, 3).map(expr => Q.fCalc({ expr, hint: 'บวกจำนวนนับกับจำนวนนับ เศษส่วนกับเศษส่วน (ค.ร.น. ของตัวส่วน) ถ้าเศษส่วนเกิน 1 ให้ทด' })),
-      ...pkF(F6W_MSUB, 3).map(expr => Q.fCalc({ expr, hint: 'ทำตัวส่วนให้เท่ากัน ถ้าเศษส่วนตัวตั้งน้อยกว่า ยืม 1 จากจำนวนนับ' }))]),
+    () => [...pkF(F6W_MADD, 3).map(expr => Q.f4Calc2({ expr, lcm: true })), ...pkF(F6W_MSUB, 3).map(expr => Q.f4Calc2({ expr, lcm: true }))]), /* v157 */
   L6F(7, 21, 'ถ้ำวงเล็บ', 'การบวก ลบ คูณ หารระคนเศษส่วนกับจำนวนคละ 4 จำนวน แบบมีวงเล็บ', 'ระคน (มีวงเล็บ)', 'หาผลลัพธ์การบวก ลบ คูณ หารระคนที่มีวงเล็บ — ทำในวงเล็บก่อน แล้วคูณ หาร ก่อน บวก ลบ', [
     T('แตะเครื่องหมายที่ต้องคำนวณ<b>ก่อน</b> — ในวงเล็บต้องมาก่อนเสมอ', 'แตะเครื่องหมายที่ต้องคำนวณก่อน ในวงเล็บต้องมาก่อนเสมอ', el => el.append(simOrderTap('(1 1/2 + 3/4) × 2/3 − 1/2'))),
     T('ตัวอย่างทีละขั้น (วงเล็บ 2 คู่)', 'ตัวอย่างทีละขั้น วงเล็บสองคู่', el => el.append(simSteps('(2 1/3 − 5/6) ÷ (1/4 + 1/2)')))],
-    () => [...pkF(F6W_PAR, 4).map(expr => Q.fCalc({ expr })), ...pkF(F6W_PAR, 2).map(expr => Q.fFirst({ expr }))]),
+    () => [...pkF(F6W_PAR, 4).map(expr => Q.f6Steps({ expr })), /* v157 */ ...pkF(F6W_PAR, 2).map(expr => Q.fFirst({ expr }))]),
   L6F(8, 22, 'ลานไม่มีวงเล็บ', 'การบวก ลบ คูณ หารระคนเศษส่วนกับจำนวนคละ 4 จำนวน แบบไม่มีวงเล็บ', 'ระคน (ไม่มีวงเล็บ)', 'หาผลลัพธ์การบวก ลบ คูณ หารระคนที่ไม่มีวงเล็บ — คูณ หาร ก่อน บวก ลบ (จากซ้ายไปขวา)', [
     T('ไม่มีวงเล็บ: แตะ <b>× ÷</b> ก่อน (ซ้ายไปขวา) แล้วค่อย <b>+ −</b>', 'ไม่มีวงเล็บ แตะคูณหารก่อน ซ้ายไปขวา แล้วค่อยบวกลบ', el => el.append(simOrderTap('2 1/4 − 3/4 × 1 1/3 + 1/2'))),
     T('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', el => el.append(simSteps('1 2/3 + 5/6 ÷ 5/8 − 1 1/2')))],
-    () => [...pkF(F6W_NOP.slice(0, 3), 2).map(expr => Q.fCalc({ expr })), ...pkF(F6W_NOP.slice(3), 2).map(expr => Q.fCalc({ expr })), ...pkF(F6W_NOP, 2).map(expr => Q.fFirst({ expr }))]),
+    () => [...pkF(F6W_NOP.slice(0, 3), 2).map(expr => Q.f6Steps({ expr })), ...pkF(F6W_NOP.slice(3), 2).map(expr => Q.f6Steps({ expr })), /* v157 */ ...pkF(F6W_NOP, 2).map(expr => Q.fFirst({ expr }))]),
   L6F(9, 23, 'ทางแยกวงเล็บ', 'การบวก ลบ คูณ หารระคนเศษส่วนกับจำนวนคละ แบบที่มีวงเล็บ และไม่มีวงเล็บ', 'มี/ไม่มีวงเล็บ', 'บอกได้ว่าวงเล็บเปลี่ยนลำดับการคำนวณ และหาผลลัพธ์ทั้งแบบมีและไม่มีวงเล็บได้ถูกต้อง', [
     T('ลองเอง: โจทย์นี้มีวงเล็บ<b>ซ้อนอยู่ตรงกลาง</b> — แตะเครื่องหมายตามลำดับ', 'ลองเอง โจทย์นี้มีวงเล็บซ้อนอยู่ตรงกลาง แตะเครื่องหมายตามลำดับ', el => el.append(simOrderTap('3/4 + (2 1/2 − 1 1/6) × 3/8'))),
     T('ตัวอย่างทีละขั้น: ตัวเลขชุดเดียวกัน แต่<b>วงเล็บ</b>ทำให้ผลต่างกัน', 'ตัวอย่างทีละขั้น ตัวเลขชุดเดียวกัน แต่วงเล็บทำให้ผลต่างกัน', el => el.append(dcWalk('', [['ไม่มีวงเล็บ', '[1/2] + [1/4] × [2/3] → คูณก่อน [1/4] × [2/3] = [1/6] → [1/2] + [1/6] = [2/3]'], ['มีวงเล็บ', '([1/2] + [1/4]) × [2/3] → ในวงเล็บก่อน [3/4] → [3/4] × [2/3] = [1/2]'], ['เปรียบเทียบ', '[2/3] &gt; [1/2] — วงเล็บเปลี่ยนลำดับ ผลจึงต่างกัน']], 'อ่านโจทย์ให้ดีว่ามีวงเล็บหรือไม่', 'วงเล็บเปลี่ยนลำดับการคำนวณ ผลจึงต่างกัน')))],
-    () => [...pkF(F6_PAIRS, 4).map(f6pairQ), ...pkF([...F6W_PAR, ...F6W_NOP], 8).map(expr => Q.fCalc({ expr }))] /* v134: ≥ 8 ข้อ */),
+    () => [...pkF(F6_PAIRS, 4).map(f6pairQ), ...pkF([...F6W_PAR, ...F6W_NOP], 8).map(expr => Q.f6Steps({ expr }))] /* v134: ≥ 8 ข้อ */),
   L6F(10, 24, 'ฐานโจทย์ 2 ขั้น', 'การวิเคราะห์โจทย์ปัญหาเศษส่วนไม่เกิน 2 ขั้นตอน', 'โจทย์ 2 ขั้นตอน', 'วิเคราะห์โจทย์ปัญหาเศษส่วนไม่เกิน 2 ขั้นตอน เขียนประโยคสัญลักษณ์ และหาคำตอบ', [
     T('<b>แผนภาพบาร์</b>: แบ่งทั้งหมดตามเศษส่วนในโจทย์ทีละขั้น (เปลี่ยนจำนวนทั้งหมดได้)', 'แผนภาพบาร์ แบ่งทั้งหมดตามเศษส่วนในโจทย์ทีละขั้น', el => el.append(simBar({ text: 'มีเงินจำนวนหนึ่ง ใช้ซื้ออาหาร [2/5] ของเงินทั้งหมด แล้วซื้อหนังสือ [1/4] ของเงินทั้งหมด เหลือเงินเท่าไร', totals: [400, 600, 800, 1000], unit: 'บาท', steps: [{ f: '2/5', of: 'all', label: 'อาหาร' }, { f: '1/4', of: 'all', label: 'หนังสือ' }] }))),
     T('ตัวอย่างทีละขั้น: วิเคราะห์โจทย์ 2 ขั้นตอน', 'ตัวอย่างทีละขั้น วิเคราะห์โจทย์สองขั้นตอน', el => el.append(simStory('แม่มีแป้ง [3 1/2] กิโลกรัม ทำขนม [1 3/4] กิโลกรัม แล้วซื้อมาเพิ่ม [2/3] กิโลกรัม แม่มีแป้งกี่กิโลกรัม', [['โจทย์ถาม', 'แป้งที่มีตอนนี้'], ['ขั้นที่ 1', 'ใช้ไป → ลบ: [3 1/2] − [1 3/4] = [1 3/4]'], ['ขั้นที่ 2', 'ซื้อเพิ่ม → บวก: [1 3/4] + [2/3] = [2 5/12]'], ['ประโยคสัญลักษณ์', '[3 1/2] − [1 3/4] + [2/3] = ☐']], '3 1/2 − 1 3/4 + 2/3')))],
-    () => [Q.fStory({ text: 'โรงเรียนแห่งหนึ่งมีนักเรียนหญิง 1,200 คน คิดเป็น [5/12] ของนักเรียนทั้งหมด โรงเรียนนี้มีนักเรียนกี่คน', expr: '1200 ÷ 5/12', wrong: ['1200 × 5/12', '1200 + 5/12'], unit: 'คน' }),
-      Q.fStory({ text: 'ปีนี้อายมีอายุ 24 ปี ถ้าอายุของอายเป็น [10/15] ของอายุออย ออยมีอายุกี่ปี', expr: '24 ÷ 10/15', wrong: ['24 × 10/15', '24 − 10/15'], unit: 'ปี' }),
+    () => [Q.p4Story2({ frac: true,  text: 'โรงเรียนแห่งหนึ่งมีนักเรียนหญิง 1,200 คน คิดเป็น [5/12] ของนักเรียนทั้งหมด โรงเรียนนี้มีนักเรียนกี่คน', expr: '1200 ÷ 5/12', wrong: ['1200 × 5/12', '1200 + 5/12'], unit: 'คน' }),
+      Q.p4Story2({ frac: true,  text: 'ปีนี้อายมีอายุ 24 ปี ถ้าอายุของอายเป็น [10/15] ของอายุออย ออยมีอายุกี่ปี', expr: '24 ÷ 10/15', wrong: ['24 × 10/15', '24 − 10/15'], unit: 'ปี' }),
       ...pkF([
         { text: 'ริบบิ้นยาว [5 1/4] เมตร ตัดไปผูกของขวัญ [1 2/3] เมตร และ [2 1/6] เมตร เหลือริบบิ้นกี่เมตร', expr: '5 1/4 − 1 2/3 − 2 1/6', wrong: ['5 1/4 − 1 2/3 + 2 1/6', '5 1/4 + 1 2/3 − 2 1/6'], unit: 'เมตร' },
         { text: 'น้ำในถัง [8 3/4] ลิตร ใช้ไป [2 1/2] ลิตร แล้วเติมอีก [3 1/3] ลิตร มีน้ำในถังกี่ลิตร', expr: '8 3/4 − 2 1/2 + 3 1/3', wrong: ['8 3/4 + 2 1/2 − 3 1/3', '8 3/4 − 2 1/2 − 3 1/3'], unit: 'ลิตร' },
@@ -11318,8 +11317,8 @@ const LESSONS_P6C2 = [
   L6F(11, 25, 'ฐานโจทย์ 3 ขั้น', 'การวิเคราะห์โจทย์ปัญหาเศษส่วน 3 ขั้นตอน', 'โจทย์ 3 ขั้นตอน', 'วิเคราะห์โจทย์ปัญหาเศษส่วน 3 ขั้นตอน เช่น “ของที่เหลือ” โดยใช้แผนภาพบาร์', [
     T('<b>“ของที่เหลือ”</b> ต้องคิดจากส่วนที่เหลือ ไม่ใช่จากทั้งหมด — ดูแผนภาพบาร์ทีละขั้น', 'ของที่เหลือ ต้องคิดจากส่วนที่เหลือ ไม่ใช่จากทั้งหมด ดูแผนภาพบาร์ทีละขั้น', el => el.append(simBar({ text: 'มีส้มจำนวนหนึ่ง ขายไป [1/3] ของทั้งหมด แล้วแจก [1/4] ของ<b>ที่เหลือ</b> เหลือส้มกี่ผล', totals: [120, 240, 360], unit: 'ผล', steps: [{ f: '1/3', of: 'all', label: 'ขาย' }, { f: '1/4', of: 'rest', label: 'แจก' }] }))),
     T('ตัวอย่างทีละขั้น: โจทย์ 3 ขั้นตอน', 'ตัวอย่างทีละขั้น โจทย์สามขั้นตอน', el => el.append(simStory('พ่อมีที่ดิน [12 1/2] ไร่ ปลูกข้าว [5 3/4] ไร่ ปลูกผัก [2 1/3] ไร่ ที่เหลือแบ่งให้ลูก 2 คน เท่า ๆ กัน ลูกได้คนละกี่ไร่', [['ขั้นที่ 1', 'ใช้ปลูกทั้งหมด [5 3/4] + [2 1/3] = [8 1/12] ไร่'], ['ขั้นที่ 2', 'เหลือ [12 1/2] − [8 1/12] = [4 5/12] ไร่'], ['ขั้นที่ 3', 'แบ่ง 2 คน [4 5/12] ÷ 2 = [2 5/24] ไร่'], ['ประโยคสัญลักษณ์', '([12 1/2] − ([5 3/4] + [2 1/3])) ÷ 2 = ☐']], '(12 1/2 − (5 3/4 + 2 1/3)) ÷ 2')))],
-    () => [Q.fStory({ text: 'ยายมีเงิน 7,950 บาท ให้หลานคนแรก [6/10] ของเงินที่มี และให้หลานคนที่สอง [4/15] ของเงินที่มี ยายเหลือเงินกี่บาท', expr: '7950 − (7950 × 6/10 + 7950 × 4/15)', wrong: ['7950 − 7950 × 6/10', '7950 × 6/10 + 7950 × 4/15'], unit: 'บาท' }),
-      Q.fStory({ text: 'ร้านผ้ามีลูกไม้สีขาวยาว [1 12/14] เมตร และลูกไม้สีครีมยาว [3 7/20] เมตร ขายเมตรละ 280 บาท ถ้าขายหมดจะได้เงินกี่บาท', expr: '(1 12/14 + 3 7/20) × 280', wrong: ['1 12/14 + 3 7/20 × 280', '(3 7/20 − 1 12/14) × 280'], unit: 'บาท' }),
+    () => [Q.p4Story2({ frac: true,  text: 'ยายมีเงิน 7,950 บาท ให้หลานคนแรก [6/10] ของเงินที่มี และให้หลานคนที่สอง [4/15] ของเงินที่มี ยายเหลือเงินกี่บาท', expr: '7950 − (7950 × 6/10 + 7950 × 4/15)', wrong: ['7950 − 7950 × 6/10', '7950 × 6/10 + 7950 × 4/15'], unit: 'บาท' }),
+      Q.p4Story2({ frac: true,  text: 'ร้านผ้ามีลูกไม้สีขาวยาว [1 12/14] เมตร และลูกไม้สีครีมยาว [3 7/20] เมตร ขายเมตรละ 280 บาท ถ้าขายหมดจะได้เงินกี่บาท', expr: '(1 12/14 + 3 7/20) × 280', wrong: ['1 12/14 + 3 7/20 × 280', '(3 7/20 − 1 12/14) × 280'], unit: 'บาท' }),
       ...pkF([
         { text: 'มีไข่ 180 ฟอง ทำขนม [1/3] ของทั้งหมด แล้วขาย [3/4] ของที่เหลือ เหลือไข่กี่ฟอง', expr: '(180 − 180 × 1/3) × 1/4', wrong: ['180 − 180 × 1/3 − 180 × 3/4', '180 × 1/3 × 3/4'], unit: 'ฟอง' },
         { text: 'นักเรียน 480 คน ชอบกีฬา [5/8] ของทั้งหมด ในจำนวนนี้ [2/5] ชอบฟุตบอล นักเรียนที่ชอบกีฬาแต่ไม่ชอบฟุตบอลมีกี่คน', expr: '480 × 5/8 × (1 − 2/5)', wrong: ['480 × 5/8 × 2/5', '480 − 480 × 5/8 − 2/5'], unit: 'คน' },
@@ -16156,52 +16155,59 @@ function p4firstQ(expr) { // which part first? candidates = every neighbouring p
 const p4tok = e => e.replace(/\(/g, ' ( ').replace(/\)/g, ' ) ').replace(/,/g, '').trim().split(/\s+/);
 const P4OPF = { '+': (a, b) => a + b, '−': (a, b) => a - b, '×': (a, b) => a * b, '÷': (a, b) => a / b };
 const p4isOp = t => /^[+−×÷]$/.test(t);
-function p4nextOps(T) {
+/* v157: โหมดเศษส่วน (ป.6 ระคน) — โทเค็นเป็นข้อความ "1 1/2" · ค่าเป็นจำนวนตรรกยะ (p5 rAdd…) */
+const P4NUM = { v: t => +t, op: (o, a, b) => P4OPF[o](a, b), s: v => String(v), html: t => fmt(+t), vh: v => fmt(v) };
+const P4FRN = { v: t => litR(litParse(t).lit), op: (o, a, b) => o === '+' ? rAdd(a, b) : o === '−' ? rSub(a, b) : o === '×' ? rMul(a, b) : rDiv(a, b), s: r => rText(r), html: t => litHTML(litParse(t).lit), vh: r => rHTML(r) };
+const p4tokF = e => exprTokens(e).map(k => k.lit ? tokSrc([k]) : k.op);
+function p4nextOps(T, F = P4NUM) {
   const G = []; for (let i = 0; i < T.length; i++) if (T[i] === '(') { let j = i + 1; while (T[j] !== ')' && T[j] !== '(') j++; if (T[j] === ')') G.push([i + 1, j - 1]); }
   const segs = G.length ? G : [[0, T.length - 1]], out = [];
   segs.forEach(([a, b]) => { const ops = []; for (let k = a + 1; k < b; k += 2) ops.push(k);
-    if (ops.length > 1 && ops.every(k => T[k] === '+')) return out.push({ ops, lo: a, hi: b, val: ops.reduce((t, k) => t + +T[k + 1], +T[a]), part: T.slice(a, b + 1).join(' ') });
+    if (ops.length > 1 && ops.every(k => T[k] === '+')) return out.push({ ops, lo: a, hi: b, val: ops.reduce((t, k) => F.op('+', t, F.v(T[k + 1])), F.v(T[a])), part: T.slice(a, b + 1).join(' ') });
     const md = ops.filter(k => T[k] === '×' || T[k] === '÷'), cand = md.length ? md.filter(k => k - 2 < a || T[k - 2] === '+' || T[k - 2] === '−') : ops.slice(0, 1);
-    cand.forEach(k => out.push({ ops: [k], lo: k - 1, hi: k + 1, val: P4OPF[T[k]](+T[k - 1], +T[k + 1]), part: `${T[k - 1]} ${T[k]} ${T[k + 1]}` })); });
+    cand.forEach(k => out.push({ ops: [k], lo: k - 1, hi: k + 1, val: F.op(T[k], F.v(T[k - 1]), F.v(T[k + 1])), part: `${T[k - 1]} ${T[k]} ${T[k + 1]}` })); });
   return { N: out, G }; }
 function p4stepBox(ctx, expr, o = {}) {
-  let T = p4tok(expr), k = 0, pick = null, done = false;
+  const F = o.frac ? P4FRN : P4NUM, nx = () => p4nextOps(T, F); let T = o.frac ? p4tokF(expr) : p4tok(expr), k = 0, pick = null, done = false;
   const line = h('div', { class: 'fbig p4sline one-line' }), log = h('div', { class: 'colstack fsteps p4slog' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'p4sslot' });
   const draw = () => { line.innerHTML = ''; line.classList.toggle('lock', !!pick || done);
     T.forEach((t, i) => { if (p4isOp(t)) line.append(h('button', { class: 'fop p4sop' + (pick && pick.ops.includes(i) ? ' on' : ''), onclick: e => { e.stopPropagation(); tap(i); } }, t));
       else if (t === '(' || t === ')') line.append(h('b', { class: 'fop p4spar' + (pick && (i === pick.lo - 1 || i === pick.hi + 1) && T[pick.lo - 1] === '(' && T[pick.hi + 1] === ')' ? ' p4shl' : '') }, t));
-      else line.append(h('b', { class: 'num' + (pick && i >= pick.lo && i <= pick.hi ? ' p4shl' : '') }, fmt(+t))); });
+      else line.append(h('b', { class: 'num' + (pick && i >= pick.lo && i <= pick.hi ? ' p4shl' : ''), html: F.html(t) })); });
     if (!done) line.append(h('b', { class: 'fop' }, '='), h('span', { class: 'fsign' }, '?')); };
-  const apply = P => { T = [...T.slice(0, P.lo), String(P.val), ...T.slice(P.hi + 1)];
+  const apply = P => { T = [...T.slice(0, P.lo), F.s(P.val), ...T.slice(P.hi + 1)];
     for (let i = 1; i < T.length - 1; i++) if (T[i - 1] === '(' && T[i + 1] === ')') { T.splice(i + 1, 1); T.splice(i - 1, 1); i = 0; } };
-  const addLog = P => log.append(h('div', { class: 'fstep-row' }, h('span', { class: 'ms-lab' }, `ขั้นที่ ${k}`), h('span', { html: `${exprHTML(P.part)} <b class="fop">=</b> <b class="num">${fmt(P.val)}</b> ✓` })));
+  const addLog = P => log.append(h('div', { class: 'fstep-row' }, h('span', { class: 'ms-lab' }, `ขั้นที่ ${k}`), h('span', { html: `${exprHTML(P.part)} <b class="fop">=</b> <b class="num">${F.vh(P.val)}</b> ✓` })));
   const ask = () => { slot.innerHTML = ''; pick = null; draw();
-    if (T.length === 1) { done = true; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${fmt(+T[0])}</b>`; return; }
-    const { N } = p4nextOps(T), nOps = T.filter(p4isOp).length;
+    if (T.length === 1) { done = true; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${F.html(T[0])}</b>`; return; }
+    const { N } = nx(), nOps = T.filter(p4isOp).length;
     if (nOps === 1 || (N.length === 1 && N[0].ops.length === nOps)) return choose(N[0], true);
     lab.innerHTML = `ขั้นที่ ${k + 1}: แตะ<b>เครื่องหมาย</b>ที่ต้องคิดก่อน`; };
   const choose = (P, auto) => { pick = P; draw(); const last = T.length === P.hi - P.lo + 1;
     lab.innerHTML = `ขั้นที่ ${k + 1}: ${exprHTML(P.part)} = ?`;
     const sub = last ? ctx : { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); k++; sfx.pop(Math.min(8, k + 2)); addLog(P); apply(P); ask(); }, say: ctx.say };
-    slot.append(answerBox(sub, String(P.val), { hint: P.ops.length > 1 ? `รวมทุกจำนวนในวงเล็บ` : /[×÷]/.test(P.part) && P.val > 999 ? `ตั้ง${P.part.includes('×') ? 'คูณ' : 'หาร'} ${exprHTML(P.part)} ในกระดาษทด` : `คิด ${exprHTML(P.part)}` }));
+    const hint = o.frac ? (P.ops.length > 1 ? 'ทำตัวส่วนให้เท่ากัน แล้วรวมทุกจำนวนในวงเล็บ' : /[+−]/.test(T[P.ops[0]]) ? 'ทำตัวส่วนให้เท่ากัน (ใช้ ค.ร.น.) แล้วบวก/ลบตัวเศษ' : T[P.ops[0]] === '×' ? 'เปลี่ยนจำนวนคละเป็นเศษเกิน แล้วเศษคูณเศษ ส่วนคูณส่วน' : 'หารด้วยเศษส่วน = คูณด้วยส่วนกลับของตัวหาร') : null;
+    slot.append(o.frac ? numOrFrac(sub, P.val, hint) : answerBox(sub, String(P.val), { hint: P.ops.length > 1 ? `รวมทุกจำนวนในวงเล็บ` : /[×÷]/.test(P.part) && P.val > 999 ? `ตั้ง${P.part.includes('×') ? 'คูณ' : 'หาร'} ${exprHTML(P.part)} ในกระดาษทด` : `คิด ${exprHTML(P.part)}` }));
     if (last) { const r = ctx.onRight; ctx.onRight = () => { if (!done) { k++; addLog(P); apply(P); ask(); } r && r(); }; }
     if (!auto && ctx.say && k === 0) ctx.say('ใช่แล้ว! คิดส่วนนี้ก่อน'); };
-  function tap(i) { if (pick || done) return; const { N, G } = p4nextOps(T), P = N.find(x => x.ops.includes(i)); if (P) { sfx.tap(); return choose(P); }
+  function tap(i) { if (pick || done) return; const { N, G } = nx(), P = N.find(x => x.ops.includes(i)); if (P) { sfx.tap(); return choose(P); }
     const inG = G.some(([a, b]) => i > a && i < b), t = T[i];
     ctx.check(false, G.length && !inG ? `${t} อยู่นอกวงเล็บ — ต้องคิดในวงเล็บก่อน` : (t === '+' || t === '−') && N.some(x => /[×÷]/.test(T[x.ops[0]])) ? `ต้องคูณ หาร ก่อน แล้วจึง${t === '+' ? 'บวก' : 'ลบ'}` : 'บวก ลบ (หรือ คูณ หาร) ทำจากซ้ายไปขวา — เริ่มที่เครื่องหมายทางซ้ายก่อน'); }
   const wrap = h('div', { class: 'colstack p2q p4sbox ans' }, line, log, lab, slot);
-  wrap.reveal = () => { while (T.length > 1) { const P = p4nextOps(T).N[0]; k++; addLog(P); apply(P); } slot.innerHTML = ''; done = true; pick = null; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${fmt(+T[0])}</b>`; };
+  wrap.reveal = () => { while (T.length > 1) { const P = nx().N[0]; k++; addLog(P); apply(P); } slot.innerHTML = ''; done = true; pick = null; draw(); lab.innerHTML = `${exprHTML(expr)} = <b>${F.html(T[0])}</b>`; };
   ask(); return wrap; }
 Object.assign(Q, {
   p4Steps({ expr }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้นตามลำดับ`, say: `หาผลลัพธ์ ${speakText(expr)}`, __sig: 'p4st ' + expr, mount(bd, ctx) { bd.append(p4stepBox(ctx, expr)); } }; },
   /* โจทย์ 2 ขั้นตอน/ค่าเฉลี่ย: ① เลือกประโยคสัญลักษณ์ ② คิดทีละขั้น */
-  p4Story2({ text, expr, wrong = [], unit = '' }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
-    return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: text.replace(/<[^>]+>/g, ''), __sig: 'p4s2 ' + expr, mount(bd, ctx) {
+  p4Story2({ text, expr, wrong = [], unit = '', frac = false }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
+    return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: frac ? FXsay(text) : text.replace(/<[^>]+>/g, ''), __sig: 'p4s2 ' + expr, mount(bd, ctx) {
       const lab = h('div', { class: 'p4steplab', html: '① เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' });
-      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; slot.append(p4stepBox(ctx, expr)); const X = bd.querySelector('.x3st'); X && X.classList.add('p4s2on'); } };
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; slot.append(p4stepBox(ctx, expr, { frac })); const X = bd.querySelector('.x3st'); X && X.classList.add('p4s2on'); } };
       const ch = choices(sub, opts.map(o => ({ value: o, label: exprHTML(o) })), expr, { hint: 'เรื่องที่ต้องรู้ก่อนอยู่ในวงเล็บ · รวม/เพิ่ม → บวก · เหลือ → ลบ · หลายกลุ่มเท่ากัน → คูณ · แบ่งเท่า ๆ กัน → หาร' });
       ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); slot.append(ch);
-      bd.append(h('div', { class: 'colstack x3st' }, h('div', { class: 'storybox', html: text }), lab, slot)); } }; }
+      bd.append(h('div', { class: 'colstack x3st' }, h('div', { class: 'storybox', html: frac ? FX(text) : text }), lab, slot)); } }; },
+  /* v157: ป.6 ระคนเศษส่วน — แตะเครื่องหมาย แล้วตอบเป็นเศษส่วน/จำนวนคละทีละขั้น */
+  f6Steps({ expr }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้นตามลำดับ`, say: `หาผลลัพธ์ ${exprSay(expr)}`, __sig: 'f6st ' + expr, mount(bd, ctx) { bd.append(p4stepBox(ctx, expr, { frac: true })); } }; }
 });
 const p4calcQ = expr => Q.p4Steps({ expr }); /* v149: เดิม Q.dCalc พิมพ์คำตอบสุดท้ายอย่างเดียว */
 const p4boxQ = s => Q.p4Num({ fig: p4big(p4box(s)), q: 'เติมจำนวนใน □ ให้ถูกต้อง', say: 'เติมจำนวนในช่องให้ถูกต้อง', a: p4boxSolve(s), hint: 'คิดลำดับการคำนวณ (วงเล็บ → คูณ หาร → บวก ลบ) แล้วลองแทนค่าตรวจ' });
@@ -22822,22 +22828,24 @@ const f4Calc = (expr, vis) => ({ ...Q.fCalc({ expr, vis, hint: 'ทำตัว�
 const f4Story = s => ({ ...Q.fStory(s), __sig: 'f4t ' + s.text.slice(0, 40) });
 /* v151 (ผู้ใช้ขอ: เด็กทำเองทีละขั้น) — f4Work: บวก/ลบเศษส่วน จำนวนคละ ทีละขั้น
    ① จำนวนคละ → เศษเกิน ② ทำตัวส่วนให้เท่ากัน (เติม □) ③ บวก/ลบตัวเศษ ④ ทำเป็นจำนวนคละ/อย่างต่ำ (ถ้าต้องทำ) · ขั้นที่ทำแล้วเรียงไว้ด้านบน */
-const f4lit = x => { const m = String(x).trim().match(/^(?:(\d+) )?(\d+)\/(\d+)$/); return { w: +(m[1] || 0), n: +m[2], d: +m[3] }; };
+const f4lit = x => { const t = String(x).trim(); if (/^\d+$/.test(t)) return { w: +t, n: 0, d: 1 }; const m = t.match(/^(?:(\d+) )?(\d+)\/(\d+)$/); return { w: +(m[1] || 0), n: +m[2], d: +m[3] }; }; /* v157: จำนวนนับก็ได้ */
 const f4H = (w, n, d) => `<span class="fr">${w ? `<b class="fw">${w}</b>` : ''}${fqHTML(n === '□' ? P4BOX : n, d)}</span>`;
-function f4Plan(expr) { const [A, op, B] = expr.split(/ ([+−]) /), a = f4lit(A), b = f4lit(B), L = Math.max(a.d, b.d), S = [];
+function f4Plan(expr, o = {}) { const [A, op, B] = expr.split(/ ([+−]) /), a = f4lit(A), b = f4lit(B), L = a.d * b.d / gcdN(a.d, b.d), S = [];
+  const F0 = (x, N) => x.d === 1 ? `<b class="num">${x.w}</b>` : f4H(0, N, x.d); /* v157: ตัวส่วนไม่จำเป็นต้องเป็นพหุคูณกัน (ใช้ ค.ร.น.) */
+  if (o.lcm && a.d > 1 && b.d > 1 && a.d !== b.d) S.push({ lab: 'หา<b>ค.ร.น.</b> ของตัวส่วน', html: `ค.ร.น. ของ ${a.d} และ ${b.d} = ${P4BOX}`, ans: L, hint: `พหุคูณของ ${Math.max(a.d, b.d)} ที่ ${Math.min(a.d, b.d)} หารลงตัว ตัวที่น้อยที่สุด` });
   const N1 = a.w * a.d + a.n, N2 = b.w * b.d + b.n;
-  if (a.w) S.push({ lab: `เปลี่ยน ${f4H(a.w, a.n, a.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(a.w, a.n, a.d)} = ${f4H(0, '□', a.d)}`, ans: N1, hint: `${a.w} × ${a.d} + ${a.n}` });
-  if (b.w) S.push({ lab: `เปลี่ยน ${f4H(b.w, b.n, b.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(b.w, b.n, b.d)} = ${f4H(0, '□', b.d)}`, ans: N2, hint: `${b.w} × ${b.d} + ${b.n}` });
+  if (a.w && a.n) S.push({ lab: `เปลี่ยน ${f4H(a.w, a.n, a.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(a.w, a.n, a.d)} = ${f4H(0, '□', a.d)}`, ans: N1, hint: `${a.w} × ${a.d} + ${a.n}` });
+  if (b.w && b.n) S.push({ lab: `เปลี่ยน ${f4H(b.w, b.n, b.d)} เป็น<b>เศษเกิน</b>`, html: `${f4H(b.w, b.n, b.d)} = ${f4H(0, '□', b.d)}`, ans: N2, hint: `${b.w} × ${b.d} + ${b.n}` });
   const X = N1 * L / a.d, Y = N2 * L / b.d;
-  if (a.d !== L) S.push({ lab: `ทำ<b>ตัวส่วนให้เท่ากัน</b> (เป็น ${L})`, html: `${f4H(0, N1, a.d)} = ${f4H(0, '□', L)}`, ans: X, hint: `${a.d} × ${L / a.d} = ${L} → ตัวเศษก็ต้อง × ${L / a.d}` });
-  if (b.d !== L) S.push({ lab: `ทำ<b>ตัวส่วนให้เท่ากัน</b> (เป็น ${L})`, html: `${f4H(0, N2, b.d)} = ${f4H(0, '□', L)}`, ans: Y, hint: `${b.d} × ${L / b.d} = ${L} → ตัวเศษก็ต้อง × ${L / b.d}` });
+  if (a.d !== L) S.push({ lab: `ทำ<b>ตัวส่วนให้เท่ากัน</b> (เป็น ${L})`, html: `${F0(a, N1)} = ${f4H(0, '□', L)}`, ans: X, hint: a.d === 1 ? `1 = ${L}/${L} → ${a.w} × ${L}` : `${a.d} × ${L / a.d} = ${L} → ตัวเศษก็ต้อง × ${L / a.d}` });
+  if (b.d !== L) S.push({ lab: `ทำ<b>ตัวส่วนให้เท่ากัน</b> (เป็น ${L})`, html: `${F0(b, N2)} = ${f4H(0, '□', L)}`, ans: Y, hint: b.d === 1 ? `1 = ${L}/${L} → ${b.w} × ${L}` : `${b.d} × ${L / b.d} = ${L} → ตัวเศษก็ต้อง × ${L / b.d}` });
   const R = op === '+' ? X + Y : X - Y;
   S.push({ lab: `ตัวส่วนเท่ากันแล้ว <b>${op === '+' ? 'บวก' : 'ลบ'}ตัวเศษ</b> (ตัวส่วนคงเดิม)`, html: `${f4H(0, X, L)} <b class="fop">${op}</b> ${f4H(0, Y, L)} = ${f4H(0, '□', L)}`, ans: R, hint: `${X} ${op} ${Y}` });
   const g = gcdN(R, L);
   if (R && (g > 1 || R >= L)) S.push({ lab: R % L === 0 ? 'เขียนเป็น<b>จำนวนนับ</b>' : R > L ? 'เขียนเป็น<b>จำนวนคละ</b> (เศษส่วนอย่างต่ำ)' : 'ทำเป็น<b>เศษส่วนอย่างต่ำ</b>', html: `${f4H(0, R, L)} = ?`, fin: Rr(R, L), whole: R % L === 0 ? R / L : null,
     hint: R >= L ? `${R} ÷ ${L} ได้ ${Math.floor(R / L)} เศษ ${R % L}${gcdN(R % L, L) > 1 ? ` แล้วทำเศษส่วนให้อย่างต่ำ (หารด้วย ${gcdN(R % L, L)})` : ''}` : `หารทั้งตัวเศษและตัวส่วนด้วย ${g}` });
   return { S, a, b, op, L }; }
-function f4Work(expr, ctx, o = {}) { const P = f4Plan(expr), S = P.S; let k = 0;
+function f4Work(expr, ctx, o = {}) { const P = f4Plan(expr, o), S = P.S; let k = 0;
   const rows = h('div', { class: 'colstack f4wrows' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack f4wslot' });
   const top = h('div', { class: 'fbig f4wtop', html: `${exprHTML(expr)} <b class="fop">=</b> <span class="fsign">?</span>` });
   const fill = (s, v) => s.html.replace(P4BOX, `<b class="num">${v}</b>`);
@@ -22849,9 +22857,9 @@ function f4Work(expr, ctx, o = {}) { const P = f4Plan(expr), S = P.S; let k = 0;
     if (last) ctx.onRight = () => { const q = top.querySelector('.fsign'); if (q) q.outerHTML = rHTML(exprEval(expr)); }; };
   run(); return h('div', { class: 'colstack p2q f4work' }, top, o.pic || null, rows, lab, slot); }
 Object.assign(Q, {
-  f4Calc2({ expr, bars }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้น`, say: `หาผลลัพธ์ ${exprSay(expr)}`, __sig: 'f4w ' + expr, mount(bd, ctx) {
+  f4Calc2({ expr, bars, lcm }) { return { prompt: `หาผลลัพธ์ ${exprHTML(expr)} — ทำทีละขั้น`, say: `หาผลลัพธ์ ${exprSay(expr)}`, __sig: 'f4w ' + expr, mount(bd, ctx) {
     let pic = null; if (bars) { const P = f4Plan(expr); pic = h('div', { class: 'colstack f4wpic' }, fracBars(Rr(P.a.w * P.a.d + P.a.n, P.a.d), { col: 'a', sm: true }), fracBars(Rr(P.b.w * P.b.d + P.b.n, P.b.d), { col: 'b', sm: true })); }
-    bd.append(f4Work(expr, ctx, { pic })); } }; },
+    bd.append(f4Work(expr, ctx, { pic, lcm })); } }; },
   f4Story2({ text, expr, wrong = [], unit = '' }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
     return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: FXsay(text), __sig: 'f4t ' + text.slice(0, 40), mount(bd, ctx) {
       const lab = h('div', { class: 'p4steplab', html: '① เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' }), box = h('div', { class: 'colstack x3st f4st' });
