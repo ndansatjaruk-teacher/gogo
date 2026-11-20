@@ -16146,7 +16146,7 @@ Object.assign(Q, {
   p4Story2({ text, expr, wrong = [], unit = '' }) { const opts = shuffle([expr, ...wrong].slice(0, 3));
     return { prompt: 'อ่านโจทย์ เลือกประโยคสัญลักษณ์ แล้วคิดทีละขั้น', say: text.replace(/<[^>]+>/g, ''), __sig: 'p4s2 ' + expr, mount(bd, ctx) {
       const lab = h('div', { class: 'p4steplab', html: '① เลือก<b>ประโยคสัญลักษณ์</b>' }), slot = h('div', { class: 'colstack' });
-      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; slot.append(p4stepBox(ctx, expr)); bd.querySelector('.x3st').classList.add('p4s2on'); } };
+      const sub = { check: (ok, hn) => { if (!ok) return ctx.check(false, hn); sfx.pop(5); ctx.say && ctx.say('ใช่แล้ว! คิดทีละขั้น'); lab.innerHTML = `<b>${exprHTML(expr)}</b> ✓${unit ? ` · ตอบเป็น<b>${unit}</b>` : ''}`; slot.innerHTML = ''; slot.append(p4stepBox(ctx, expr)); const X = bd.querySelector('.x3st'); X && X.classList.add('p4s2on'); } };
       const ch = choices(sub, opts.map(o => ({ value: o, label: exprHTML(o) })), expr, { hint: 'เรื่องที่ต้องรู้ก่อนอยู่ในวงเล็บ · รวม/เพิ่ม → บวก · เหลือ → ลบ · หลายกลุ่มเท่ากัน → คูณ · แบ่งเท่า ๆ กัน → หาร' });
       ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt')); slot.append(ch);
       bd.append(h('div', { class: 'colstack x3st' }, h('div', { class: 'storybox', html: text }), lab, slot)); } }; }
@@ -16207,7 +16207,12 @@ const P4S_2A = [
   D6S('ภูมีการ์ด 74 ใบ ให้น้องไปครึ่งหนึ่ง แล้วซื้อมาเพิ่มอีก 13 ใบ ภูมีการ์ดกี่ใบ', '74 ÷ 2 + 13', ['74 − 2 + 13', '74 ÷ 2 − 13'], 'ใบ'),
   D6S('ฝ้ายมีเงิน 52 บาท จ่ายค่าขนมไป 30 บาท ยายให้เพิ่ม 38 บาท ฝ้ายมีเงินกี่บาท', '52 − 30 + 38', ['52 + 30 − 38', '52 − 30 − 38'], 'บาท'),
   D6S('ซื้อสมุด 6 เล่ม เล่มละ 25 บาท จ่ายเงิน 200 บาท ได้เงินทอนกี่บาท', '200 − 6 × 25', ['200 − 6 + 25', '6 × 25 + 200'], 'บาท'),
-  D6S('มีส้ม 5 ลัง ลังละ 48 ผล นำมาแบ่งใส่ถุง ถุงละ 8 ผล ได้กี่ถุง', '5 × 48 ÷ 8', ['5 + 48 ÷ 8', '48 ÷ 8 + 5'], 'ถุง')];
+  D6S('มีส้ม 5 ลัง ลังละ 48 ผล นำมาแบ่งใส่ถุง ถุงละ 8 ผล ได้กี่ถุง', '5 × 48 ÷ 8', ['5 + 48 ÷ 8', '48 ÷ 8 + 5'], 'ถุง'),
+  /* v155 เพิ่ม (เกมต้องมี ≥ 8 ข้อ) */
+  D6S('ครูมีดินสอ 96 แท่ง แจกนักเรียน 8 คน คนละเท่า ๆ กัน แล้วต้นได้ดินสอเพิ่มจากแม่อีก 5 แท่ง ต้นมีดินสอกี่แท่ง', '96 ÷ 8 + 5', ['96 − 8 + 5', '96 ÷ (8 + 5)'], 'แท่ง'),
+  D6S('ห้องสมุดมีหนังสือ 85 เล่ม ให้ยืมไป 27 เล่ม แล้วได้รับบริจาคมาอีก 40 เล่ม ห้องสมุดมีหนังสือกี่เล่ม', '85 − 27 + 40', ['85 + 27 + 40', '85 − 27 − 40'], 'เล่ม'),
+  D6S('แม่ซื้อไข่ไก่ 4 แผง แผงละ 30 ฟอง ใช้ทำขนมไป 45 ฟอง เหลือไข่ไก่กี่ฟอง', '4 × 30 − 45', ['4 + 30 − 45', '4 × 30 + 45'], 'ฟอง'),
+  D6S('ใบเตยเก็บมะม่วงได้ 36 ผล ขวัญเก็บได้ 28 ผล นำมาแบ่งใส่ตะกร้า ตะกร้าละ 8 ผล ได้กี่ตะกร้า', '(36 + 28) ÷ 8', ['36 + 28 ÷ 8', '(36 − 28) ÷ 8'], 'ตะกร้า')];
 const P4S_2B = [
   D6S('แปลงผักมีผักกาด 66 แถว แถวละ 73 ต้น เก็บไปขาย 2,015 ต้น แปลงนี้เหลือผักกาดกี่ต้น', '66 × 73 − 2015', ['66 × 73 + 2015', '(66 + 73) × 2015'], 'ต้น'),
   D6S('ค่ายลูกเสือมีเด็กชาย 170 คน เด็กหญิง 205 คน แบ่งเป็นหมู่ หมู่ละ 15 คน จะได้ทั้งหมดกี่หมู่', '(170 + 205) ÷ 15', ['170 + 205 ÷ 15', '(170 − 205) ÷ 15'], 'หมู่'),
@@ -24474,7 +24479,7 @@ LESSONS_P4C9.push({ id: 1499, boss: true, place: 'รังแมงป่อง
 const g4Tot = T => ({ r: T.rows.map(([, v]) => v.reduce((a, b) => a + b, 0)), c: T.cols.map((_, j) => T.rows.reduce((a, [, v]) => a + v[j], 0)) });
 const g4All = T => g4Tot(T).r.reduce((a, b) => a + b, 0);
 function g4TwHTML(T, o = {}) { const t = g4Tot(T), tot = T.total !== false, bl = o.blank || [], hl = o.hl || [], cell = (key, v) => bl.includes(key) ? `<td class="n g4-b" data-k="${key}"></td>` : `<td class="n${hl.includes(key) ? ' on' : ''}" data-k="${key}">${fmt(v)}</td>`;
-  let s = `<div class="g4tw">${T.title && !o.notitle ? `<div class="pc3-tt">${T.title}</div>` : ''}<table><tr class="hd"><td rowspan="2">${T.rowH}</td><td colspan="${T.cols.length + (tot ? 1 : 0)}">จำนวน (${T.unit})</td></tr><tr class="hd">${T.cols.map(c => `<td>${c}</td>`).join('')}${tot ? '<td>รวม</td>' : ''}</tr>`;
+  let s = `<div class="g4tw">${T.title && !o.notitle ? `<div class="pc3-tt">${T.title}</div>` : ''}<table><tr class="hd"><td rowspan="2">${T.rowH}</td><td colspan="${T.cols.length + (tot ? 1 : 0)}">${T.unit === 'บาท' ? 'ราคา' : 'จำนวน'} (${T.unit})</td></tr><tr class="hd">${T.cols.map(c => `<td>${c}</td>`).join('')}${tot ? '<td>รวม</td>' : ''}</tr>`;
   T.rows.forEach(([n, v], i) => { s += `<tr><td class="rh${hl.includes('r' + i) ? ' on' : ''}" data-k="r${i}">${n}</td>${v.map((x, j) => cell(`${i},${j}`, x)).join('')}${tot ? cell(`${i},t`, t.r[i]) : ''}</tr>`; });
   if (tot) s += `<tr class="tot"><td>รวม</td>${t.c.map((x, j) => cell(`t,${j}`, x)).join('')}${cell('t,t', g4All(T))}</tr>`;
   return s + '</table></div>'; }
@@ -24510,7 +24515,7 @@ const g4barRand = (i, o = {}) => { const [title, yName, xName, cats0, unit, step
 const g4cat = (C, i) => String(C.cats[i]);
 const g4V = (C, i) => C.series[0].v[i];
 /* ป.4 บท 10 (ผู้ใช้ขอ): table / chart on the LEFT, answer on the RIGHT (unit beside the ? slot, keypad under it) — on every screen, portrait too */
-const g4Ans = (ctx, a, hint, unit) => { const an = decAnswer(ctx, DQ(String(a).replace(/,/g, '')), { hint }), sl = an.querySelector(':scope > .ans-slot');
+const g4Ans = (ctx, a, hint, unit) => { const v = String(a).replace(/,/g, ''), an = /^\d+$/.test(v) ? answerBox(ctx, v, { hint }) : decAnswer(ctx, DQ(v), { hint }), sl = an.querySelector(':scope > .ans-slot'); /* v155: คำตอบจำนวนนับไม่ต้องมีปุ่มจุด */
   if (unit && sl) { const row = h('div', { class: 'ans-urow' }); sl.replaceWith(row); row.append(sl, h('span', { class: 'cap g4u' }, unit)); } return an; };
 const g4Side = (left, ...right) => h('div', { class: 'g4sd' }, h('div', { class: 'g4sd-l' }, left), h('div', { class: 'g4sd-r' }, ...right));
 const g4SideAsk = (C, q, a, unit, hint, sig) => ({ prompt: q, say: q.replace(/<[^>]+>/g, ''), __sig: sig, mount(bd, ctx) { bd.append(g4Side(dataChart(C), g4Ans(ctx, a, hint, unit))); } });
@@ -24579,7 +24584,7 @@ Object.assign(Q, {
     return me; },
   /* one bar hidden: the total is known */
   g4Hidden({ C, i }) { const vs = C.series[0].v, tot = vs.reduce((a, b) => a + b, 0), C2 = { ...C, series: [{ name: '', v: vs.map((v, k) => k === i ? null : v) }], nolab: false };
-    const q = `${C.title} รวมทั้งหมด <b>${fmt(tot)}</b> ${C.unit} · แท่งของ<b>${g4cat(C, i)}</b>ถูกซ่อนไว้ มีจำนวนเท่าใด`;
+    const q = `แท่งของ<b>${g4cat(C, i)}</b>ถูกซ่อนไว้ ถ้า${C.title}รวมทั้งหมด <b>${fmt(tot)}</b> ${C.unit} ${g4cat(C, i)}มีจำนวนเท่าใด`; /* v155: เดิมขึ้นต้นด้วยชื่อแผนภูมิ → promptOnce คิดว่าโจทย์อยู่ในการ์ดแล้ว ตัดเหลือ “อ่านโจทย์ แล้วตอบ” จนโจทย์หาย */
     const me = { prompt: q, say: q.replace(/<[^>]+>/g, ''), __sig: `g4h ${C.title} ${vs} ${i}`, mount(bd, ctx) { const ch = dataChart(C2, { st: { hlc: [i] } });
       const ans = g4Ans(ctx, vs[i], 'นำผลรวมทั้งหมด ลบด้วยค่าของแท่งอื่นทุกแท่ง', C.unit);
       ctx.onRight = () => { if (ch.isConnected) ch.replaceWith(dataChart(C, { st: { hl: [i + ':0'] } })); }; bd.append(g4Side(ch, ans)); } };
@@ -24626,7 +24631,7 @@ const g4tallyQ = () => { const P = pick([['ผลไม้ที่ชอบ', '
   const counts = P[2].map(() => P[3].map(() => rnd(1, 5))), S = g4survey(`ผลสำรวจ${P[0]}ของนักเรียน`, P[1], P[2], P[3], 'คน', counts), keys = []; P[2].forEach((_, i) => P[3].forEach((_, j) => keys.push(`${i},${j}`)));
   return Q.g4TwTally({ S, give: pkF(keys, 2) }); };
 /* word problems with a table / chart in the story box */
-const g4FigStory = (fig, text, expr, wrong, unit) => { const base = Q.dStory(D6S(text, expr, wrong, unit));
+const g4FigStory = (fig, text, expr, wrong, unit) => { const base = Q.p4Story2(D6S(text, expr, wrong, unit)); /* v155: ② คิดทีละขั้นบน p4stepBox */
   return { ...base, prompt: text, say: text.replace(/<[^>]+>/g, ''), __sig: 'g4x ' + text.replace(/<[^>]+>/g, '').slice(0, 60) + fig.length,
     mount(bd, ctx) { const tmp = h('div'); base.mount(tmp, ctx); const col = tmp.firstElementChild, sb = col.querySelector('.storybox'); if (sb) sb.remove(); // the question is already in the bubble
       bd.append(g4Side(h('div', { class: 'p4-fig', html: fig }), ...col.childNodes)); } }; };
@@ -29125,7 +29130,7 @@ const qText = d => { const w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT
 /* the question text already printed in the card → the bubble only says what to do (ผู้ใช้เจอโจทย์ 2 ครั้งในหน้าเดียว) */
 function promptOnce(q) { if (!q || q.__p1) return q; q.__p1 = 1; try { qSig(q); const p = String(q.prompt || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); if (p.length <= 25) return q;
     const tx = String(q.__txt || '').slice(String(q.prompt || '').length + String(q.say || '').length + 2).replace(/\s+/g, ' ');
-    if (tx.includes(p.slice(0, 25))) { q.say = q.say || p; q.prompt = 'อ่านโจทย์ แล้วตอบ'; } } catch (_) { } return q; }
+    if (tx.includes(p.slice(0, 25)) && tx.includes(p.slice(-12))) { q.say = q.say || p; q.prompt = 'อ่านโจทย์ แล้วตอบ'; } } catch (_) { } return q; } /* v155: ต้องเจอทั้งต้นและท้ายโจทย์ในการ์ด (เดิมดูแค่ 25 ตัวแรก — ชื่อแผนภูมิตรงกับต้นโจทย์ ทำให้โจทย์หาย) */
 function qSig(q) {
   /* v108: a preset __sig still gets its text read once (the duplicate-wording test needs the numbers) */
   if (q.__sig && q.__txt != null) return q.__sig; const W = window, keep = { say: W.say, st: W.setTimeout, si: W.setInterval, raf: W.requestAnimationFrame }, fx = {};
