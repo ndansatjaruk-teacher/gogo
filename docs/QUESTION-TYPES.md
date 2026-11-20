@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-389 types
+391 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -137,18 +137,20 @@
 | `Q.gBuild` | `{ chart }` | [`grades/p5/p5c.js:121`](../src/grades/p5/p5c.js#L121) |
 | `Q.gPick` | `{ chart, q, opts, right, hint, say: sy }` | [`grades/p5/p5c.js:115`](../src/grades/p5/p5c.js#L115) |
 | `Q.gridAsk` | `{ rows, ask, of }` | [`engine/questions.js:1028`](../src/engine/questions.js#L1028) |
-| `Q.hCmul` | `{ nums, upto }` | [`grades/p6/p6h.js:325`](../src/grades/p6/p6h.js#L325) |
-| `Q.hCommon` | `{ nums }` | [`grades/p6/p6h.js:320`](../src/grades/p6/p6h.js#L320) |
-| `Q.hFac` | `{ n }` | [`grades/p6/p6h.js:283`](../src/grades/p6/p6h.js#L283) |
-| `Q.hGcd` | `{ nums, how = 'cd' }` | [`grades/p6/p6h.js:310`](../src/grades/p6/p6h.js#L310) |
-| `Q.hKind` | `{ text, kind, why }` | [`grades/p6/p6h.js:338`](../src/grades/p6/p6h.js#L338) |
-| `Q.hLcm` | `{ nums, how = 'cm' }` | [`grades/p6/p6h.js:315`](../src/grades/p6/p6h.js#L315) |
-| `Q.hNum` | `{ q, head, a, hint, say: sy }` | [`grades/p6/p6h.js:335`](../src/grades/p6/p6h.js#L335) |
-| `Q.hPF` | `{ n }` | [`grades/p6/p6h.js:299`](../src/grades/p6/p6h.js#L299) |
-| `Q.hPFs` | `{ n }` | [`grades/p6/p6h.js:293`](../src/grades/p6/p6h.js#L293) |
-| `Q.hPrime` | `{ nums }` | [`grades/p6/p6h.js:288`](../src/grades/p6/p6h.js#L288) |
-| `Q.hStory` | `{ text, kind, ans, unit = '', ask, why }` | [`grades/p6/p6h.js:344`](../src/grades/p6/p6h.js#L344) |
-| `Q.hTF` | `{ text, ok, why }` | [`grades/p6/p6h.js:330`](../src/grades/p6/p6h.js#L330) |
+| `Q.hCmul` | `{ nums, upto }` | [`grades/p6/p6h.js:370`](../src/grades/p6/p6h.js#L370) |
+| `Q.hCommon` | `{ nums }` | [`grades/p6/p6h.js:365`](../src/grades/p6/p6h.js#L365) |
+| `Q.hFac` | `{ n }` | [`grades/p6/p6h.js:328`](../src/grades/p6/p6h.js#L328) |
+| `Q.hGcd` | `{ nums, how = 'cd' }` | [`grades/p6/p6h.js:355`](../src/grades/p6/p6h.js#L355) |
+| `Q.hKind` | `{ text, kind, why }` | [`grades/p6/p6h.js:383`](../src/grades/p6/p6h.js#L383) |
+| `Q.hLadder` | `{ nums, mode }` | [`grades/p6/p6h.js:322`](../src/grades/p6/p6h.js#L322) |
+| `Q.hLcm` | `{ nums, how = 'cm' }` | [`grades/p6/p6h.js:360`](../src/grades/p6/p6h.js#L360) |
+| `Q.hNum` | `{ q, head, a, hint, say: sy }` | [`grades/p6/p6h.js:380`](../src/grades/p6/p6h.js#L380) |
+| `Q.hPF` | `{ n }` | [`grades/p6/p6h.js:344`](../src/grades/p6/p6h.js#L344) |
+| `Q.hPFs` | `{ n }` | [`grades/p6/p6h.js:338`](../src/grades/p6/p6h.js#L338) |
+| `Q.hPFWork` | `{ nums, mode }` | [`grades/p6/p6h.js:324`](../src/grades/p6/p6h.js#L324) |
+| `Q.hPrime` | `{ nums }` | [`grades/p6/p6h.js:333`](../src/grades/p6/p6h.js#L333) |
+| `Q.hStory` | `{ text, kind, ans, unit = '', ask, why }` | [`grades/p6/p6h.js:389`](../src/grades/p6/p6h.js#L389) |
+| `Q.hTF` | `{ text, ok, why }` | [`grades/p6/p6h.js:375`](../src/grades/p6/p6h.js#L375) |
 | `Q.hundredFill` | `{ cells, show, q }` | [`engine/questions.js:1246`](../src/engine/questions.js#L1246) |
 | `Q.isAddition` | | [`engine/questions.js:371`](../src/engine/questions.js#L371) |
 | `Q.isSubtraction` | | [`engine/questions.js:514`](../src/engine/questions.js#L514) |

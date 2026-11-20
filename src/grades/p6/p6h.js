@@ -279,6 +279,51 @@ const H6HOW = {
   lpf: 'แยกตัวประกอบ แล้วนำตัวประกอบเฉพาะทุกตัวมาคูณกัน (ตัวที่ซ้ำกันใช้เพียงครั้งเดียว)',
   ldiv: 'ตั้งหารสั้น หารด้วยจำนวนเฉพาะที่หารได้ลงตัวอย่างน้อย 2 จำนวน แล้วนำตัวหารและผลหารสุดท้ายมาคูณกัน'
 };
+/* v156 (ผู้ใช้ขอ: เด็กทำเองตามวิธีของแต่ละด่าน) — เดิมด่าน “โดยการหาร/แยกตัวประกอบ” พิมพ์คำตอบอย่างเดียว
+   h6Ladder: ตั้งหารสั้นเอง ① แตะจำนวนเฉพาะที่ใช้หาร (ผิดบอกเหตุผล) ② พิมพ์ผลหารทีละจำนวน (ค.ร.น. ตัวที่หารไม่ลงตัวดึงลงมาให้) ③ กด “หยุดหาร” เมื่อหารต่อไม่ได้ ④ พิมพ์ ห.ร.ม./ค.ร.น.
+   h6PFWork: ① แยกตัวประกอบทีละจำนวน (แตะจำนวนเฉพาะ) ② พิมพ์ ห.ร.ม./ค.ร.น. จากตัวประกอบที่เรียงไว้ */
+const H6PRX = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43];
+function h6Ladder(ctx, nums, mode) {
+  const box = h6sdBox(nums), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack h6lslot' }); let cur = nums.slice(); const ds = [];
+  const anyValid = () => H6PRX.some(q => h6valid(mode, q, cur)), M = mode === 'hcf' ? 'ห.ร.ม.' : 'ค.ร.น.';
+  const pad = h('div', { class: 'h6-prow ia' });
+  const sub = f => ({ check: (ok, hn) => { if (!ok) return ctx.check(false, hn); f(); }, say: ctx.say });
+  const askPrime = () => { slot.innerHTML = ''; lab.innerHTML = `แตะ<b>จำนวนเฉพาะ</b>ที่${mode === 'hcf' ? 'หาร<b>ทุกจำนวน</b>ลงตัว' : 'หารลงตัว<b>อย่างน้อย 2 จำนวน</b>'} — ถ้าไม่มีแล้วกด <b>หยุดหาร</b>`; slot.append(pad); };
+  const askQuot = p => { const idx = cur.map((x, i) => x % p === 0 ? i : -1).filter(i => i >= 0), nx = cur.slice(); let j = 0;
+    const one = () => { slot.innerHTML = ''; if (j >= idx.length) { box.add(p, nx); ds.push(p); cur = nx; sfx.pop(ds.length + 2); return askPrime(); }
+      const i = idx[j]; lab.innerHTML = `<b>${fmt(cur[i])} ÷ ${p}</b> = ?${mode === 'lcm' && idx.length < cur.length && j === 0 ? ` · ${cur.filter(x => x % p).map(fmt).join(', ')} หาร ${p} ไม่ลงตัว ดึงลงมา` : ''}`;
+      slot.append(answerBox(sub(() => { nx[i] = cur[i] / p; j++; sfx.pop(j + 2); one(); }), String(cur[i] / p), { hint: `${p} × อะไร = ${fmt(cur[i])}` })); };
+    one(); };
+  [2, 3, 5, 7, 11, 13].forEach(p => pad.append(h('button', { class: 'btn', onclick: e => { e.stopPropagation(); if (h6valid(mode, p, cur)) { sfx.tap(); return askQuot(p); }
+    const y = cur.filter(x => x % p === 0); ctx.check(false, mode === 'hcf' ? `${p} หาร ${cur.filter(x => x % p).map(fmt).join(', ')} ไม่ลงตัว — ต้องหารลงตัวทุกจำนวน` : y.length ? `${p} หารลงตัวแค่ ${fmt(y[0])} จำนวนเดียว — ต้องหารลงตัวอย่างน้อย 2 จำนวน` : `${p} หารไม่ลงตัวเลย`); } }, String(p))));
+  pad.append(h('button', { class: 'btn h6stop', onclick: e => { e.stopPropagation();
+    if (anyValid()) return ctx.check(false, `ยังหารต่อได้ — ยังมีจำนวนเฉพาะที่หาร${mode === 'hcf' ? 'ทุกจำนวน' : 'อย่างน้อย 2 จำนวน'}ลงตัว ลองไล่ 2, 3, 5, 7`);
+    sfx.tap(); box.classList.add(mode === 'lcm' ? 'fin-l' : 'fin'); slot.innerHTML = ''; const rest = cur.filter(x => x > 1), res = mode === 'hcf' ? h6gcd(nums) : h6lcm(nums);
+    lab.innerHTML = mode === 'hcf' ? (ds.length ? `${M} = คูณ<b>ตัวหารทางซ้าย</b>ทั้งหมด` : `ไม่มีจำนวนเฉพาะใดหารทุกจำนวนลงตัว → ${M} = ?`) : `${M} = คูณ<b>ตัวหารทางซ้าย</b>กับ<b>ผลหารแถวล่างสุด</b>`;
+    slot.append(answerBox(ctx, String(res), { hint: mode === 'hcf' ? (ds.length ? h6x(ds) : 'ถ้าไม่มีตัวหารร่วม ห.ร.ม. คือ 1') : h6x([...ds, ...rest]) })); } }, 'หยุดหาร'));
+  askPrime(); return h('div', { class: 'colstack h6lad' }, box, lab, slot); }
+function h6PFWork(ctx, nums, mode) {
+  const rows = h('div', { class: 'colstack h6pfrows' }), lab = h('div', { class: 'p4steplab' }), slot = h('div', { class: 'colstack' }); let k = 0;
+  const M = mode === 'hcf' ? 'ห.ร.ม.' : 'ค.ร.น.';
+  const factor = () => { slot.innerHTML = ''; if (k >= nums.length) return final();
+    const n = nums[k], got = [], line = h('div', { class: 'fbig h6-pfl' }), pad = h('div', { class: 'h6-prow ia' }), prod = () => got.reduce((a, b) => a * b, 1);
+    lab.innerHTML = `แยกตัวประกอบของ <b>${fmt(n)}</b> — แตะจำนวนเฉพาะมาคูณกัน`;
+    const show = () => { line.innerHTML = `${h6N(n)} = ${got.length ? h6x(got) : '<span class="fsign">?</span>'}`; };
+    H6PR.forEach(p => pad.append(h('button', { class: 'btn', onclick: e => { e.stopPropagation(); const rest = n / prod();
+      if (rest % p) return ctx.check(false, `${h6x(got.length ? [...got, p] : [p])} หาร ${fmt(n)} ไม่ลงตัว — ลองจำนวนเฉพาะอื่น`);
+      got.push(p); sfx.pop(got.length); show(); if (prod() === n) { got.sort((a, b) => a - b); rows.append(h('div', { class: 'fbig h6-pfl h6pfdone', html: `${h6N(n)} = ${h6x(got)}` })); k++; factor(); } } }, String(p))));
+    pad.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: e => { e.stopPropagation(); got.pop(); sfx.tap(); show(); } }, icon('left')));
+    show(); slot.append(line, pad); };
+  const final = () => { const res = mode === 'hcf' ? h6gcd(nums) : h6lcm(nums);
+    lab.innerHTML = mode === 'hcf' ? `${M} = คูณตัวประกอบเฉพาะที่<b>มีร่วมกันทุกจำนวน</b>` : `${M} = คูณตัวประกอบเฉพาะ<b>ทุกตัว</b> (ตัวที่ซ้ำกันใช้ครั้งเดียว)`;
+    slot.append(answerBox(ctx, String(res), { hint: H6HOW[mode === 'hcf' ? 'pf' : 'lpf'] })); };
+  factor(); return h('div', { class: 'colstack h6pfw' }, rows, lab, slot); }
+Object.assign(Q, {
+  hLadder({ nums, mode }) { const M = mode === 'hcf' ? 'ห.ร.ม.' : 'ค.ร.น.';
+    return { prompt: `หา <span class="hl">${M}</span> ของ ${h6and(nums)} โดยการตั้งหารสั้น`, say: `หา ${mode === 'hcf' ? 'หอรอมอ' : 'คอรอนอ'} ของ ${nums.join(' และ ')} โดยการหาร`, __sig: `h6l ${mode} ${nums}`, mount(bd, ctx) { bd.append(h6Ladder(ctx, nums, mode)); } }; },
+  hPFWork({ nums, mode }) { const M = mode === 'hcf' ? 'ห.ร.ม.' : 'ค.ร.น.';
+    return { prompt: `หา <span class="hl">${M}</span> ของ ${h6and(nums)} โดยการแยกตัวประกอบ`, say: `หา ${mode === 'hcf' ? 'หอรอมอ' : 'คอรอนอ'} ของ ${nums.join(' และ ')} โดยการแยกตัวประกอบ`, __sig: `h6p ${mode} ${nums}`, mount(bd, ctx) { bd.append(h6PFWork(ctx, nums, mode)); } }; }
+});
 Object.assign(Q, {
   hFac({ n }) {
     const F = h6fac(n), pool = range(2, n - 1).filter(x => n % x), extra = shuffle(pool).slice(0, Math.max(3, Math.min(pool.length, 12 - F.length)));
@@ -300,7 +345,7 @@ Object.assign(Q, {
     return { prompt: `แยกตัวประกอบของ ${fmt(n)} — แตะจำนวนเฉพาะมาคูณกันให้ได้ ${fmt(n)}`, say: `แยกตัวประกอบของ ${n}`,
       mount(bd, ctx) { const got = [], line = h('div', { class: 'fbig h6-pfl' }), msg = h('div', { class: 'cap' }), pad = h('div', { class: 'h6-prow ia' });
         const prod = () => got.reduce((a, b) => a * b, 1);
-        const show = () => { line.innerHTML = `${h6N(n)} = ${got.length ? h6x(got) : '<span class="fsign">?</span>'}`; msg.textContent = got.length ? `ผลคูณตอนนี้ = ${fmt(prod())}${prod() < n ? ` · เหลือ ${fmt(n / prod())}` : ''}` : 'เริ่มจากจำนวนเฉพาะที่หาร ' + n + ' ลงตัว'; };
+        const show = () => { line.innerHTML = `${h6N(n)} = ${got.length ? h6x(got) : '<span class="fsign">?</span>'}`; msg.textContent = got.length ? 'แตะจำนวนเฉพาะต่อ จนผลคูณเท่ากับ ' + n : 'เริ่มจากจำนวนเฉพาะที่หาร ' + n + ' ลงตัว'; }; /* v156: ไม่บอกผลคูณ/ที่เหลือให้ (เด็กคิดเอง) */
         H6PR.forEach(p => pad.append(h('button', { class: 'btn', onclick: e => { e.stopPropagation(); if (pad.dataset.done) return; const rest = n / prod();
           if (rest % p) { ctx.check(false, `${p} หาร ${fmt(rest)} ไม่ลงตัว — ลองจำนวนเฉพาะอื่น`); return; }
           got.push(p); sfx.pop(got.length); show(); if (prod() === n) { pad.dataset.done = 1; ctx.onRight = () => { got.sort((a, b) => a - b); line.innerHTML = `${h6N(n)} = ${h6x(got)}`; }; ctx.check(true); } } }, String(p))));
@@ -413,12 +458,12 @@ const LESSONS_P6C1 = [
   L6H(5, 5, 'บันไดหินแยกตัวประกอบ', 'การหา ห.ร.ม. โดยการแยกตัวประกอบ', 'ห.ร.ม. (แยกตัวประกอบ)', 'หา ห.ร.ม. โดยแยกตัวประกอบ แล้วนำตัวประกอบเฉพาะที่มีร่วมกันทุกจำนวนมาคูณกัน', [
     T('แยกตัวประกอบ แล้วเรียงตัวที่เหมือนกัน<b>ให้ตรงหลักกัน</b> — หลักที่<b>มีครบทุกจำนวน</b>คือตัวประกอบร่วม', 'แยกตัวประกอบ แล้วเรียงตัวที่เหมือนกันให้ตรงหลักกัน หลักที่มีครบทุกจำนวนคือตัวประกอบร่วม', el => el.append(simAlign([[24, 40], [30, 45], [18, 42, 60]], 'hcf'))),
     T('ตัวอย่างทีละขั้น: ห.ร.ม. ของ 42 และ 56', 'ตัวอย่างทีละขั้น หอรอมอ ของ 42 และ 56', el => el.append(dcWalk('ห.ร.ม. ของ 42 และ 56', [['แยกตัวประกอบ 42', '42 = 2 × 3 × 7'], ['แยกตัวประกอบ 56', '56 = 2 × 2 × 2 × 7'], ['ตัวที่มีร่วมกัน', '2 กับ 7 (มีในทั้งสองจำนวน)'], ['นำมาคูณกัน', '2 × 7 = 14']], 'ห.ร.ม. ของ 42 และ 56 คือ <b>14</b>', 'หอรอมอ ของ 42 และ 56 คือ 14')))],
-    () => [...pkF(H6W_GPF.slice(0, 6), 4).map(nums => Q.hGcd({ nums, how: 'pf' })), ...pkF(H6W_GPF.slice(6), 2).map(nums => Q.hGcd({ nums, how: 'pf' })),
+    () => [...pkF(H6W_GPF.slice(0, 6), 4).map(nums => Q.hPFWork({ nums, mode: 'hcf' })) /* v156 */, ...pkF(H6W_GPF.slice(6), 2).map(nums => Q.hGcd({ nums, how: 'pf' })),
       Q.dPick({ q: '60 = 2 × 2 × 3 × 5 และ 90 = 2 × 3 × 3 × 5 ห.ร.ม. ตรงกับข้อใด', opts: ['2 × 3 × 5', '2 × 2 × 3 × 3 × 5', '2 × 5'], right: '2 × 3 × 5', hint: 'เลือกตัวที่มีทั้งสองจำนวน: 2 หนึ่งตัว 3 หนึ่งตัว 5 หนึ่งตัว' })]),
   L6H(6, 6, 'ถ้ำน้ำแข็งตั้งหาร', 'การหา ห.ร.ม. โดยการหาร', 'ห.ร.ม. (ตั้งหาร)', 'หา ห.ร.ม. โดยตั้งหารสั้นด้วยจำนวนเฉพาะที่หารทุกจำนวนลงตัว แล้วนำตัวหารมาคูณกัน', [
     T('ลองเอง: เลือกจำนวนเฉพาะที่หาร<b>ทุกจำนวน</b>ลงตัว ตั้งหารไปเรื่อย ๆ', 'ลองเอง เลือกจำนวนเฉพาะที่หารทุกจำนวนลงตัว ตั้งหารไปเรื่อย ๆ', el => el.append(simShortDivTry([36, 54], 'hcf'))),
     T('ตัวอย่างทีละขั้น: ห.ร.ม. ของ 28, 42 และ 70 โดยการหาร', 'ตัวอย่างทีละขั้น หอรอมอ ของ 28 42 และ 70 โดยการหาร', el => el.append(simShortDiv([28, 42, 70], 'hcf')))],
-    () => [...pkF(H6W_GDV.slice(0, 6), 4).map(nums => Q.hGcd({ nums, how: 'div' })), ...pkF(H6W_GDV.slice(6), 2).map(nums => Q.hGcd({ nums, how: 'div' })),
+    () => [...pkF(H6W_GDV.slice(0, 6), 4).map(nums => Q.hLadder({ nums, mode: 'hcf' })), ...pkF(H6W_GDV.slice(6), 2).map(nums => Q.hLadder({ nums, mode: 'hcf' })) /* v156 */,
       Q.dPick({ q: 'การตั้งหารสั้นเพื่อหา ห.ร.ม. ต้อง<b>หยุดหาร</b>เมื่อใด', opts: ['เมื่อไม่มีจำนวนเฉพาะใดหารทุกจำนวนได้ลงตัว', 'เมื่อหารได้ 2 ครั้ง', 'เมื่อผลหารเป็นเลขคี่'], right: 'เมื่อไม่มีจำนวนเฉพาะใดหารทุกจำนวนได้ลงตัว' })]),
   L6H(7, 7, 'ทางกบกระโดด', 'การหา ค.ร.น. โดยการหาผลคูณร่วม', 'ค.ร.น. (ผลคูณร่วม)', 'หาพหุคูณร่วม และ ค.ร.น. — พหุคูณร่วมที่น้อยที่สุด — ของจำนวนนับ', [
     T('กบ 2 ตัวกระโดดคนละระยะ — จุดที่ลง<b>ตรงกันครั้งแรก</b>คือพหุคูณร่วมที่น้อยที่สุด = <b>ค.ร.น.</b> (ปรับระยะกระโดดได้)', 'กบสองตัวกระโดดคนละระยะ จุดที่ลงตรงกันครั้งแรกคือพหุคูณร่วมที่น้อยที่สุด คือ คอรอนอ', el => el.append(simHops({ steps: [6, 9] }))),
@@ -428,12 +473,12 @@ const LESSONS_P6C1 = [
   L6H(8, 8, 'สะพานแขวนตัวประกอบ', 'การหา ค.ร.น. โดยการแยกตัวประกอบ', 'ค.ร.น. (แยกตัวประกอบ)', 'หา ค.ร.น. โดยแยกตัวประกอบ แล้วนำตัวประกอบเฉพาะทุกหลักมาคูณกัน (ตัวที่ตรงกันใช้ครั้งเดียว)', [
     T('เรียงตัวประกอบให้ตรงหลัก แล้วเลือก<b>ทุกหลัก หลักละ 1 ตัว</b> มาคูณกัน = ค.ร.น.', 'เรียงตัวประกอบให้ตรงหลัก แล้วเลือกทุกหลัก หลักละหนึ่งตัวมาคูณกัน คือ คอรอนอ', el => el.append(simAlign([[10, 12], [14, 21], [6, 8, 10]], 'lcm'))),
     T('ตัวอย่างทีละขั้น: ค.ร.น. ของ 15, 20 และ 30', 'ตัวอย่างทีละขั้น คอรอนอ ของ 15 20 และ 30', el => el.append(dcWalk('ค.ร.น. ของ 15, 20 และ 30', [['แยกตัวประกอบ', '15 = 3 × 5 · 20 = 2 × 2 × 5 · 30 = 2 × 3 × 5'], ['2 มีมากที่สุดกี่ตัว', '2 ตัว (ใน 20) → 2 × 2'], ['3 มีมากที่สุดกี่ตัว', '1 ตัว → 3'], ['5 มีมากที่สุดกี่ตัว', '1 ตัว → 5'], ['นำมาคูณกัน', '2 × 2 × 3 × 5 = 60']], 'ค.ร.น. ของ 15, 20 และ 30 คือ <b>60</b>', 'คอรอนอ ของ 15 20 และ 30 คือ 60')))],
-    () => [...pkF(H6W_LPF.slice(0, 3), 3).map(nums => Q.hLcm({ nums, how: 'lpf' })), ...pkF(H6W_LPF.slice(3), 3).map(nums => Q.hLcm({ nums, how: 'lpf' })),
+    () => [...pkF(H6W_LPF.slice(0, 3), 3).map(nums => Q.hPFWork({ nums, mode: 'lcm' })) /* v156 */, ...pkF(H6W_LPF.slice(3), 3).map(nums => Q.hLcm({ nums, how: 'lpf' })),
       Q.dPick({ q: '12 = 2 × 2 × 3 และ 18 = 2 × 3 × 3 ค.ร.น. ตรงกับข้อใด', opts: ['2 × 2 × 3 × 3', '2 × 3', '2 × 2 × 3 × 2 × 3 × 3'], right: '2 × 2 × 3 × 3', hint: 'ตัวที่ตรงกันใช้เพียงครั้งเดียว: 2 สองตัว 3 สองตัว' })]),
   L6H(9, 9, 'ยอดหินตั้งหาร', 'การหา ค.ร.น. โดยการหาร', 'ค.ร.น. (ตั้งหาร)', 'หา ค.ร.น. โดยตั้งหารสั้นด้วยจำนวนเฉพาะที่หารได้ลงตัวอย่างน้อย 2 จำนวน แล้วนำตัวหารและผลหารสุดท้ายมาคูณกัน', [
     T('ลองเอง: เลือกจำนวนเฉพาะมาหาร แล้วนำ<b>ตัวหารทั้งหมด × ผลหารแถวล่าง</b> (รูปตัว L) = ค.ร.น.', 'ลองเอง เลือกจำนวนเฉพาะมาหาร แล้วนำตัวหารทั้งหมดคูณผลหารแถวล่าง เป็นรูปตัวแอล คือ คอรอนอ', el => el.append(simShortDivTry([12, 20], 'lcm'))),
     T('ตัวอย่างทีละขั้น: ค.ร.น. ของ 8, 12 และ 18 — ตัวที่หารไม่ลงตัว<b>ดึงลงมา</b>', 'ตัวอย่างทีละขั้น คอรอนอ ของ 8 12 และ 18 ตัวที่หารไม่ลงตัวให้ดึงลงมา', el => el.append(simShortDiv([8, 12, 18], 'lcm')))],
-    () => [...pkF(H6W_LDV.slice(0, 4), 3).map(nums => Q.hLcm({ nums, how: 'ldiv' })), ...pkF(H6W_LDV.slice(4), 3).map(nums => Q.hLcm({ nums, how: 'ldiv' })),
+    () => [...pkF(H6W_LDV.slice(0, 4), 3).map(nums => Q.hLadder({ nums, mode: 'lcm' })), ...pkF(H6W_LDV.slice(4), 3).map(nums => Q.hLadder({ nums, mode: 'lcm' })) /* v156 */,
       Q.dPick({ q: 'การตั้งหารหา ค.ร.น. ของ 3 จำนวน ต้องใช้จำนวนเฉพาะที่หารได้ลงตัวอย่างน้อยกี่จำนวน', opts: ['2 จำนวน', '3 จำนวน', '1 จำนวน'], right: '2 จำนวน' })]),
   L6H(10, 10, 'สันเขาสัมพันธ์', 'ความสัมพันธ์ระหว่าง ห.ร.ม. กับ ค.ร.น. ของจำนวนนับ 2 จำนวน', 'ห.ร.ม. × ค.ร.น.', 'ใช้ความสัมพันธ์ ห.ร.ม. × ค.ร.น. = ผลคูณของจำนวนนับ 2 จำนวนนั้น', [
     T('ใส่ตัวประกอบเฉพาะในวงกลม: <b>ตรงกลาง</b> = ห.ร.ม. · <b>ทั้งหมด</b> = ค.ร.น. — แล้วเทียบผลคูณ', 'ใส่ตัวประกอบเฉพาะในวงกลม ตรงกลางคือ หอรอมอ ทั้งหมดคือ คอรอนอ แล้วเทียบผลคูณ', el => el.append(simRel())),

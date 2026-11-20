@@ -3768,3 +3768,10 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .f4st.p4s2on>.storybox{font-size:17px;padding:6px 14px}
 .f4wcur .ans-slot{min-width:1.6em;height:1.15em;font-size:1em;padding:0 .12em;border-radius:12px;display:inline-flex;align-items:center;justify-content:center}
 .e4mixq{gap:4px;align-items:center}.e4mixq>.colstack:first-child .fbig{font-size:clamp(20px,2.6cqw,28px)}
+
+/* ---------- v156 P6 ch1: h6Ladder / h6PFWork ---------- */
+.h6lad,.h6pfw{gap:8px;align-items:center}
+.h6lad .h6-sd{align-self:center}
+.h6stop{background:var(--coral-soft,#FDECEE);color:#B4232F;font-weight:800}
+.h6pfrows{gap:2px}.h6pfrows:empty{display:none}
+.h6pfdone{font-size:clamp(20px,2.6cqw,28px);opacity:.85}
