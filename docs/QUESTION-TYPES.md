@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-393 types
+394 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -339,10 +339,11 @@
 | `Q.t4Tab` | `{ T, q, opts, right, hint }` | [`grades/p4/p4t.js:100`](../src/grades/p4/p4t.js#L100) |
 | `Q.t4TabDur` | `{ T, i }` | [`grades/p4/p4t.js:101`](../src/grades/p4/p4t.js#L101) |
 | `Q.t4YM` | `{ text, a, b }` | [`grades/p4/p4t.js:88`](../src/grades/p4/p4t.js#L88) |
-| `Q.t6Cls` | `{ B, C, by }` | [`grades/p6/p6t.js:207`](../src/grades/p6/p6t.js#L207) |
-| `Q.t6Find` | `{ B, C, ask = 0, names = ['ก', 'ข', 'ค'] }` | [`grades/p6/p6t.js:223`](../src/grades/p6/p6t.js#L223) |
-| `Q.t6Num` | `{ fig, q, a, unit, hint }` | [`grades/p6/p6t.js:229`](../src/grades/p6/p6t.js#L229) |
-| `Q.t6Part` | `{ B, C, base, ask }` | [`grades/p6/p6t.js:214`](../src/grades/p6/p6t.js#L214) |
+| `Q.t6Cls` | `{ B, C, by }` | [`grades/p6/p6t.js:233`](../src/grades/p6/p6t.js#L233) |
+| `Q.t6Con` | `{ kind, v }` | [`grades/p6/p6t.js:158`](../src/grades/p6/p6t.js#L158) |
+| `Q.t6Find` | `{ B, C, ask = 0, names = ['ก', 'ข', 'ค'] }` | [`grades/p6/p6t.js:249`](../src/grades/p6/p6t.js#L249) |
+| `Q.t6Num` | `{ fig, q, a, unit, hint }` | [`grades/p6/p6t.js:255`](../src/grades/p6/p6t.js#L255) |
+| `Q.t6Part` | `{ B, C, base, ask }` | [`grades/p6/p6t.js:240`](../src/grades/p6/p6t.js#L240) |
 | `Q.tallerWord` | `{ a, b }` | [`engine/questions.js:1266`](../src/engine/questions.js#L1266) |
 | `Q.tallyMake` | `{ n, label }` | [`engine/questions.js:946`](../src/engine/questions.js#L946) |
 | `Q.tallyRead` | `{ n, label }` | [`engine/questions.js:942`](../src/engine/questions.js#L942) |
