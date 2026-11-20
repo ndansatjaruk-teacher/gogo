@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-380 types
+381 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -388,3 +388,4 @@
 | `Q.x3Cmp` | `{ L, R }` | [`grades/p3/p3x.js:48`](../src/grades/p3/p3x.js#L48) |
 | `Q.x3Fill` | `{ tpl, res, pool }` | [`grades/p3/p3x.js:46`](../src/grades/p3/p3x.js#L46) |
 | `Q.x3Make` | `{ s, parts, ask }` | [`grades/p3/p3x.js:51`](../src/grades/p3/p3x.js#L51) |
+| `Q.x3Story` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p3/p3x.js:61`](../src/grades/p3/p3x.js#L61) |
