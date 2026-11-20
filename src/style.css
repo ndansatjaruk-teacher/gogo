@@ -3756,3 +3756,14 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .p4slog:empty{display:none}
 .p4slog .fstep-row{font-size:clamp(18px,2.4cqw,24px)}
 .x3st.p4s2on>.storybox{font-size:17px;padding:6px 14px}
+
+/* ---------- v151 P4 ch6: f4Work — บวก/ลบเศษส่วนทีละขั้น ---------- */
+.f4work{gap:6px;align-items:center}
+.f4wrows:empty{display:none}
+.f4wrows{gap:2px;align-items:center}
+.f4wrow{font-size:clamp(20px,2.6cqw,28px);opacity:.85}
+.f4wrow .f4ok{color:#1F9D6B;font-size:.8em}
+.f4wcur{font-size:clamp(28px,3.8cqw,42px)}
+.f4wpic{gap:4px}
+.f4st.p4s2on>.storybox{font-size:17px;padding:6px 14px}
+.f4wcur .ans-slot{min-width:1.6em;height:1.15em;font-size:1em;padding:0 .12em;border-radius:12px;display:inline-flex;align-items:center;justify-content:center}
