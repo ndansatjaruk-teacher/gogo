@@ -83,7 +83,7 @@ const w3StoryOpts = (sent, wrong) => { const out = [...wrong], ops = [' + ', ' �
   if ((op === ' − ' || op === ' + ') && out.length < 2) { const [x, y] = sent.split(op); [`${y} − ${x}`, `${x} − ${y}`].forEach(t => { if (out.length < 2 && t !== sent && !out.includes(t)) out.push(t); }); }
   return out.slice(0, 2); };
 const w3StoryJob = (sent, g, m) => { if (!m) return null; const op = ['+', '−', '×', '÷'].find(o => sent.includes(` ${o} `)); if (!op) return null;
-  const [L, R] = sent.split(` ${op} `), pv = t => { let v = 0; try { v = l3p(t); } catch (_) { /* p3l ยังไม่โหลด (เรียกตอนสร้างบทเรียน) */ } return v || w3p(t); }, a = pv(L), b = op === '×' || op === '÷' ? +R.replace(/,/g, '') : pv(R);
+  const [L, R] = sent.split(` ${op} `), pv = t => { let v = 0; if (m === 'lm') { try { return v3p(t); } catch (_) { return 0; } } try { v = l3p(t); } catch (_) { /* p3l ยังไม่โหลด (เรียกตอนสร้างบทเรียน) */ } return v || w3p(t); }, a = pv(L), b = op === '×' || op === '÷' ? +R.replace(/,/g, '') : pv(R);
   if (!a || !b || !Number.isFinite(b)) return null; const r = op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : a / b; return r === g ? { a, b, op } : null; };
 /* ---------- teaching sims ---------- */
 function simW3Tool(items) { // tap a thing, then tap the most suitable scale
