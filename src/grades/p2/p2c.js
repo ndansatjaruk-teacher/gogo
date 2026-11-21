@@ -41,15 +41,19 @@ function ppBuilder(D) {
     grid.append(h('div', { class: 'pp-row' }, h('div', { class: 'pp-lab' }, lab, h('small', null, `${v} ${D.unit}`)), cells, h('b', { class: 'pp-sum' + (val(i) === v ? ' ok' : '') }, val(i)))); }); };
   draw(); wrap.check = () => D.rows.every((r, i) => val(i) === r[1]); wrap.lock = () => wrap.dataset.done = 1; return wrap;
 }
+/* v181 (ผู้ใช้ขอ): ชายหาดแผนภูมิ — แผนภูมิไว้ด้านซ้าย ส่วนที่ให้ตอบไว้ด้านขวา (หน่วยอยู่ข้างช่องคำตอบ) */
+const ppSide = (fig, ...right) => h('div', { class: 'g4sd p2sd pp-sd' }, h('div', { class: 'p2sd-l' }, fig), h('div', { class: 'g4sd-r' }, ...right));
+const ppAns = (ctx, a, hint, unit) => { const ab = answerBox(ctx, String(a), { hint }), sl = ab.querySelector(':scope > .ans-slot');
+  if (sl && unit) { const row = h('div', { class: 'ans-urow' }); sl.replaceWith(row); row.append(sl, h('span', { class: 'cap', style: { fontSize: '20px' } }, unit)); } return ab; };
 Object.assign(Q, {
   ppRead({ D, i, q }) {
     const [lab, val] = D.rows[i]; q = q || `${lab}มี${D.what}กี่${D.unit}`;
     return { prompt: q + ' <small>(แตะรูปทำเครื่องหมายขณะนับได้)</small>', say: q, mount(bd, ctx) { const f = h('div', { class: 'ppwrap', html: ppHTML(D) }); ppMark(f);
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, f, h('div', { class: 'rowstack' }, answerBox(ctx, String(val), { hint: `1 รูปแทน ${D.k} ${D.unit} — นับเพิ่มทีละ ${D.k}${val % D.k ? ` ครึ่งรูปแทน ${D.k / 2}` : ''}` }), h('span', { class: 'cap', style: { fontSize: '20px' } }, D.unit)))); } };
+      bd.append(h('div', { class: 't6-q p4-q p2q' }, ppSide(f, ppAns(ctx, val, `1 รูปแทน ${D.k} ${D.unit} — นับเพิ่มทีละ ${D.k}${val % D.k ? ` ครึ่งรูปแทน ${D.k / 2}` : ''}`, D.unit)))); } };
   },
   ppNum({ D, q, a, hint, unit }) {
     return { prompt: q, say: q.replace(/<[^>]+>/g, ''), mount(bd, ctx) { const f = h('div', { class: 'ppwrap', html: ppHTML(D) }); ppMark(f);
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, f, h('div', { class: 'rowstack' }, answerBox(ctx, String(a), { hint }), h('span', { class: 'cap', style: { fontSize: '20px' } }, unit ?? D.unit)))); } };
+      bd.append(h('div', { class: 't6-q p4-q p2q' }, ppSide(f, ppAns(ctx, a, hint, unit ?? D.unit)))); } };
   },
   /* tap the row (most / least) right in the chart */
   ppTap({ D, ask }) {
@@ -58,6 +62,11 @@ Object.assign(Q, {
       ixTapFig(f.firstChild, '.pp-row', ctx, i => D.rows[i][1] === t, ask === 'max' ? 'ดูว่าแถวไหนมีรูปมากที่สุด (ครึ่งรูปนับครึ่งเดียว)' : 'ดูว่าแถวไหนมีรูปน้อยที่สุด');
       bd.append(h('div', { class: 'colstack' }, f, h('div', { class: 'cap ixcap' }, 'แตะที่แถวในแผนภูมิได้เลย'))); } };
   },
+  /* เลือกคำตอบ: แผนภูมิซ้าย ตัวเลือกขวา (เรียงบนลงล่าง) */
+  ppChoose({ D, q, opts, right, hint }) {
+    return { prompt: q, say: q.replace(/<[^>]+>/g, ''), mount(bd, ctx) { const ch = choices(ctx, shuffle(opts).map(o => ({ value: o, label: o })), right, { hint }); ch.classList.add('pp-opts'); ch.querySelectorAll('.opt').forEach(o => o.classList.add('fopt', 'txt'));
+      bd.append(h('div', { class: 't6-q p4-q' }, ppSide(h('div', { class: 'ppwrap', html: ppHTML(D) }), ch))); } };
+  },
   ppBuild({ D }) {
     const q = `สร้างแผนภูมิรูปภาพจากข้อมูล โดย 1 รูปแทน ${D.k} ${D.unit}`;
     return { prompt: q + ' <small>(แตะช่องเพื่อวางรูป)</small>', say: q, mount(bd, ctx) { const B = ppBuilder(D);
@@ -65,9 +74,9 @@ Object.assign(Q, {
   }
 });
 function ppMark(f) { f.classList.add('ia'); f.querySelectorAll('.pp-i:not(.k)').forEach(ic => ic.addEventListener('click', e => { e.stopPropagation(); ic.classList.toggle('mk'); sfx.tap(); })); }
-const ppSort = (D, dir) => Q.ixSort({ q: `เรียงจาก<span class="hl">${dir === 'desc' ? 'มากที่สุดไปน้อยที่สุด' : 'น้อยที่สุดไปมากที่สุด'}</span>`, fig: ppHTML(D), items: D.rows.map(r => ({ label: r[0], v: r[1] })), dir, slotLabels: D.rows.map((_, i) => i ? '' : dir === 'desc' ? 'มากที่สุด' : 'น้อยที่สุด') });
-const ppKeyQ = D => Q.p4Pick({ fig: ppHTML(D), q: `จากแผนภูมิ 1 รูปแทนจำนวน${D.what}กี่${D.unit}`, opts: [D.k, ...[1, 2, 5, 10].filter(x => x !== D.k).slice(0, 2)].map(x => `${x} ${D.unit}`), right: `${D.k} ${D.unit}`, hint: 'ดูบรรทัด “กำหนดให้” ใต้แผนภูมิ' });
-const ppPick = (D, q, right, opts, hint) => Q.p4Pick({ fig: ppHTML(D), q, opts: [right, ...opts.filter(o => o !== right)].slice(0, 4), right, hint });
+const ppSort = (D, dir) => Q.ixSort({ side: true, q: `เรียงจาก<span class="hl">${dir === 'desc' ? 'มากที่สุดไปน้อยที่สุด' : 'น้อยที่สุดไปมากที่สุด'}</span>`, fig: ppHTML(D), items: D.rows.map(r => ({ label: r[0], v: r[1] })), dir, slotLabels: D.rows.map((_, i) => i ? '' : dir === 'desc' ? 'มากที่สุด' : 'น้อยที่สุด') });
+const ppKeyQ = D => Q.ppChoose({ D, q: `จากแผนภูมิ 1 รูปแทนจำนวน${D.what}กี่${D.unit}`, opts: [D.k, ...[1, 2, 5, 10].filter(x => x !== D.k).slice(0, 2)].map(x => `${x} ${D.unit}`), right: `${D.k} ${D.unit}`, hint: 'ดูบรรทัด “กำหนดให้” ใต้แผนภูมิ' });
+const ppPick = (D, q, right, opts, hint) => Q.ppChoose({ D, q, opts: [right, ...opts.filter(o => o !== right)].slice(0, 4), right, hint });
 
 /* ---------- data: teaching (not used in the games) ---------- */
 const PPT_2 = { title: 'จำนวนเปลือกหอยที่เด็ก ๆ เก็บได้', what: 'เปลือกหอย', unit: 'ชิ้น', k: 2, keyE: 'shell', rows: [['ต้นกล้า', 8], ['ใบเตย', 12], ['ภูผา', 6], ['ฟ้าใส', 10]] };
@@ -99,7 +108,9 @@ const LESSONS_P2C11 = [
         Q.ppNum({ D: PPW2, q: 'ขายไอศกรีมในวันพุธน้อยกว่าวันศุกร์อยู่กี่โคน', a: 4, hint: 'วันศุกร์ 12 โคน วันพุธ 8 โคน → 12 − 8' }),
         Q.ppNum({ D: PPW3, q: 'ออยเก็บข้าวโพดได้น้อยกว่าแพมกี่กิโลกรัม', a: 2, hint: 'แพม 14 ออย 12 → 14 − 12' }), ppSort(A, 'desc')]; }),
   L2C(2, 'หาดแทนห้า', 'แผนภูมิรูปภาพที่กำหนดรูป 1 รูปแทน 5 หน่วย', '1 รูปแทน 5', 'อ่านและเขียนแผนภูมิรูปภาพที่กำหนดรูป 1 รูปแทน 5 หน่วย และแก้โจทย์จากแผนภูมิ',
-    [T('ข้อมูลเดียวกัน แต่เปลี่ยน <b>1 รูปแทน 5 ลูก</b> เป็น <b>10 ลูก</b> — ดูจำนวนรูปที่ใช้ แล้วแตะแถวนับ', 'ข้อมูลเดียวกัน แต่เปลี่ยนรูปหนึ่งรูปแทนกี่ลูก แตะปุ่มดูจำนวนรูปที่ใช้ แล้วแตะแถวนับ', el => el.append(simPpKey(PPT_5, [5, 10]))),
+    [T('ที่หาดนี้ <b>1 รูปแทน 5 ลูก</b> — แตะแต่ละวันเพื่อนับเพิ่มทีละ 5', 'ที่หาดนี้ หนึ่งรูปแทนห้าลูก แตะแต่ละวันเพื่อนับเพิ่มทีละห้า', el => { const out = fNote(), f = h('div', { class: 'ppwrap', html: ppHTML(PPT_5) }), seen = new Set(); out.innerHTML = 'แตะแถวของแต่ละวัน';
+       ppTapCount(f.firstChild, PPT_5, { nums: true, out, onTap: i => { seen.add(i); if (seen.size >= PPT_5.rows.length) teachDone(el); } }); el.append(h6wait(), f, out); }), /* v181: ไม่เอาเรื่อง 1 รูปแทน 10 มาปน */
+     T('ลองสร้างเอง: ลูกโป่งที่ขายได้ — แตะช่องวางรูป (1 รูปแทน 5 ลูก)', 'ลองสร้างเอง แตะช่องวางรูป หนึ่งรูปแทนห้าลูก', el => el.append(qSim(Q.ppBuild({ D: { ...PPT_5, title: 'จำนวนลูกโป่งที่ขายได้ (สร้างเอง)', rows: [['วันเสาร์', 20], ['วันอาทิตย์', 35], ['วันจันทร์', 10]] } }), 'ตัวเลขด้านขวาเท่ากับข้อมูลทุกแถวแล้ว'))),
      T('ตัวอย่างทีละขั้น: 1 รูปแทน 5', 'ตัวอย่างทีละขั้น', p4ex([['① ดูกำหนดให้', '1 รูปแทนลูกโป่ง 5 ลูก'], ['② วันอาทิตย์มี', '8 รูป → 5, 10, 15, … , 40 → 40 ลูก'], ['③ วันจันทร์มี', '3 รูป → 15 ลูก'], ['④ รวม 3 วัน', '25 + 40 + 15 = 80 ลูก']], 'ขายลูกโป่งได้ทั้งหมด <b>80 ลูก</b>', '', () => h('div', { class: 'ppwrap', html: ppHTML(PPT_5) })))],
     () => { const A = ppMix(PPW4), B = ppMix(PPW5), C = ppMix(PPW6);
       return [ppKeyQ(A), Q.ppRead({ D: B, i: B.rows.findIndex(r => r[0] === 'ว่ายน้ำ'), q: 'ประเทศไทยได้รับเหรียญจากกีฬาว่ายน้ำกี่เหรียญ' }),

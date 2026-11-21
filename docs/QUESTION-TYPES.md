@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-395 types
+396 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -157,10 +157,10 @@
 | `Q.hundredFill` | `{ cells, show, q }` | [`engine/questions.js:1263`](../src/engine/questions.js#L1263) |
 | `Q.isAddition` | | [`engine/questions.js:380`](../src/engine/questions.js#L380) |
 | `Q.isSubtraction` | | [`engine/questions.js:529`](../src/engine/questions.js#L529) |
-| `Q.ixGroup` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:44`](../src/engine/ix.js#L44) |
+| `Q.ixGroup` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:45`](../src/engine/ix.js#L45) |
 | `Q.ixMatch` | `{ q, say: sy, pairs, hint, wide }` | [`engine/ix.js:11`](../src/engine/ix.js#L11) |
-| `Q.ixSort` | `{ q, say: sy, items, dir = 'asc', k, slotLabels, hint, fig }` | [`engine/ix.js:19`](../src/engine/ix.js#L19) |
-| `Q.ixTF` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:29`](../src/engine/ix.js#L29) |
+| `Q.ixSort` | `{ q, say: sy, items, dir = 'asc', k, slotLabels, hint, fig, side }` | [`engine/ix.js:19`](../src/engine/ix.js#L19) |
+| `Q.ixTF` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:30`](../src/engine/ix.js#L30) |
 | `Q.k3Cmp` | `{ L, R }` | [`grades/p3/p3k.js:59`](../src/grades/p3/p3k.js#L59) |
 | `Q.k3Col` | `{ a, m, flip }` | [`grades/p3/p3k.js:43`](../src/grades/p3/p3k.js#L43) |
 | `Q.k3Groups` | `{ g, m, z }` | [`grades/p3/p3k.js:57`](../src/grades/p3/p3k.js#L57) |
@@ -264,11 +264,12 @@
 | `Q.pickStory` | `{ a, b, op, stories }` | [`engine/questions.js:900`](../src/engine/questions.js#L900) |
 | `Q.place2` | `{ n, pos }` | [`engine/questions.js:1224`](../src/engine/questions.js#L1224) |
 | `Q.pOf` | `{ p, n, text, unit = '' }` | [`grades/p5/p5p.js:81`](../src/grades/p5/p5p.js#L81) |
-| `Q.ppBuild` | `{ D }` | [`grades/p2/p2c.js:61`](../src/grades/p2/p2c.js#L61) |
+| `Q.ppBuild` | `{ D }` | [`grades/p2/p2c.js:70`](../src/grades/p2/p2c.js#L70) |
+| `Q.ppChoose` | `{ D, q, opts, right, hint }` | [`grades/p2/p2c.js:66`](../src/grades/p2/p2c.js#L66) |
 | `Q.pPL` | `{ text, cost, sell }` | [`grades/p5/p5p.js:95`](../src/grades/p5/p5p.js#L95) |
-| `Q.ppNum` | `{ D, q, a, hint, unit }` | [`grades/p2/p2c.js:50`](../src/grades/p2/p2c.js#L50) |
-| `Q.ppRead` | `{ D, i, q }` | [`grades/p2/p2c.js:45`](../src/grades/p2/p2c.js#L45) |
-| `Q.ppTap` | `{ D, ask }` | [`grades/p2/p2c.js:55`](../src/grades/p2/p2c.js#L55) |
+| `Q.ppNum` | `{ D, q, a, hint, unit }` | [`grades/p2/p2c.js:54`](../src/grades/p2/p2c.js#L54) |
+| `Q.ppRead` | `{ D, i, q }` | [`grades/p2/p2c.js:49`](../src/grades/p2/p2c.js#L49) |
+| `Q.ppTap` | `{ D, ask }` | [`grades/p2/p2c.js:59`](../src/grades/p2/p2c.js#L59) |
 | `Q.r4Build` | `{ kind, w, hh, nm }` | [`grades/p4/p4r.js:224`](../src/grades/p4/p4r.js#L224) |
 | `Q.r4Count` | `{ cells, unit, W, H }` | [`grades/p4/p4r.js:319`](../src/grades/p4/p4r.js#L319) |
 | `Q.r4Cut` | `{ k, Wd, Hd, a, b, c, u }` | [`grades/p4/p4r.js:349`](../src/grades/p4/p4r.js#L349) |

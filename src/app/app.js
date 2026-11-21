@@ -1258,6 +1258,7 @@ function startBoss(li, opt = {}) {
       b.onclick = e => { e.stopPropagation(); if (opts.dataset.done) return; opts.dataset.done = 1; answer(k, b, opts); };
       opts.append(b);
     });
+    if (q.fig && /class="pp [hv]/.test(q.fig)) card.classList.add('xside'); /* v181 (ผู้ใช้ขอ): แผนภูมิรูปภาพ → ภาพซ้าย ตัวเลือกขวา */
     stage.append(h('div', { class: 'screen arena' }, bossCard, card)); fitBody(card, { noJump: true });
     const readQ = force => say(`ข้อ ${i + 1} ${speakText(q.q)} ` + q.opts.map((o, k) => `${LETTERS[k]} ${optSpeech(o)}`).join(' '), force);
     readQ();
