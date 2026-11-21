@@ -65,15 +65,15 @@
 | `Q.drawSum` | `{ a, b }` | [`engine/questions.js:273`](../src/engine/questions.js#L273) |
 | `Q.dRound` | `{ x, p, line = false }` | [`grades/p5/p5d.js:95`](../src/grades/p5/p5d.js#L95) |
 | `Q.dStory` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p5/p5d.js:149`](../src/grades/p5/p5d.js#L149) |
-| `Q.dvCmp` | `{ l, r }` | [`grades/p2/p2d.js:142`](../src/grades/p2/p2d.js#L142) |
-| `Q.dvCtr` | `{ n, d }` | [`grades/p2/p2d.js:106`](../src/grades/p2/p2d.js#L106) |
-| `Q.dvFact` | `{ n, d }` | [`grades/p2/p2d.js:112`](../src/grades/p2/p2d.js#L112) |
-| `Q.dvFam` | `{ a, b }` | [`grades/p2/p2d.js:119`](../src/grades/p2/p2d.js#L119) |
-| `Q.dvPic` | `{ n, d, e, what, box, unit, mode }` | [`grades/p2/p2d.js:100`](../src/grades/p2/p2d.js#L100) |
-| `Q.dvPop` | `{ facts }` | [`grades/p2/p2d.js:126`](../src/grades/p2/p2d.js#L126) |
-| `Q.dvRem` | `{ n, d, e }` | [`grades/p2/p2d.js:137`](../src/grades/p2/p2d.js#L137) |
-| `Q.dvStory` | `{ text, n, d, unit, unit2, fig }` | [`grades/p2/p2d.js:157`](../src/grades/p2/p2d.js#L157) |
-| `Q.dvUnk` | `{ a, b, c, pos }` | [`grades/p2/p2d.js:148`](../src/grades/p2/p2d.js#L148) |
+| `Q.dvCmp` | `{ l, r }` | [`grades/p2/p2d.js:144`](../src/grades/p2/p2d.js#L144) |
+| `Q.dvCtr` | `{ n, d }` | [`grades/p2/p2d.js:108`](../src/grades/p2/p2d.js#L108) |
+| `Q.dvFact` | `{ n, d }` | [`grades/p2/p2d.js:114`](../src/grades/p2/p2d.js#L114) |
+| `Q.dvFam` | `{ a, b }` | [`grades/p2/p2d.js:121`](../src/grades/p2/p2d.js#L121) |
+| `Q.dvPic` | `{ n, d, e, what, box, unit, mode }` | [`grades/p2/p2d.js:102`](../src/grades/p2/p2d.js#L102) |
+| `Q.dvPop` | `{ facts }` | [`grades/p2/p2d.js:128`](../src/grades/p2/p2d.js#L128) |
+| `Q.dvRem` | `{ n, d, e }` | [`grades/p2/p2d.js:139`](../src/grades/p2/p2d.js#L139) |
+| `Q.dvStory` | `{ text, n, d, unit, unit2, fig }` | [`grades/p2/p2d.js:159`](../src/grades/p2/p2d.js#L159) |
+| `Q.dvUnk` | `{ a, b, c, pos }` | [`grades/p2/p2d.js:150`](../src/grades/p2/p2d.js#L150) |
 | `Q.e4Col` | `{ a, b, op }` | [`grades/p4/p4e.js:100`](../src/grades/p4/p4e.js#L100) |
 | `Q.e4Exp` | `{ s }` | [`grades/p4/p4e.js:131`](../src/grades/p4/p4e.js#L131) |
 | `Q.e4Frac` | `{ s }` | [`grades/p4/p4e.js:118`](../src/grades/p4/p4e.js#L118) |

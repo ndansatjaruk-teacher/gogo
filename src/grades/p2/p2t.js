@@ -206,7 +206,7 @@ Object.assign(Q, {
   /* one dial hour → its daytime and night-time names */
   tkTwoNames({ k }) { const day = k >= 6 ? k : k + 12, night = k === 12 ? 0 : k >= 6 ? k + 12 : k; const q = 'เวลานี้เป็นได้ทั้งกลางวันและกลางคืน เติมทั้งสองแบบ';
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: `<div class="tk-pair">${tkClk(k, 0)}<span class="tk-dn">${tkSun(40)}${tkMoon(40)}</span></div>` }),
-      duoInput(ctx, [day, night], ['นาฬิกา · กลางคืน', 'นาฬิกา'], { pre: 'กลางวัน', hint: `กลางวัน 6–17 นาฬิกา · กลางคืน 18–5 นาฬิกา · หลังเที่ยงให้บวก 12` }))); } };
+      duoInput(ctx, [day, night], ['นาฬิกา', 'นาฬิกา'], { rows: ['กลางวัน', 'กลางคืน'], names: ['เวลากลางวัน', 'เวลากลางคืน'], hint: `กลางวัน 6–17 นาฬิกา · กลางคืน 18–5 นาฬิกา · หลังเที่ยงให้บวก 12` }))); } };
   },
   /* set the hands, then say day or night when it matters */
   tkSet({ h: H, m = 0 }) { const q = `หมุนเข็มนาฬิกาให้เป็นเวลา ${tkTxt(H, m)}`;

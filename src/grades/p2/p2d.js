@@ -33,7 +33,9 @@ function duoInput(ctx, want, U, o = {}) {
   const kp = h('div', { class: 'keypad' });
   [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: () => type(d) }, d)));
   kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: () => { sfx.tap(); val[cur] = val[cur].slice(0, -1); paint(); } }, icon('left')), h('button', { class: 'btn', onclick: () => type(0) }, '0'), h('button', { class: 'btn primary', 'aria-label': 'ส่งคำตอบ', onclick: ok }, icon('check')));
-  const wrap = h('div', { class: 'ans mc-ans ia' }, h('div', { class: 'mc-row' }, o.pre === '' ? null : h('span', { class: 'mc-u' }, o.pre || 'ได้'), slots[0], U[0] ? h('span', { class: 'mc-u' }, U[0]) : null, o.mid ? h('span', { class: 'mc-u mc-mid' }, o.mid) : null, slots[1], U[1] ? h('span', { class: 'mc-u' }, U[1]) : null), kp, msg); /* v136: o.mid = คำระหว่างสองช่อง (ได้ __ เศษ __) */
+  /* v185 (ผู้ใช้ขอ): o.rows = [ป้ายบรรทัด 1, ป้ายบรรทัด 2] → สองช่องอยู่คนละบรรทัด (เช่น กลางวัน / กลางคืน) */
+  const rowsEl = o.rows ? h('div', { class: 'mc-rows' }, ...[0, 1].map(i => h('div', { class: 'mc-row mc-row2' }, h('span', { class: 'mc-u mc-rl' }, o.rows[i]), slots[i], U[i] ? h('span', { class: 'mc-u' }, U[i]) : null))) : null;
+  const wrap = h('div', { class: 'ans mc-ans ia' }, rowsEl || h('div', { class: 'mc-row' }, o.pre === '' ? null : h('span', { class: 'mc-u' }, o.pre || 'ได้'), slots[0], U[0] ? h('span', { class: 'mc-u' }, U[0]) : null, o.mid ? h('span', { class: 'mc-u mc-mid' }, o.mid) : null, slots[1], U[1] ? h('span', { class: 'mc-u' }, U[1]) : null), kp, msg); /* v136: o.mid = คำระหว่างสองช่อง (ได้ __ เศษ __) */
   wrap.reveal = () => { val[0] = String(want[0]); val[1] = String(want[1]); done = true; paint(); wrap.classList.add('done', 'revealed'); }; wrap.ansText = want.map(String);
   paint(); return wrap;
 }

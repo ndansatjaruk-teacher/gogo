@@ -3800,3 +3800,5 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .hopline .tick.hop b{background:#FFE7A3;border-radius:10px}
 .hopline .tick.hop{position:relative}
 .hopline .tick.hop::before{content:attr(data-k);position:absolute;top:-1.6em;left:50%;transform:translateX(-50%);font-size:.7em;font-weight:800;color:#C98612}
+
+.mc-rows{display:flex;flex-direction:column;gap:10px;align-items:flex-start}.mc-row2{justify-content:flex-start}.mc-row2 .mc-rl{min-width:4.6em;text-align:right}
