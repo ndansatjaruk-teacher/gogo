@@ -70,7 +70,7 @@ Object.assign(Q, {
 
 1. สร้างไฟล์ `src/grades/p<ชั้น>/p<ชั้น><ตัวอักษร>.js` เช่น `p5z.js` ตั้ง prefix ชื่อฟังก์ชันของไฟล์ (เช่น `z5…`) กันชื่อชนกับไฟล์อื่น
 2. เพิ่มบรรทัดใน [`src/order.txt`](../src/order.txt) **หลัง** ไฟล์ที่ใช้ของ (ปกติวางต่อจากไฟล์อื่นของชั้นเดียวกัน) และ **ก่อน** `app/lessons.js`
-3. ประกาศ `const LESSONS_P5C9 = [ … ]` และด่านบอส (`boss: true` — ดูท้าย `p5q.js`)
+3. ประกาศ `const LESSONS_P5C9 = [ … ]` และด่านบอส (`boss: true` — ดูท้าย `p5q.js` · เกณฑ์ชนะ 80% ตั้งให้อัตโนมัติ)
 4. ลงทะเบียนเมืองใน `CITIES` ของ [`src/app/lessons.js`](../src/app/lessons.js) (ลำดับใน `CITIES` = ลำดับการเล่น) พร้อม `theme` ตามโลกของชั้นนั้น
 5. `python3 tools/build.py --check` → `python3 tests/smoke.py --grade 5` → เปิด `dist/index.html` เล่นจริงบนจอขนาดไอแพด
 6. เพิ่มหัวข้อสั้น ๆ ใน [ARCHITECTURE.md](ARCHITECTURE.md) และรัน `python3 tools/catalog.py` ถ้าเพิ่มชนิดคำถาม

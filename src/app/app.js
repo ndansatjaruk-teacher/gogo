@@ -1282,7 +1282,7 @@ function startBoss(li, opt = {}) {
   stage.addEventListener('click', e => { if (awaiting && !Scratch.on && !e.target.closest('.ia,button,canvas')) advance(); });
   function finish() {
     if (over && !timedOut) return; $('.sheet')?.remove(); over = true; clearInterval(timer); clearInterval(tick); const used = Math.round((Date.now() - T0) / 1000);
-    const pass = score >= L.pass, stars = !pass ? 0 : score >= N - 1 ? 3 : score >= Math.ceil(N * .73) ? 2 : 1;
+    const pass = score >= L.pass, s2 = Math.min(N, Math.max(L.pass + 1, Math.ceil(N * .9 - 1e-9))), s3 = Math.min(N, Math.max(s2 + 1, N - 1)), stars = !pass ? 0 : score >= s3 ? 3 : score >= s2 ? 2 : 1; /* v186: ผ่าน 80% = 1 ดาว · ≥90% = 2 ดาว · เกือบเต็ม/เต็ม = 3 ดาว */
     const prev = SAVE.stars[L.id] || 0;
     if (pass) { SAVE.stars[L.id] = Math.max(prev, stars); if (stars > prev) SAVE.lastEarned = { id: L.id, stars }; persist(); }
     stage.innerHTML = ''; pbar.firstChild.style.width = '100%'; cnt.textContent = `ได้ ${score} จาก ${N} ข้อ`;
