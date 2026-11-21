@@ -1156,13 +1156,13 @@ button.solidbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #E7E0D1}
 .tr-obj svg{width:100%;height:100%}
 .tracebox.lifted .tr-obj{transform:translate(30%,-130%) rotate(14deg) scale(.5);opacity:0}
 /* sides and corners */
-.sidew{width:clamp(180px,24cqw,240px)}
+.sidew{width:clamp(220px,30cqw,330px)} /* v182 (ผู้ใช้ขอ): จุดกดนับเล็กลง รูปใหญ่ขึ้น เห็นชัด */
 .sidew svg{width:100%;overflow:visible}
-.sidew .sd{stroke:#2B2550;stroke-width:2.2;stroke-linecap:round;transition:stroke var(--t1),stroke-width var(--t1)}
-.sidew .sd.on{stroke:var(--coral);stroke-width:4.4}
+.sidew .sd{stroke:#2B2550;stroke-width:1.3;stroke-linecap:round;transition:stroke var(--t1),stroke-width var(--t1)}
+.sidew .sd.on{stroke:var(--coral);stroke-width:2.6}
 .sidew .sdhit{stroke:transparent;stroke-width:12;cursor:pointer}
-.sidew .cn{fill:#fff;stroke:#2B2550;stroke-width:1.6;transition:fill var(--t1)}
-.sidew .cn.on{fill:var(--sky);stroke:#2B6FBA;r:5}
+.sidew .cn{fill:#fff;stroke:#2B2550;stroke-width:.8;transition:fill var(--t1)}
+.sidew .cn.on{fill:var(--sky);stroke:#2B6FBA;r:2.3}
 .sidew .cnhit{fill:transparent;cursor:pointer}
 .sidecount{display:flex;gap:var(--s4);font-size:clamp(18px,2.2cqw,24px);font-weight:700}
 .sidecount b{display:inline-block;min-width:1.4em;text-align:center;color:var(--coral-2)}
@@ -4576,6 +4576,71 @@ function megaBossSVG(state = 'idle', emblem = 'ป.1') {
 }
 
 /* =========================================================
+   v182 (ผู้ใช้ขอ: รูปสิ่งของในชายหาดรูปเรขาคณิตต้องดูสมจริง) — สิ่งของทรงสี่เหลี่ยมมุมฉาก / ทรงกลม วาดใหม่
+   art3Box: กล่องมุมมองเฉียง ทุกลวดลายวาดในพิกัดของแต่ละหน้า (0–1) แล้วแปลงด้วย matrix → จุดลูกเต๋า ริบบิ้น ช่องทิชชู
+   อยู่บนหน้ากล่องจริง และเอียงตามหน้า · ไล่เฉดแสง (บนสว่าง หน้าปกติ ข้างมืด) + เงาพื้นนุ่ม
+   ========================================================= */
+function art3Box(o) { /* o: { id, w, hh, dx, dy, x0, y0, top, front, side, line, fTop, fFront, fSide, over } — สีเป็น [สว่าง, เข้ม] */
+  const { id, w, hh, dx, dy, line } = o, x0 = o.x0 ?? (64 - w - dx) / 2, y0 = o.y0 ?? (64 + hh + dy) / 2 + 2 - hh, yb = y0 + hh;
+  const M = { front: `matrix(${w} 0 0 ${hh} ${x0} ${y0})`, top: `matrix(${w} 0 ${dx} ${-dy} ${x0} ${y0})`, side: `matrix(${dx} ${-dy} 0 ${hh} ${x0 + w} ${y0})` };
+  const g = (k, c, dir) => `<linearGradient id="${id}-${k}" x1="0" y1="0" x2="${dir ? 1 : 0}" y2="${dir ? 0 : 1}"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[1]}"/></linearGradient>`;
+  const face = (k, pts, deco) => `<path d="M${pts.map(p => p.join(' ')).join(' L')} Z" fill="url(#${id}-${k})" stroke="${line}" stroke-width="1.3" stroke-linejoin="round"/>${deco ? `<g transform="${M[k]}">${deco}</g>` : ''}`;
+  return `<defs>${g('t', o.top)}${g('f', o.front)}${g('s', o.side, 1)}</defs>`
+    + `<ellipse cx="${x0 + (w + dx) / 2 + 2}" cy="${yb + 1.2}" rx="${(w + dx) / 2 + 3}" ry="3" fill="#2B2550" opacity=".14"/>`
+    + face('s', [[x0 + w, y0], [x0 + w + dx, y0 - dy], [x0 + w + dx, yb - dy], [x0 + w, yb]], o.fSide).replace(`<g transform="${M.s}">`, `<g transform="${M.side}">`)
+    + face('t', [[x0, y0], [x0 + w, y0], [x0 + w + dx, y0 - dy], [x0 + dx, y0 - dy]], o.fTop).replace(`<g transform="${M.t}">`, `<g transform="${M.top}">`)
+    + face('f', [[x0, y0], [x0 + w, y0], [x0 + w, yb], [x0, yb]], o.fFront).replace(`<g transform="${M.f}">`, `<g transform="${M.front}">`)
+    + `<path d="M${x0 + 1.5} ${y0 + 1.2} H${x0 + w - 1.5}" stroke="#fff" stroke-width="1.2" opacity=".7" stroke-linecap="round"/>` + (o.over ? o.over({ x0, y0, w, hh, dx, dy, yb }) : ''); }
+/* faces' decorations are drawn in 0–1 units — keep strokes at screen width */
+const a3dot = (x, y, r, c) => `<ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r}" fill="${c}"/>`;
+Object.assign(ART, {
+  /* ลูกเต๋า: หน้าบน 1 (แดง) · หน้า 5 · ข้าง 3 — ด้านตรงข้ามรวมกันได้ 7 เหมือนลูกเต๋าจริง */
+  dice: art3Box({ id: 'a3dc', w: 27, hh: 27, dx: 14, dy: 12, line: '#9C94B5', top: ['#FFFFFF', '#F4F1FA'], front: ['#FFFFFF', '#ECE8F3'], side: ['#DCD6E8', '#C9C1DA'],
+    fTop: a3dot(.5, .5, .19, '#E0313F'),
+    fFront: [[.24, .24], [.76, .24], [.5, .5], [.24, .76], [.76, .76]].map(([x, y]) => a3dot(x, y, .085, '#2B2550')).join(''),
+    fSide: [[.25, .24], [.5, .5], [.75, .76]].map(([x, y]) => a3dot(x, y, .1, '#2B2550')).join('') }),
+  /* กล่องกระดาษทิชชู: กล่องแบน ลายจุด ช่องรีด้านบน มีกระดาษทิชชูโผล่ */
+  tissue: art3Box({ id: 'a3ts', w: 40, hh: 17, dx: 14, dy: 10, line: '#3E8FB0', top: ['#D9F3FF', '#BDE7FA'], front: ['#AEE2F7', '#86CDEB'], side: ['#6FBAD9', '#5BA8C8'],
+    fFront: [[.12, .3], [.3, .7], [.5, .3], [.7, .7], [.88, .3]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".07" fill="#fff" opacity=".85"/>`).join('') + '<rect x="0" y=".86" width="1" height=".06" fill="#fff" opacity=".7"/>',
+    fSide: [[.3, .35], [.7, .7]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".1" fill="#fff" opacity=".6"/>`).join(''),
+    fTop: '<ellipse cx=".5" cy=".5" rx=".3" ry=".22" fill="#4E7F96"/><ellipse cx=".5" cy=".52" rx=".26" ry=".16" fill="#3B6578"/>',
+    over: ({ x0, y0, w, dx, dy }) => { const cx = x0 + w / 2 + dx / 2, cy = y0 - dy / 2;
+      return `<path d="M${cx - 8} ${cy + 1} q1 -7 4 -10 q2 3 3 1 q1 -6 5 -8 q1 5 3 4 q2 4 0 13 z" fill="#fff" stroke="#C9C2DD" stroke-width="1" stroke-linejoin="round"/><path d="M${cx - 3} ${cy - 7} q2 3 1 7 M${cx + 3} ${cy - 11} q1 5 0 11" fill="none" stroke="#DCD6E8" stroke-width=".9"/>`; } }),
+  /* กล่องของขวัญ: ริบบิ้นพาดรอบกล่องจริง (หน้า บน ข้าง) + โบว์ตรงกลางฝา */
+  giftbox: art3Box({ id: 'a3gb', w: 30, hh: 22, dx: 15, dy: 12, line: '#B23A4C', top: ['#FF9AA6', '#FF7E8D'], front: ['#FF6F7D', '#E24D5F'], side: ['#C93C50', '#B23347'],
+    fFront: '<rect x=".42" y="0" width=".16" height="1" fill="#FFD45C"/><rect x=".42" y="0" width=".05" height="1" fill="#FFE9A3"/>',
+    fTop: '<rect x=".42" y="0" width=".16" height="1" fill="#FFE07A"/><rect x="0" y=".42" width="1" height=".16" fill="#FFE07A"/>',
+    fSide: '<rect x=".42" y="0" width=".16" height="1" fill="#E8B23A"/>',
+    over: ({ x0, y0, w, dx, dy }) => { const cx = x0 + w / 2 + dx / 2, cy = y0 - dy / 2;
+      return `<path d="M${cx} ${cy} q-9 -9 -10 -3 q0 5 10 3 z M${cx} ${cy} q9 -9 10 -3 q0 5 -10 3 z" fill="#FFD45C" stroke="#C9961F" stroke-width="1" stroke-linejoin="round"/><path d="M${cx - 1} ${cy + 1} l-4 6 M${cx + 1} ${cy + 1} l4 6" stroke="#E8B23A" stroke-width="2" stroke-linecap="round"/><ellipse cx="${cx}" cy="${cy}" rx="2.4" ry="2" fill="#F2BE3A" stroke="#C9961F" stroke-width=".9"/>`; } }),
+  /* อิฐ: ผิวขรุขระเล็กน้อย (ไม่มีเส้นเกิน) */
+  brick: art3Box({ id: 'a3bk', w: 38, hh: 14, dx: 14, dy: 9, line: '#9B4A2A', top: ['#E38A5E', '#D27447'], front: ['#C8623A', '#B25230'], side: ['#9C4528', '#873A21'],
+    fFront: [[.15, .35], [.4, .6], [.62, .3], [.85, .65], [.3, .78]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".035" fill="#7A3418" opacity=".45"/>`).join(''),
+    fTop: '<ellipse cx=".33" cy=".5" rx=".1" ry=".22" fill="#9B4A2A" opacity=".35"/><ellipse cx=".67" cy=".5" rx=".1" ry=".22" fill="#9B4A2A" opacity=".35"/>' }),
+  /* กล่องนม: ทรงหลังคาจั่ว มีแถบสีและรูปแก้วนม */
+  carton: (() => { const id = 'a3mk', w = 20, hh = 30, dx = 12, dy = 8, x0 = 14, y0 = 24, yb = y0 + hh, pk = 9, line = '#3F7FB8';
+    return `<defs><linearGradient id="${id}-f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#EEF3FA"/></linearGradient><linearGradient id="${id}-s" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D6E2F2"/><stop offset="1" stop-color="#C2D3EA"/></linearGradient><linearGradient id="${id}-r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7FAFF"/><stop offset="1" stop-color="#DCE7F5"/></linearGradient></defs>`
+      + `<ellipse cx="${x0 + (w + dx) / 2 + 2}" cy="${yb + 1.2}" rx="${(w + dx) / 2 + 3}" ry="3" fill="#2B2550" opacity=".14"/>`
+      + `<path d="M${x0 + w} ${y0} L${x0 + w + dx} ${y0 - dy} V${yb - dy} L${x0 + w} ${yb} Z" fill="url(#${id}-s)" stroke="${line}" stroke-width="1.3" stroke-linejoin="round"/>`
+      + `<path d="M${x0 + w / 2} ${y0 - pk} L${x0 + w} ${y0} L${x0 + w + dx} ${y0 - dy} L${x0 + w / 2 + dx} ${y0 - pk - dy} Z" fill="url(#${id}-r)" stroke="${line}" stroke-width="1.3" stroke-linejoin="round"/>`
+      + `<path d="M${x0 + w / 2} ${y0 - pk} l0 -2.6 l${dx} ${-dy} l0 2.6 z" fill="#E9F0FA" stroke="${line}" stroke-width="1.1" stroke-linejoin="round"/>`
+      + `<path d="M${x0} ${y0} L${x0 + w / 2} ${y0 - pk} L${x0 + w} ${y0} V${yb} H${x0} Z" fill="url(#${id}-f)" stroke="${line}" stroke-width="1.3" stroke-linejoin="round"/>`
+      + `<rect x="${x0}" y="${y0 + 4}" width="${w}" height="7" fill="#4C9BF0"/><path d="M${x0 + w} ${y0 + 4} l${dx} ${-dy} v7 l${-dx} ${dy} z" fill="#3A84D6"/>`
+      + `<text x="${x0 + w / 2}" y="${y0 + 9.6}" text-anchor="middle" font-family="IBM Plex Sans Thai Looped,Nunito,sans-serif" font-weight="800" font-size="5" fill="#fff">นมสด</text>`
+      + `<path d="M${x0 + 6} ${y0 + 15} h8 l-1.2 11 h-5.6 z" fill="#fff" stroke="#9DB8D8" stroke-width=".9"/><path d="M${x0 + 6.4} ${y0 + 18} h7.2 l-.9 7.6 h-5.4 z" fill="#F4F8FF"/>`
+      + `<path d="M${x0 + 1.5} ${y0 + 1.5} L${x0 + w / 2} ${y0 - pk + 2}" stroke="#fff" stroke-width="1.2" opacity=".8" stroke-linecap="round"/>`; })(),
+  /* ลูกบอลชายหาด: แถบสีโค้งตามผิวลูกบอล + ฝาขาวด้านบน + แสงเงาทรงกลม */
+  ball: (() => { const R = 20, cx = 32, cy = 33, id = 'a3bb', arc = k => `M${cx} ${cy - R} A${R * k} ${R} 0 0 ${k < 0 ? 0 : 1} ${cx} ${cy + R}`;
+    const gore = (k1, k2, c) => `<path d="M${cx} ${cy - R} A${Math.abs(R * k1)} ${R} 0 0 ${k1 < 0 ? 0 : 1} ${cx} ${cy + R} A${Math.abs(R * k2)} ${R} 0 0 ${k2 < 0 ? 1 : 0} ${cx} ${cy - R} Z" fill="${c}"/>`;
+    return `<defs><clipPath id="${id}-c"><circle cx="${cx}" cy="${cy}" r="${R}"/></clipPath><radialGradient id="${id}-g" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#1B1640" stop-opacity=".35"/></radialGradient></defs>`
+      + `<ellipse cx="${cx + 2}" cy="${cy + R + 3}" rx="${R * .85}" ry="3.2" fill="#2B2550" opacity=".14"/>`
+      + `<g clip-path="url(#${id}-c)"><rect x="${cx - R}" y="${cy - R}" width="${2 * R}" height="${2 * R}" fill="#FFFFFF"/>`
+      + gore(-1, -.55, '#FF5A6B') + gore(-.55, -.1, '#FFFFFF') + gore(-.1, .35, '#FFC83D') + gore(.35, .8, '#FFFFFF') + gore(.8, 1.05, '#3FA6F2') + gore(-1.05, -1, '#3FA6F2')
+      + `<ellipse cx="${cx}" cy="${cy - R + 1.5}" rx="5.5" ry="2.6" fill="#fff" stroke="#D9D3E6" stroke-width=".8"/></g>`
+      + `<circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#${id}-g)" stroke="#8E86A8" stroke-width="1.3"/>${HI(24, 24, 6, 3.4)}`; })()
+});
+
+/* =========================================================
    ป่าดิบชื้น (ป.3) — rainforest pieces: giant buttress trees, vines, a river, walking / flying animals, insects
    used by showMap (map svg) and worldSVG('jungle') (page background)
    ========================================================= */
@@ -6048,7 +6113,7 @@ function traceBoard(v, o = {}) {
 function sideCounter(v, o = {}) {
   const P = SHAPE_PTS[v], k = SHAPE_KIND(v), col = PAL[o.p || mixCol()];
   const svg = `<svg viewBox="-6 -6 76 76" class="sidec" aria-hidden="true"><path d="${shapeOutline(v)}" fill="${col[0]}" stroke="none"/>` +
-    (P ? P.map((p, i) => { const q = P[(i + 1) % P.length]; return `<line class="sd" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/><line class="sdhit" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/>`; }).join('') + P.map((p, i) => `<circle class="cn" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="4"/><circle class="cnhit" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="9"/>`).join('')
+    (P ? P.map((p, i) => { const q = P[(i + 1) % P.length]; return `<line class="sd" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/><line class="sdhit" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/>`; }).join('') + P.map((p, i) => `<circle class="cn" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="1.5"/><circle class="cnhit" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="9"/>`).join('')
        : `<path d="${shapeOutline(v)}" fill="none" stroke="${col[3]}" stroke-width="2.4"/>`) + '</svg>';
   const w = h('div', { class: 'sidew ia', html: svg }), out = h('div', { class: 'sidecount' }, h('span', null, 'ด้าน ', h('b', { class: 'num' }, '0')), h('span', null, 'มุม ', h('b', { class: 'num' }, '0')));
   let ns = 0, nc = 0; const [bs, bc] = out.querySelectorAll('b');
