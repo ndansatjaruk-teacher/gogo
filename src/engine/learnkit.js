@@ -50,7 +50,7 @@ function lbMark(root, keys, bad) { let hit = false; if (!keys.length) return hit
   keys.forEach(key => { for (const n of nodes) { if (!n.parentNode) continue; const t = n.nodeValue, re = new RegExp('(?<![\\d,])' + key.split('').map(ch => ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[\\s,]*') + '(?![\\d])');
       const m = t.match(re); if (!m) continue; const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length); const mk = document.createElement('mark'); mk.className = 'lb-hl' + (bad ? ' bad' : ''); r.surroundContents(mk); hit = true; break; } });
   return hit; }
-const LB_SOLO = /tkclk|tkdig|tkcal|t4-watch|t3line/; // v124 (ผู้ใช้ขอ): เรื่องเวลา (นาฬิกา · นาฬิกาตัวเลข · ปฏิทิน · เส้นเวลา) — แต่ละหน้ามีแค่รูปของหน้านั้น ไม่สะสมรูปหน้าก่อน
+const LB_SOLO = /tkclk|tkdig|tkcal|t4-watch|t3line|tkfist|tk-mons|tk-days/; /* v184: ปฏิทิน/เดือน/สันหมัด แยกหน้าละรูป */ // v124 (ผู้ใช้ขอ): เรื่องเวลา (นาฬิกา · นาฬิกาตัวเลข · ปฏิทิน · เส้นเวลา) — แต่ละหน้ามีแค่รูปของหน้านั้น ไม่สะสมรูปหน้าก่อน
 function lrnBoard(cards, k, figOf) {
   if (cards.some(d => typeof d.fig === 'string' && LB_SOLO.test(d.fig))) return figOf(cards[k]);
   let s0 = 0; for (let j = k; j > 0; j--) if (cards[j].carry === false) { s0 = j; break; }

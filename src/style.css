@@ -2562,7 +2562,14 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .tk-mons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:460px}.tk-mons span{display:flex;flex-direction:column;align-items:center;background:#FFF6E3;border-radius:10px;padding:4px 6px;font:700 14px var(--font)}
 .tk-mons span b{font:800 12px var(--font-num);color:#2F86C2}.tk-mons span small{color:#8C84B8;font-size:11px}.tk-mons span.on{background:#FFD45C;box-shadow:0 0 0 2px #E3A21C}
 .tk-mons.sm span{font-size:12px;padding:2px 4px}
-.tkfist{width:min(340px,86cqw);height:auto}
+.tkfist{width:min(440px,46cqw);height:auto}.pw-fig .tkfist{width:min(460px,44cqw)}.lrn-fig .tkfist{width:min(420px,40cqw)}
+.tkfs-lab{font-weight:800;font-size:clamp(20px,2.6cqw,26px);color:var(--ink)}.tkfs-lab small{font-size:14px;color:var(--ink-2);font-weight:600;margin-left:6px}.tkfs-txt{font-size:clamp(17px,2.1cqw,21px);line-height:1.55;min-height:6.2em}.tkfs-txt small{font-size:.85em;color:#6E6290}
+.tkmcs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,1.2cqw,14px);width:min(1000px,96cqw)}
+.tkmc{aspect-ratio:1/1.05;border:0;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font:inherit;box-shadow:var(--e1),inset 0 0 0 2.5px #EBD9B8;background:#FFF6E3;padding:6px}
+.tkmc b{font-size:clamp(17px,2.2cqw,24px);line-height:1.2;color:var(--ink)}.tkmc b.num{font:900 clamp(34px,5cqw,52px)/1 var(--font-num);color:#2F86C2}.tkmc b.ab{font-size:clamp(26px,3.6cqw,38px);color:#C2485A}.tkmc small{font-size:13px;color:#8C84B8}
+.tkmc.s1{background:#E9F6FF;box-shadow:var(--e1),inset 0 0 0 2.5px #7FC8F0}.tkmc.s2{background:#FFEFF1;box-shadow:var(--e1),inset 0 0 0 2.5px #FF9AA8}
+.tkmc.flip{animation:tkflip .35s ease}@keyframes tkflip{0%{transform:rotateY(90deg)}100%{transform:none}}@media (prefers-reduced-motion:reduce){.tkmc.flip{animation:none}}
+.tkcalfig .tkcal{zoom:1.45}
 .tk-dforms{display:flex;flex-direction:column;gap:6px;align-items:center}.tkdf{font:800 20px var(--font);background:#FFF6E3;border-radius:12px;padding:6px 14px}.tkdf.big{font-size:24px;background:#FFE9A8}
 .tk-step{display:flex;align-items:center;gap:6px;background:#fff;border-radius:12px;padding:4px 8px;box-shadow:var(--e1)}.tk-step b{font:800 15px var(--font)}
 .tk-24{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;width:min(620px,94cqw)}

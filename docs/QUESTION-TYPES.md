@@ -355,15 +355,15 @@
 | `Q.tensRead` | `{ n, ask = 'digit' }` | [`engine/questions.js:1211`](../src/engine/questions.js#L1211) |
 | `Q.tenSub` | `{ a, b }` | [`engine/questions.js:491`](../src/engine/questions.js#L491) |
 | `Q.three` | `{ nums, op = '+' }` | [`engine/questions.js:868`](../src/engine/questions.js#L868) |
-| `Q.tkCalQ` | `{ m, y, marks, q, a, opts, num, unit = '', hint }` | [`grades/p2/p2t.js:152`](../src/grades/p2/p2t.js#L152) |
-| `Q.tkDigPick` | `{ h: H, m }` | [`grades/p2/p2t.js:182`](../src/grades/p2/p2t.js#L182) |
-| `Q.tkDigRead` | `{ h: H, m }` | [`grades/p2/p2t.js:177`](../src/grades/p2/p2t.js#L177) |
-| `Q.tkElapsed` | `{ h1, m1 = 0, h2, m2 = 0, mode, what, clocks = true }` | [`grades/p2/p2t.js:188`](../src/grades/p2/p2t.js#L188) |
-| `Q.tkEnd` | `{ text, h1, m1 = 0, add }` | [`grades/p2/p2t.js:196`](../src/grades/p2/p2t.js#L196) |
-| `Q.tkRead` | `{ h: H, m = 0, ask = 'hm', sky = true }` | [`grades/p2/p2t.js:158`](../src/grades/p2/p2t.js#L158) |
-| `Q.tkSet` | `{ h: H, m = 0 }` | [`grades/p2/p2t.js:169`](../src/grades/p2/p2t.js#L169) |
-| `Q.tkStory` | `{ text, sent, wrong, a, unit, duo }` | [`grades/p2/p2t.js:202`](../src/grades/p2/p2t.js#L202) |
-| `Q.tkTwoNames` | `{ k }` | [`grades/p2/p2t.js:164`](../src/grades/p2/p2t.js#L164) |
+| `Q.tkCalQ` | `{ m, y, marks, q, a, opts, num, unit = '', hint }` | [`grades/p2/p2t.js:194`](../src/grades/p2/p2t.js#L194) |
+| `Q.tkDigPick` | `{ h: H, m }` | [`grades/p2/p2t.js:225`](../src/grades/p2/p2t.js#L225) |
+| `Q.tkDigRead` | `{ h: H, m }` | [`grades/p2/p2t.js:220`](../src/grades/p2/p2t.js#L220) |
+| `Q.tkElapsed` | `{ h1, m1 = 0, h2, m2 = 0, mode, what, clocks = true }` | [`grades/p2/p2t.js:231`](../src/grades/p2/p2t.js#L231) |
+| `Q.tkEnd` | `{ text, h1, m1 = 0, add }` | [`grades/p2/p2t.js:239`](../src/grades/p2/p2t.js#L239) |
+| `Q.tkRead` | `{ h: H, m = 0, ask = 'hm', sky = true }` | [`grades/p2/p2t.js:201`](../src/grades/p2/p2t.js#L201) |
+| `Q.tkSet` | `{ h: H, m = 0 }` | [`grades/p2/p2t.js:212`](../src/grades/p2/p2t.js#L212) |
+| `Q.tkStory` | `{ text, sent, wrong, a, unit, duo }` | [`grades/p2/p2t.js:245`](../src/grades/p2/p2t.js#L245) |
+| `Q.tkTwoNames` | `{ k }` | [`grades/p2/p2t.js:207`](../src/grades/p2/p2t.js#L207) |
 | `Q.tMoreLess` | `{ r1, r2, v, unit, more }` | [`grades/p5/p5r.js:137`](../src/grades/p5/p5r.js#L137) |
 | `Q.toThai` | `{ n }` | [`engine/questions.js:697`](../src/engine/questions.js#L697) |
 | `Q.traceShape` | `{ v, obj, name }` | [`engine/questions.js:1156`](../src/engine/questions.js#L1156) |
