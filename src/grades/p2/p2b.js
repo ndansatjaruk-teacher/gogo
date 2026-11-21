@@ -8,23 +8,46 @@ P4ART.fan = `<ellipse cx="32" cy="60" rx="14" ry="2.6" fill="#2B2550" opacity=".
 /* ---------- base-ten blocks you can combine / take apart (แผ่นตารางร้อย สิบ หน่วย) ---------- */
 const P2_BK = { h: FLAT_SVG, t: ROD_SVG, u: CUBE_SVG }, P2_PN = { h: 'ร้อย', t: 'สิบ', u: 'หน่วย' };
 const p2cols = n => ({ h: Math.floor(n / 100), t: Math.floor(n / 10) % 10, u: n % 10 });
-function p2board(st, hi) { // st: {h:[cls…], t:[…], u:[…]}
-  return `<div class="p2bb">${['h', 't', 'u'].map(k => `<div class="col ${k}${hi === k ? ' hi' : ''}"><div class="hd">${P2_PN[k]}</div><div class="its">${st[k].map((c, i) => `<span class="it ${c}" style="animation-delay:${i * .03}s">${P2_BK[k]}</span>`).join('')}</div><b class="num">${st[k].filter(c => c !== 'gone').length}</b></div>`).join('')}</div>`;
+function p2board(st, hi, shown) { // st: {h:[cls…], t:[…], u:[…]} · shown: Set ของหลักที่โชว์จำนวนแล้ว (ไม่ส่ง = โชว์ทุกหลัก)
+  return `<div class="p2bb">${['h', 't', 'u'].map(k => `<div class="col ${k}${hi === k ? ' hi' : ''}"><div class="hd">${P2_PN[k]}</div><div class="its">${st[k].map((c, i) => `<span class="it ${c}" style="animation-delay:${i * .03}s">${P2_BK[k]}</span>`).join('')}</div><b class="num">${!shown || shown.has(k) ? st[k].filter(c => c !== 'gone').length : '?'}</b></div>`).join('')}</div>`;
 }
+/* v178 (ผู้ใช้ขอ: ภาพต้องตรงกับสิ่งที่กำลังพูดถึง) ตัวอย่างทีละขั้นด้วยแผ่นตาราง: กดขั้นต่อไป → หลักที่พูดถึงถูกไฮไลต์ แลก/เอาออกเกิดบนภาพจริง
+   และจำนวนใต้หลักขึ้นเมื่อคิดหลักนั้นเสร็จ (เดิมภาพนิ่ง ไม่เปลี่ยนตามขั้น) */
+function p2blkWalk(a, b, op) {
+  const add = op === '+', A = p2cols(a), B = p2cols(b), r = add ? a + b : a - b, R = p2cols(r), UP = { u: 't', t: 'h', h: null };
+  const fill = (n, c) => Array(n).fill(c), st = add ? { h: [...fill(A.h, 'a'), ...fill(B.h, 'b')], t: [...fill(A.t, 'a'), ...fill(B.t, 'b')], u: [...fill(A.u, 'a'), ...fill(B.u, 'b')] } : { h: fill(A.h, 'a'), t: fill(A.t, 'a'), u: fill(A.u, 'a') };
+  const shown = new Set(add ? [] : ['h', 't', 'u']); let hi = '';
+  const take = (k, n) => { let c = 0; st[k] = st[k].map(x => x !== 'gone' && c < n ? (c++, 'gone') : x); };
+  const steps = [];
+  if (add) { let carry = 0;
+    ['u', 't', 'h'].forEach(k => { const s = A[k] + B[k] + carry, up = UP[k];
+      steps.push({ lab: P2_PN[k], txt: `${A[k]} + ${B[k]}${carry ? ' + 1 (ที่แลกมา)' : ''} = ${s} ${P2_PN[k]}`, run: () => { hi = k; shown.add(k); } }); carry = 0;
+      if (s >= 10 && up) { steps.push({ lab: 'แลก', txt: `${P2_PN[k]}ครบ 10 → แลก 10 ${P2_PN[k]} เป็น 1 ${P2_PN[up]} (สีเขียว) · เหลือ ${s - 10} ${P2_PN[k]}`, run: () => { st[k] = st[k].slice(10); st[up] = [...st[up], 'x']; hi = up; } }); carry = 1; } });
+  } else { const n = { ...A };
+    ['u', 't', 'h'].forEach(k => { const up = UP[k];
+      if (n[k] < B[k] && up) { const had = n[k]; steps.push({ lab: 'แลก', txt: `${P2_PN[k]}มี ${had} ไม่พอเอาออก ${B[k]} → แลก 1 ${P2_PN[up]} เป็น 10 ${P2_PN[k]} (สีเขียว) · มี ${had + 10} ${P2_PN[k]}`, run: () => { take(up, 1); st[k] = [...st[k], ...fill(10, 'x')]; hi = k; } }); n[k] += 10; n[up] -= 1; }
+      const have = n[k]; steps.push({ lab: P2_PN[k], txt: `${have} − ${B[k]} = ${have - B[k]} ${P2_PN[k]}`, run: () => { take(k, B[k]); hi = k; } }); n[k] -= B[k]; }); }
+  steps.push({ lab: add ? 'รวม' : 'เหลือ', txt: `${R.h} ร้อย ${R.t} สิบ ${R.u} หน่วย = ${r}`, run: () => { hi = ''; } });
+  const head = add ? `<div class="p2walk-hd"><b class="p2ca">${a}</b> + <b class="p2cb">${b}</b><small>ขอบส้ม = ${a} · ขอบฟ้า = ${b}</small></div>` : `<div class="p2walk-hd">เริ่มจาก <b class="p2ca">${a}</b> แล้วเอาออก <b>${b}</b></div>`;
+  const snap = () => `<div class="colstack">${head}<div class="p2wrap">${p2board(st, hi, shown)}</div></div>`, fig0 = snap();
+  const rows = steps.map(S => { S.run(); return [S.lab, S.txt, snap()]; }); /* ภาพหลังทำขั้นนั้น — picWalk เปลี่ยนภาพทุกครั้งที่กดขั้นต่อไป */
+  return picWalk(rows, `${a} ${op} ${b} = <b>${r}</b>`, `${thaiWords(a)} ${add ? 'บวก' : 'ลบ'} ${thaiWords(b)} เท่ากับ ${thaiWords(r)}`, fig0);
+}
+
 function simBlocksAdd(list) {
   let idx = 0; const box = h('div', { class: 'colstack' });
   const draw = () => {
     const [a, b] = list[idx], A = p2cols(a), B = p2cols(b), r = a + b; box.innerHTML = '';
     const st = { h: [...Array(A.h).fill('a'), ...Array(B.h).fill('b')], t: [...Array(A.t).fill('a'), ...Array(B.t).fill('b')], u: [...Array(A.u).fill('a'), ...Array(B.u).fill('b')] };
-    const fig = h('div', { class: 'p2wrap' }), note = fNote(), fin = h('div', { class: 'fbig p4est' }); let hi = '';
-    const paint = () => fig.innerHTML = p2board(st, hi);
+    const fig = h('div', { class: 'p2wrap' }), note = fNote(), fin = h('div', { class: 'fbig p4est' }), shown = new Set(); let hi = ''; /* v178: จำนวนใต้หลักขึ้นเมื่อรวมหลักนั้นแล้ว */
+    const paint = () => fig.innerHTML = p2board(st, hi, shown);
     const steps = [];
     const trade = (from, to) => { st[from] = st[from].slice(10); st[to] = [...st[to], 'x']; };
-    steps.push(() => { hi = 'u'; note.innerHTML = `รวม<b>หน่วย</b>: ${A.u} + ${B.u} = ${A.u + B.u}`; });
+    steps.push(() => { hi = 'u'; shown.add('u'); note.innerHTML = `รวม<b>หน่วย</b>: ${A.u} + ${B.u} = ${A.u + B.u}`; });
     if (A.u + B.u >= 10) steps.push(() => { trade('u', 't'); hi = 't'; note.innerHTML = `หน่วยครบ 10 → <b>แลก 10 หน่วย เป็น 1 สิบ</b> (แท่งสีเขียว)`; });
-    steps.push(() => { hi = 't'; note.innerHTML = `รวม<b>สิบ</b>: มีทั้งหมด ${st.t.length} สิบ`; });
+    steps.push(() => { hi = 't'; shown.add('t'); note.innerHTML = `รวม<b>สิบ</b>: มีทั้งหมด ${st.t.length} สิบ`; });
     if (st.t.length >= 10 || A.t + B.t + (A.u + B.u >= 10 ? 1 : 0) >= 10) steps.push(() => { trade('t', 'h'); hi = 'h'; note.innerHTML = `สิบครบ 10 → <b>แลก 10 สิบ เป็น 1 ร้อย</b>`; });
-    steps.push(() => { hi = 'h'; note.innerHTML = `รวม<b>ร้อย</b>: มีทั้งหมด ${st.h.length} ร้อย → ${st.h.length} ร้อย ${st.t.length} สิบ ${st.u.length} หน่วย`; });
+    steps.push(() => { hi = 'h'; shown.add('h'); note.innerHTML = `รวม<b>ร้อย</b>: มีทั้งหมด ${st.h.length} ร้อย → ${st.h.length} ร้อย ${st.t.length} สิบ ${st.u.length} หน่วย`; });
     let k = 0; note.innerHTML = `${fmt(a)} (ขอบส้ม) กับ ${fmt(b)} (ขอบฟ้า) — กด<b>รวมทีละหลัก</b>`;
     const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); steps[k++](); sfx.pop(k); paint();
       if (k >= steps.length) { btn.remove(); hi = ''; paint(); fin.innerHTML = `${a} + ${b} = <b class="num">${fmt(r)}</b>`; sfx.ok(); say(`${thaiWords(a)} บวก ${thaiWords(b)} เท่ากับ ${thaiWords(r)}`, true); } } }, icon('right'), 'รวมทีละหลัก');
@@ -134,7 +157,8 @@ const p2colEx = (a, b, op) => T(`ตัวอย่างทีละขั้�
 const LESSONS_P2C2 = [
   L2B(1, 'หาดแผ่นตาราง', 'การหาผลบวกโดยใช้แผ่นตารางร้อย แผ่นตารางสิบ แผ่นตารางหน่วย', 'บวกด้วยแผ่นตาราง', 'หาผลบวกโดยใช้แผ่นตารางร้อย แผ่นตารางสิบ แผ่นตารางหน่วย และเส้นจำนวน',
     [T('ยินดีต้อนรับสู่ <b>ชายหาดบวกลบ</b>! กด<b>รวมทีละหลัก</b> — ครบ 10 ต้องแลกขึ้นหลักถัดไป', 'ยินดีต้อนรับสู่ชายหาดบวกลบ กดรวมทีละหลัก ครบสิบต้องแลกขึ้นหลักถัดไป', el => el.append(simBlocksAdd([[245, 132], [168, 257], [376, 148]]))),
-     T('ตัวอย่างทีละขั้น: 226 + 153', 'ตัวอย่างทีละขั้น', p4ex([['หน่วย', '6 + 3 = 9 หน่วย'], ['สิบ', '2 + 5 = 7 สิบ'], ['ร้อย', '2 + 1 = 3 ร้อย'], ['รวม', '3 ร้อย 7 สิบ 9 หน่วย = 379']], '226 + 153 = <b>379</b>', '', () => h('div', { class: 'p2wrap', html: p2blocksFig(226, 153) })))],
+     T('ตัวอย่างทีละขั้น: 226 + 153 — กด<b>ขั้นต่อไป</b> ดูแผ่นตารางรวมทีละหลัก', 'ตัวอย่างทีละขั้น สองร้อยยี่สิบหก บวก หนึ่งร้อยห้าสิบสาม', el => el.append(p2blkWalk(226, 153, '+'))),
+     T('ตัวอย่างทีละขั้น (มีแลก): 168 + 257', 'ตัวอย่างที่ต้องแลก หนึ่งร้อยหกสิบแปด บวก สองร้อยห้าสิบเจ็ด', el => el.append(p2blkWalk(168, 257, '+')))],
     () => [...pkF(P2W_BLK.filter(x => x[1] === '+'), 3).map(p2blkQ), ...pkF(P2W_LINE.filter(x => x[1] === '+'), 2).map(p2lineQ)]),
   L2B(2, 'หาดตั้งบวก', 'การหาผลบวกโดยการตั้งบวกไม่มีการทด', 'ตั้งบวกไม่มีทด', 'หาผลบวกโดยการตั้งบวกที่ไม่มีการทด',
     [T('ตั้งหลักให้ตรงกัน แล้วกด<b>ทำหลักต่อไป</b>', 'ตั้งหลักให้ตรงกัน แล้วกดทำหลักต่อไป', el => el.append(simColumn([[352, 416], [503, 241]], '+'))), p2colEx(624, 175, '+')],
@@ -148,7 +172,7 @@ const LESSONS_P2C2 = [
     () => [...pkF(P2W_A1.filter(([a, b]) => p4colPlan(a, b, '+').filter(s => Object.keys(s.carry).length).length >= 2), 3).map(([a, b]) => p4colQ(a, b, '+')), ...pkF(P2W_A3, 3).map(p2add3Q)]),
   L2B(5, 'หาดแลกบล็อก', 'การหาผลลบโดยใช้แผ่นตารางร้อย แผ่นตารางสิบ แผ่นตารางหน่วย', 'ลบด้วยแผ่นตาราง', 'หาผลลบโดยใช้แผ่นตารางร้อย แผ่นตารางสิบ แผ่นตารางหน่วย และเส้นจำนวน',
     [T('กด<b>เอาออกทีละหลัก</b> — ถ้าไม่พอ ต้อง<b>แลก</b> 1 อันจากหลักทางซ้ายเป็น 10', 'กดเอาออกทีละหลัก ถ้าไม่พอ ต้องแลกหนึ่งอันจากหลักทางซ้ายเป็นสิบ', el => el.append(simBlocksSub([[452, 216], [534, 182], [403, 157]]))),
-     T('ตัวอย่างทีละขั้น: 375 − 148', 'ตัวอย่างทีละขั้น', p4ex([['หน่วย', '5 ไม่พอเอาออก 8 → แลก 1 สิบ เป็น 10 หน่วย: 15 − 8 = 7'], ['สิบ', 'เหลือ 6 สิบ: 6 − 4 = 2'], ['ร้อย', '3 − 1 = 2'], ['เหลือ', '2 ร้อย 2 สิบ 7 หน่วย = 227']], '375 − 148 = <b>227</b>'))],
+     T('ตัวอย่างทีละขั้น: 375 − 148 — กด<b>ขั้นต่อไป</b> ดูแผ่นตารางเอาออกทีละหลัก', 'ตัวอย่างทีละขั้น สามร้อยเจ็ดสิบห้า ลบ หนึ่งร้อยสี่สิบแปด', el => el.append(p2blkWalk(375, 148, '−')))], /* v178: ภาพเปลี่ยนตามขั้น (เดิมไม่มีภาพ) */
     () => [...pkF(P2W_BLK.filter(x => x[1] === '−'), 3).map(p2blkQ), ...pkF(P2W_LINE.filter(x => x[1] === '−'), 2).map(p2lineQ)]),
   L2B(6, 'หาดตั้งลบ', 'การหาผลลบโดยการตั้งลบไม่มีการกระจาย', 'ตั้งลบไม่มีกระจาย', 'หาผลลบโดยการตั้งลบที่ไม่มีการกระจาย',
     [T('ตั้งหลักให้ตรงกัน แล้วกด<b>ทำหลักต่อไป</b>', 'ตั้งหลักให้ตรงกัน แล้วกดทำหลักต่อไป', el => el.append(simColumn([[687, 254], [958, 307]], '−'))), p2colEx(769, 435, '−')],
