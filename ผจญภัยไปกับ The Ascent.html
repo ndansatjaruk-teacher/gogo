@@ -2569,7 +2569,14 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .tk-mons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:460px}.tk-mons span{display:flex;flex-direction:column;align-items:center;background:#FFF6E3;border-radius:10px;padding:4px 6px;font:700 14px var(--font)}
 .tk-mons span b{font:800 12px var(--font-num);color:#2F86C2}.tk-mons span small{color:#8C84B8;font-size:11px}.tk-mons span.on{background:#FFD45C;box-shadow:0 0 0 2px #E3A21C}
 .tk-mons.sm span{font-size:12px;padding:2px 4px}
-.tkfist{width:min(340px,86cqw);height:auto}
+.tkfist{width:min(440px,46cqw);height:auto}.pw-fig .tkfist{width:min(460px,44cqw)}.lrn-fig .tkfist{width:min(420px,40cqw)}
+.tkfs-lab{font-weight:800;font-size:clamp(20px,2.6cqw,26px);color:var(--ink)}.tkfs-lab small{font-size:14px;color:var(--ink-2);font-weight:600;margin-left:6px}.tkfs-txt{font-size:clamp(17px,2.1cqw,21px);line-height:1.55;min-height:6.2em}.tkfs-txt small{font-size:.85em;color:#6E6290}
+.tkmcs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(8px,1.2cqw,14px);width:min(1000px,96cqw)}
+.tkmc{aspect-ratio:1/1.05;border:0;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;font:inherit;box-shadow:var(--e1),inset 0 0 0 2.5px #EBD9B8;background:#FFF6E3;padding:6px}
+.tkmc b{font-size:clamp(17px,2.2cqw,24px);line-height:1.2;color:var(--ink)}.tkmc b.num{font:900 clamp(34px,5cqw,52px)/1 var(--font-num);color:#2F86C2}.tkmc b.ab{font-size:clamp(26px,3.6cqw,38px);color:#C2485A}.tkmc small{font-size:13px;color:#8C84B8}
+.tkmc.s1{background:#E9F6FF;box-shadow:var(--e1),inset 0 0 0 2.5px #7FC8F0}.tkmc.s2{background:#FFEFF1;box-shadow:var(--e1),inset 0 0 0 2.5px #FF9AA8}
+.tkmc.flip{animation:tkflip .35s ease}@keyframes tkflip{0%{transform:rotateY(90deg)}100%{transform:none}}@media (prefers-reduced-motion:reduce){.tkmc.flip{animation:none}}
+.tkcalfig .tkcal{zoom:1.45}
 .tk-dforms{display:flex;flex-direction:column;gap:6px;align-items:center}.tkdf{font:800 20px var(--font);background:#FFF6E3;border-radius:12px;padding:6px 14px}.tkdf.big{font-size:24px;background:#FFE9A8}
 .tk-step{display:flex;align-items:center;gap:6px;background:#fff;border-radius:12px;padding:4px 8px;box-shadow:var(--e1)}.tk-step b{font:800 15px var(--font)}
 .tk-24{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;width:min(620px,94cqw)}
@@ -9393,7 +9400,7 @@ function lbMark(root, keys, bad) { let hit = false; if (!keys.length) return hit
   keys.forEach(key => { for (const n of nodes) { if (!n.parentNode) continue; const t = n.nodeValue, re = new RegExp('(?<![\\d,])' + key.split('').map(ch => ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[\\s,]*') + '(?![\\d])');
       const m = t.match(re); if (!m) continue; const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length); const mk = document.createElement('mark'); mk.className = 'lb-hl' + (bad ? ' bad' : ''); r.surroundContents(mk); hit = true; break; } });
   return hit; }
-const LB_SOLO = /tkclk|tkdig|tkcal|t4-watch|t3line/; // v124 (ผู้ใช้ขอ): เรื่องเวลา (นาฬิกา · นาฬิกาตัวเลข · ปฏิทิน · เส้นเวลา) — แต่ละหน้ามีแค่รูปของหน้านั้น ไม่สะสมรูปหน้าก่อน
+const LB_SOLO = /tkclk|tkdig|tkcal|t4-watch|t3line|tkfist|tk-mons|tk-days/; /* v184: ปฏิทิน/เดือน/สันหมัด แยกหน้าละรูป */ // v124 (ผู้ใช้ขอ): เรื่องเวลา (นาฬิกา · นาฬิกาตัวเลข · ปฏิทิน · เส้นเวลา) — แต่ละหน้ามีแค่รูปของหน้านั้น ไม่สะสมรูปหน้าก่อน
 function lrnBoard(cards, k, figOf) {
   if (cards.some(d => typeof d.fig === 'string' && LB_SOLO.test(d.fig))) return figOf(cards[k]);
   let s0 = 0; for (let j = k; j > 0; j--) if (cards[j].carry === false) { s0 = j; break; }
@@ -19416,13 +19423,26 @@ function tkCal(m, y, o = {}) { const n = tkDays(m, y), f = tkFirst(m, y), hl = n
   return s + '</div></div>'; }
 const tkCalMark = el => { el.classList.add('ia'); el.addEventListener('click', e => { const c = e.target.closest('.d'); if (!c) return; e.stopPropagation(); c.classList.toggle('tap'); sfx.tap(); }); };
 /* fist (นับสันหมัด): 4 knuckles (31 วัน) and 3 dips (30 วัน / ก.พ.) */
-function tkFistSVG(k = -1) { const slots = [0, 1, 2, 3, 4, 5, 6], xs = slots.map(i => 40 + i * 40), isK = i => i % 2 === 0;
-  const mon = i => [i, i + 7].filter(x => x < 12), at = mm => mm < 7 ? mm : mm - 7;
-  let s = `<path d="M14 120 V70 Q14 40 40 40 ${slots.map(i => isK(i) ? `Q${xs[i]} 10 ${xs[i] + 20} 40` : `Q${xs[i]} 52 ${xs[i] + 20} 40`).join(' ')} Q${xs[6] + 40} 40 ${xs[6] + 40} 70 V120 Z" fill="#FFD9B8" stroke="#D99A6C" stroke-width="3"/>`;
-  s += `<path d="M60 92 h170 M60 108 h170" stroke="#D99A6C" stroke-width="2.4" opacity=".6"/>`;
-  slots.forEach(i => { const on = k >= 0 && at(k) === i; s += `<circle cx="${xs[i]}" cy="${isK(i) ? 26 : 46}" r="${on ? 10 : 6}" fill="${on ? (isK(i) ? '#E5505E' : '#2F86C2') : (isK(i) ? '#FF9AA8' : '#9DD1F2')}"/>`;
-    s += `<text x="${xs[i]}" y="${isK(i) ? 150 : 172}" text-anchor="middle" font-size="12.5" font-weight="800" fill="${isK(i) ? '#C2485A' : '#2F6FA0'}">${mon(i).map(x => TK_AB[x]).join(' ')}</text>`; });
-  return `<svg viewBox="0 0 320 182" class="tkfist" aria-hidden="true">${s}</svg>`; }
+/* v184 (ผู้ใช้ขอ): หมัดซ้าย หันหลังมือเข้าหาตัว — นิ้วโป้งอยู่ขวา สันหมัดนิ้วชี้อยู่ขวาสุด นับไปทางซ้ายถึงนิ้วก้อย
+   ช่อง 0–6: สันหมัด (คู่) / ร่อง (คี่) · o: upto (แสดงชื่อเดือนถึงเดือนที่เท่าไร), parts (ป้ายสันหมัด/ร่อง), num (เลขลำดับสันหมัด/ร่อง), start (ลูกศรจุดเริ่ม) */
+const TK_FX = [292, 254, 216, 178, 140, 102, 64], tkSlot = m => m < 7 ? m : m - 7, tkIsK = i => i % 2 === 0;
+function tkFistSVG(k = -1, o = {}) { const upto = o.upto ?? 11, yK = 30, yD = 58, X = TK_FX, Y = i => tkIsK(i) ? yK : yD;
+  const pts = [[34, 78], ...[6, 5, 4, 3, 2, 1, 0].map(i => [X[i], Y(i)]), [318, 66]];
+  let d = `M34 186 V${pts[0][1]}`; for (let n = 1; n < pts.length; n++) { const [x0, y0] = pts[n - 1], [x1, y1] = pts[n]; d += ` C${x0 + (x1 - x0) * .5} ${y0} ${x0 + (x1 - x0) * .5} ${y1} ${x1} ${y1}`; }
+  d += ' C336 70 350 92 348 118 C346 146 326 156 304 152 V186 Z';
+  let s = `<path d="${d}" fill="#FFD9B8" stroke="#C98A5C" stroke-width="3" stroke-linejoin="round"/>`
+    + `<path d="M304 152 C318 136 322 112 314 92" fill="none" stroke="#C98A5C" stroke-width="2.4" stroke-linecap="round"/>`
+    + [1, 3, 5].map(i => `<path d="M${X[i]} ${yD + 14} C${X[i] - 3} ${yD + 40} ${X[i] + 2} ${yD + 62} ${X[i]} ${yD + 84}" fill="none" stroke="#D9A27A" stroke-width="2" opacity=".75"/>`).join('')
+    + `<path d="M60 168 h220" stroke="#D9A27A" stroke-width="2" opacity=".5"/>`;
+  if (o.parts) s += `<text x="${X[0]}" y="${yK - 16}" text-anchor="middle" font-size="12" font-weight="800" fill="#6E6290">นิ้วชี้</text><text x="${X[6]}" y="${yK - 16}" text-anchor="middle" font-size="12" font-weight="800" fill="#6E6290">นิ้วก้อย</text><text x="334" y="176" text-anchor="middle" font-size="12" font-weight="800" fill="#6E6290">นิ้วโป้ง</text>`;
+  X.forEach((x, i) => { const kn = tkIsK(i), on = k >= 0 && tkSlot(k) === i, y = Y(i);
+    s += `<circle cx="${x}" cy="${y}" r="${on ? 12 : 7}" fill="${on ? (kn ? '#E5505E' : '#2F86C2') : (kn ? '#FF9AA8' : '#9DD1F2')}" stroke="#fff" stroke-width="2"/>`;
+    if (o.num) s += `<text x="${x}" y="${y + 26}" text-anchor="middle" font-size="12" font-weight="800" fill="${kn ? '#C2485A' : '#2F6FA0'}">${kn ? 'สัน ' + (i / 2 + 1) : 'ร่อง ' + (i + 1) / 2}</text>`;
+    const ms = [i, i + 7].filter(m => m < 12 && m <= upto);
+    if (ms.length) s += `<text x="${x}" y="${kn ? 206 : 226}" text-anchor="middle" font-size="14" font-weight="800" fill="${kn ? '#C2485A' : '#2F6FA0'}">${ms.map(m => m === k ? `<tspan font-size="16" text-decoration="underline">${TK_AB[m]}</tspan>` : TK_AB[m]).join(' ')}</text>`; });
+  if (o.parts) s += `<path d="M${X[4]} ${yK - 2} Q${(X[4] + X[2]) / 2} ${yK - 30} ${X[2]} ${yK - 2}" fill="none" stroke="#E5505E" stroke-width="2" stroke-dasharray="4 3"/><text x="${(X[4] + X[2]) / 2}" y="${yK - 20}" text-anchor="middle" font-size="12" font-weight="800" fill="#C2485A">สันหมัด = นูน</text><text x="${X[3]}" y="${yD + 36}" text-anchor="middle" font-size="12" font-weight="800" fill="#2F6FA0">ร่อง = เว้า</text>`;
+  if (o.start) s += `<path d="M${X[0] + 36} 14 q-10 -2 -24 10" fill="none" stroke="#E3A21C" stroke-width="3" marker-end="url(#tkar)"/><text x="${X[0] + 40}" y="12" font-size="12" font-weight="800" fill="#B7791F">เริ่ม</text><path d="M${X[0] - 20} 4 H${X[6] + 20}" stroke="#E3A21C" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#tkar)"/>`;
+  return `<svg viewBox="0 -8 370 244" class="tkfist" aria-hidden="true"><defs><marker id="tkar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#E3A21C"/></marker></defs>${s}</svg>`; }
 
 /* ---------- interactive clock: drag the long hand (outer part) or the short hand (near the middle); tap also works ---------- */
 function tkClock(h0, m0, o = {}) { // v124 (ผู้ใช้ขอ: หมุนให้เสถียรขึ้น) — ลากแบบ “ตามนิ้ว” (นับมุมที่นิ้วหมุนไป) ไม่กระโดดไปที่นิ้วทันที
@@ -19464,12 +19484,41 @@ function simTkCal(m, y, marks) { // tap a date → weekday · tap a weekday → 
     else { wd = +c.dataset.w; hl = []; cols.add(wd); draw(); const n = range(1, tkDays(m, y)).filter(d => tkWday(d, m, y) === wd); out.innerHTML = `วัน${TK_DAY[wd]} ทั้งเดือน<br>มี <b>${n.length} วัน</b> คือ ${n.join(', ')}`; }
     if (dates.size >= 2 && cols.size >= 1) teachDone(box); });
   draw(); out.innerHTML = 'แตะวันที่ 1 วัน เพื่อดูว่าตรงกับวันอะไร<br>แล้วแตะหัวช่อง (อา. จ. …) เพื่อนับวันนั้นทั้งเดือน'; box.append(fig, out); return box; }
-function simTkFist() { // count months on the knuckles
-  const box = h('div', { class: 'colstack' }), fig = h('div', { class: 'pw-fig' }), out = fNote(); let k = -1;
-  const go = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); k++; sfx.pop(k % 7 + 1); fig.innerHTML = tkFistSVG(k);
-    const d = k === 1 ? '28 หรือ 29' : tkDays(k, 2568); out.innerHTML = `${TK_MON[k]} (${TK_AB[k]}) · ${k === 1 || [3, 5, 8, 10].includes(k) ? 'ร่อง' : 'สันหมัด'}<br>มี <b>${d} วัน</b>`;
-    say(`${TK_MON[k]} มี ${d} วัน`, true); if (k >= 11) go.remove(); else go.lastChild.textContent = `นับเดือนต่อไป (${TK_MON[k + 1]})`; } }, icon('right'), h('span', null, 'เริ่มนับที่มกราคม'));
-  fig.innerHTML = tkFistSVG(); out.innerHTML = 'กำมือ แล้วนับเดือนบนสันหมัดและร่อง<br>สันหมัด = 31 วัน · ร่อง = 30 วัน (ก.พ. 28 หรือ 29)'; box.append(fig, go, out); return box; }
+/* v184 (ผู้ใช้ขอ): นับเดือนบนสันหมัด — เล่าทีละประเด็น (สันหมัดคืออะไร → ยกหมัดซ้าย → สันหมัด 4 ร่อง 3 → กติกา → เริ่มนับ)
+   แล้วสาธิตนับทีละเดือน บอกครบ: เดือนที่เท่าไร · อักษรย่อ · อยู่บนสันหมัด/ร่องที่เท่าไร · กี่วัน · ตรงกับท้ายชื่อเดือน */
+function tkFistSteps() { const S = [
+    ['สันหมัดคืออะไร', 'เวลากำมือ ข้อนิ้วที่<b>นูนขึ้นมา</b> เรียกว่า <b>สันหมัด</b> ส่วนที่<b>เว้าลง</b>ระหว่างสันหมัด เรียกว่า <b>ร่อง</b>', tkFistSVG(-1, { upto: -1, parts: 1 })],
+    ['ยกหมัดซ้ายขึ้นมา', 'น้อง ๆ ลอง<b>ยกหมัดซ้าย</b>ขึ้นมา กำมือให้แน่น หัน<b>หลังมือ</b>เข้าหาตัว — นิ้วโป้งจะอยู่ทางขวา', tkFistSVG(-1, { upto: -1, parts: 1 })],
+    ['นับสันหมัดและร่อง', 'จากนิ้วชี้ไปถึงนิ้วก้อย มี<b>สันหมัด 4 สัน</b> (จุดแดง) และ<b>ร่อง 3 ร่อง</b> (จุดฟ้า) — ลองจับดูบนมือตัวเองนะ', tkFistSVG(-1, { upto: -1, num: 1 })],
+    ['กติกา', 'เดือนที่ตรงกับ<b>สันหมัด</b> มี <b>31 วัน</b><br>เดือนที่ตรงกับ<b>ร่อง</b> มี <b>30 วัน</b> (ยกเว้นกุมภาพันธ์)', tkFistSVG(-1, { upto: -1, num: 1 })],
+    ['เริ่มนับ', 'เริ่มที่<b>สันหมัดนิ้วชี้</b> (ข้างนิ้วโป้ง) แล้วนับไปทางนิ้วก้อยทีละช่อง: สันหมัด → ร่อง → สันหมัด → …', tkFistSVG(-1, { upto: -1, num: 1, start: 1 })]];
+  TK_MON.forEach((nm, m) => { const i = tkSlot(m), kn = tkIsK(i), pos = kn ? `อยู่บน<b>สันหมัดที่ ${i / 2 + 1}</b>` : `อยู่ใน<b>ร่องที่ ${(i + 1) / 2}</b>`;
+    const days = m === 1 ? 'ตกในร่อง แต่<b>กุมภาพันธ์พิเศษ</b> มี <b>28 วัน</b> (บางปีมี 29 วัน)' : kn ? `→ มี <b>31 วัน</b>` : `→ มี <b>30 วัน</b>`;
+    const tail = m === 1 ? 'ชื่อลงท้าย “พันธ์” — จำไว้ว่าพิเศษ' : /คม$/.test(nm) ? 'ชื่อลงท้าย “คม” ✓ ตรงกับ 31 วัน' : 'ชื่อลงท้าย “ยน” ✓ ตรงกับ 30 วัน';
+    const pre = m === 7 ? 'นับถึงนิ้วก้อยแล้ว <b>กลับไปเริ่มที่สันหมัดนิ้วชี้ใหม่</b><br>' : '';
+    const post = m === 7 ? '<br>กรกฎาคมกับสิงหาคมจึงมี 31 วัน<b>ติดกัน 2 เดือน</b>' : m === 6 ? '<br>ถึงสันหมัดนิ้วก้อยแล้ว — เดือนต่อไปกลับไปเริ่มใหม่' : '';
+    S.push([`เดือนที่ ${m + 1}`, `${pre}<b>${nm}</b> (อักษรย่อ <b>${TK_AB[m]}</b>) ${pos} ${days}<br><small>${tail}</small>${post}`, tkFistSVG(m, { upto: m })]); });
+  S.push(['สรุป', '<b>31 วัน</b> (สันหมัด) 7 เดือน: ม.ค. มี.ค. พ.ค. ก.ค. ส.ค. ต.ค. ธ.ค.<br><b>30 วัน</b> (ร่อง) 4 เดือน: เม.ย. มิ.ย. ก.ย. พ.ย.<br><b>ก.พ.</b> 28 หรือ 29 วัน', tkFistSVG(-1)]);
+  return S; }
+function simTkFist() { const S = tkFistSteps(), N = S.length; let k = 0;
+  const box = h('div', { class: 'colstack' }, h6wait()), pane = h('div', { class: 'pw-fig pw-in' }), lab = h('div', { class: 'tkfs-lab' }), txt = h('div', { class: 'fnote tkfs-txt' });
+  const back = h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); if (k > 0) { k--; show(); } } }, icon('left'), 'ย้อน');
+  const go = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); if (k < N - 1) { k++; sfx.pop(k % 7 + 1); show(); } } }, icon('right'), h('span'));
+  const show = () => { const [l, t, f] = S[k]; pane.innerHTML = f; pane.classList.remove('pw-in'); void pane.offsetWidth; pane.classList.add('pw-in'); lab.innerHTML = `${l} <small>${k + 1} / ${N}</small>`; txt.innerHTML = t;
+    say(t.replace(/<[^>]+>/g, ' '), true); back.style.visibility = k ? '' : 'hidden';
+    if (k >= N - 1) { go.style.display = 'none'; teachDone(box); } else { go.style.display = ''; go.lastChild.textContent = k >= 4 ? `นับเดือนต่อไป (${TK_MON[k - 4] || 'สรุป'})` : 'ขั้นต่อไป'; } };
+  box.append(h('div', { class: 'pwk' }, pane, h('div', { class: 'colstack pw-side' }, lab, txt, h('div', { class: 'rowstack' }, back, go)))); show(); return box; }
+/* v184 (ผู้ใช้ขอ): การ์ดจำ 12 เดือน — เริ่มเป็นเลข 1–12 · แตะครั้งที่ 1 = ชื่อเดือน · ครั้งที่ 2 = อักษรย่อ · ครั้งที่ 3 = กลับเป็นเลข */
+function simTkMonCards() { const box = h('div', { class: 'colstack' }, h6wait()), seen = new Set(), st = Array(12).fill(0), note = fNote();
+  const face = m => st[m] === 0 ? `<b class="num">${m + 1}</b><small>เดือนที่</small>` : st[m] === 1 ? `<b>${TK_MON[m]}</b><small>เดือนที่ ${m + 1}</small>` : `<b class="ab">${TK_AB[m]}</b><small>อักษรย่อ</small>`;
+  const cards = TK_MON.map((_, m) => { const c = h('button', { class: 'tkmc ia s0', html: face(m) });
+    c.onclick = e => { e.stopPropagation(); st[m] = (st[m] + 1) % 3; c.classList.remove('flip'); void c.offsetWidth; c.classList.add('flip'); c.className = c.className.replace(/\bs\d\b/, 's' + st[m]); c.innerHTML = face(m); sfx.pop(st[m] + 2);
+      if (st[m] === 1) { seen.add(m); say(`เดือนที่ ${m + 1} ${TK_MON[m]}`, true); } else if (st[m] === 2) say(`อักษรย่อ ${TK_AB[m].split('').join(' ')}`, true);
+      note.innerHTML = `เปิดชื่อเดือนแล้ว <b>${seen.size}</b> / 12 ใบ`; if (seen.size >= 12) { note.innerHTML = 'ครบ 12 เดือนแล้ว! ลองทายในใจก่อนแตะ แล้วแตะดูว่าถูกไหม'; teachDone(box); } };
+    return c; });
+  const all = (v, t) => h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); cards.forEach((c, m) => { st[m] = v; c.className = 'tkmc ia s' + v; c.innerHTML = face(m); }); sfx.tap(); } }, t);
+  note.innerHTML = 'แตะการ์ด: ครั้งที่ 1 ดู<b>ชื่อเดือน</b> · ครั้งที่ 2 ดู<b>อักษรย่อ</b> · ครั้งที่ 3 กลับเป็นเลข';
+  box.append(h('div', { class: 'tkmcs' }, ...cards), h('div', { class: 'rowstack' }, all(0, 'กลับเป็นเลขทุกใบ'), all(1, 'ดูชื่อทุกใบ'), all(2, 'ดูอักษรย่อทุกใบ')), note); return box; }
 function simTkDate() { // build a date, see the ways to write it
   let d = 3, m = 9, y = 2568; const box = h('div', { class: 'colstack' }, h6wait()), out = h('div', { class: 'tk-dforms' }), seen = new Set();
   const draw = () => { const yy = String(y).slice(2), mm = String(m + 1).padStart(2, '0'), dd = String(d).padStart(2, '0');
@@ -19515,9 +19564,10 @@ const tkYesNo = (ctx, h24) => { const blank = h('span', { class: 'blank' }, '?')
 Object.assign(Q, {
   /* calendar: ask a weekday / date / count · tap cells to mark */
   tkCalQ({ m, y, marks, q, a, opts, num, unit = '', hint }) {
-    return { prompt: q, say: q, mount(bd, ctx) { const fig = h('div', { class: 'p4-fig', html: tkCal(m, y, { marks }) }); tkCalMark(fig);
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, fig, num ? h('div', { class: 'rowstack' }, answerBox(ctx, String(a), { hint }), unit ? h('span', { class: 'cap', style: { fontSize: '20px' } }, unit) : null)
-        : choices(ctx, shuffle(opts).map(o => ({ value: o, label: o })), a, { hint }))); bd.querySelectorAll('.opt').forEach(o => o.classList.add('fopt', 'txt')); } };
+    return { prompt: q, say: q, mount(bd, ctx) { const fig = h('div', { class: 'p4-fig tkcalfig', html: tkCal(m, y, { marks }) }); tkCalMark(fig); /* v184 (ผู้ใช้ขอ): ปฏิทินซ้าย ส่วนตอบขวา */
+      let right; if (num) { right = answerBox(ctx, String(a), { hint }); const sl = right.querySelector(':scope > .ans-slot'); if (sl && unit) { const row = h('div', { class: 'ans-urow' }); sl.replaceWith(row); row.append(sl, h('span', { class: 'cap', style: { fontSize: '20px' } }, unit)); } }
+      else { right = choices(ctx, shuffle(opts).map(o => ({ value: o, label: o })), a, { hint }); right.classList.add('pp-opts'); }
+      bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'g4sd p2sd pp-sd' }, h('div', { class: 'p2sd-l' }, fig), h('div', { class: 'g4sd-r' }, right)))); bd.querySelectorAll('.opt').forEach(o => o.classList.add('fopt', 'txt')); } };
   },
   /* read a clock: 'h' (hours, with sky) · 'hm' (hours + minutes) */
   tkRead({ h: H, m = 0, ask = 'hm', sky = true }) { const q = ask === 'h' ? 'นาฬิกาบอกเวลากี่นาฬิกา' : 'นาฬิกาบอกเวลาเท่าไร';
@@ -19628,8 +19678,9 @@ const LESSONS_P2C7 = [
       { fig: `<div class="tk-mons">${TK_MON.map((x, i) => `<span><b>${i + 1}</b>${x}<small>${TK_AB[i]}</small></span>`).join('')}</div>`, name: 'เรียงจากมกราคมถึงธันวาคม', text: 'เดือนที่ 1 มกราคม … เดือนที่ 12 ธันวาคม<br>แต่ละเดือนมีอักษรย่อ' },
       { fig: lrow(lcap(lbig('…คม', 'sm'), '31 วัน'), lcap(lbig('…ยน', 'sm'), '30 วัน'), lcap(lbig('กุมภาพันธ์', 'sm'), '28 หรือ 29 วัน')), name: 'ดูท้ายชื่อเดือน', text: 'ลงท้าย “คม” มี 31 วัน<br>ลงท้าย “ยน” มี 30 วัน' },
       { fig: tkFistSVG(0), name: 'นับบนสันหมัดก็ได้', text: 'สันหมัด = 31 วัน · ร่อง = 30 วัน' }], 'คม = 31 · ยน = 30 · กุมภาพันธ์ = 28 หรือ 29'),
-     pexStep('ตัวอย่างทีละขั้น: เดือนที่ต่อจากเมษายนคือเดือนใด และมีกี่วัน', 'ตัวอย่างทีละขั้น', [['① หาเมษายน', 'เมษายนเป็นเดือนที่ 4', `<div class="tk-mons sm">${TK_MON.map((x, i) => `<span class="${i === 3 ? 'on' : ''}"><b>${i + 1}</b>${x}</span>`).join('')}</div>`], ['② เดือนถัดไป', 'เดือนที่ 5 คือ พฤษภาคม', `<div class="tk-mons sm">${TK_MON.map((x, i) => `<span class="${i === 4 ? 'on' : ''}"><b>${i + 1}</b>${x}</span>`).join('')}</div>`], ['③ นับวัน', 'ลงท้าย “คม” → 31 วัน', tkFistSVG(4)]], 'พฤษภาคม มี <b>31 วัน</b>'),
-     T('ลองนับเดือนบนสันหมัด', 'ลองนับเดือนบนสันหมัด', el => el.append(simTkFist()))],
+     /* v184 (ผู้ใช้ขอ): ตัวอย่างเดือนต่อจากเมษายน → เกมการ์ดจำ 12 เดือน */
+     T('เกม<b>การ์ดจำเดือน</b>: แตะการ์ดเพื่อดูชื่อเดือน แตะอีกครั้งดูอักษรย่อ', 'เกมการ์ดจำเดือน แตะการ์ดเพื่อดูชื่อเดือน แตะอีกครั้งดูอักษรย่อ', el => el.append(simTkMonCards())),
+     T('มาลอง<b>นับเดือนบนสันหมัด</b>กัน — กดทีละขั้น', 'มาลองนับเดือนบนสันหมัดกัน กดทีละขั้น', el => el.append(simTkFist()))],
     () => [tkMonGroup(), tkMonSort(), tkAbMatch(), tkPick(null, 'เดือนที่ 11 คือเดือนใด', 'พฤศจิกายน', ['ตุลาคม', 'ธันวาคม'], 'นับจากมกราคม = 1'), tkPick(null, 'เดือนที่ต่อจากเดือนมีนาคมคือเดือนใด', 'เมษายน', ['กุมภาพันธ์', 'พฤษภาคม'], 'มีนาคมเดือนที่ 3 · ถัดไปเดือนที่ 4'),
       tkPick(null, 'ก.ย. เป็นอักษรย่อของเดือนใด', 'กันยายน', ['กรกฎาคม', 'สิงหาคม'], 'ก.ย. = กัน-ยา-ยน')]),
   L2T(3, 15, 'หาดเขียนวันที่', 'การเขียนแสดงวัน เดือน ปี', 'เขียนวัน เดือน ปี', 'อ่านและเขียนแสดงวัน เดือน ปี แบบเต็มและแบบย่อ',
@@ -30116,7 +30167,7 @@ function startBoss(li, opt = {}) {
       b.onclick = e => { e.stopPropagation(); if (opts.dataset.done) return; opts.dataset.done = 1; answer(k, b, opts); };
       opts.append(b);
     });
-    if (q.fig && /class="pp [hv]/.test(q.fig)) card.classList.add('xside'); /* v181 (ผู้ใช้ขอ): แผนภูมิรูปภาพ → ภาพซ้าย ตัวเลือกขวา */
+    if (q.fig && /class="pp [hv]|class="tkcal/.test(q.fig)) card.classList.add('xside'); /* v181 (ผู้ใช้ขอ): แผนภูมิรูปภาพ → ภาพซ้าย ตัวเลือกขวา */
     stage.append(h('div', { class: 'screen arena' }, bossCard, card)); fitBody(card, { noJump: true });
     const readQ = force => say(`ข้อ ${i + 1} ${speakText(q.q)} ` + q.opts.map((o, k) => `${LETTERS[k]} ${optSpeech(o)}`).join(' '), force);
     readQ();
