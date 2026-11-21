@@ -873,7 +873,7 @@ function traceBoard(v, o = {}) {
 function sideCounter(v, o = {}) {
   const P = SHAPE_PTS[v], k = SHAPE_KIND(v), col = PAL[o.p || mixCol()];
   const svg = `<svg viewBox="-6 -6 76 76" class="sidec" aria-hidden="true"><path d="${shapeOutline(v)}" fill="${col[0]}" stroke="none"/>` +
-    (P ? P.map((p, i) => { const q = P[(i + 1) % P.length]; return `<line class="sd" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/><line class="sdhit" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/>`; }).join('') + P.map((p, i) => `<circle class="cn" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="4"/><circle class="cnhit" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="9"/>`).join('')
+    (P ? P.map((p, i) => { const q = P[(i + 1) % P.length]; return `<line class="sd" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/><line class="sdhit" data-i="${i}" x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}"/>`; }).join('') + P.map((p, i) => `<circle class="cn" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="1.5"/><circle class="cnhit" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="9"/>`).join('')
        : `<path d="${shapeOutline(v)}" fill="none" stroke="${col[3]}" stroke-width="2.4"/>`) + '</svg>';
   const w = h('div', { class: 'sidew ia', html: svg }), out = h('div', { class: 'sidecount' }, h('span', null, 'ด้าน ', h('b', { class: 'num' }, '0')), h('span', null, 'มุม ', h('b', { class: 'num' }, '0')));
   let ns = 0, nc = 0; const [bs, bc] = out.querySelectorAll('b');
