@@ -2461,6 +2461,7 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .pw-fig{min-width:min(400px,88cqw)}.pw-fig>svg.mtpic,.pw-fig>.mtcolwrap{width:100%}
 .t6-q .fbig.mt-big,.fbig.p4big.mt-big{font-size:clamp(34px,5cqw,54px)}
 .wp-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;justify-content:center}.wp-row>svg{width:auto;max-width:260px;height:auto;max-height:180px}.wp-row .vcont{width:64px;height:80px}
+.vtl .lrn-row{gap:clamp(10px,2cqw,22px);align-items:flex-end}.vtl .lrn-it svg{width:clamp(70px,9.5cqw,108px)!important;height:auto!important;max-height:150px}.vtl .lrn-it.vtl-t svg{width:clamp(96px,13cqw,150px)!important}.vtl .lrn-it small{font-size:15px;font-weight:700}
 .wp-col{display:flex;flex-direction:column;gap:14px;align-items:center;width:100%}.wp-col>svg{width:min(500px,44cqw)!important;max-width:none!important;max-height:none!important;height:auto}
 .pw-fig .p2pair{transform:scale(.9)}.pw-fig .p2wall{max-height:260px}
 .wp-row>svg{width:clamp(72px,11cqw,104px);height:auto;flex:0 0 auto}.wp-row>svg.mtpic,.wp-row>svg.p4bar,.wp-row>svg.w2dial{width:clamp(150px,22cqw,240px)}
