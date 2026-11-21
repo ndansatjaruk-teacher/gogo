@@ -364,6 +364,7 @@ a{color:var(--sky-2)}
 .scratch-tools.on{display:flex;animation:sheetIn2 var(--t2) var(--ease)}
 @keyframes sheetIn2{from{opacity:0;transform:translate(-50%,10px)}}
 .scratch-tools .t{font-size:14px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:6px;margin-right:4px}
+.scratch-tools .t.grip{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;padding:6px 10px 6px 6px;border-radius:999px;background:var(--bg-2,#F4F0FF)}.scratch-tools .t.grip::before{content:'⋮⋮';letter-spacing:-3px;color:var(--ink-3,#9A93B5);font-weight:800;margin-right:2px}.scratch-tools.dragging{animation:none;box-shadow:var(--e3)}.scratch-tools.dragging .t.grip{cursor:grabbing}
 .scratch-tools .sw{width:30px;height:30px;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(255,255,255,.7),0 1px 3px rgba(0,0,0,.2);transition:transform var(--t1) var(--spring)}
 .scratch-tools .sw.on{transform:scale(1.18);box-shadow:inset 0 0 0 3px #fff,0 0 0 2px var(--ink)}
 .scratch-tools .ibtn{width:40px;height:40px;box-shadow:none;background:transparent}
@@ -2157,7 +2158,12 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .p2pair{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px}
 .p2pair > div{display:flex;flex-direction:column;align-items:center;gap:2px}
 .p2pair .fop{font-size:28px}
-.p2walk-hd{font-size:22px;text-align:center}.p2walk-hd small{display:block;font-size:14px;color:#7A6A55;font-weight:600}.p2ca{color:#C25E0A}.p2cb{color:#2F86C2}
+.p2walk-hd{font-size:22px;text-align:center}
+.p2self .p2sp{min-height:1.15em;border-bottom:2px dashed #E3D5B8;margin:0 2px}.p2self .p4col{font-size:clamp(34px,5.4cqw,56px)}
+.p2sd{grid-template-columns:minmax(0,1fr) clamp(220px,28cqw,300px)}.p2sd-l{min-width:0;display:flex;justify-content:center;align-items:center}.p2sd-l .p2pair{flex-wrap:nowrap;zoom:1.2}
+.p2b3{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-items:center;gap:4px 12px}.p2b3-c{display:flex;flex-direction:column;align-items:center;gap:2px}.p2b3-c > .num{font-size:20px}.p2b3-c > .num small{font-size:13px;color:#7A6A55}.p2b3 .fop{font-size:28px;color:var(--coral-2,#C23C4B)}
+.p2b3-down{grid-column:1 / -1;display:flex;align-items:center;gap:6px;font-weight:700;color:#7A6A55;font-size:15px}.p2b3-down .icon{transform:rotate(90deg);width:20px;height:20px}.p2b3-c.r{grid-column:1 / -1}.p2b3-c.r .p2bb{box-shadow:inset 0 0 0 2.5px #4CC38A;background:#F3FFF8}
+.pw-fig .p2b3 .p2bb .h .it svg{width:28px;height:28px}.pw-fig .p2b3 .p2bb .t .it svg{width:6px;height:36px}.pw-fig .p2b3 .p2bb .u .it svg{width:10px;height:10px}.pw-fig .p2b3 .p2bb .col{min-width:52px}.pw-fig .p2b3 .p2bb .h .its{max-width:130px}.pw-fig .p2b3 .p2bb .t .its{max-width:100px}.pw-fig .p2b3 .p2bb .u .its{max-width:70px}.p2walk-hd small{display:block;font-size:14px;color:#7A6A55;font-weight:600}.p2ca{color:#C25E0A}.p2cb{color:#2F86C2}
 @media (max-width:560px){.p2bb .col{min-width:50px}.p2bb .h .it svg{width:22px;height:22px}.p2bb .t .it svg{height:30px}.p2pair .p2bb .h .its{max-width:70px}}
 @media (min-width:700px){.p2bb .h .it svg{width:40px;height:40px}.p2bb .t .it svg{width:8px;height:52px}.p2bb .u .it svg{width:13px;height:13px}.p2bb .h .its{max-width:200px}.p2bb .t .its{max-width:150px}.p2bb .u .its{max-width:100px}}
 
@@ -2453,6 +2459,7 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .pw-fig{min-width:min(400px,88cqw)}.pw-fig>svg.mtpic,.pw-fig>.mtcolwrap{width:100%}
 .t6-q .fbig.mt-big,.fbig.p4big.mt-big{font-size:clamp(34px,5cqw,54px)}
 .wp-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;justify-content:center}.wp-row>svg{width:auto;max-width:260px;height:auto;max-height:180px}.wp-row .vcont{width:64px;height:80px}
+.wp-col{display:flex;flex-direction:column;gap:14px;align-items:center;width:100%}.wp-col>svg{width:min(500px,44cqw)!important;max-width:none!important;max-height:none!important;height:auto}
 .pw-fig .p2pair{transform:scale(.9)}.pw-fig .p2wall{max-height:260px}
 .wp-row>svg{width:clamp(72px,11cqw,104px);height:auto;flex:0 0 auto}.wp-row>svg.mtpic,.wp-row>svg.p4bar,.wp-row>svg.w2dial{width:clamp(150px,22cqw,240px)}
 .pw-fig .vpour{flex-wrap:nowrap}.pw-fig .vcups{flex:0 1 200px;min-width:120px}

@@ -321,6 +321,16 @@ function animateDigit(canvas, d, opts = {}) {
 /* ---------------- Scratch layer (ทด) ---------------- */
 const Scratch = {
   on: false, enabled: false, color: '#4C9BF0', strokes: [], cur: null,
+  /* v179 (ผู้ใช้ขอ: แถบเครื่องมือทดลากย้ายได้) จับที่ป้าย "กระดาษทด" แล้วลาก — แถบไม่บังโจทย์ · จำตำแหน่งไว้ (ถ้าเบราว์เซอร์ให้เก็บ) */
+  dragBar() { const T = this.tools, g = T.querySelector('.t'); g.classList.add('grip'); g.title = 'ลากเพื่อย้ายแถบ';
+    const place = (x, y) => { const r = T.getBoundingClientRect(), X = Math.max(4, Math.min(innerWidth - r.width - 4, x)), Y = Math.max(4, Math.min(innerHeight - r.height - 4, y)); Object.assign(T.style, { left: X + 'px', top: Y + 'px', bottom: 'auto', transform: 'none' }); return [X, Y]; };
+    this.placeBar = place; try { this.barPos = JSON.parse(localStorage.getItem('scratchBar') || 'null'); } catch (_) { }
+    let d = null;
+    g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); const r = T.getBoundingClientRect(); d = { dx: e.clientX - r.left, dy: e.clientY - r.top }; T.classList.add('dragging'); try { g.setPointerCapture(e.pointerId); } catch (_) { } });
+    g.addEventListener('pointermove', e => { if (d) this.barPos = place(e.clientX - d.dx, e.clientY - d.dy); });
+    const end = () => { if (!d) return; d = null; T.classList.remove('dragging'); try { localStorage.setItem('scratchBar', JSON.stringify(this.barPos)); } catch (_) { } };
+    g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+    addEventListener('resize', () => { if (this.barPos) this.barPos = place(...this.barPos); }); },
   init() {
     this.c = h('canvas', { id: 'scratch' }); document.body.append(this.c); this.x = this.c.getContext('2d');
     const sw = c => h('button', { class: 'sw' + (c === this.color ? ' on' : ''), style: { background: c }, 'aria-label': 'สี', onclick: e => { this.color = c; this.tools.querySelectorAll('.sw').forEach(b => b.classList.toggle('on', b === e.currentTarget)); } });
@@ -329,7 +339,7 @@ const Scratch = {
       h('button', { class: 'ibtn', 'aria-label': 'ย้อน', onclick: () => { this.strokes.pop(); this.redraw(); } }, icon('undo')),
       h('button', { class: 'ibtn', 'aria-label': 'ล้าง', onclick: () => this.clear() }, icon('eraser')),
       h('button', { class: 'ibtn', 'aria-label': 'ปิด', onclick: () => this.toggle(false) }, icon('close')));
-    document.body.append(this.tools);
+    document.body.append(this.tools); this.dragBar();
     addEventListener('resize', () => this.resize()); this.resize();
     // finger/pen drawing while scratch mode is on
     this.c.addEventListener('pointerdown', e => {
@@ -391,7 +401,7 @@ const Scratch = {
   },
   redraw() { this.x.clearRect(0, 0, innerWidth, innerHeight); for (const s of this.strokes) { const p = s.pts; this.x.strokeStyle = s.color; this.x.lineWidth = 4; this.x.lineCap = 'round'; this.x.lineJoin = 'round'; this.x.beginPath(); p.forEach((q, i) => i ? this.x.lineTo(q.x, q.y) : this.x.moveTo(q.x, q.y)); this.x.stroke(); } },
   clear() { this.strokes = []; this.cur = null; this.redraw(); },
-  toggle(v = !this.on) { this.on = v; this.c.classList.toggle('on', v); this.tools.classList.toggle('on', v); const b = $('#btnScratch'); b && b.classList.toggle('on', v); },
+  toggle(v = !this.on) { this.on = v; this.c.classList.toggle('on', v); this.tools.classList.toggle('on', v); const b = $('#btnScratch'); b && b.classList.toggle('on', v); if (v && this.barPos && this.placeBar) requestAnimationFrame(() => { this.barPos = this.placeBar(...this.barPos); }); },
   setEnabled(v) { this.enabled = v; if (!v) { this.toggle(false); this.clear(); } }
 };
 

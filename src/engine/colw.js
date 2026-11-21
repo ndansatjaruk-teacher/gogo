@@ -30,12 +30,12 @@ function colWork(bd, ctx, o) {
   const eq = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `), ans = cwFmt(R, p);
   const paint = () => {
     let x = row('<span></span>', i => `<span class="pn">${CW_PV[i - p] || ''}</span>`);
-    x += row('<span></span>', i => { if (op === '−') return `<span class="mk">${i < shown(0) && S.cur[i] !== dg(V[0], i) ? S.cur[i] : ''}</span>`;
+    x += row('<span></span>', i => { if (o.plain) return '<span class="mk"></span>'; if (op === '−') return `<span class="mk">${i < shown(0) && S.cur[i] !== dg(V[0], i) ? S.cur[i] : ''}</span>`;
       return i >= 1 && i <= cTop ? `<span class="mk e4c-k${S.carry[i] ? ' on' : ''}" data-k="c:${i}">${S.carry[i] || ''}</span>` : '<span class="mk"></span>'; });
     nums.forEach((s, j) => { const last = j === nums.length - 1;
       x += row(last ? `<span class="sg">${op}</span>` : '<span></span>', i => { if (i >= shown(j)) return '<span class="dg"></span>'; const pad = i < p - PL[j];
         if (pad && !S.zf.has(j + ':' + i)) return `<span class="dg e4z" data-k="z:${j}:${i}"></span>`;
-        const bt = op === '−' && j === 0 && i >= 1, ch = op === '−' && j === 0 && S.cur[i] !== dg(V[0], i);
+        const bt = op === '−' && j === 0 && i >= 1 && !o.plain, ch = op === '−' && j === 0 && S.cur[i] !== dg(V[0], i);
         return `<span class="dg${pad ? ' z' : ''}${ch ? ' x' : ''}${bt ? ' e4b' : ''}"${bt ? ` data-k="b:${i}"` : ''}>${dg(V[j], i)}</span>`; }, p ? '.' : ''); });
     x += `<span class="ln" style="grid-column:1 / span ${span}"></span>`;
     const ed = k => i => i >= cellsOf(k) ? '<span class="dg"></span>' : `<span class="dg rs e4r${k !== 'r' ? ' cw-part' : ''}${!S.ok && S.sel.k === k && S.sel.i === i ? ' sel' : ''}${S.bad.has(k + i) ? ' bad' : ''}${S.ok && k === 'r' ? ' ok' : ''}" data-k="r:${k}:${i}">${S.res[k][i] ?? ''}</span>`;
@@ -61,14 +61,14 @@ function colWork(bd, ctx, o) {
   const check = () => { if (S.ok) return; const miss = needZ.filter(z => !S.zf.has(z));
     if (miss.length) { say1('ตำแหน่งยังไม่เท่ากัน — แตะ<b>ช่องว่าง</b>เพื่อเติม 0 ก่อน'); sfx.no(); grid.classList.remove('e4w-zhint'); void grid.offsetWidth; grid.classList.add('e4w-zhint'); return; }
     if (!Object.values(S.res.r).some(v => v !== '')) { say1(parts.length && Object.values(S.res[rowsE[0]]).some(v => v !== '') ? 'อย่าลืมแถวคำตอบ (แถวล่างสุด)' : 'แตะช่องคำตอบ แล้วกดตัวเลขก่อนนะ'); if (parts.length) { S.sel = { k: 'r', i: 0 }; paint(); } return; }
-    S.bad = new Set([...range(0, n - 1).filter(i => (S.res.r[i] ?? '') !== want(i)).map(i => 'r' + i), ...parts.flatMap(pt => range(0, cellsOf('p' + pt.r) - 1).filter(i => !partOK(pt, i)).map(i => 'p' + pt.r + i))]);
+    S.bad = new Set([...range(0, n - 1).filter(i => (S.res.r[i] ?? '') !== want(i) && !(want(i) === '' && S.res.r[i] === '0')).map(i => 'r' + i), /* v179: 0 นำหน้าทางซ้ายของคำตอบไม่ผิด (070 = 70) */ ...parts.flatMap(pt => range(0, cellsOf('p' + pt.r) - 1).filter(i => !partOK(pt, i)).map(i => 'p' + pt.r + i))]);
     if (![...S.bad].some(b => b[0] === 'r')) { S.ok = true; S.bad = new Set(); paint(); say1(''); undo.style.display = 'none'; info.innerHTML = `${eq} = <b>${ans}</b>`; return ctx.check(true); }
     paint(); ctx.check(false, op === '+' ? 'บวกทีละหลักจากขวาไปซ้าย หลักไหนได้ 10 ขึ้นไป เขียนหลักหน่วย แล้วทดไปหลักทางซ้าย' : op === '−' ? 'ลบทีละหลักจากขวาไปซ้าย หลักไหนลบไม่ได้ ให้แตะตัวเลขด้านบนทางซ้ายเพื่อกระจายก่อน'
       : parts.length ? 'คูณด้วยหลักหน่วยก่อน แล้วคูณด้วยหลักสิบ (เติม 0 ทางขวา) แล้วบวกผลคูณย่อย' : 'คูณทีละหลักจากหลักหน่วย ได้ 10 ขึ้นไป เขียนหลักหน่วย แล้วทดไปบวกในหลักถัดไป'); };
   const kp = h('div', { class: 'keypad e4w-kp' }); [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: e => { e.stopPropagation(); type(d); } }, d)));
   kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: e => { e.stopPropagation(); del(); } }, icon('left')), h('button', { class: 'btn', onclick: e => { e.stopPropagation(); type(0); } }, '0'), h('button', { class: 'btn primary', 'aria-label': 'ตรวจ', onclick: e => { e.stopPropagation(); check(); } }, icon('check')));
   info.innerHTML = 'แตะช่องคำตอบ แล้วกดตัวเลขทีละหลัก <b>จากขวาไปซ้าย</b> · ทำครบแล้วกด ✓' + (needZ.length ? '<br>ตำแหน่งไม่เท่ากัน → แตะช่องว่างเพื่อเติม 0' : '')
-    + (op === '+' ? '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะอีกครั้งเพื่อเปลี่ยน/ลบ)' : op === '−' ? '<br>ลบไม่ได้ → แตะตัวเลขตัวตั้งทางซ้ายเพื่อกระจาย' : '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะซ้ำ = เพิ่มทีละ 1)')
+    + (o.plain ? '' : op === '+' ? '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะอีกครั้งเพื่อเปลี่ยน/ลบ)' : op === '−' ? '<br>ลบไม่ได้ → แตะตัวเลขตัวตั้งทางซ้ายเพื่อกระจาย' : '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะซ้ำ = เพิ่มทีละ 1)')
     + (parts.length ? '<br>แถวผลคูณย่อย: คูณด้วยหลักหน่วย → หลักสิบ (ช่องขวาสุดเป็น 0) → บวกกันในแถวล่าง' : '');
   grid.classList.add('rvl'); grid.ansText = ans.replace(/,/g, '');
   grid.reveal = () => { needZ.forEach(z => S.zf.add(z));
@@ -80,8 +80,8 @@ function colWork(bd, ctx, o) {
   paint(); bd.append(g4Side(h('div', { class: 'e4w-fig' }, grid), info, kp, msg, undo)); return grid;
 }
 Object.assign(Q, {
-  colW({ nums, op, prompt, say, sig }) { const vb = op === '+' ? 'บวก' : op === '−' ? 'ลบ' : 'คูณ', p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), eq = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `);
-    return { prompt: prompt || `ตั้ง${vb} <b class="num">${eq}</b>`, say: say || `ตั้ง${vb} ${eq.replace(/,/g, '')}`, __sig: sig || `cw ${nums.join(op)}`, mount(bd, ctx) { colWork(bd, ctx, { nums, op }); } }; }
+  colW({ nums, op, prompt, say, sig, plain }) { /* plain: ไม่มีช่องทด / ไม่ให้กระจาย (ด่านที่ยังไม่เรียนทด) */ const vb = op === '+' ? 'บวก' : op === '−' ? 'ลบ' : 'คูณ', p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), eq = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `);
+    return { prompt: prompt || `ตั้ง${vb} <b class="num">${eq}</b>`, say: say || `ตั้ง${vb} ${eq.replace(/,/g, '')}`, __sig: sig || `cw ${nums.join(op)}`, mount(bd, ctx) { colWork(bd, ctx, { nums, op, plain }); } }; }
 });
 
 /* =========================================================
