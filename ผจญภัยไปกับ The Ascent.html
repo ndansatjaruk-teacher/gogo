@@ -3807,6 +3807,8 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .hopline .tick.hop b{background:#FFE7A3;border-radius:10px}
 .hopline .tick.hop{position:relative}
 .hopline .tick.hop::before{content:attr(data-k);position:absolute;top:-1.6em;left:50%;transform:translateX(-50%);font-size:.7em;font-weight:800;color:#C98612}
+
+.mc-rows{display:flex;flex-direction:column;gap:10px;align-items:flex-start}.mc-row2{justify-content:flex-start}.mc-row2 .mc-rl{min-width:4.6em;text-align:right}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -19071,7 +19073,9 @@ function duoInput(ctx, want, U, o = {}) {
   const kp = h('div', { class: 'keypad' });
   [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: () => type(d) }, d)));
   kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: () => { sfx.tap(); val[cur] = val[cur].slice(0, -1); paint(); } }, icon('left')), h('button', { class: 'btn', onclick: () => type(0) }, '0'), h('button', { class: 'btn primary', 'aria-label': 'ส่งคำตอบ', onclick: ok }, icon('check')));
-  const wrap = h('div', { class: 'ans mc-ans ia' }, h('div', { class: 'mc-row' }, o.pre === '' ? null : h('span', { class: 'mc-u' }, o.pre || 'ได้'), slots[0], U[0] ? h('span', { class: 'mc-u' }, U[0]) : null, o.mid ? h('span', { class: 'mc-u mc-mid' }, o.mid) : null, slots[1], U[1] ? h('span', { class: 'mc-u' }, U[1]) : null), kp, msg); /* v136: o.mid = คำระหว่างสองช่อง (ได้ __ เศษ __) */
+  /* v185 (ผู้ใช้ขอ): o.rows = [ป้ายบรรทัด 1, ป้ายบรรทัด 2] → สองช่องอยู่คนละบรรทัด (เช่น กลางวัน / กลางคืน) */
+  const rowsEl = o.rows ? h('div', { class: 'mc-rows' }, ...[0, 1].map(i => h('div', { class: 'mc-row mc-row2' }, h('span', { class: 'mc-u mc-rl' }, o.rows[i]), slots[i], U[i] ? h('span', { class: 'mc-u' }, U[i]) : null))) : null;
+  const wrap = h('div', { class: 'ans mc-ans ia' }, rowsEl || h('div', { class: 'mc-row' }, o.pre === '' ? null : h('span', { class: 'mc-u' }, o.pre || 'ได้'), slots[0], U[0] ? h('span', { class: 'mc-u' }, U[0]) : null, o.mid ? h('span', { class: 'mc-u mc-mid' }, o.mid) : null, slots[1], U[1] ? h('span', { class: 'mc-u' }, U[1]) : null), kp, msg); /* v136: o.mid = คำระหว่างสองช่อง (ได้ __ เศษ __) */
   wrap.reveal = () => { val[0] = String(want[0]); val[1] = String(want[1]); done = true; paint(); wrap.classList.add('done', 'revealed'); }; wrap.ansText = want.map(String);
   paint(); return wrap;
 }
@@ -19578,7 +19582,7 @@ Object.assign(Q, {
   /* one dial hour → its daytime and night-time names */
   tkTwoNames({ k }) { const day = k >= 6 ? k : k + 12, night = k === 12 ? 0 : k >= 6 ? k + 12 : k; const q = 'เวลานี้เป็นได้ทั้งกลางวันและกลางคืน เติมทั้งสองแบบ';
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: `<div class="tk-pair">${tkClk(k, 0)}<span class="tk-dn">${tkSun(40)}${tkMoon(40)}</span></div>` }),
-      duoInput(ctx, [day, night], ['นาฬิกา · กลางคืน', 'นาฬิกา'], { pre: 'กลางวัน', hint: `กลางวัน 6–17 นาฬิกา · กลางคืน 18–5 นาฬิกา · หลังเที่ยงให้บวก 12` }))); } };
+      duoInput(ctx, [day, night], ['นาฬิกา', 'นาฬิกา'], { rows: ['กลางวัน', 'กลางคืน'], names: ['เวลากลางวัน', 'เวลากลางคืน'], hint: `กลางวัน 6–17 นาฬิกา · กลางคืน 18–5 นาฬิกา · หลังเที่ยงให้บวก 12` }))); } };
   },
   /* set the hands, then say day or night when it matters */
   tkSet({ h: H, m = 0 }) { const q = `หมุนเข็มนาฬิกาให้เป็นเวลา ${tkTxt(H, m)}`;
