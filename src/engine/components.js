@@ -297,7 +297,7 @@ function linker(wrap, svg, o) {
 }
 function matchBoard(ctx, left, right, opts = {}) {
   // left/right: [{key, node|label}]
-  const wrap = h('div', { class: 'match ia' });
+  const wrap = h('div', { class: 'match ia' + (opts.rows ? ' mrows' : '') }); /* v187 rows: การ์ดซ้ายเป็นแถวบน การ์ดขวาเป็นแถวล่าง */
   const svg = document.createElementNS(SVGNS, 'svg'); svg.setAttribute('class', 'lines');
   const L = h('div', { class: 'colm l' }), R = h('div', { class: 'colm r' });
   const make = (it, side) => { const d = h('div', { class: 'mi', 'data-key': it.key, 'data-side': side }); if (it.node) d.append(it.node); else d.innerHTML = /^\d+$/.test(it.label) ? `<span class="num">${it.label}</span>` : it.label; return d; };
@@ -305,8 +305,8 @@ function matchBoard(ctx, left, right, opts = {}) {
   wrap.append(svg, L, R);
   let done = 0;
   linker(wrap, svg, {
-    sel: '.mi', dir: 'h',
-    anchor: el => { const wr = wrap.getBoundingClientRect(), r = el.getBoundingClientRect(); return el.dataset.side === 'l' ? [r.right - wr.left, r.top + r.height / 2 - wr.top] : [r.left - wr.left, r.top + r.height / 2 - wr.top]; },
+    sel: '.mi', dir: opts.rows ? 'v' : 'h',
+    anchor: el => { const wr = wrap.getBoundingClientRect(), r = el.getBoundingClientRect(); if (opts.rows) return [r.left + r.width / 2 - wr.left, el.dataset.side === 'l' ? r.bottom - wr.top : r.top - wr.top]; return el.dataset.side === 'l' ? [r.right - wr.left, r.top + r.height / 2 - wr.top] : [r.left - wr.left, r.top + r.height / 2 - wr.top]; },
     canLink: (a, b) => a.dataset.side !== b.dataset.side,
     onLink: (a, b) => {
       const [l, r] = a.dataset.side === 'l' ? [a, b] : [b, a];

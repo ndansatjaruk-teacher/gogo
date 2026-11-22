@@ -40,7 +40,7 @@
 | `Q.chartAsk` | `{ chart: c, ask, a = 0, b = 1, k = 3 }` | [`engine/questions.js:915`](../src/engine/questions.js#L915) |
 | `Q.cmp2` | `{ a, b: bb, blocks = false }` | [`engine/questions.js:1241`](../src/engine/questions.js#L1241) |
 | `Q.cnsQ` | `T, q` | [`grades/p5/p5q.js:571`](../src/grades/p5/p5q.js#L571) |
-| `Q.colW` | `{ nums, op, prompt, say, sig, plain }` | [`engine/colw.js:83`](../src/engine/colw.js#L83) |
+| `Q.colW` | `{ nums, op, prompt, say, sig, plain, ...rest }` | [`engine/colw.js:89`](../src/engine/colw.js#L89) |
 | `Q.compare5` | `{ a, b: bb, ea, eb, eq = true }` | [`engine/questions.js:754`](../src/engine/questions.js#L754) |
 | `Q.compareSym` | `{ a, b: bb, blocks = false }` | [`engine/questions.js:621`](../src/engine/questions.js#L621) |
 | `Q.countKind` | `{ items, kind, mode = 'solid', art: isArt }` | [`engine/questions.js:1130`](../src/engine/questions.js#L1130) |
@@ -158,7 +158,7 @@
 | `Q.isAddition` | | [`engine/questions.js:380`](../src/engine/questions.js#L380) |
 | `Q.isSubtraction` | | [`engine/questions.js:529`](../src/engine/questions.js#L529) |
 | `Q.ixGroup` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:45`](../src/engine/ix.js#L45) |
-| `Q.ixMatch` | `{ q, say: sy, pairs, hint, wide }` | [`engine/ix.js:11`](../src/engine/ix.js#L11) |
+| `Q.ixMatch` | `{ q, say: sy, pairs, hint, wide, rows }` | [`engine/ix.js:11`](../src/engine/ix.js#L11) |
 | `Q.ixSort` | `{ q, say: sy, items, dir = 'asc', k, slotLabels, hint, fig, side }` | [`engine/ix.js:19`](../src/engine/ix.js#L19) |
 | `Q.ixTF` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:30`](../src/engine/ix.js#L30) |
 | `Q.k3Cmp` | `{ L, R }` | [`grades/p3/p3k.js:59`](../src/grades/p3/p3k.js#L59) |
@@ -385,12 +385,12 @@
 | `Q.vPour` | `{ src, srcName, n, cup, cupName, col, dry }` | [`grades/p2/p2v.js:95`](../src/grades/p2/p2v.js#L95) |
 | `Q.vRead` | `{ kind, cap, v, name, col }` | [`grades/p2/p2v.js:101`](../src/grades/p2/p2v.js#L101) |
 | `Q.vWord` | `{ text, right, fig }` | [`grades/p2/p2v.js:114`](../src/grades/p2/p2v.js#L114) |
-| `Q.w2Body` | `{ txt }` | [`grades/p2/p2w.js:147`](../src/grades/p2/p2w.js#L147) |
-| `Q.w2Calc` | `{ a, b, op, m = 'kd', text }` | [`grades/p2/p2w.js:157`](../src/grades/p2/p2w.js#L157) |
-| `Q.w2Conv` | `{ g, from, to, name }` | [`grades/p2/p2w.js:151`](../src/grades/p2/p2w.js#L151) |
-| `Q.w2Read` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:137`](../src/grades/p2/p2w.js#L137) |
-| `Q.w2Set` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:143`](../src/grades/p2/p2w.js#L143) |
-| `Q.w2Story` | `{ text, a, b, op, m = 'kd', why }` | [`grades/p2/p2w.js:162`](../src/grades/p2/p2w.js#L162) |
+| `Q.w2Body` | `{ txt }` | [`grades/p2/p2w.js:183`](../src/grades/p2/p2w.js#L183) |
+| `Q.w2Calc` | `{ a, b, op, m = 'kd', text }` | [`grades/p2/p2w.js:193`](../src/grades/p2/p2w.js#L193) |
+| `Q.w2Conv` | `{ g, from, to, name }` | [`grades/p2/p2w.js:187`](../src/grades/p2/p2w.js#L187) |
+| `Q.w2Read` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:173`](../src/grades/p2/p2w.js#L173) |
+| `Q.w2Set` | `{ e, name, g, kind = 'kd', m }` | [`grades/p2/p2w.js:179`](../src/grades/p2/p2w.js#L179) |
+| `Q.w2Story` | `{ text, a, b, op, m = 'kd', why }` | [`grades/p2/p2w.js:197`](../src/grades/p2/p2w.js#L197) |
 | `Q.w3Calc` | `{ a, b, op, m }` | [`grades/p3/p3w.js:135`](../src/grades/p3/p3w.js#L135) |
 | `Q.w3Conv` | `{ from, to }` | [`grades/p3/p3w.js:129`](../src/grades/p3/p3w.js#L129) |
 | `Q.w3Dig` | `{ g, m = 'kg', name, e }` | [`grades/p3/p3w.js:115`](../src/grades/p3/p3w.js#L115) |

@@ -13,6 +13,12 @@ const CW_PV = { 0: 'หน่วย', 1: 'สิบ', 2: 'ร้อย', 3: 'พ
 const cwPl = s => (String(s).replace(/,/g, '').split('.')[1] || '').length;
 const cwInt = (s, p) => { const [w, f = ''] = String(s).replace(/,/g, '').split('.'); return +((w || '0') + f.padEnd(p, '0')); };
 const cwFmt = (v, p) => { const s = String(v).padStart(p + 1, '0'), w = s.slice(0, s.length - p), f = p ? s.slice(-p) : ''; return (+w).toLocaleString('en-US') + (p ? '.' + f : ''); };
+/* v187 (ผู้ใช้ขอ: บวกลบน้ำหนักทดเหมือนบทบวกลบ) หน่วยผสม — o.pv(i) ป้ายหลัก · o.grp(n) [[ชื่อกลุ่ม, จำนวนหลัก], …] จากซ้าย ·
+   o.split = จำนวนหลักทางขวาที่เป็นหน่วยย่อย (ขีด 1 · กรัม 3) → ระบายสีและมีเส้นแบ่ง · o.eq / o.ans ข้อความโจทย์-คำตอบ · o.nm(i) ชื่อหลักในคำอธิบาย */
+function cwTint(grid, n, split) { if (!split) return; let c = 0;
+  [...grid.children].forEach(el => { if (el.classList.contains('ln') || el.classList.contains('pgr') || el.classList.contains('pt')) return; const k = c % (n + 1); c++; if (!k) return; const i = n - k;
+    if (i < split) el.classList.add('cwu'); if (i === split - 1) el.classList.add('cwdv'); }); }
+const cwGrp = (o, n) => o.grp ? '<span class="pgr"></span>' + o.grp(n).map(([t, c, k]) => `<span class="pg pgr ${k || ''}" style="grid-column:span ${c}">${t}</span>`).join('') : '';
 function colWork(bd, ctx, o) {
   const op = o.op, nums = o.nums.map(x => String(x).replace(/,/g, '')), p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), V = nums.map(s => cwInt(s, p));
   const R = op === '+' ? V.reduce((x, y) => x + y, 0) : op === '−' ? V[0] - V[1] : V[0] * V[1], len = v => String(v).length, dg = (v, i) => Math.floor(v / 10 ** i) % 10;
@@ -27,9 +33,9 @@ function colWork(bd, ctx, o) {
   const grid = h('div', { class: 'p4col e4col e4w cw ia' }), info = h('div', { class: 'p4steplab e4w-info' }), msg = h('div', { class: 'pad-msg e4w-msg' });
   let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : ''); grid.style.gridTemplateColumns = cols;
   const span = n + 1 + (p ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; } return x; };
-  const eq = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `), ans = cwFmt(R, p);
+  const eq = o.eq || nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `), ans = o.ans || cwFmt(R, p);
   const paint = () => {
-    let x = row('<span></span>', i => `<span class="pn">${CW_PV[i - p] || ''}</span>`);
+    let x = cwGrp(o, n) + row('<span></span>', i => `<span class="pn">${(o.pv ? o.pv(i) : CW_PV[i - p]) || ''}</span>`);
     x += row('<span></span>', i => { if (o.plain) return '<span class="mk"></span>'; if (op === '−') return `<span class="mk">${i < shown(0) && S.cur[i] !== dg(V[0], i) ? S.cur[i] : ''}</span>`;
       return i >= 1 && i <= cTop ? `<span class="mk e4c-k${S.carry[i] ? ' on' : ''}" data-k="c:${i}">${S.carry[i] || ''}</span>` : '<span class="mk"></span>'; });
     nums.forEach((s, j) => { const last = j === nums.length - 1;
@@ -42,7 +48,7 @@ function colWork(bd, ctx, o) {
     parts.forEach((pt, r) => { x += row(r === parts.length - 1 ? '<span class="sg">+</span>' : '<span></span>', ed('p' + pt.r)); });
     if (parts.length) x += `<span class="ln" style="grid-column:1 / span ${span}"></span>`;
     x += row('<span></span>', ed('r'), p ? '.' : '');
-    grid.innerHTML = x + `<span class="ln dbl" style="grid-column:1 / span ${span}"></span>`; };
+    grid.innerHTML = x + `<span class="ln dbl" style="grid-column:1 / span ${span}"></span>`; cwTint(grid, n, o.split); };
   const say1 = t => { msg.innerHTML = t; };
   const undo = h('button', { class: 'btn sm ia', style: { display: 'none' }, onclick: e => { e.stopPropagation(); if (S.ok || !S.hist.length) return; const i = S.hist.pop(); S.cur[i]++; S.cur[i - 1] -= 10; if (!S.hist.length) undo.style.display = 'none'; sfx.tap(); paint(); } }, icon('undo'), 'ย้อนการกระจาย');
   grid.addEventListener('click', e => { e.stopPropagation(); if (S.ok) return; const el = e.target.closest('[data-k]'); if (!el) return; const [k, u, v] = el.dataset.k.split(':');
@@ -63,14 +69,14 @@ function colWork(bd, ctx, o) {
     if (!Object.values(S.res.r).some(v => v !== '')) { say1(parts.length && Object.values(S.res[rowsE[0]]).some(v => v !== '') ? 'อย่าลืมแถวคำตอบ (แถวล่างสุด)' : 'แตะช่องคำตอบ แล้วกดตัวเลขก่อนนะ'); if (parts.length) { S.sel = { k: 'r', i: 0 }; paint(); } return; }
     S.bad = new Set([...range(0, n - 1).filter(i => (S.res.r[i] ?? '') !== want(i) && !(want(i) === '' && S.res.r[i] === '0')).map(i => 'r' + i), /* v179: 0 นำหน้าทางซ้ายของคำตอบไม่ผิด (070 = 70) */ ...parts.flatMap(pt => range(0, cellsOf('p' + pt.r) - 1).filter(i => !partOK(pt, i)).map(i => 'p' + pt.r + i))]);
     if (![...S.bad].some(b => b[0] === 'r')) { S.ok = true; S.bad = new Set(); paint(); say1(''); undo.style.display = 'none'; info.innerHTML = `${eq} = <b>${ans}</b>`; return ctx.check(true); }
-    paint(); ctx.check(false, op === '+' ? 'บวกทีละหลักจากขวาไปซ้าย หลักไหนได้ 10 ขึ้นไป เขียนหลักหน่วย แล้วทดไปหลักทางซ้าย' : op === '−' ? 'ลบทีละหลักจากขวาไปซ้าย หลักไหนลบไม่ได้ ให้แตะตัวเลขด้านบนทางซ้ายเพื่อกระจายก่อน'
-      : parts.length ? 'คูณด้วยหลักหน่วยก่อน แล้วคูณด้วยหลักสิบ (เติม 0 ทางขวา) แล้วบวกผลคูณย่อย' : 'คูณทีละหลักจากหลักหน่วย ได้ 10 ขึ้นไป เขียนหลักหน่วย แล้วทดไปบวกในหลักถัดไป'); };
+    paint(); ctx.check(false, o.hint || (op === '+' ? 'บวกทีละหลักจากขวาไปซ้าย หลักไหนได้ 10 ขึ้นไป เขียนหลักหน่วย แล้วทดไปหลักทางซ้าย' : op === '−' ? 'ลบทีละหลักจากขวาไปซ้าย หลักไหนลบไม่ได้ ให้แตะตัวเลขด้านบนทางซ้ายเพื่อกระจายก่อน'
+      : parts.length ? 'คูณด้วยหลักหน่วยก่อน แล้วคูณด้วยหลักสิบ (เติม 0 ทางขวา) แล้วบวกผลคูณย่อย' : 'คูณทีละหลักจากหลักหน่วย ได้ 10 ขึ้นไป เขียนหลักหน่วย แล้วทดไปบวกในหลักถัดไป')); };
   const kp = h('div', { class: 'keypad e4w-kp' }); [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: e => { e.stopPropagation(); type(d); } }, d)));
   kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: e => { e.stopPropagation(); del(); } }, icon('left')), h('button', { class: 'btn', onclick: e => { e.stopPropagation(); type(0); } }, '0'), h('button', { class: 'btn primary', 'aria-label': 'ตรวจ', onclick: e => { e.stopPropagation(); check(); } }, icon('check')));
-  info.innerHTML = 'แตะช่องคำตอบ แล้วกดตัวเลขทีละหลัก <b>จากขวาไปซ้าย</b> · ทำครบแล้วกด ✓' + (needZ.length ? '<br>ตำแหน่งไม่เท่ากัน → แตะช่องว่างเพื่อเติม 0' : '')
-    + (o.plain ? '' : op === '+' ? '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะอีกครั้งเพื่อเปลี่ยน/ลบ)' : op === '−' ? '<br>ลบไม่ได้ → แตะตัวเลขตัวตั้งทางซ้ายเพื่อกระจาย' : '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะซ้ำ = เพิ่มทีละ 1)')
+  info.innerHTML = o.info || 'แตะช่องคำตอบ แล้วกดตัวเลขทีละหลัก <b>จากขวาไปซ้าย</b> · ทำครบแล้วกด ✓' + (needZ.length ? '<br>ตำแหน่งไม่เท่ากัน → แตะช่องว่างเพื่อเติม 0' : '')
+    + (o.note ? '<br>' + o.note : '') + (o.plain ? '' : op === '+' ? '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะอีกครั้งเพื่อเปลี่ยน/ลบ)' : op === '−' ? '<br>ลบไม่ได้ → แตะตัวเลขตัวตั้งทางซ้ายเพื่อกระจาย' : '<br>ทด: แตะช่องเล็กเหนือหลัก (แตะซ้ำ = เพิ่มทีละ 1)')
     + (parts.length ? '<br>แถวผลคูณย่อย: คูณด้วยหลักหน่วย → หลักสิบ (ช่องขวาสุดเป็น 0) → บวกกันในแถวล่าง' : '');
-  grid.classList.add('rvl'); grid.ansText = ans.replace(/,/g, '');
+  grid.classList.add('rvl'); grid.ansText = cwFmt(R, p).replace(/,/g, '');
   grid.reveal = () => { needZ.forEach(z => S.zf.add(z));
     if (op === '+') { let c = 0; for (let i = 0; i < n; i++) { const s = V.reduce((t, v) => t + dg(v, i), 0) + c; c = Math.floor(s / 10); if (c && i + 1 <= cTop) S.carry[i + 1] = c; } }
     else if (op === '−') { const t = range(0, n - 1).map(i => dg(V[0], i)); range(0, n - 1).forEach(i => { if (t[i] < dg(V[1], i)) { let j = i + 1; while (t[j] === 0) j++; t[j]--; for (let k = j - 1; k > i; k--) t[k] += 9; t[i] += 10; } }); S.cur = t; }
@@ -80,8 +86,8 @@ function colWork(bd, ctx, o) {
   paint(); bd.append(g4Side(h('div', { class: 'e4w-fig' }, grid), info, kp, msg, undo)); return grid;
 }
 Object.assign(Q, {
-  colW({ nums, op, prompt, say, sig, plain }) { /* plain: ไม่มีช่องทด / ไม่ให้กระจาย (ด่านที่ยังไม่เรียนทด) */ const vb = op === '+' ? 'บวก' : op === '−' ? 'ลบ' : 'คูณ', p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), eq = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `);
-    return { prompt: prompt || `ตั้ง${vb} <b class="num">${eq}</b>`, say: say || `ตั้ง${vb} ${eq.replace(/,/g, '')}`, __sig: sig || `cw ${nums.join(op)}`, mount(bd, ctx) { colWork(bd, ctx, { nums, op, plain }); } }; }
+  colW({ nums, op, prompt, say, sig, plain, ...rest }) { /* plain: ไม่มีช่องทด / ไม่ให้กระจาย (ด่านที่ยังไม่เรียนทด) */ const vb = op === '+' ? 'บวก' : op === '−' ? 'ลบ' : 'คูณ', p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), eq = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `);
+    return { prompt: prompt || `ตั้ง${vb} <b class="num">${eq}</b>`, say: say || `ตั้ง${vb} ${eq.replace(/,/g, '')}`, __sig: sig || `cw ${nums.join(op)}`, mount(bd, ctx) { colWork(bd, ctx, { nums, op, plain, ...rest }); } }; }
 });
 
 /* =========================================================
@@ -93,12 +99,12 @@ Object.assign(Q, {
    ========================================================= */
 function colWalk(nums0, op, o = {}) {
   const nums = nums0.map(x => String(x).replace(/,/g, '')), p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), V = nums.map(s => cwInt(s, p)), PL = nums.map(cwPl);
-  const len = v => String(v).length, dg = (v, i) => Math.floor(v / 10 ** i) % 10, shown = j => Math.max(len(V[j]), p + 1), NM = i => 'หลัก' + (CW_PV[i - p] || '').replace('ส.', 'ส่วน');
+  const len = v => String(v).length, dg = (v, i) => Math.floor(v / 10 ** i) % 10, shown = j => Math.max(len(V[j]), p + 1), NM = i => o.nm ? o.nm(i) : 'หลัก' + (CW_PV[i - p] || '').replace('ส.', 'ส่วน');
   const R = op === '+' ? V.reduce((x, y) => x + y, 0) : op === '−' ? V[0] - V[1] : V[0] * V[1], mB = op === '×' ? String(V[1]).split('').reverse().map(Number) : [];
   const parts = op === '×' && mB.length > 1 ? mB.map((d, r) => ({ r, d, v: V[0] * d })) : [];
   const n = Math.max(...V.map((v, j) => shown(j)), len(R), ...parts.map(x => len(x.v) + x.r)), rows = [...parts.map(x => 'p' + x.r), 'r'];
   const pads = op === '×' ? [] : nums.flatMap((s, j) => range(0, n - 1).filter(i => i < shown(j) && i < p - PL[j]).map(i => j + ':' + i));
-  const eqTxt = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `), ans = cwFmt(R, p);
+  const eqTxt = o.eq || nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `), ans = o.ans || cwFmt(R, p);
   /* ---- the steps: each = { t, hl, rowHl, f(S) } ---- */
   const ST = []; const add = (t, hl, f, rowHl, mr) => ST.push({ t, hl, f, rowHl, mr });
   add(op === '×' ? 'ตั้งตัวตั้งไว้บน ตัวคูณไว้ล่าง ให้<b>หลักหน่วยตรงกัน</b>' : p ? 'ตั้งให้<b>จุดทศนิยมตรงกัน</b> หลักเดียวกันอยู่ตรงกัน' : 'ตั้งให้<b>หลักตรงกัน</b> — หลักหน่วยตรงหลักหน่วย', -1, () => {});
@@ -135,7 +141,7 @@ function colWalk(nums0, op, o = {}) {
   const fresh = () => ({ zf: new Set(), carry: {}, cur: cur0.slice(), res: Object.fromEntries(rows.map(k => [k, {}])), nw: new Set(), ok: false });
   let k = 0; const stateAt = m => { const S = fresh(); for (let j = 0; j < m; j++) { S.nw = new Set(); ST[j].f(S); } return S; };
   const paint = () => { const S = stateAt(k), st = k ? ST[k - 1] : null, hl = st ? st.hl : -1, hc = i => i === hl ? ' cw-hl' : '';
-    let x = row('<span></span>', i => `<span class="pn${hc(i)}">${CW_PV[i - p] || ''}</span>`);
+    let x = cwGrp(o, n) + row('<span></span>', i => `<span class="pn${hc(i)}">${(o.pv ? o.pv(i) : CW_PV[i - p]) || ''}</span>`);
     x += row('<span></span>', i => op === '−' ? `<span class="mk${hc(i)}${S.nw.has('b' + i) ? ' cw-new' : ''}">${i < shown(0) && S.cur[i] !== cur0[i] ? S.cur[i] : ''}</span>` : `<span class="mk cw-cm${hc(i)}${S.nw.has('c' + i) ? ' cw-new' : ''}">${S.carry[i] || ''}</span>`);
     nums.forEach((s, j) => { const last = j === nums.length - 1;
       x += row(last ? `<span class="sg">${op}</span>` : '<span></span>', i => { if (i >= shown(j)) return `<span class="dg${hc(i)}"></span>`; const pad = i < p - PL[j];
@@ -148,7 +154,7 @@ function colWalk(nums0, op, o = {}) {
     parts.forEach((pt, r) => { x += row(r === parts.length - 1 ? '<span class="sg">+</span>' : '<span></span>', rr('p' + pt.r)); });
     if (parts.length) x += `<span class="ln" style="grid-column:1 / span ${span}"></span>`;
     x += row('<span></span>', rr('r'), p ? '.' : '');
-    grid.innerHTML = x + `<span class="ln dbl" style="grid-column:1 / span ${span}"></span>`;
+    grid.innerHTML = x + `<span class="ln dbl" style="grid-column:1 / span ${span}"></span>`; cwTint(grid, n, o.split);
     now.innerHTML = st ? `<span class="cwk-n">ขั้นที่ ${k}/${ST.length}</span> ${st.t}` : `โจทย์ <b class="num">${eqTxt} = ?</b><br><small>กด “ขั้นต่อไป” ดูทีละขั้น</small>`;
     log.innerHTML = ST.slice(0, Math.max(0, k - 1)).map((s, j) => `<div class="cwk-li"><i>${j + 1}</i><span>${s.t}</span></div>`).join(''); log.scrollTop = log.scrollHeight;
     nx.disabled = k >= ST.length; bk.disabled = k === 0; nx.lastChild.textContent = k >= ST.length ? 'ครบทุกขั้นแล้ว' : 'ขั้นต่อไป';

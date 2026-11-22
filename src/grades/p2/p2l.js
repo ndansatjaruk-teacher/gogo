@@ -295,11 +295,11 @@ Object.assign(Q, {
     return { prompt: q, say: q, mount(bd, ctx) { const big = h('div', { class: 'fbig p4big' }, h('b', { class: 'num' }, to === 'mc' ? `${fmt(cm)} ซม.` : mcTxt(cm, 1)), h('span', { class: 'fop' }, ' = '), h('span', { class: 'fsign' }, '?'));
       bd.append(h('div', { class: 'colstack' }, big, to === 'mc' ? mcInput(ctx, cm, { hint: `100 เซนติเมตร = 1 เมตร → ${fmt(cm)} = ${fmt(mcM(cm) * 100)} + ${mcC(cm)}` }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(cm), { hint: `${mcM(cm)} เมตร = ${fmt(mcM(cm) * 100)} เซนติเมตร แล้วบวก ${mcC(cm)} เซนติเมตร` }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เซนติเมตร')))); } };
   },
-  /* sentence comparison with mixed units: a, b = [name, label, cm] */
+  /* sentence comparison with mixed units: a, b = [name, label, cm, art?] — v187: art = ภาพประกอบ (ไม่บอกคำตอบ) */
   p2cmpWord({ a, b, words, pre = '', hint }) {
     const r = a[2] > b[2] ? words[0] : a[2] < b[2] ? words[1] : words[2];
     return { prompt: 'เลือกคำเติมในช่องว่าง', say: `${pre}${a[0]} กับ ${pre}${b[0]} เลือกคำเติมในช่องว่าง`, mount(bd, ctx) { const blank = h('span', { class: 'blank' }, '?');
-      bd.append(h('div', { class: 'colstack' }, h('div', { class: 'sentence cmp2' }, h('span', { class: 'lab', html: `${pre}${a[0]} <b class="cv">${a[1]}</b>` }), blank, h('span', { class: 'lab', html: `${pre}${b[0]} <b class="cv">${b[1]}</b>` })),
+      bd.append(h('div', { class: 'colstack' }, h('div', { class: 'sentence cmp2' }, h('span', { class: 'lab' + (a[3] ? ' cmp-l' : ''), html: (a[3] ? `<span class="cmp-pic">${artHTML(a[3])}</span>` : '') + `<span>${pre}${a[0]} <b class="cv">${a[1]}</b></span>` }), blank, h('span', { class: 'lab' + (b[3] ? ' cmp-l' : ''), html: (b[3] ? `<span class="cmp-pic">${artHTML(b[3])}</span>` : '') + `<span>${pre}${b[0]} <b class="cv">${b[1]}</b></span>` })),
         wordChoices(ctx, r, blank, hint || 'เปลี่ยนให้เป็นเซนติเมตรทั้งคู่ก่อน (1 เมตร = 100 เซนติเมตร) แล้วเปรียบเทียบ', words))); } };
   },
   /* distance on the map: tap roads to mark the route, then pick the distance */

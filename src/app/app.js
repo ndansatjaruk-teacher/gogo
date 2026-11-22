@@ -624,11 +624,12 @@ function startTeach(li, at = 0, seen = false) {
     back.disabled = i === 0;
     stage.innerHTML = '';
     bub = bubbleRow(''); vis = h('div', { class: 'visual step-in' }); hint = h('div', { class: 'tap-hint' }, icon('tap'), h('span', null, 'แตะตรงไหนก็ได้เพื่อไปต่อ'));
-    const card = h('div', { class: 'card stage-card teach-card', style: { flex: 1, display: 'flex', minHeight: 0 } }, vis);
-    stage.append(h('div', { class: 'screen teach' + (dir < 0 ? ' back' : '') }, bub, card, hint));
+    bub.classList.add('in-card'); /* v187 (ผู้ใช้ขอ): ไก่น้อยพูดอยู่ในกรอบเนื้อหา ด้านบนสุด ไม่มีกรอบคำพูดแยก ตัวอักษรใหญ่ขึ้น */
+    const card = h('div', { class: 'card stage-card teach-card', style: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } }, bub, vis);
+    stage.append(h('div', { class: 'screen teach' + (dir < 0 ? ' back' : '') }, card, hint));
     if (i < L.teach.length) {
       const s = L.teach[i]; bub.set(s.t, null, 'happy'); window.__teachBub = bub; mountStep(s); say(s.s || s.t);
-      if (vis.querySelector('.ia, button, canvas, .tappable')) card.append(h('button', { class: 'btn sm restart ia', 'aria-label': 'เริ่มใหม่', onclick: e => { e.stopPropagation(); sfx.page(); mountStep(s); vis.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 300 }); } }, icon('replay'), 'เริ่มใหม่'));
+      if (vis.querySelector('.ia, button, canvas, .tappable')) bub.querySelector('.speech').insertBefore(h('button', { class: 'btn sm restart ia', 'aria-label': 'เริ่มใหม่', onclick: e => { e.stopPropagation(); sfx.page(); mountStep(s); vis.animate([{ opacity: .3 }, { opacity: 1 }], { duration: 300 }); } }, icon('replay'), 'เริ่มใหม่'), bub.querySelector('.spk'));
       next.firstChild.textContent = 'ถัดไป';
     } else {
       gate = null; setLock(false);
@@ -965,8 +966,9 @@ function startGame(li) {
     stage.innerHTML = '';
     promptOnce(q);
     const bub = bubbleRow(q.prompt + '<div class="bsub ph">&nbsp;</div>', { speak: q.say || q.prompt }), body = h('div', { class: 'qbody' });
-    const card = h('div', { class: 'card stage-card', style: { flex: 1, display: 'flex', minHeight: 0 } }, body);
-    stage.append(h('div', { class: 'screen qwrap' }, bub, card));
+    bub.classList.add('in-card');
+    const card = h('div', { class: 'card stage-card', style: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } }, bub, body);
+    stage.append(h('div', { class: 'screen qwrap' }, card));
     let attempts = 0, done = false, extra = '', lastWhy = '';
     const PH = '<div class="bsub ph">&nbsp;</div>'; // reserve the feedback line so the screen does not jump when feedback appears
     const withPrompt = () => q.prompt + (extra && extra !== q.prompt ? `<div class="bsub">${extra}</div>` : PH);

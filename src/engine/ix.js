@@ -8,21 +8,21 @@
    ========================================================= */
 Object.assign(Q, {
   /* pairs: [[leftHTML, rightHTML]] — identical right labels share one key, so any of them is accepted */
-  ixMatch({ q, say: sy, pairs, hint, wide }) {
+  ixMatch({ q, say: sy, pairs, hint, wide, rows }) {
     return { prompt: q, say: sy || speakText(q.replace(/<[^>]+>/g, '')), mount(bd, ctx) {
       const key = r => String(r).replace(/<[^>]+>/g, '');
-      const m = matchBoard(ctx, shuffle(pairs.map(([l, r]) => ({ key: key(r), label: l }))), shuffle(pairs.map(([, r]) => ({ key: key(r), label: r }))), { hint: hint || 'ลากเส้นหรือแตะการ์ดซ้ายแล้วแตะการ์ดขวาที่เป็นคู่กัน' });
+      const m = matchBoard(ctx, shuffle(pairs.map(([l, r]) => ({ key: key(r), label: l }))), shuffle(pairs.map(([, r]) => ({ key: key(r), label: r }))), { hint: hint || (rows ? 'ลากเส้นหรือแตะการ์ดบนแล้วแตะการ์ดล่างที่เป็นคู่กัน' : 'ลากเส้นหรือแตะการ์ดซ้ายแล้วแตะการ์ดขวาที่เป็นคู่กัน'), rows });
       m.classList.add('ixm'); if (wide) m.classList.add('ixw');
-      bd.append(h('div', { class: 'colstack' }, m, h('div', { class: 'cap ixcap' }, 'ลากเส้นจับคู่ หรือแตะการ์ดซ้ายแล้วแตะการ์ดขวา'))); } };
+      bd.append(h('div', { class: 'colstack' }, m, h('div', { class: 'cap ixcap' }, rows ? 'ลากเส้นจับคู่ หรือแตะการ์ดบนแล้วแตะการ์ดล่าง' : 'ลากเส้นจับคู่ หรือแตะการ์ดซ้ายแล้วแตะการ์ดขวา'))); } };
   },
   /* items: [{ label (HTML), v (number to sort by) }] · dir 'asc' | 'desc' · k = only the first k places (podium) */
   ixSort({ q, say: sy, items, dir = 'asc', k, slotLabels, hint, fig, side }) { /* side (v181): ภาพซ้าย · ทางเดิน (แนวตั้ง) + การ์ดขวา — พอดีจอไม่ต้องเลื่อน */
     const n = k || items.length, sorted = [...items].sort((a, b) => dir === 'asc' ? a.v - b.v : b.v - a.v).slice(0, n);
     return { prompt: q, say: sy || speakText(q.replace(/<[^>]+>/g, '')), mount(bd, ctx) { // v119: เส้นทางคาราวาน (cvnBoard)
-      const its = shuffle(items.slice()), board = cvnBoard({ cards: its.map(it => it.label), n, labels: slotLabels, ...(side ? { horiz: false } : {}), fits: (k, i) => its[k].v === sorted[i].v,
+      const its = shuffle(items.slice()), board = cvnBoard({ cards: its.map(it => it.label), n, labels: slotLabels, ...(side && side !== 'h' ? { horiz: false } : {}), fits: (k, i) => its[k].v === sorted[i].v,
         onDone: ok => ok ? ctx.check(true) : ctx.check(false, hint || (dir === 'asc' ? 'หาสิ่งที่น้อยที่สุดที่ยังเหลือ วางก่อน' : 'หาสิ่งที่มากที่สุดที่ยังเหลือ วางก่อน')) });
       ctx.onRight = () => board.reveal();
-      if (side && fig) { bd.append(h('div', { class: 'g4sd p2sd pp-sd' }, h('div', { class: 'p2sd-l', html: fig }), h('div', { class: 'g4sd-r colstack', style: { gap: '6px' } }, board, h('div', { class: 'cap ixcap' }, 'แตะการ์ดตามลำดับ — ' + cvnHint())))); return; }
+      if (side && fig) { bd.append(h('div', { class: 'g4sd p2sd pp-sd' + (side === 'h' ? ' ixs-h' : '') }, h('div', { class: 'p2sd-l', html: fig }), h('div', { class: 'g4sd-r colstack', style: { gap: '6px' } }, board, h('div', { class: 'cap ixcap' }, 'แตะการ์ดตามลำดับ — ' + cvnHint())))); return; }
       bd.append(h('div', { class: 'colstack' }, fig ? h('div', { class: 'p4-fig', html: fig }) : null, board, h('div', { class: 'cap ixcap' }, 'แตะการ์ดตามลำดับ — ' + cvnHint()))); } };
   },
   /* bins: ['คู่','คี่'] · items: [{ label, bin (index) }] — tap a card, then tap its bin (or tap the bin first) */
