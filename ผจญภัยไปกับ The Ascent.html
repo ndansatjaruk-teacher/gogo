@@ -3940,6 +3940,8 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .boss-result:has(.evalbox .evrow:nth-of-type(3)) h2{font-size:clamp(1.5rem,3.2cqw,2.1rem)}
 .boss-result:has(.evalbox .evrow:nth-of-type(3)) .evrow{padding:3px 8px}
 .boss-result:has(.bigstars) .boss-end{width:clamp(110px,12cqw,140px)} /* v192: หน้าชนะ (มีดาว) ให้ปุ่มอยู่ในจอ */
+/* v192 · เรื่องเล่าสอบปลายภาค: ป้ายบทใต้บอสแต่ละตัว */
+.st-mlab{position:absolute;left:50%;top:100%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(.7rem,1.4cqw,.9rem);font-weight:800;color:#1E1447;background:#FFD45C;border-radius:999px;padding:1px 8px;margin-top:2px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -4699,8 +4701,11 @@ Object.assign(ART, {
 /* final P1 boss: all chapter bosses merged — the minis orbit the giant body */
 const innerSVG = svg => svg.replace(/^\s*<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
 function megaMinis(grade = 1) { return typeof CITIES === 'undefined' ? [] : CITIES.filter(c => c.grade === grade && !c.final).flatMap(c => c.lessons.filter(L => L.boss && L.bossKind !== 'mega')).map(L => [L.bossPal, L.emblem, L.bossKind || 'blob']); }
+/* v192: บอสรวมร่างของข้อสอบปลายภาค — emblem → { grade, bosses: [id บอสท้ายบทที่มารวมร่าง] } (ไฟล์ของแต่ละชั้นลงทะเบียนเอง เช่น MEGA_SET['ภ.1'] ใน p2e.js) */
+const MEGA_SET = {};
+function megaMinisOf(ids) { return typeof CITIES === 'undefined' ? [] : ids.map(id => CITIES.flatMap(c => c.lessons).find(L => L.id === id)).filter(Boolean).map(L => [L.bossPal, L.emblem, L.bossKind || 'blob']); }
 function megaBossSVG(state = 'idle', emblem = 'ป.1') {
-  const grade = emblem === 'ป.2' ? 2 : emblem === 'ป.3' ? 3 : emblem === 'ป.4' ? 4 : emblem === 'ป.5' ? 5 : emblem === 'ป.6' ? 6 : 1, minis = megaMinis(grade), n = minis.length, ring = minis.map(([pal, em, kind], i) => { const a = Math.PI * .92 + (i / Math.max(1, n - 1)) * Math.PI * 1.16, x = 60 + Math.cos(a) * 70 - 16, y = 74 + Math.sin(a) * 62 - 17;
+  const S = MEGA_SET[emblem], grade = S ? S.grade : emblem === 'ป.2' ? 2 : emblem === 'ป.3' ? 3 : emblem === 'ป.4' ? 4 : emblem === 'ป.5' ? 5 : emblem === 'ป.6' ? 6 : 1, minis = S ? megaMinisOf(S.bosses) : megaMinis(grade), n = minis.length, ring = minis.map(([pal, em, kind], i) => { const a = Math.PI * .92 + (i / Math.max(1, n - 1)) * Math.PI * 1.16, x = 60 + Math.cos(a) * 70 - 16, y = 74 + Math.sin(a) * 62 - 17;
     return `<g class="mega-mini" style="animation-delay:${(i * .12).toFixed(2)}s"><g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(.27)">${innerSVG(bossSVG(state === 'down' ? 'down' : i % 3 ? 'idle' : 'roar', pal, em, kind))}</g></g>`; }).join('');
   const core = innerSVG(bossSVG(state, 'night', emblem, grade === 2 ? 'octo' : grade === 3 ? 'snake' : grade === 4 ? 'scorp' : grade === 5 ? 'bear' : grade === 6 ? 'yeti' : 'blob'));
   return `<svg viewBox="-34 -6 188 150" class="boss-svg mega" aria-hidden="true">
@@ -20263,11 +20268,13 @@ LESSONS_P2C7.push({ id: 979, boss: true, place: 'อ่าวนาฬิกา'
   winLine: 'ชนะปีศาจปลาหมึกนาฬิกาแล้ว! บอกเวลาได้แม่นยำมาก', loseLine: 'ปีศาจปลาหมึกนาฬิกายังเร็วกว่า กลับไปทวนแล้วสู้ใหม่นะ!' });
 
 /* =========================================================
-   GRADE 2 · TERM 1 EXAM — สอบปลายภาคเรียนที่ 1  (ชายหาด · เมือง 73 · บอส 1098)
-   40 ข้อ ครบบทที่ 1–5 (จำนวนนับไม่เกิน 1,000 · บวกลบ · ความยาว · น้ำหนัก · การคูณ) เรียงตามบท ง่าย → ยาก ในแต่ละบท
+   GRADE 2 · TERM EXAMS — สอบปลายภาค  (ชายหาด · ภาค 1: เมือง 73 · บอส 1098 · ภาค 2: เมือง 74 · บอส 1097)
+   ภาค 1: 40 ข้อ ครบบทที่ 1–5 (จำนวนนับไม่เกิน 1,000 · บวกลบ · ความยาว · น้ำหนัก · การคูณ)
+   ภาค 2: 40 ข้อ ครบบทที่ 6–11 (การหาร · เวลา · ปริมาตร · รูปเรขาคณิต · ระคน · แผนภูมิรูปภาพ) — เรียงตามบท ง่าย → ยาก ในแต่ละบท
+   เมืองสอบไม่มีแผนที่: กดเข้าเมือง = เรื่องเล่าสั้น (city.story → finalStory) บอสท้ายบทว่ายกลับมาทีละตัว รวมร่าง แล้วเข้าสอบทันที
    แบบข้อสอบปรนัย 3 ตัวเลือกตามแนวข้อสอบปลายภาค ป.2 — โจทย์ ตัวเลข ชื่อ และบริบทแต่งใหม่ทั้งหมด (ไม่คัดลอกข้อสอบของผู้อื่น)
    a = ตำแหน่งคำตอบใน opts ที่เขียน (ตัวเลือกถูกเขียนไว้ก่อนเสมอ) · ตำแหน่งจริงสุ่มใหม่ทุกครั้งที่เริ่มสอบ
-   ch = บทที่ · lv = ด่านที่สอนเรื่องนั้น (ใช้แนะนำด่านที่ควรทบทวน) · ตรวจคำตอบทุกข้อด้วย tests/term_exam.py
+   ch = บทที่ · lv = ด่านที่สอนเรื่องนั้น (ใช้แนะนำด่านที่ควรทบทวน) · ตรวจคำตอบทุกข้อด้วย tests/term_exam.py (ทั้งสองภาค)
    ========================================================= */
 const T1_MAP = { W: 560, H: 300, nodes: { home: [90, 250, 'บ้านแก้ว', 'house'], school: [290, 62, 'โรงเรียน', 'school', -1], park: [480, 250, 'สวนสาธารณะ', 'park'] },
   edges: [['home', 'school', 350, -40, 0, .3], ['school', 'park', 275, 44, 0, .3], ['home', 'park', 540, 0, 20, 0]] };
@@ -20318,13 +20325,80 @@ const T1_EXAM = [
   { ch: 5, lv: 930, q: '76 × 4 = ☐   ☐ คือจำนวนใด', opts: ['304', '284', '314'], a: 0 },
   { ch: 5, lv: 931, q: '☐ × 8 = 72   ☐ คือจำนวนใด', opts: ['9', '8', '64'], a: 0 },
   { ch: 5, lv: 932, q: 'ชาวสวนปลูกต้นกล้า 8 แถว แถวละ 47 ต้น ปลูกต้นกล้าได้ทั้งหมดกี่ต้น', opts: ['376 ต้น', '326 ต้น', '55 ต้น'], a: 0 }];
-const T1_N = T1_EXAM.length, T1_TIME = 60 * 60, T1_PASS = Math.ceil(.8 * T1_N - 1e-9);
-/* ตำแหน่งคำตอบสุ่มทุกครั้ง แต่ข้อเรียงตามบทเหมือนข้อสอบจริง */
-function t1Exam() { return T1_EXAM.map(q => { const n = q.opts.length, r = rnd(0, n - 1); return { ...q, opts: [...q.opts.slice(r), ...q.opts.slice(0, r)], a: (q.a - r + n) % n, from: T1_BOSS[q.ch] }; }); }
-const LESSONS_P2T1 = [{ id: 1098, boss: true, bonus: true, place: 'อ่าวสอบปลายภาค', title: 'ด่านบอส: สอบปลายภาคเรียนที่ 1 ป.2', short: 'สอบ 40 ข้อ · จับเวลา', tone: 'sky',
-  goal: `ปีศาจปลาหมึกบทที่ 1–5 รวมร่างกันแล้ว! ข้อสอบปลายภาคเรียนที่ 1 จำนวน ${T1_N} ข้อ ครบทั้ง 5 บท มีทั้งข้อง่ายและข้อยาก ทำให้เสร็จภายใน ${T1_TIME / 60} นาที ตอบถูกอย่างน้อย ${T1_PASS} ข้อเพื่อชนะ`,
-  get exam() { return this._ex || (this._ex = t1Exam()); }, examGen: t1Exam, pass: T1_PASS, timeLimit: T1_TIME, bossName: 'ราชาปลาหมึกปลายภาค', bossPal: 'night', emblem: 'ภ.1', bossKind: 'mega',
-  winLine: 'ชนะราชาปลาหมึกปลายภาคแล้ว! พร้อมขึ้นภาคเรียนที่ 2', loseLine: 'ราชาปลาหมึกยังไม่ยอมแพ้ ทบทวนแล้วมาสู้ใหม่นะ!' }];
+/* ตำแหน่งคำตอบสุ่มทุกครั้ง แต่ข้อเรียงตามบทเหมือนข้อสอบจริง · from = บอสท้ายบท (รายงานผลแยกบท) */
+const termExam = (E, B) => () => E.map(q => { const n = q.opts.length, r = rnd(0, n - 1); return { ...q, opts: [...q.opts.slice(r), ...q.opts.slice(0, r)], a: (q.a - r + n) % n, from: B[q.ch] }; });
+const termLesson = (o, E, B) => { const N = E.length, pass = Math.ceil(.8 * N - 1e-9), gen = termExam(E, B);
+  return [{ boss: true, bonus: true, tone: 'sky', bossPal: 'night', bossKind: 'mega', timeLimit: 60 * 60, pass, examGen: gen, get exam() { return this._ex || (this._ex = gen()); },
+    goal: `${o.lead} ข้อสอบปลายภาคเรียนที่ ${o.term} จำนวน ${N} ข้อ ครบทุกบท มีทั้งข้อง่ายและข้อยาก ทำให้เสร็จภายใน 60 นาที ตอบถูกอย่างน้อย ${pass} ข้อเพื่อชนะ`, ...o }]; };
+const T1_STORY = { bosses: Object.values(T1_BOSS),
+  intro: 'ปิดภาคเรียนที่ 1 แล้ว… เย็นวันนั้นที่อ่าวสอบปลายภาค', shake: 'คลื่นซัดแรงผิดปกติ… มีหนวดยักษ์โผล่ขึ้นมาจากทะเล!',
+  back: n => `ปีศาจปลาหมึกบทที่ 1–5 ทั้ง ${n} ตัวที่เธอเคยชนะ ว่ายกลับมาทวงชายหาดคืน!`, reduced: 'ปีศาจปลาหมึกบทที่ 1–5 รวมร่างเป็นราชาปลาหมึกปลายภาค!' };
+const LESSONS_P2T1 = termLesson({ id: 1098, term: 1, place: 'อ่าวสอบปลายภาค', title: 'ด่านบอส: สอบปลายภาคเรียนที่ 1 ป.2', short: 'สอบ 40 ข้อ · จับเวลา',
+  lead: 'ปีศาจปลาหมึกบทที่ 1–5 รวมร่างกันแล้ว!', bossName: 'ราชาปลาหมึกปลายภาค', emblem: 'ภ.1',
+  winLine: 'ชนะราชาปลาหมึกปลายภาคแล้ว! พร้อมขึ้นภาคเรียนที่ 2', loseLine: 'ราชาปลาหมึกยังไม่ยอมแพ้ ทบทวนแล้วมาสู้ใหม่นะ!' }, T1_EXAM, T1_BOSS);
+MEGA_SET['ภ.1'] = { grade: 2, bosses: T1_STORY.bosses };
+
+/* ---------- ภาคเรียนที่ 2 · บทที่ 6–11 ---------- */
+const T2_CAL = { m: 9, y: 2569, marks: {} }; /* ตุลาคม 2569 */
+const T2_PP1 = { title: 'จำนวนหนังสือที่นักเรียนยืมจากห้องสมุด', what: 'หนังสือ', unit: 'เล่ม', k: 2, keyE: 'book', rows: [['ข้าวปุ้น', 10], ['ใบเตย', 6], ['ภูผา', 14], ['น้ำฝน', 9]] };
+const T2_PP2 = { title: 'ผลไม้ที่นักเรียนชอบ', what: 'นักเรียน', unit: 'คน', k: 10, rows: [['มังคุด', 40, 'mangosteen'], ['ทุเรียน', 25, 'durian'], ['เงาะ', 60, 'rambutan'], ['ส้ม', 35, 'orange']] };
+const T2_PAT = ['tri.sky', 'tri.sky', 'ci.coral'];
+const T2_BOSS = { 6: 959, 7: 979, 8: 999, 9: 1019, 10: 1039, 11: 1059 };
+const T2_EXAM = [
+  /* บทที่ 6 การหาร */
+  { ch: 6, lv: 941, q: 'มีขนมครก 18 ชิ้น จัดใส่จาน จานละ 3 ชิ้น เขียนเป็นประโยคสัญลักษณ์ได้อย่างไร', opts: ['18 ÷ 3 = ☐', '3 ÷ 18 = ☐', '18 − 3 = ☐'], a: 0 },
+  { ch: 6, lv: 945, q: '42 ÷ 6 = ☐   ☐ คือจำนวนใด', opts: ['7', '8', '36'], a: 0 },
+  { ch: 6, lv: 944, q: 'ถ้า 9 × 6 = 54 ข้อใดถูกต้อง', opts: ['54 ÷ 9 = 6', '54 ÷ 6 = 8', '9 ÷ 54 = 6'], a: 0 },
+  { ch: 6, lv: 946, q: 'ข้อใดเป็นการหารลงตัว', opts: ['48 ÷ 8', '50 ÷ 8', '37 ÷ 6'], a: 0 },
+  { ch: 6, lv: 947, q: '59 ÷ 7 ได้เท่าไร', opts: ['8 เศษ 3', '7 เศษ 10', '9 เศษ 4'], a: 0 },
+  { ch: 6, lv: 948, q: 'ข้อใดมีผลหารมากที่สุด', opts: ['81 ÷ 9', '64 ÷ 8', '42 ÷ 7'], a: 0 },
+  { ch: 6, lv: 950, q: '☐ ÷ 6 = 8   ☐ คือจำนวนใด', opts: ['48', '14', '2'], a: 0 },
+  { ch: 6, lv: 952, q: 'มีไข่เค็ม 75 ฟอง บรรจุกล่อง กล่องละ 8 ฟอง ได้ไข่เค็มเต็มกล่องกี่กล่อง และเหลือกี่ฟอง', opts: ['9 กล่อง เหลือ 3 ฟอง', '8 กล่อง เหลือ 11 ฟอง', '10 กล่อง เหลือ 5 ฟอง'], a: 0 },
+  /* บทที่ 7 เวลา */
+  { ch: 7, lv: 962, q: 'เดือนใดมี 31 วัน', opts: ['สิงหาคม', 'กันยายน', 'พฤศจิกายน'], a: 0 },
+  { ch: 7, lv: 961, q: 'จากปฏิทิน วันที่ 23 ตุลาคม ตรงกับวันอะไร', fig: tkF(tkCalFig(T2_CAL)), opts: ['วันศุกร์', 'วันพฤหัสบดี', 'วันเสาร์'], a: 0 },
+  { ch: 7, lv: 961, q: 'จากปฏิทิน เดือนตุลาคมมีวันเสาร์กี่วัน', fig: tkF(tkCalFig(T2_CAL)), opts: ['5 วัน', '4 วัน', '6 วัน'], a: 0 },
+  { ch: 7, lv: 964, q: 'เวลาใดเป็นเวลากลางคืน', opts: ['20 นาฬิกา 30 นาที', '10 นาฬิกา 30 นาที', '15 นาฬิกา'], a: 0 },
+  { ch: 7, lv: 965, q: 'นาฬิกาบอกเวลาเท่าไร (เวลากลางวัน)', fig: tkF(tkClk(10, 25, { sky: true })), opts: ['10 นาฬิกา 25 นาที', '5 นาฬิกา 50 นาที', '10 นาฬิกา 5 นาที'], a: 0 },
+  { ch: 7, lv: 968, q: 'นาฬิกาตัวเลขบอกเวลาเท่าไร', fig: tkF(tkDigSVG(7, 45, '#B8C8FF', 200)), opts: ['7 นาฬิกา 45 นาที', '8 นาฬิกา 45 นาที', '7 นาฬิกา 15 นาที'], a: 0 },
+  { ch: 7, lv: 967, q: 'มดเริ่มทำการบ้านเวลา 18 นาฬิกา 40 นาที ทำเสร็จเวลา 19 นาฬิกา 15 นาที มดใช้เวลาทำการบ้านกี่นาที', opts: ['35 นาที', '25 นาที', '55 นาที'], a: 0 },
+  { ch: 7, lv: 969, q: 'วันนี้เป็นวันจันทร์ที่ 12 อีก 10 วันจะเป็นวันอะไร วันที่เท่าไร', opts: ['วันพฤหัสบดีที่ 22', 'วันพุธที่ 22', 'วันพฤหัสบดีที่ 21'], a: 0 },
+  /* บทที่ 8 การวัดปริมาตรและความจุ */
+  { ch: 8, lv: 986, q: 'ตวงน้ำปลาใส่แกงประมาณ 1 ช้อน ควรใช้เครื่องตวงใด', opts: ['ช้อนตวง', 'ถังน้ำ', 'ลิตรตวงน้ำมัน'], a: 0 },
+  { ch: 8, lv: 981, q: 'จากภาพ น้ำมะพร้าวในเหยือกตวงได้กี่แก้ว', fig: `<div class="vwrap">${vPourFig('jug', 6, 'glass', { srcName: 'น้ำมะพร้าว', col: vLiq.water })}</div>`, opts: ['6 แก้ว', '5 แก้ว', '7 แก้ว'], a: 0 },
+  { ch: 8, lv: 985, q: 'ถังสีแดงมีน้ำ 12 ลิตร ถังสีฟ้ามีน้ำ 9 ลิตร ข้อใดถูกต้อง', opts: ['ถังสีแดงมีน้ำมากกว่าถังสีฟ้า 3 ลิตร', 'ถังสีฟ้ามีน้ำมากกว่าถังสีแดง 3 ลิตร', 'ถังสีแดงมีน้ำมากกว่าถังสีฟ้า 21 ลิตร'], a: 0 },
+  { ch: 8, lv: 987, q: 'กระติกน้ำจุ 8 ลิตร ตอนนี้มีน้ำอยู่ 5 ลิตร ต้องเติมน้ำอีกกี่ลิตรจึงจะเต็มพอดี', opts: ['3 ลิตร', '13 ลิตร', '5 ลิตร'], a: 0 },
+  { ch: 8, lv: 989, q: 'โรงเรียนซื้อน้ำดื่ม 6 แกลลอน แกลลอนละ 5 ลิตร ได้น้ำดื่มทั้งหมดกี่ลิตร', opts: ['30 ลิตร', '11 ลิตร', '35 ลิตร'], a: 0 },
+  { ch: 8, lv: 989, q: 'โอ่งใบหนึ่งจุน้ำ 60 ลิตร ใช้ถังที่จุ 4 ลิตร ตักน้ำเทใส่โอ่ง ต้องตักกี่ครั้งโอ่งจึงจะเต็มพอดี', opts: ['15 ครั้ง', '56 ครั้ง', '64 ครั้ง'], a: 0 },
+  /* บทที่ 9 รูปเรขาคณิต */
+  { ch: 9, lv: 1001, q: 'รูปนี้คือรูปเรขาคณิตใด', fig: g2xFig(g2c('box', 'box', { p: 'mint' })), opts: ['ทรงสี่เหลี่ยมมุมฉาก', 'รูปสี่เหลี่ยมมุมฉาก', 'ทรงกลม'], a: 0 },
+  { ch: 9, lv: 1001, q: 'สิ่งของในข้อใดมีลักษณะเป็นทรงกลม', opts: ['ลูกปิงปอง', 'กล่องนม', 'เหรียญ'], a: 0 },
+  { ch: 9, lv: 1002, q: 'รูปนี้คือรูปอะไร', fig: g2xFig(g2c('poly', 'g2_pent', { p: 'coral' })), opts: ['รูปห้าเหลี่ยม', 'รูปหกเหลี่ยม', 'รูปสี่เหลี่ยม'], a: 0 },
+  { ch: 9, lv: 1003, q: 'ข้อใดถูกต้อง', opts: ['วงรีไม่มีมุม', 'วงกลมมี 4 ด้าน', 'รูปห้าเหลี่ยมมี 6 มุม'], a: 0 },
+  { ch: 9, lv: 1001, q: 'วางกระป๋องนมให้ก้นกระป๋องติดกระดาษ แล้วลากเส้นรอบก้นกระป๋อง จะได้รูปใด', opts: ['วงกลม', 'วงรี', 'รูปสี่เหลี่ยม'], a: 0 },
+  { ch: 9, lv: 1005, q: 'รูปใดหายไปจากแบบรูปซ้ำนี้', fig: `<div class="g2pat">${patStrip(g2seq(T2_PAT, 9), { blank: [7] }).outerHTML}</div>`,
+    opts: [{ html: tokEl('tri.sky').outerHTML, say: 'รูปสามเหลี่ยมสีฟ้า' }, { html: tokEl('ci.coral').outerHTML, say: 'วงกลมสีแดง' }, { html: tokEl('sq.coral').outerHTML, say: 'รูปสี่เหลี่ยมสีแดง' }], a: 0 },
+  /* บทที่ 10 การบวก ลบ คูณ หารระคน */
+  { ch: 10, lv: 1021, q: '(36 + 14) − 25 = ☐   ☐ คือจำนวนใด', opts: ['25', '75', '35'], a: 0 },
+  { ch: 10, lv: 1021, q: '7 × (48 ÷ 6) = ☐   ☐ คือจำนวนใด', opts: ['56', '49', '15'], a: 0 },
+  { ch: 10, lv: 1021, q: '90 − (8 × 9) = ☐   ☐ คือจำนวนใด', opts: ['18', '72', '162'], a: 0 },
+  { ch: 10, lv: 1021, q: 'ข้อใดถูกต้อง', opts: ['6 × (9 − 9) = 0', '45 − (35 ÷ 5) = 8', '(12 + 8) ÷ 4 = 4'], a: 0 },
+  { ch: 10, lv: 1023, q: 'ป้ามีส้ม 80 ผล ขายไป 35 ผล แล้วเก็บมาเพิ่มอีก 27 ผล ป้ามีส้มกี่ผล', opts: ['72 ผล', '18 ผล', '142 ผล'], a: 0 },
+  { ch: 10, lv: 1025, q: 'ลุงเก็บมะนาวได้ 96 ผล แบ่งใส่ถุง ถุงละ 8 ผล แล้วขายถุงละ 15 บาท ถ้าขายหมดจะได้เงินกี่บาท', opts: ['180 บาท', '119 บาท', '1,440 บาท'], a: 0 },
+  /* บทที่ 11 แผนภูมิรูปภาพ */
+  { ch: 11, lv: 1041, q: 'จากแผนภูมิ ใครยืมหนังสือมากที่สุด', fig: ppHTML(T2_PP1), opts: ['ภูผา', 'ข้าวปุ้น', 'น้ำฝน'], a: 0 },
+  { ch: 11, lv: 1041, q: 'จากแผนภูมิ น้ำฝนยืมหนังสือกี่เล่ม', fig: ppHTML(T2_PP1), opts: ['9 เล่ม', '5 เล่ม', '4 เล่ม'], a: 0 },
+  { ch: 11, lv: 1041, q: 'จากแผนภูมิ ภูผายืมหนังสือมากกว่าใบเตยกี่เล่ม', fig: ppHTML(T2_PP1), opts: ['8 เล่ม', '4 เล่ม', '20 เล่ม'], a: 0 },
+  { ch: 11, lv: 1043, q: 'จากแผนภูมิ นักเรียนที่ชอบทุเรียนมีกี่คน', fig: ppHTML(T2_PP2), opts: ['25 คน', '3 คน', '30 คน'], a: 0 },
+  { ch: 11, lv: 1043, q: 'จากแผนภูมิ นักเรียนที่ชอบเงาะและส้มรวมกันมีกี่คน', fig: ppHTML(T2_PP2), opts: ['95 คน', '90 คน', '10 คน'], a: 0 },
+  { ch: 11, lv: 1043, q: 'จากแผนภูมิ นักเรียนที่ตอบว่าชอบผลไม้ทั้ง 4 ชนิด มีทั้งหมดกี่คน', fig: ppHTML(T2_PP2), opts: ['160 คน', '16 คน', '150 คน'], a: 0 }];
+const T2_STORY = { bosses: Object.values(T2_BOSS),
+  intro: 'คืนสุดท้ายของภาคเรียนที่ 2… ที่อ่าวสอบปลายภาค', shake: 'ฟ้าแลบแปลบปลาบ… ทะเลหมุนวนเป็นน้ำวนยักษ์!',
+  back: n => `ปีศาจปลาหมึกบทที่ 6–11 ทั้ง ${n} ตัวที่เธอเคยชนะ ว่ายกลับมาพร้อมกัน!`, reduced: 'ปีศาจปลาหมึกบทที่ 6–11 รวมร่างเป็นจอมปลาหมึกปลายภาค!' };
+const LESSONS_P2T2 = termLesson({ id: 1097, term: 2, place: 'อ่าวสอบปลายภาค', title: 'ด่านบอส: สอบปลายภาคเรียนที่ 2 ป.2', short: 'สอบ 40 ข้อ · จับเวลา',
+  lead: 'ปีศาจปลาหมึกบทที่ 6–11 รวมร่างกันแล้ว!', bossName: 'จอมปลาหมึกปลายภาค', emblem: 'ภ.2',
+  winLine: 'ชนะจอมปลาหมึกปลายภาคแล้ว! เก่งครบทั้งปี ป.2', loseLine: 'จอมปลาหมึกยังไม่ยอมแพ้ ทบทวนแล้วมาสู้ใหม่นะ!' }, T2_EXAM, T2_BOSS);
+MEGA_SET['ภ.2'] = { grade: 2, bosses: T2_STORY.bosses };
 
 /* =========================================================
    GRADE 3 · CHAPTER 2 — การบวกและการลบจำนวนนับไม่เกิน 100,000  (ป่าดิบชื้น · เมือง 50 · ด่าน 111–118 · บอส 129)
@@ -28488,7 +28562,7 @@ const CITIES = [
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['umbrella', 'palm', 'boat', 'palm'], small: ['crab', 'shell', 'starfish', 'lifebuoy', 'shell', 'crab'] } },
   { id: 47, grade: 2, name: 'ชายหาดสูตรคูณ', chapter: 'บทที่ 5 การคูณ', lessons: LESSONS_P2C5,
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['palm', 'umbrella', 'palm', 'boat'], small: ['starfish', 'shell', 'crab', 'lifebuoy', 'starfish', 'shell'] } },
-  { id: 73, grade: 2, name: 'อ่าวสอบปลายภาค 1', chapter: 'สอบปลายภาคเรียนที่ 1 · บทที่ 1–5', lessons: LESSONS_P2T1,
+  { id: 73, grade: 2, name: 'อ่าวสอบปลายภาค 1', chapter: 'สอบปลายภาคเรียนที่ 1 · บทที่ 1–5', lessons: LESSONS_P2T1, story: T1_STORY,
     theme: { beach: true, hills: ['#DCE8F5', '#E6EEF7', '#D8E4F2'], far: '#E8F0FA', edge: ['palm', 'boat', 'palm', 'umbrella'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'crab', 'shell'] } },
   { id: 48, grade: 2, term: 2, name: 'ชายหาดแบ่งเท่ากัน', chapter: 'บทที่ 6 การหาร', lessons: LESSONS_P2C6,
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['umbrella', 'palm', 'boat', 'palm'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'crab', 'shell'] } },
@@ -28502,6 +28576,8 @@ const CITIES = [
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['palm', 'boat', 'umbrella', 'palm'], small: ['crab', 'lifebuoy', 'shell', 'starfish', 'crab', 'shell'] } },
   { id: 44, grade: 2, term: 2, name: 'ชายหาดแผนภูมิ', chapter: 'บทที่ 11 แผนภูมิรูปภาพ', lessons: LESSONS_P2C11,
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['umbrella', 'palm', 'palm', 'boat'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'shell', 'crab'] } },
+  { id: 74, grade: 2, term: 2, name: 'อ่าวสอบปลายภาค 2', chapter: 'สอบปลายภาคเรียนที่ 2 · บทที่ 6–11', lessons: LESSONS_P2T2, story: T2_STORY,
+    theme: { beach: true, hills: ['#DCE8F5', '#E6EEF7', '#D8E4F2'], far: '#E8F0FA', edge: ['palm', 'boat', 'palm', 'umbrella'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'crab', 'shell'] } },
   { id: 51, grade: 2, term: 2, name: 'อ่าวราชาปลาหมึกยักษ์', chapter: 'ด่านสุดท้าย ป.2 · บอสใหญ่รวมร่าง', lessons: LESSONS_MEGA2, final: true, secret: true,
     theme: { beach: true, hills: ['#DCE8F5', '#E6EEF7', '#D8E4F2'], far: '#E8F0FA', edge: ['palm', 'boat', 'palm', 'boat'], small: ['shell', 'crab', 'shell', 'starfish', 'crab', 'shell'] } },
   { id: 5, grade: 3, name: 'ป่าดิบชื้นจำนวนนับ', chapter: 'บทที่ 1 จำนวนนับไม่เกิน 100,000', lessons: LESSONS_P3C1,
@@ -29591,13 +29667,13 @@ function cloudTransition(cb, title, sub) {
 }
 function goCity(id) {
   const c = CITIES.find(x => x.id === id);
-  if (c.final) { finalStory(c); return; }
+  if (c.final || c.story) { finalStory(c); return; } /* v192: เมืองสอบปลายภาค (story) = เรื่องเล่าแล้วเข้าสอบเลย เหมือนบอสใหญ่ */
   cloudTransition(() => showMap(id), c.name, `${gradeOf(c).name}${c.term ? ' · ภาคเรียนที่ ' + c.term : ''} · ${c.chapter}`);
 }
 
 /* ---------------- FINAL CASTLE: a short story that flows straight into the timed exam ---------------- */
 function finalStory(city) {
-  const L = city.lessons[0], li = LESSONS.indexOf(L), G = city.grade, gName = gradeOf(city).name, minis = megaMinis(G), mini = (m, st = 'idle') => bossSVG(st, m[0], m[1], m[2]);
+  const L = city.lessons[0], li = LESSONS.indexOf(L), G = city.grade, gName = gradeOf(city).name, SL = city.story, minis = SL ? megaMinisOf(SL.bosses) : megaMinis(G), mini = (m, st = 'idle') => bossSVG(st, m[0], m[1], m[2]);
   const ov = h('div', { class: 'story-ov' }), stage = h('div', { class: 'story-stage' }), cap = h('div', { class: 'story-cap' }), skip = h('button', { class: 'btn sm story-skip' }, 'ข้าม', icon('right'));
   ov.append(h('div', { class: 'story-sky' }, h('i', { class: 'st-moon' }), ...range(1, 26).map(k => h('i', { class: 'st-star', style: { left: (k * 37) % 100 + '%', top: (k * 23) % 55 + '%', animationDelay: (k % 7) * .3 + 's' } }))), stage, cap, skip);
   document.body.append(ov); hush(); let done = false, T = [];
@@ -29612,16 +29688,19 @@ function finalStory(city) {
   const peak = h('div', { class: 'st-castle st-peak', html: `<svg viewBox="0 0 200 140" aria-hidden="true"><path d="M0 140 L60 60 L90 92 L120 30 L200 140 Z" fill="#3A3F7A"/><path d="M120 30 L104 52 L114 50 L120 60 L128 50 L138 54 Z M60 60 L50 74 L60 70 L68 76 Z" fill="#E8F1FF"/><path d="M120 30 V14 l14 5 l-14 5" fill="#FF5A6A" stroke="#E8F1FF" stroke-width="1.4"/><path d="M84 140 v-14 q8 -10 16 0 v14 Z" fill="#FF5A6A" opacity=".75"/><rect x="88" y="108" width="8" height="10" rx="4" fill="#FFD45C" class="st-win"/><path d="M0 128 q50 -10 100 0 t100 0 V140 H0 Z" fill="#DDE8F7"/></svg>` });
   const temple = h('div', { class: 'st-castle st-temple', html: `<svg viewBox="0 0 200 140" aria-hidden="true"><path d="M52 132 V78 h96 V132 Z M60 78 V62 h80 V78 Z M70 62 V48 h60 V62 Z M84 48 V34 h32 V48 Z" fill="#2E4A3A"/><path d="M92 132 v-22 q8 -12 16 0 v22 Z" fill="#FF5A6A" opacity=".75"/><rect x="96" y="38" width="8" height="8" rx="4" fill="#FFD45C" class="st-win"/><path d="M0 140 V96 q20 -30 40 -6 q14 -34 30 -10 V140 Z M200 140 V92 q-18 -30 -38 -4 q-16 -30 -30 -6 V140 Z" fill="#1F5A3A"/><path d="M0 132 H200 V140 H0 Z" fill="#163F2A"/></svg>` });
   const castle = G === 3 ? temple : G === 6 ? peak : G === 5 ? cave : G === 4 ? desert : G === 2 ? h('div', { class: 'st-castle st-sea', html: `<svg viewBox="0 0 200 140" aria-hidden="true"><path d="M70 140 V112 q10 -22 30 -26 q22 4 32 26 V140 Z" fill="#1E1447"/><rect x="94" y="52" width="14" height="40" fill="#2B2E5C"/><path d="M92 52 h18 l-3 -10 h-12 z" fill="#2B2E5C"/><circle cx="101" cy="46" r="5" fill="#FFE27A"/><path class="st-beam" d="M101 46 L200 26 L200 66 Z" fill="#FFE27A" opacity=".25"/><path d="M0 118 q25 -12 50 0 t50 0 t50 0 t50 0 V140 H0 Z" fill="#2F6FA0"/><path d="M0 126 q25 -10 50 0 t50 0 t50 0 t50 0 V140 H0 Z" fill="#1F4F7A"/></svg>` }) : castleP1;
-  if (REDUCED()) { stage.append(castle); line(G === 3 ? 'งูยักษ์ทุกตัวของ ป.3 รวมร่างเป็นราชางูยักษ์!' : G === 6 ? 'ราชาเยติทุกตัวของ ป.6 รวมร่างเป็นจอมเยติ!' : G === 5 ? 'ราชาหมีทุกตัวของ ป.5 รวมร่างเป็นจอมราชาหมี!' : G === 4 ? 'แมงป่องทุกตัวของ ป.4 รวมร่างเป็นจักรพรรดิแมงป่อง!' : G === 2 ? 'ปีศาจปลาหมึกทุกตัวของ ป.2 รวมร่างเป็นราชาปลาหมึกยักษ์!' : 'บอสทุกตัวของ ป.1 รวมร่างเป็นจอมราชาปีศาจ!', true); at(1800, go); return; }
-  stage.append(castle); line(G === 3 ? 'คืนฝนตก… ณ วิหารโบราณกลางป่าดิบชื้นของ ป.3' : G === 6 ? 'คืนพายุหิมะ… บนยอดเขาที่สูงที่สุดของ ป.6' : G === 5 ? 'ณ ถ้ำที่ลึกที่สุดของ ป.5… คริสตัลเริ่มส่องแสงวูบวาบ' : G === 4 ? 'คืนเดือนหงาย… ณ ใจกลางทะเลทรายของ ป.4' : G === 2 ? 'คืนพระจันทร์เต็มดวง… ณ อ่าวลึกสุดของชายหาด ป.2' : 'ณ ปราสาทราชาปีศาจ… บนยอดเขาสุดท้ายของ ป.1');
-  at(2600, () => { castle.classList.add('shake'); sfx.roar(); line(G === 3 ? 'ต้นไม้ไหวทั้งป่า… มีเสียงขู่ฟ่อดังมาจากในวิหาร!' : G === 6 ? 'หิมะถล่มลงมา… มีเงายักษ์ปรากฏบนยอดเขา!' : G === 5 ? 'ผนังถ้ำสั่นสะเทือน… มีเสียงคำรามดังมาจากความมืด!' : G === 4 ? 'ผืนทรายสั่นสะเทือน… มีอะไรบางอย่างมุดขึ้นมาจากใต้ทราย!' : G === 2 ? 'ทะเลปั่นป่วน… มีอะไรบางอย่างโผล่ขึ้นมาจากใต้น้ำ!' : '“ใครกล้าบุกเข้ามาในปราสาทของพวกเรา!”'); });
+  if (REDUCED()) { stage.append(castle); line(SL ? SL.reduced : G === 3 ? 'งูยักษ์ทุกตัวของ ป.3 รวมร่างเป็นราชางูยักษ์!' : G === 6 ? 'ราชาเยติทุกตัวของ ป.6 รวมร่างเป็นจอมเยติ!' : G === 5 ? 'ราชาหมีทุกตัวของ ป.5 รวมร่างเป็นจอมราชาหมี!' : G === 4 ? 'แมงป่องทุกตัวของ ป.4 รวมร่างเป็นจักรพรรดิแมงป่อง!' : G === 2 ? 'ปีศาจปลาหมึกทุกตัวของ ป.2 รวมร่างเป็นราชาปลาหมึกยักษ์!' : 'บอสทุกตัวของ ป.1 รวมร่างเป็นจอมราชาปีศาจ!', true); at(1800, go); return; }
+  stage.append(castle); line(SL ? SL.intro : G === 3 ? 'คืนฝนตก… ณ วิหารโบราณกลางป่าดิบชื้นของ ป.3' : G === 6 ? 'คืนพายุหิมะ… บนยอดเขาที่สูงที่สุดของ ป.6' : G === 5 ? 'ณ ถ้ำที่ลึกที่สุดของ ป.5… คริสตัลเริ่มส่องแสงวูบวาบ' : G === 4 ? 'คืนเดือนหงาย… ณ ใจกลางทะเลทรายของ ป.4' : G === 2 ? 'คืนพระจันทร์เต็มดวง… ณ อ่าวลึกสุดของชายหาด ป.2' : 'ณ ปราสาทราชาปีศาจ… บนยอดเขาสุดท้ายของ ป.1');
+  at(2600, () => { castle.classList.add('shake'); sfx.roar(); line(SL ? SL.shake : G === 3 ? 'ต้นไม้ไหวทั้งป่า… มีเสียงขู่ฟ่อดังมาจากในวิหาร!' : G === 6 ? 'หิมะถล่มลงมา… มีเงายักษ์ปรากฏบนยอดเขา!' : G === 5 ? 'ผนังถ้ำสั่นสะเทือน… มีเสียงคำรามดังมาจากความมืด!' : G === 4 ? 'ผืนทรายสั่นสะเทือน… มีอะไรบางอย่างมุดขึ้นมาจากใต้ทราย!' : G === 2 ? 'ทะเลปั่นป่วน… มีอะไรบางอย่างโผล่ขึ้นมาจากใต้น้ำ!' : '“ใครกล้าบุกเข้ามาในปราสาทของพวกเรา!”'); });
   const ring = h('div', { class: 'st-ring' }); at(3200, () => stage.append(ring));
-  minis.forEach((m, i) => at(4200 + i * 260, () => { const a = Math.PI + (i / Math.max(1, minis.length - 1)) * Math.PI, el = h('span', { class: 'st-mini', html: mini(m, i % 2 ? 'laugh' : 'roar'), style: { left: 50 + Math.cos(a) * 38 + '%', top: 54 + Math.sin(a) * 34 + '%' } }); ring.append(el); sfx.pop(i % 8); }));
-  const t1 = 4200 + minis.length * 260 + 400;
-  at(t1, () => line(G === 3 ? `งูยักษ์ทั้ง ${minis.length} ตัวที่เธอเคยชนะ เลื้อยกลับมาแล้ว!` : G === 6 ? `ราชาเยติทั้ง ${minis.length} ตัวที่เธอเคยชนะ ปีนขึ้นมาบนยอดเขาแล้ว!` : G === 5 ? `ราชาหมีทั้ง ${minis.length} ตัวที่เธอเคยชนะ เดินออกมาจากถ้ำแล้ว!` : G === 4 ? `แมงป่องทั้ง ${minis.length} ตัวที่เธอเคยชนะ คลานกลับมาแล้ว!` : G === 2 ? `ปีศาจปลาหมึกทั้ง ${minis.length} ตัวที่เธอเคยชนะ ว่ายกลับมาแล้ว!` : `ราชาปีศาจทั้ง ${minis.length} ตัวที่เธอเคยชนะ กลับมาแล้ว!`));
+  const step = SL ? 1500 : 260, chOf = id => { const B = LESSONS.find(x => x.id === id), c = B && cityOf(B); return c ? c.chapter : ''; }; /* v192: เรื่องเล่าสอบปลายภาค — บอสแต่ละบทโผล่ทีละตัว พร้อมบอกว่าเป็นบทอะไร (ทวนว่าภาคนี้เรียนอะไรมา) */
+  minis.forEach((m, i) => at(4200 + i * step, () => { const a = Math.PI + (i / Math.max(1, minis.length - 1)) * Math.PI, el = h('span', { class: 'st-mini', html: mini(m, i % 2 ? 'laugh' : 'roar'), style: { left: 50 + Math.cos(a) * 38 + '%', top: 54 + Math.sin(a) * 34 + '%' } });
+    if (SL) { const ch = chOf(SL.bosses[i]); el.append(h('small', { class: 'st-mlab num' }, (ch.match(/^บทที่ \d+/) || [''])[0])); cap.innerHTML = ''; cap.append(h('span', null, ch)); cap.classList.remove('on'); void cap.offsetWidth; cap.classList.add('on'); }
+    ring.append(el); sfx.pop(i % 8); }));
+  const t1 = 4200 + minis.length * step + 400;
+  at(t1, () => line(SL ? SL.back(minis.length) : G === 3 ? `งูยักษ์ทั้ง ${minis.length} ตัวที่เธอเคยชนะ เลื้อยกลับมาแล้ว!` : G === 6 ? `ราชาเยติทั้ง ${minis.length} ตัวที่เธอเคยชนะ ปีนขึ้นมาบนยอดเขาแล้ว!` : G === 5 ? `ราชาหมีทั้ง ${minis.length} ตัวที่เธอเคยชนะ เดินออกมาจากถ้ำแล้ว!` : G === 4 ? `แมงป่องทั้ง ${minis.length} ตัวที่เธอเคยชนะ คลานกลับมาแล้ว!` : G === 2 ? `ปีศาจปลาหมึกทั้ง ${minis.length} ตัวที่เธอเคยชนะ ว่ายกลับมาแล้ว!` : `ราชาปีศาจทั้ง ${minis.length} ตัวที่เธอเคยชนะ กลับมาแล้ว!`));
   at(t1 + 2400, () => { line('“พวกเรา… รวมร่าง!!!”', true); ring.classList.add('merge'); castle.classList.add('dim'); });
   at(t1 + 3600, () => { const flash = h('i', { class: 'st-flash' }); stage.append(flash); sfx.win(); ring.remove();
-    stage.append(h('div', { class: 'st-mega', html: bossSVG('roar', 'night', gName, 'mega') })); });
+    stage.append(h('div', { class: 'st-mega', html: bossSVG('roar', 'night', SL ? L.emblem : gName, 'mega') })); });
   at(t1 + 4400, () => { sfx.roar(); line(`ข้าคือ ${L.bossName}! ตอบให้ถูก ${L.pass} จาก ${L.exam.length} ข้อ ภายใน ${L.timeLimit / 60} นาที ถ้าทำได้!`, true); });
   const cnt = h('div', { class: 'st-count num' });
   [3, 2, 1].forEach((k, j) => at(t1 + 8200 + j * 900, () => { if (!cnt.isConnected) stage.append(cnt); cnt.textContent = k; cnt.classList.remove('pop'); void cnt.offsetWidth; cnt.classList.add('pop'); sfx.tap(); }));
@@ -29646,9 +29725,9 @@ function showMap(cityId) {
   const stage = shell({});
   app.querySelector('.topbar').style.display = 'none'; app.querySelector('.bottombar').style.display = 'none'; app.style.gridTemplateRows = '1fr';
   let city = CITIES.find(c => c.id === (cityId || defaultCity())) || CITIES[0];
-  if (city.final) { const g = CITIES.filter(c => c.grade === city.grade && !c.final); city = g[g.length - 1]; } // the castle has no map: it is a story straight into the exam
+  if (city.final || city.story) { const g = CITIES.slice(0, CITIES.indexOf(city)).filter(c => c.grade === city.grade && !c.final && !c.story); city = g[g.length - 1] || city; } /* the castle (and the term-exam bays, v192) have no map: a story straight into the exam → show the city before it */
   SAVE.city = city.id; persist(); setWorld(WORLD_OF(city));
-  backHandler = () => { const cs = CITIES.filter(c => c.grade === city.grade && !c.final), k = cs.indexOf(city); if (k > 0) goCity(cs[k - 1].id); };
+  backHandler = () => { const cs = CITIES.filter(c => c.grade === city.grade && !c.final && !c.story), k = cs.indexOf(city); if (k > 0) goCity(cs[k - 1].id); };
   const items = LESSONS.map((L, i) => ({ L, i })).filter(x => x.L.city === city.id), n = items.length;
   const total = Object.values(SAVE.stars).reduce((a, b) => a + b, 0), max = LESSONS.length * 3;
   const starCount = h('b', { class: 'num' }, total, h('small', null, ' / ' + max));
@@ -30495,7 +30574,7 @@ function startGame(li) {
       h('div', { class: 'actions' },
         h('button', { class: 'btn lg', onclick: () => startGame(li) }, icon('replay'), 'เล่นอีกครั้ง'),
         h('button', { class: 'btn lg info', onclick: () => showMap(L.city) }, icon('map'), 'แผนที่'),
-        nextIdx >= 0 ? h('button', { class: 'btn lg primary', onclick: () => { if (LESSONS[nextIdx].city !== L.city) { goCity(LESSONS[nextIdx].city); setTimeout(() => showIntro(nextIdx), 2300); } else { showMap(L.city); setTimeout(() => showIntro(nextIdx), 500); } } }, h('span', null, LESSONS[nextIdx].boss ? 'ไปสู้บอส' : 'ด่านต่อไป'), icon('right')) : null)));
+        nextIdx >= 0 ? h('button', { class: 'btn lg primary', onclick: () => { const NC = cityOf(LESSONS[nextIdx]); if (NC.story || NC.final) goCity(NC.id); else if (LESSONS[nextIdx].city !== L.city) { goCity(LESSONS[nextIdx].city); setTimeout(() => showIntro(nextIdx), 2300); } else { showMap(L.city); setTimeout(() => showIntro(nextIdx), 500); } } }, h('span', null, LESSONS[nextIdx].boss ? 'ไปสู้บอส' : 'ด่านต่อไป'), icon('right')) : null)));
     [0, 1, 2].forEach(k => k < stars && setTimeout(() => sfx.pop(k * 3 + 4), 320 + k * 220));
     cnt.textContent = 'จบด่าน'; pbar.firstChild.style.width = '100%';
   }
