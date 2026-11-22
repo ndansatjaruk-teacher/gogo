@@ -46,13 +46,13 @@ Object.assign(Q, {
     if (bins && bins.length === 2 && /✓|^ถูก|^สมเหตุสมผล/.test(bins[0]) && /✗|^ผิด|^ไม่/.test(bins[1])) return Q.ixTF({ q: q.replace(/แตะ(การ์ด|ข้อความ) แล้วแตะกล่อง/, 'กด ✓ หรือ ✗ ให้ทุกข้อ:'), say: sy, bins, items, hint });
     return { prompt: q, say: sy || speakText(q.replace(/<[^>]+>/g, '')), mount(bd, ctx) {
       let sel = null, left = items.length; const pool = h('div', { class: 'cards lbl ia ixs rvl' });
-      const B = bins.map((b, bi) => { const box = h('div', { class: 'ixbin ia' }, h('b', null, b), h('div', { class: 'ixin' }));
+      const B = bins.map((b, bi) => { const box = h('div', { class: 'ixbin ia ixb' + (bi % 6) }, h('b', null, b), h('div', { class: 'ixin' })); /* v191: กล่องมีสีประจำตัว */
         box.onclick = e => { e.stopPropagation(); if (!sel) return; const it = sel.it;
-          if (it.bin === bi) { sel.c.classList.remove('sel'); box.lastChild.append(h('span', { class: 'ixchip', html: it.label })); sel.c.classList.add('used'); sel = null; sfx.pop(items.length - --left); if (!left) ctx.check(true); }
+          if (it.bin === bi) { sel.c.classList.remove('sel'); box.lastChild.append(h('span', { class: 'ixchip', html: it.label })); popConfetti(box, 10); sel.c.classList.add('used'); sel = null; sfx.pop(items.length - --left); if (!left) ctx.check(true); }
           else { sel.c.classList.remove('wrong'); void sel.c.offsetWidth; sel.c.classList.add('wrong'); ctx.check(false, it.why || hint); } };
         return box; });
       pool.reveal = () => { pool.querySelectorAll('.ncard:not(.used)').forEach(c => { const it = c.__it; B[it.bin].lastChild.append(h('span', { class: 'ixchip reveal', html: it.label })); c.classList.add('used'); }); };
-      shuffle(items).forEach(it => { const c = h('button', { class: 'ncard', html: it.label }); c.__it = it; c.onclick = e => { e.stopPropagation(); if (c.classList.contains('used')) return; sel && sel.c.classList.remove('sel'); sel = { it, c }; c.classList.add('sel'); sfx.tap(); }; pool.append(c); });
+      shuffle(items).forEach((it, ci) => { const c = h('button', { class: 'ncard ixc' + (ci % 5), html: it.label }); c.__it = it; c.onclick = e => { e.stopPropagation(); if (c.classList.contains('used')) return; sel && sel.c.classList.remove('sel'); sel = { it, c }; c.classList.add('sel'); sfx.tap(); }; pool.append(c); });
       bd.append(h('div', { class: 'colstack' }, pool, h('div', { class: 'ixbins' }, ...B), h('div', { class: 'cap ixcap' }, 'แตะการ์ด แล้วแตะกล่องที่ใช่'))); } };
   }
 });

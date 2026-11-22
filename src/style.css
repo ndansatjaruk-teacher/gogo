@@ -3896,3 +3896,30 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .pw-fig svg.mtpic,.mtpw svg.mtpic{max-width:none!important;width:min(560px,46cqw);height:auto}
 .mttab.mtfall{max-width:540px;width:100%;gap:8px}.mttab.mtfall .mtrow{padding:6px 14px}.mttab.mtfall .mtf{font-size:clamp(20px,2.5cqw,27px)}
 .mtpw .lbig{font-size:clamp(26px,3.2cqw,36px)}
+/* v191 ชายหาดแบ่งเท่า: ของขนาดคงที่ (dvBoard) · ตัวนับมีเลขกลุ่ม+สี · แผนภาพแถว/คอลัมน์สี */
+.dvb{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;margin:0 auto}
+.dvb-g{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-content:flex-start;width:100%}
+.dvb-bx{display:flex;flex-direction:column;align-items:center;padding:8px;border-radius:16px;background:#F2F8FF;border:3px solid #8C86AC;box-sizing:border-box}
+.dvb-bx.plate{border-radius:50% / 34%;background:#FFFDF3;border-color:#E3C766;padding:10px 8px}.dvb-bx.hl{box-shadow:0 0 0 4px #FFD54F}
+.dvb-in{display:grid;gap:0;justify-content:center;align-content:center}.dvb i,.dvb-pi i{display:block;width:var(--s);height:var(--s)}.dvb i svg{width:100%;height:100%;display:block}
+.dvb-n{font-size:15px;color:#6E6290;margin-top:2px}
+.dvb-p{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;border-radius:14px;border:2.5px dashed #D9CFA8;background:#FFFCEF}.dvb-p small{font-size:15px;font-weight:700;color:#8A6200}
+.dvb-pi{display:grid;justify-content:center}
+.dvpw{gap:10px}.dvpw .lrn-big{font-size:clamp(24px,3cqw,34px)}
+.dvsim{width:100%;gap:10px}.dvsim-bar{gap:12px;align-items:center}.dvsim-fig{width:100%;display:flex;justify-content:center}
+.dvfig{display:flex;justify-content:center;width:100%}
+.dvc .ct{display:grid;place-items:center;font:800 14px var(--font-num);color:#fff}.dvc .ct.on{background:var(--c);box-shadow:inset 0 -3px 0 #0003,0 0 0 1.5px #0003}
+.dvc-big .dvc{grid-template-columns:repeat(8,52px);gap:10px 8px}.dvc-big .dvc .ct{width:46px;height:46px;font-size:20px}
+.dvarr{height:auto;max-width:100%}.dva-n{font:800 20px var(--font-num);fill:#D2455A}.dva-n.sm{font-size:16px;fill:#6E6290}
+.dvcard{flex-direction:column;gap:0}.dvcard small{font:700 14px var(--font-num);color:#5B87B0}
+@media (max-width:560px){.dvc-big .dvc{grid-template-columns:repeat(6,40px)}.dvc-big .dvc .ct{width:36px;height:36px;font-size:16px}}
+.dvb-p.empty{border-color:transparent;background:none}
+/* v191 (ผู้ใช้ขอ): แตะการ์ดใส่กล่อง — มีสีสันขึ้น ธีมชายหาด (ถังทราย/ตะกร้าสี) */
+.ixbins{gap:clamp(12px,2cqw,22px)}
+.ixbin[class*="ixb"]{--bc:#4FB3E8;--bs:#E6F5FD;min-width:clamp(180px,22cqw,240px);min-height:clamp(120px,17cqh,150px);padding:0 10px 10px;border-radius:20px 20px 28px 28px;background:var(--bs);box-shadow:inset 0 0 0 3px var(--bc),0 5px 0 color-mix(in srgb,var(--bc) 55%,#000 10%);overflow:hidden}
+.ixbin[class*="ixb"] > b{display:block;align-self:stretch;margin:0 -10px 6px;padding:8px 10px;background:var(--bc);color:#fff;font-size:clamp(16px,1.9cqw,19px);text-align:center;text-shadow:0 1px 0 #0003}
+.ixbin.ixb1{--bc:#FF8A65;--bs:#FFF0EA}.ixbin.ixb2{--bc:#4CC38A;--bs:#E9F8F0}.ixbin.ixb3{--bc:#B18CF2;--bs:#F3EEFF}.ixbin.ixb4{--bc:#F2B92E;--bs:#FFF7DD}.ixbin.ixb5{--bc:#E86BA8;--bs:#FDEBF4}
+.ixbin[class*="ixb"] .ixchip{background:#fff;box-shadow:0 2px 0 #0001;border:2px solid var(--bc)}
+.ixs .ncard.ixc0{--c:#E3F2FD;--c2:#9CCBF0}.ixs .ncard.ixc1{--c:#FFF3D6;--c2:#F2C94C}.ixs .ncard.ixc2{--c:#E8F8EE;--c2:#8FD6AE}.ixs .ncard.ixc3{--c:#FDECF2;--c2:#F2A7C3}.ixs .ncard.ixc4{--c:#F1ECFF;--c2:#C9B8F0}
+.ixs .ncard[class*="ixc"]{background:var(--c);box-shadow:0 4px 0 var(--c2);border:2px solid var(--c2)}
+.mtrowtap .dva-hit{cursor:pointer}.mtrowtap svg{max-width:100%}.mtarr-sim{min-height:250px;align-items:center}

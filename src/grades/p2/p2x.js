@@ -8,6 +8,18 @@
 const mtIco = (e, x, y, s) => e === 'bottle' ? `<svg x="${x}" y="${y}" width="${s}" height="${s * 1.25}" viewBox="0 0 64 80">${vCont('bottle', .85, { col: '#E5505E' }).replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>`
   : `<svg x="${x}" y="${y}" width="${s}" height="${s}" viewBox="0 0 64 64">${ART[e] || ART.star}</svg>`;
 /* g groups of s things — o.hl: first k groups lit · o.run: running total under each group · o.box: 'plate' | 'bag' */
+/* v191: สีประจำกลุ่ม (ไม่ซ้ำกัน) และแผนภาพจัดแถวที่จุดขนาดเท่ากันทุกภาพ — ใช้ทั้งบทการคูณและบทการหาร */
+const DV_COL = ['#4A90E2', '#E0533D', '#4FA34F', '#F0962F', '#8E3FAE', '#2F8F83', '#D4589A', '#8A6D3B', '#3E5BA9', '#C9A227', '#5F7383', '#B5543A', '#1FA0C8', '#9C6ADE', '#7FA33A'];
+/* array with rows (÷ จำนวนแถว) or columns (÷ จำนวนต่อแถว) in different colours — the same dot size in every state */
+function dvArrSVG(r, c, o = {}) { const s = 34, W = c * s + 16 + (o.run ? 52 : 0), H = r * s + 16 + (o.cols ? 26 : 0), lit = o.lit ?? r, k = o.k || 1.9;
+  let out = ''; for (let i = 0; i < r; i++) for (let j = 0; j < c; j++) { const col = i >= lit ? '#DCD6EA' : o.mode === 'rows' || o.lit !== undefined ? DV_COL[i % DV_COL.length] : o.mode === 'cols' ? DV_COL[j % DV_COL.length] : (o.col || '#7FC8F0');
+    out += `<circle cx="${8 + j * s + s / 2}" cy="${8 + i * s + s / 2}" r="${s * .38}" fill="${col}" stroke="#0002" stroke-width="1.5"/>`; }
+  if (o.mode === 'rows') for (let i = 0; i < r; i++) out += `<rect x="4" y="${6 + i * s}" width="${c * s + 8}" height="${s - 2}" rx="${s / 2}" fill="none" stroke="${DV_COL[i % DV_COL.length]}" stroke-width="2.5"/>`;
+  if (o.mode === 'cols') for (let j = 0; j < c; j++) out += `<rect x="${6 + j * s}" y="4" width="${s - 2}" height="${r * s + 8}" rx="${s / 2}" fill="none" stroke="${DV_COL[j % DV_COL.length]}" stroke-width="2.5"/>`;
+  if (o.run) for (let i = 0; i < Math.min(r, lit); i++) out += `<text x="${c * s + 22}" y="${8 + i * s + s / 2 + 7}" class="dva-n">${(i + 1) * c}</text>`;
+  if (o.cols) for (let j = 0; j < c; j++) out += `<text x="${8 + j * s + s / 2}" y="${r * s + 34}" text-anchor="middle" class="dva-n sm">${r}</text>`;
+  if (o.hit) for (let i = 0; i < r; i++) out += `<rect class="dva-hit" data-r="${i}" x="0" y="${6 + i * s}" width="${W}" height="${s}" fill="transparent"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" class="dvarr" style="width:${Math.min(W * k, o.max || 470)}px" aria-hidden="true">${out}</svg>`; }
 function mtGroupsSVG(g, s, e = 'orange', o = {}) {
   const I = o.size || (s > 6 ? 15 : 18), cols = s <= 3 ? Math.max(s, 1) : s <= 6 ? 3 : s <= 9 ? 3 : 4, rows = Math.max(1, Math.ceil(s / cols)), bw = cols * I + 12, bh = rows * I * (e === 'bottle' ? 1.25 : 1) + 14;
   const per = Math.min(g, o.perRow || 5), W = per * (bw + 10) + 6, R = Math.ceil(g / per), H = R * (bh + (o.run ? 26 : 12)) + 4; let out = '';
@@ -145,8 +157,8 @@ function simMtGroups(e = 'strawberry') {
   draw(); box.append(fig, h('div', { class: 'rowstack' }, st('จำนวนกลุ่ม', () => g, v => g = v, 6), st('กลุ่มละ', () => s, v => s = v, 6)), out); return box;
 }
 function simMtArray() {
-  let r = 3, c = 5, turned = false; const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'pw-fig' }), out = fNote();
-  const draw = () => { fig.innerHTML = mtArraySVG(r, c, { run: true }); out.innerHTML = `${r} แถว แถวละ ${c} → <b>${r} × ${c} = ${r * c}</b>` + (turned ? ` · หมุนแล้วจำนวนจุดยังเท่าเดิม: <b>${c} × ${r} = ${r * c}</b>` : ''); };
+  let r = 3, c = 5, turned = false; const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'dvsim-fig mtarr-sim' }), out = fNote();
+  const draw = () => { fig.innerHTML = dvArrSVG(r, c, { run: true, k: 1.5 }); out.innerHTML = `${r} แถว แถวละ ${c} → <b>${r} × ${c} = ${r * c}</b>` + (turned ? ` · หมุนแล้วจำนวนจุดยังเท่าเดิม: <b>${c} × ${r} = ${r * c}</b>` : ''); };
   const rot = h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); [r, c] = [c, r]; turned = true; sfx.pop(3); fig.firstChild?.classList.add('spin'); setTimeout(draw, 250); teachDone(box); } }, '↻ หมุนแผนภาพ');
   const st = (lab, d1) => h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); if (d1 === 'r') r = r % 6 + 1; else c = c % 6 + 1; sfx.tap(); draw(); } }, lab);
   draw(); box.append(fig, h('div', { class: 'rowstack' }, st('+ แถว', 'r'), st('+ จุดต่อแถว', 'c'), rot), out); return box;
@@ -183,11 +195,20 @@ Object.assign(Q, {
   },
   /* array → total */
   mtArr({ r, c }) { const q = `จุดเรียงเป็น ${r} แถว แถวละ ${c} จุด มีทั้งหมดกี่จุด`;
-    return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q p2st' }, h('div', { class: 'p4-fig', html: mtArraySVG(r, c) }),
-      mtTwoStep(ctx, [`${r} × ${c}`, `${r} + ${c}`, `${c} × ${c}`], `${r} × ${c}`, `${r} แถว แถวละ ${c}`, () => answerBox(ctx, String(r * c), { hint: `นับทีละแถว แถวละ ${c}` })))); } };
+    return { prompt: q, say: q, __sig: `mta ${r}x${c}`, mount(bd, ctx) { bd.append(ppSide(h('div', { class: 'dvfig', html: dvArrSVG(r, c, { col: pick(['#7FC8F0', '#FFB74D', '#81C784', '#F48FB1']) }) }),
+      mtTwoStep(ctx, [`${r} × ${c}`, `${r} + ${c}`, `${c} × ${c}`], `${r} × ${c}`, `${r} แถว แถวละ ${c}`, () => answerBox(ctx, String(r * c), { hint: `นับทีละแถว แถวละ ${c}` })))); } }; /* v191: ภาพซ้าย ตอบขวา */
+  },
+  /* v191: แตะทีละแถว นับเพิ่ม แล้วตอบ */
+  mtRowTap({ r, c }) { const q = `${r} × ${c} = ?`;
+    return { prompt: q + ` <small>(แตะทีละแถว นับเพิ่มทีละ ${c})</small>`, say: `${r} คูณ ${c} เท่ากับเท่าไร แตะทีละแถว`, __sig: `mtr ${r}x${c}`, mount(bd, ctx) { let lit = 0; const fig = h('div', { class: 'dvfig ia mtrowtap' }), cnt = h('div', { class: 'p4steplab' }, `แตะแถวที่ 1`);
+      const ab = h('div', { class: 'dvgate', style: { visibility: 'hidden' } }, answerBox(ctx, String(r * c), { hint: `นับทีละแถว: ${range(1, Math.min(r, 4)).map(i => i * c).join(', ')}${r > 4 ? ', …' : ''}` }));
+      const draw = () => { fig.innerHTML = dvArrSVG(r, c, { lit, run: true, hit: true, k: 1.7 }); };
+      fig.onclick = e => { e.stopPropagation(); const t = e.target.closest('[data-r]'); if (!t || +t.dataset.r !== lit || lit >= r) { if (t) sfx.no(); return; } lit++; sfx.pop(lit); draw(); say(String(lit * c), true);
+        if (lit < r) cnt.innerHTML = `${range(1, lit).map(i => i * c).join(', ')} … แตะแถวที่ ${lit + 1}`; else { cnt.innerHTML = `${range(1, r).map(i => i * c).join(', ')} → ${r} แถว แถวละ ${c}`; ab.style.visibility = ''; } };
+      draw(); bd.append(ppSide(fig, h('div', { class: 'colstack' }, cnt, ab))); } };
   },
   mtSwap({ a, b }) { const q = `${a} × ${b} = ${b} × □  □ คือจำนวนใด`;
-    return { prompt: q, say: `${a} คูณ ${b} เท่ากับ ${b} คูณ อะไร`, mount(bd, ctx) { bd.append(h('div', { class: 't6-q p4-q p2q' }, h('div', { class: 'p4-fig', html: mtArraySVG(Math.min(a, b), Math.max(a, b)) }),
+    return { prompt: q, say: `${a} คูณ ${b} เท่ากับ ${b} คูณ อะไร`, __sig: `mts ${a}x${b}`, mount(bd, ctx) { bd.append(ppSide(h('div', { class: 'dvfig', html: dvArrSVG(a, b, { k: 1.6 }) }),
       h('div', { class: 'colstack' }, h('div', { class: 'fbig', html: `${a} × ${b} = ${b} × <span class="fsign">□</span>` }), answerBox(ctx, String(a), { hint: 'สลับที่ตัวคูณ ผลคูณเท่าเดิม (หมุนแผนภาพดู)' })))); } };
   },
   /* one fact — remembers the result; a wrong answer shows the picture as a hint */
@@ -289,7 +310,7 @@ const MTW_ST = [{ text: 'แม่ซื้อน้ำเต้าหู้ 3 �
   { text: 'มีขนม 7 ถุง ถุงละ 6 ชิ้น มีขนมทั้งหมดกี่ชิ้น', a: 7, b: 6, unit: 'ชิ้น', fig: () => mtGroupsSVG(7, 6, 'cookie', { box: 'bag' }) }, { text: 'มีมังคุด 8 จาน จานละ 5 ผล มีมังคุดทั้งหมดกี่ผล', a: 8, b: 5, unit: 'ผล', fig: () => mtGroupsSVG(8, 5, 'mangosteen') }]; // 
 
 /* ---------- lessons ---------- */
-const L2X = (no, place, title, short, goal, teach, game) => ({ id: 920 + no, no, place, title, short, tone: TONES5[(no + 5) % 6], goal, teach, game, learned: true });
+const L2X = (no, place, title, short, goal, teach, game) => ({ id: 920 + no, no, place, title, short, tone: TONES5[(no + 5) % 6], goal, teach, game, learned: true, ...(no === 2 ? { gameN: 10 } : {}) });
 const mtTablePages = (ns, first) => ns.flatMap((n, i) => learnStep(i === 0 ? first : `ต่อไป <b>แม่ ${n}</b>`, i === 0 ? first.replace(/<[^>]+>/g, '') : `ต่อไป แม่ ${n}`, MT_LEARN[n], MT_SUM[n]));
 const MT_LEARN = {
   2: [{ fig: mtHopSVG(2, 6), name: 'แม่ 2 = นับเพิ่มทีละ 2', text: '2, 4, 6, 8, 10, 12 … เป็น<b>จำนวนคู่</b>ทั้งหมด' }, { fig: mtGroupsSVG(3, 2, 'cookie', { run: true }), name: '3 × 2 คือ 3 กลุ่ม กลุ่มละ 2', text: '2, 4, 6 → 3 × 2 = <b>6</b>' }],
@@ -319,15 +340,19 @@ const LESSONS_P2C5 = [
      T('ลองเอง: เปลี่ยนจำนวนกลุ่มและจำนวนในแต่ละกลุ่ม', 'ลองเอง เปลี่ยนจำนวนกลุ่มและจำนวนในแต่ละกลุ่ม', el => el.append(simMtGroups()))],
     () => [...pkF(MTW_PIC, 3).map(o => Q.mtPic(o)), ...pkF(MTW_REP, 2).map(([n, k]) => Q.mtRep({ n, k }))]),
   L2X(2, 'หาดแถวละเท่ากัน', 'ความหมายของการคูณ (2)', 'ความหมายการคูณ (2)', 'เขียนประโยคสัญลักษณ์การคูณจากแผนภาพแถว และรู้ว่าสลับที่ตัวคูณแล้วผลคูณเท่าเดิม',
-    [T('รู้จัก<b>แผนภาพจัดแถว</b>', 'รู้จักแผนภาพจัดแถว', el => el.append(picWalk([
-      ['จัดของเป็นแถว', '3 แถว แถวละ <b>5</b> จุด ทุกแถวมีเท่ากัน', mtArraySVG(3, 5)],
-      ['นับทีละแถว', '5, 10, 15 → <b>3 × 5 = 15</b>', mtArraySVG(3, 5, { run: true })],
-      ['หมุนแผนภาพ', 'หมุนเป็น 5 แถว แถวละ 3 จุด จำนวนจุดเท่าเดิม → <b>3 × 5 = 5 × 3 = 15</b>', lpair(mtArraySVG(3, 5), mtArraySVG(5, 3), '↻')]],
+    [T('รู้จัก<b>แผนภาพจัดแถว</b>', 'รู้จักแผนภาพจัดแถว', el => el.append(picWalk([ /* v191: ทำใหม่ — จุดขนาดเท่ากันทุกขั้น ภาพต่อเนื่อง */
+      ['จัดของเป็นแถว', 'จุด 3 แถว แถวละ <b>5</b> จุด ทุกแถวมีเท่ากัน', dvArrSVG(3, 5, { k: 1.6 })],
+      ['นับทีละแถว', 'แถวที่ 1 มี 5 · แถวที่ 2 รวมเป็น 10 · แถวที่ 3 รวมเป็น 15', dvArrSVG(3, 5, { run: true, lit: 3, k: 1.6 })],
+      ['เขียนเป็นการคูณ', '3 แถว แถวละ 5 → <b>3 × 5 = 15</b>', `<div class="colstack dvpw">${dvArrSVG(3, 5, { mode: 'rows', k: 1.6 })}${lbig('3 × 5 = 15')}</div>`],
+      ['หมุนแผนภาพ', 'หมุนเป็น 5 แถว แถวละ 3 → นับ 3, 6, 9, 12, 15 → <b>5 × 3 = 15</b>', dvArrSVG(5, 3, { run: true, lit: 5, k: 1.6 })],
+      ['สลับที่ตัวคูณ', 'จุดเท่าเดิม 15 จุด → <b>3 × 5 = 5 × 3</b>', `<div class="colstack dvpw">${lrow(dvArrSVG(3, 5, { k: 1.1 }), lbig('↻', 'sm'), dvArrSVG(5, 3, { k: 1.1 }))}${lbig('3 × 5 = 5 × 3 = 15')}</div>`]],
       'แถวละเท่ากัน → คูณ · สลับที่ตัวคูณ ผลคูณเท่าเดิม'))),
-     pexStep('ตัวอย่างทีละขั้น: ที่นั่งในห้องเรียน', 'ตัวอย่างทีละขั้น', [['① ดูภาพ', 'โต๊ะเรียน 4 แถว แถวละ 6 ตัว', mtArraySVG(4, 6, { col: '#FFD45C' })], ['② นับทีละแถว', '6, 12, 18, 24', mtArraySVG(4, 6, { col: '#FFD45C', run: true })], ['③ ประโยคการคูณ', '<b>4 × 6 = 24</b>', null], ['④ หมุนดู', '6 แถว แถวละ 4 ก็ได้ 24 → 6 × 4 = 24', mtArraySVG(6, 4, { col: '#FFD45C' })]], 'มีโต๊ะเรียนทั้งหมด <b>24</b> ตัว'),
-     T('ลองเอง: เพิ่มแถว เพิ่มจุด แล้วหมุนแผนภาพ', 'ลองเอง เพิ่มแถว เพิ่มจุด แล้วหมุนแผนภาพ', el => el.append(simMtArray()))],
-    () => { const A = shuffle([[2, 6], [3, 4], [4, 5], [5, 3], [2, 8], [3, 6]]); return [Q.mtArr({ r: A[0][0], c: A[0][1] }), Q.mtArr({ r: A[1][0], c: A[1][1] }), Q.mtSwap({ a: 4, b: 7 }), Q.mtSwap({ a: 8, b: 3 }),
-      Q.ixMatch({ q: 'จับคู่แผนภาพกับประโยคการคูณ', pairs: A.slice(2, 5).map(([r, c]) => [`<div class="mtmini">${mtArraySVG(r, c)}</div>`, `${r} × ${c} = ${r * c}`]) })]; }),
+     pexStep('ตัวอย่างทีละขั้น: โต๊ะเรียนในห้อง', 'ตัวอย่างทีละขั้น', [['① ดูภาพ', 'โต๊ะเรียน 4 แถว แถวละ 6 ตัว', dvArrSVG(4, 6, { col: '#FFD45C', k: 1.5 })], ['② นับทีละแถว', '6, 12, 18, 24', dvArrSVG(4, 6, { run: true, lit: 4, k: 1.5 })], ['③ ประโยคการคูณ', '<b>4 × 6 = 24</b>', null], ['④ หมุนดู', '6 แถว แถวละ 4 ก็ได้ 24 → 6 × 4 = 24', dvArrSVG(6, 4, { col: '#FFD45C', k: 1.5 })]], 'มีโต๊ะเรียนทั้งหมด <b>24</b> ตัว'),
+     T('ลองเอง: เพิ่มแถว เพิ่มจุด แล้วหมุนแผนภาพ', 'ลองเอง เพิ่มแถว เพิ่มจุด แล้วหมุนแผนภาพ', el => el.append(simMtArray())),
+     T('ลองทำเอง: แตะทีละแถว แล้วตอบ', 'ลองทำเอง แตะทีละแถว แล้วตอบ', qPlay(Q.mtRowTap({ r: 3, c: 4 }), 'ถูกต้อง!'))],
+    () => { const A = shuffle([[2, 6], [3, 4], [4, 5], [5, 3], [2, 8], [3, 6], [4, 3], [2, 9], [5, 4], [3, 7], [4, 6], [6, 2]]), S = shuffle([[4, 7], [8, 3], [6, 5], [7, 3]]);
+      return [...A.slice(0, 3).sort((x, y) => x[0] * x[1] - y[0] * y[1]).map(([r, c]) => Q.mtRowTap({ r, c })), ...A.slice(3, 6).map(([r, c]) => Q.mtArr({ r, c })), ...S.slice(0, 2).map(([a, b]) => Q.mtSwap({ a, b })),
+        ...[A.slice(6, 9), A.slice(9, 12)].map(L => Q.ixMatch({ q: 'จับคู่แผนภาพกับประโยคการคูณ', pairs: L.map(([r, c]) => [`<div class="mtmini">${dvArrSVG(r, c, { k: .9 })}</div>`, `${r} × ${c} = ${r * c}`]) }))]; }),
   L2X(3, 'หาดหนึ่งศูนย์', 'หนึ่งและศูนย์กับการคูณ', 'หนึ่งและศูนย์', 'หาผลคูณของจำนวนใด ๆ กับ 1 และกับ 0',
     [T('รู้จัก<b>การคูณด้วย 1 และ 0</b>', 'รู้จักการคูณด้วยหนึ่งและศูนย์', el => el.append(picWalk([
       ['คูณด้วย 1', '4 จาน จานละ 1 ผล → <b>4 × 1 = 4</b> ได้จำนวนเดิม', mtGroupsSVG(4, 1, 'apple')],
