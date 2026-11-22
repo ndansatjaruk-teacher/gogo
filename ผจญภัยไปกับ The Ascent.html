@@ -3855,6 +3855,30 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .match.mrows .p2tl svg{width:66px!important;height:66px!important}
 .pw-fig .p2rwrap svg{width:min(560px,48cqw);height:auto}
 .ixs-h .p2sd-l svg.p2track{width:100%!important;max-width:none}.ixs-h .p2sd-l:has(.p2track){align-self:center;width:100%}
+/* v189 ปุ่ม ? คำแนะนำ (มุมขวาล่าง) + “มีอะไรถามมั้ย?” */
+.qh{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:14px;z-index:30;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}
+.qh.qh-teach{right:150px}
+.qh>*{pointer-events:auto}
+.qh-btn{width:56px;height:56px;border-radius:50%;border:none;background:#FFD54F;color:#5B3A00;font:800 30px var(--font-num);box-shadow:0 4px 0 #E0A82E,var(--e2);cursor:pointer;transition:transform var(--t1) var(--ease)}
+.qh-btn:active{transform:translateY(2px)}.qh-btn.on{background:#FFE58A;box-shadow:0 0 0 4px rgba(255,213,79,.45),0 3px 0 #E0A82E}
+.qh-btn.wig{animation:qhWig .5s ease-in-out 3}
+@keyframes qhWig{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.qh-ask{display:none;background:#fff;border-radius:16px;padding:8px 14px;font-size:17px;font-weight:700;color:var(--ink);box-shadow:var(--e2);position:relative}
+.qh-ask.on{display:block;animation:pop .35s}
+.qh-ask:after{content:"";position:absolute;right:22px;bottom:-7px;width:14px;height:14px;background:#fff;transform:rotate(45deg)}
+.qh-pop{width:min(400px,86vw);max-height:60vh;overflow:auto;background:#FFFBEA;border:2px solid #F1D27A;border-radius:18px;padding:12px 16px;box-shadow:var(--e3,0 10px 30px rgba(0,0,0,.15));font-size:16px;line-height:1.55;cursor:pointer}
+.qh-pop[hidden]{display:none}.qh-h{font-weight:800;color:#8A5A00;margin-bottom:4px}
+.qh-pop .e4w-info{background:none!important;padding:0!important;font-size:16px!important;text-align:left;box-shadow:none}
+.qh-x{margin-top:6px}
+@media (prefers-reduced-motion:reduce){.qh-btn.wig,.qh-ask.on{animation:none}}
+.cw .cwdv,.cwk .cwdv{box-shadow:none}
+/* v189 ชายหาดวัดความยาว: รูปซ้ายใหญ่ ตอบขวา · ข้อเรียง รูปกว้าง ทางเดินแนวตั้งขวา · ไม้เมตร รูปบนตัวเลือกล่าง */
+.p2wsd .p2sd-l .p2wwrap,.p2wsd .p2sd-l .p2wwrap svg{width:100%}.p2wsd .p2sd-l svg.p2wall{max-height:min(62cqh,500px);height:auto}
+.p2wsd .pp-sd{grid-template-columns:minmax(0,1.6fr) minmax(250px,1fr)}.p2wsen{flex-wrap:wrap;justify-content:center}
+.p2wtap .p2wall{width:min(860px,96cqw);max-height:min(62cqh,520px);height:auto}
+.ixs-v{grid-template-columns:minmax(0,1.7fr) minmax(230px,1fr)}.ixs-v .p2sd-l > svg,.ixs-v .p2sd-l svg.p2track{width:100%!important;max-width:none;height:auto;max-height:min(62cqh,500px)}.ixs-v .p2sd-l{width:100%}.ixs-v .p2sd-l .p2cards{zoom:1.3}.ixs-v .p2sd-l .w2srt{zoom:1.2}
+.p2pkfig .p2cards{zoom:1.3;max-width:520px}.p2card svg{display:block;margin:0 auto 2px}
+.mjq{gap:22px}.mjq .est-it svg{width:clamp(90px,11cqw,130px);height:auto}.mjq .mstick{transform:scale(1.2)}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -3929,7 +3953,7 @@ const SAVE = (() => {
   try { d = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { }
   d.stars = d.stars || {};
   if (d.settings && !('mute' in d.settings) && d.settings.speak === false) { d.settings.mute = true; d.settings.speak = true; } // old top button only toggled speech
-  d.settings = Object.assign({ speak: true, sfx: true, mute: false, input: 'keypad', penAnywhere: true, autoClear: true, unlockAll: false }, d.settings || {});
+  d.settings = Object.assign({ speak: true, sfx: true, mute: false, input: 'keypad', penAnywhere: true, autoClear: true, unlockAll: false, askNudge: true }, d.settings || {});
   return d;
 })();
 function persist() { try { localStorage.setItem(STORE_KEY, JSON.stringify(SAVE)); } catch (e) { } }
@@ -5314,6 +5338,29 @@ function bubbleRow(html, opts = {}) {
     if (kind === 'good') react(row, 'hop'); if (kind === 'bad') react(row, 'no');
   };
   return row;
+}
+
+/* v189 (ผู้ใช้ขอ): คำแนะนำ (กรอบเหลือง เช่น วิธีใช้กระดานทด) ไม่วางบนจอ — ย้ายไปไว้ในปุ่ม ? มุมขวาล่าง กดถามได้เมื่องง
+   ทุก 30 วินาที (ถ้ายังไม่ตอบ) ขึ้นคำพูด “มีอะไรถามมั้ย?” ข้างปุ่ม — ปิดได้ในตั้งค่า (SET.askNudge) · ตอบเสร็จแล้วคืนกรอบเดิมกลับที่ (แสดงคำตอบ)
+   คำสั่งที่จำเป็น (ขั้นที่ 1: เลือก… · ให้เข็มชี้ …) ยังอยู่บนจอ · ใส่ class "qhelp" ให้กล่องใดก็ได้ที่เป็นคำแนะนำ หรือ q.help (HTML) */
+const QHELP_SEL = '.e4w-info, .qhelp';
+function qHelp(body, q, isDone, o = {}) {
+  document.querySelectorAll('.qh').forEach(x => x.done ? x.done() : x.remove());
+  const nodes = [...body.querySelectorAll(QHELP_SEL)].map(n => ({ n, p: n.parentNode, nx: n.nextSibling }));
+  const store = h('div', { class: 'qh-store' }); nodes.forEach(x => store.append(x.n));
+  const has = nodes.length || q.help;
+  const pop = h('div', { class: 'qh-pop', hidden: true }, h('div', { class: 'qh-h' }, 'คำแนะนำ'), store, q.help ? h('div', { class: 'qh-x', html: q.help }) : null,
+    has ? null : h('div', { class: 'qh-x', html: 'อ่านโจทย์ด้านบนอีกครั้ง หรือกดปุ่มลำโพงเพื่อฟังโจทย์<br>ลองทำดูก่อน — ถ้าตอบผิด ไก่น้อยจะบอกใบ้ให้' }));
+  const btn = h('button', { class: 'qh-btn ia', 'aria-label': 'ขอคำแนะนำ', 'aria-expanded': 'false' }, '?'), ask = h('div', { class: 'qh-ask', 'aria-live': 'polite' }, 'มีอะไรถามมั้ย? กด ? ได้เลย');
+  const wrap = h('div', { class: 'qh' + (o.teach ? ' qh-teach' : '') }, pop, ask, btn);
+  const close = () => { pop.hidden = true; btn.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); };
+  btn.onclick = e => { e.stopPropagation(); sfx.tap(); ask.classList.remove('on'); btn.classList.remove('wig');
+    if (!pop.hidden) { close(); return; } pop.hidden = false; btn.classList.add('on'); btn.setAttribute('aria-expanded', 'true'); say(pop.innerText.replace(/^คำแนะนำ\s*/, '').replace(/[✓→·]/g, ' '), true); };
+  pop.addEventListener('click', e => { e.stopPropagation(); close(); });
+  let sec = 0; const t = setInterval(() => { if (!wrap.isConnected) { clearInterval(t); return; } if (!body.isConnected || isDone()) { wrap.done(); return; }
+    if (++sec % 30 || SET.askNudge === false || !pop.hidden) return; ask.classList.add('on'); btn.classList.add('wig'); setTimeout(() => { ask.classList.remove('on'); btn.classList.remove('wig'); }, 4500); }, 1000);
+  wrap.done = () => { clearInterval(t); nodes.forEach(x => { if (x.p && x.p.isConnected) x.p.insertBefore(x.n, x.nx && x.nx.parentNode === x.p ? x.nx : null); }); wrap.remove(); };
+  document.body.append(wrap); return wrap;
 }
 
 /* ---------- object displays ---------- */
@@ -7703,7 +7750,7 @@ Object.assign(Q, {
   /* practice: longer or shorter than 1 metre */
   meterJudge({ e, name, more }) {
     const right = more ? 'ยาวกว่า 1 เมตร' : 'สั้นกว่า 1 เมตร', q = `${name}ยาวกว่าหรือสั้นกว่า 1 เมตร?`;
-    return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 'rowstack' }, h('span', { class: 'est-it' }, art(e), h('b', null, name)), h('span', { class: 'cap', style: { fontSize: '22px' } }, 'กับ'), h('span', { class: 'est-it' }, h('span', { class: 'mstick' }, h('i'), h('i'), h('i'), h('i'), h('i')), h('b', null, 'ไม้เมตร (1 เมตร)')))); textOpts(bd, ctx, ['ยาวกว่า 1 เมตร', 'สั้นกว่า 1 เมตร'], right, '1 เมตร ยาวประมาณจากพื้นถึงเอวของผู้ใหญ่ หรือกางแขนของเด็ก ป.1'); } };
+    return { prompt: q, say: q, mount(bd, ctx) { const col = h('div', { class: 'colstack mjq' }, h('div', { class: 'rowstack' }, h('span', { class: 'est-it' }, art(e), h('b', null, name)), h('span', { class: 'cap', style: { fontSize: '22px' } }, 'กับ'), h('span', { class: 'est-it' }, h('span', { class: 'mstick' }, h('i'), h('i'), h('i'), h('i'), h('i')), h('b', null, 'ไม้เมตร (1 เมตร)')))); bd.append(col); /* v189: รูปบน ตัวเลือกล่าง */ textOpts(col, ctx, ['ยาวกว่า 1 เมตร', 'สั้นกว่า 1 เมตร'], right, '1 เมตร ยาวประมาณจากพื้นถึงเอวของผู้ใหญ่ หรือกางแขนของเด็ก ป.1'); } };
   },
   /* which unit fits: cm or m */
   unitPick({ name, e, m }) {
@@ -7841,9 +7888,9 @@ const cwFmt = (v, p) => { const s = String(v).padStart(p + 1, '0'), w = s.slice(
 /* v187 (ผู้ใช้ขอ: บวกลบน้ำหนักทดเหมือนบทบวกลบ) หน่วยผสม — o.pv(i) ป้ายหลัก · o.grp(n) [[ชื่อกลุ่ม, จำนวนหลัก], …] จากซ้าย ·
    o.split = จำนวนหลักทางขวาที่เป็นหน่วยย่อย (ขีด 1 · กรัม 3) → ระบายสีและมีเส้นแบ่ง · o.eq / o.ans ข้อความโจทย์-คำตอบ · o.nm(i) ชื่อหลักในคำอธิบาย */
 function cwTint(grid, n, split) { if (!split) return; let c = 0;
-  [...grid.children].forEach(el => { if (el.classList.contains('ln') || el.classList.contains('pgr') || el.classList.contains('pt')) return; const k = c % (n + 1); c++; if (!k) return; const i = n - k;
+  [...grid.children].forEach(el => { if (el.classList.contains('ln') || el.classList.contains('pgr') || el.classList.contains('pt') || el.classList.contains('gp')) return; const k = c % (n + 1); c++; if (!k) return; const i = n - k;
     if (i < split) el.classList.add('cwu'); if (i === split - 1) el.classList.add('cwdv'); }); }
-const cwGrp = (o, n) => o.grp ? '<span class="pgr"></span>' + o.grp(n).map(([t, c, k]) => `<span class="pg pgr ${k || ''}" style="grid-column:span ${c}">${t}</span>`).join('') : '';
+const cwGrp = (o, n) => o.grp ? '<span class="pgr"></span>' + o.grp(n).filter(([t, c]) => c > 0).map(([t, c, k]) => `<span class="pg pgr ${k || ''}" style="grid-column:span ${c}">${t}</span>`).join('<span class="pgr gp"></span>') : '';
 function colWork(bd, ctx, o) {
   const op = o.op, nums = o.nums.map(x => String(x).replace(/,/g, '')), p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), V = nums.map(s => cwInt(s, p));
   const R = op === '+' ? V.reduce((x, y) => x + y, 0) : op === '−' ? V[0] - V[1] : V[0] * V[1], len = v => String(v).length, dg = (v, i) => Math.floor(v / 10 ** i) % 10;
@@ -7856,8 +7903,8 @@ function colWork(bd, ctx, o) {
   const needZ = op === '×' ? [] : nums.flatMap((s, j) => range(0, n - 1).filter(i => i < shown(j) && i < p - PL[j]).map(i => j + ':' + i));
   const S = { zf: new Set(), carry: {}, cur: range(0, n - 1).map(i => dg(V[0], i)), res: Object.fromEntries(rowsE.map(k => [k, {}])), sel: { k: rowsE[0], i: 0 }, bad: new Set(), ok: false, hist: [] };
   const grid = h('div', { class: 'p4col e4col e4w cw ia' }), info = h('div', { class: 'p4steplab e4w-info' }), msg = h('div', { class: 'pad-msg e4w-msg' });
-  let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : ''); grid.style.gridTemplateColumns = cols;
-  const span = n + 1 + (p ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; } return x; };
+  const gp = o.split && n > o.split ? o.split : 0; /* v189: เว้นช่องระหว่างหน่วยใหญ่กับหน่วยย่อย */ let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : '') + (gp && i === gp ? ' .75em' : ''); grid.style.gridTemplateColumns = cols;
+  const span = n + 1 + (p ? 1 : 0) + (gp ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; if (gp && i === gp) x += '<span class="gp"></span>'; } return x; };
   const eq = o.eq || nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `), ans = o.ans || cwFmt(R, p);
   const paint = () => {
     let x = cwGrp(o, n) + row('<span></span>', i => `<span class="pn">${(o.pv ? o.pv(i) : CW_PV[i - p]) || ''}</span>`);
@@ -7963,8 +8010,8 @@ function colWalk(nums0, op, o = {}) {
   add(`คำตอบ <b class="num">${eqTxt} = ${ans}</b>`, -1, S => { S.ok = true; });
   /* ---- board ---- */
   const grid = h('div', { class: 'p4col e4col e4w cw cwk' }), cur0 = range(0, n - 1).map(i => dg(V[0], i));
-  let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : ''); grid.style.gridTemplateColumns = cols;
-  const span = n + 1 + (p ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; } return x; };
+  const gp = o.split && n > o.split ? o.split : 0; /* v189: เว้นช่องระหว่างหน่วยใหญ่กับหน่วยย่อย */ let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : '') + (gp && i === gp ? ' .75em' : ''); grid.style.gridTemplateColumns = cols;
+  const span = n + 1 + (p ? 1 : 0) + (gp ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; if (gp && i === gp) x += '<span class="gp"></span>'; } return x; };
   const fresh = () => ({ zf: new Set(), carry: {}, cur: cur0.slice(), res: Object.fromEntries(rows.map(k => [k, {}])), nw: new Set(), ok: false });
   let k = 0; const stateAt = m => { const S = fresh(); for (let j = 0; j < m; j++) { S.nw = new Set(); ST[j].f(S); } return S; };
   const paint = () => { const S = stateAt(k), st = k ? ST[k - 1] : null, hl = st ? st.hl : -1, hc = i => i === hl ? ' cw-hl' : '';
@@ -8017,7 +8064,7 @@ Object.assign(Q, {
       const its = shuffle(items.slice()), board = cvnBoard({ cards: its.map(it => it.label), n, labels: slotLabels, ...(side && side !== 'h' ? { horiz: false } : {}), fits: (k, i) => its[k].v === sorted[i].v,
         onDone: ok => ok ? ctx.check(true) : ctx.check(false, hint || (dir === 'asc' ? 'หาสิ่งที่น้อยที่สุดที่ยังเหลือ วางก่อน' : 'หาสิ่งที่มากที่สุดที่ยังเหลือ วางก่อน')) });
       ctx.onRight = () => board.reveal();
-      if (side && fig) { bd.append(h('div', { class: 'g4sd p2sd pp-sd' + (side === 'h' ? ' ixs-h' : '') }, h('div', { class: 'p2sd-l', html: fig }), h('div', { class: 'g4sd-r colstack', style: { gap: '6px' } }, board, h('div', { class: 'cap ixcap' }, 'แตะการ์ดตามลำดับ — ' + cvnHint())))); return; }
+      if (side && fig) { bd.append(h('div', { class: 'g4sd p2sd pp-sd' + (side === 'h' ? ' ixs-h' : side === 'v' ? ' ixs-v' : '') }, h('div', { class: 'p2sd-l', html: fig }), h('div', { class: 'g4sd-r colstack', style: { gap: '6px' } }, board, h('div', { class: 'cap ixcap' }, 'แตะการ์ดตามลำดับ — ' + cvnHint())))); return; }
       bd.append(h('div', { class: 'colstack' }, fig ? h('div', { class: 'p4-fig', html: fig }) : null, board, h('div', { class: 'cap ixcap' }, 'แตะการ์ดตามลำดับ — ' + cvnHint()))); } };
   },
   /* bins: ['คู่','คี่'] · items: [{ label, bin (index) }] — tap a card, then tap its bin (or tap the bin first) */
@@ -8080,10 +8127,10 @@ function qSim(q, done, opt = {}) {
   promptOnce(q); const G = opt.bub, box = h('div', { class: 'colstack qsim' + (G ? ' qs-game' : '') }), pr = h('div', { class: 'qsim-p', html: q.prompt }), fb = h('div', { class: 'qsim-fb' }), bub = h('div', { class: 'word fnote qsim-b' }, pr, fb), body = h('div', { class: 'qsim-body' + (G ? ' qbody' : '') });
   const setFb = G ? (html, cls) => G.set(q.prompt + (html ? `<div class="bsub">${html}</div>` : '<div class="bsub ph">&nbsp;</div>'), cls === 'ok' ? 'good' : cls === 'bad' ? 'bad' : null, cls === 'ok' ? 'wow' : 'think')
     : (html, cls) => { fb.innerHTML = html || ''; fb.className = 'qsim-fb' + (cls ? ' ' + cls : ''); };
-  const ctx = { __n: 0, why: '', check(ok, hint) { if (box.dataset.done) return; if (ok) { box.dataset.done = 1; sfx.ok(); markAns(body, true); setFb('✓ ถูกต้อง! ' + (done || '') + (ctx.__n && ctx.why ? `<div class="whyx"><b>ทำไมคำตอบก่อนหน้านี้ผิด</b> ${ctx.why}</div>` : ''), 'ok'); box.querySelectorAll('.ans').forEach(a => a.classList.add('done')); try { ctx.onRight && ctx.onRight(); } catch (e) { console.warn('onRight', e); } teachDone(box); say(fb.textContent, true); }
-      else { sfx.no(); markAns(body, false); { const pk = ctx.__pick; ctx.__pick = null; const hs = hint ? String(hint) : ''; if (hs || pk) ctx.why = (pk && pk.length < 60 ? `เลือก “${pk}” ซึ่งไม่ถูก` + (hs ? ' — ' : '') : '') + hs; } const r = tryStep(++ctx.__n, hint, body); if (r.reveal) { box.dataset.done = 1; revealAll(body, ctx, q); teachDone(box); } setFb(r.html, 'bad'); } },
+  const ctx = { __n: 0, why: '', check(ok, hint) { if (box.dataset.done) return; if (ok) { box.dataset.done = 1; box.__qh && box.__qh.done(); sfx.ok(); markAns(body, true); setFb('✓ ถูกต้อง! ' + (done || '') + (ctx.__n && ctx.why ? `<div class="whyx"><b>ทำไมคำตอบก่อนหน้านี้ผิด</b> ${ctx.why}</div>` : ''), 'ok'); box.querySelectorAll('.ans').forEach(a => a.classList.add('done')); try { ctx.onRight && ctx.onRight(); } catch (e) { console.warn('onRight', e); } teachDone(box); say(fb.textContent, true); }
+      else { sfx.no(); markAns(body, false); { const pk = ctx.__pick; ctx.__pick = null; const hs = hint ? String(hint) : ''; if (hs || pk) ctx.why = (pk && pk.length < 60 ? `เลือก “${pk}” ซึ่งไม่ถูก` + (hs ? ' — ' : '') : '') + hs; } const r = tryStep(++ctx.__n, hint, body); if (r.reveal) { box.dataset.done = 1; box.__qh && box.__qh.done(); revealAll(body, ctx, q); teachDone(box); } setFb(r.html, 'bad'); } },
     say(t) { setFb(t, ''); } };
-  if (G) { box.append(h6wait(), body); setFb(''); trackPick(body); q.mount(body, ctx); ixDropBlank(body); calcZoom(body); qLayout(body); requestAnimationFrame(() => fitBody(body)); return box; }
+  if (G) { box.append(h6wait(), body); setFb(''); trackPick(body); q.mount(body, ctx); box.__qh = qHelp(body, q, () => !!box.dataset.done, { teach: 1 }); ixDropBlank(body); calcZoom(body); qLayout(body); requestAnimationFrame(() => fitBody(body)); return box; }
   box.append(h6wait(), bub, body); trackPick(body); q.mount(body, ctx); calcZoom(body); qsArrange(box, bub, body); qLayout(body); return box;
 }
 /* v136/137 (ผู้ใช้ขอ: หน้าฝึกจัดองค์ประกอบเหมือนในเกม): ลูกเจี๊ยบถามในกรอบคำพูดด้านบน คำถามไม่ซ้ำในการ์ด — ใช้ใน T(title, say, qPlay(q, doneText, lead)) */
@@ -17287,10 +17334,14 @@ const P2_TOOLS_INFO = [['ruler', 'ตัวเลขบอก<b>เซนติ�
   ['reel', 'ดึงออกมาได้<b>ยาวมาก</b> แล้วม้วนเก็บได้', ['วัดระยะยาว ๆ เช่น ห้อง สนาม', 'วัดความสูงของบ้าน ประตู']]];
 const simP2Tools = () => toolReveal(P2_TOOLS_INFO.map(([k, how, uses]) => [p2ico(P2_TOOLS[k][1], 150), P2_TOOLS[k][0], how, uses]), 'เลือกเครื่องมือวัดให้<b>เหมาะกับสิ่งที่จะวัด</b> ✓');
 
+/* v189: เลือกตอบ — ข้อมูลที่กำหนด (การ์ด) ทางซ้าย ตัวใหญ่ · ตัวเลือกทางขวา */
+const p2PickSide = o => Object.assign(Q.p4Pick(o), { mount(bd, ctx) { const ch = choices(ctx, shuffle(o.opts.slice()).map(v => ({ value: v, label: v })), o.right, { hint: o.hint }); ch.classList.add('pp-opts'); ch.querySelectorAll('.opt').forEach(x => x.classList.add('fopt', 'txt'));
+  bd.append(h('div', { class: 't6-q p4-q' }, ppSide(h('div', { class: 'p2pkfig', html: o.fig }), ch))); } });
+
 /* ---------- question types (prefix p2) ---------- */
 const P2_TOOLS = { ruler: ['ไม้บรรทัด', 't_ruler'], meter: ['ไม้เมตร', 't_meter'], tape: ['สายวัดตัว', 't_tape'], reel: ['สายวัดชนิดตลับ', 't_reel'] };
 const p2toolLab = k => `<span class="p2tl">${p2ico(P2_TOOLS[k][1], 40)}<b>${P2_TOOLS[k][0]}</b></span>`;
-const p2card = (name, lab) => `<div class="p2card"><b>${name}</b><span>${lab}</span></div>`, p2cards = L => `<div class="p2cards">${L.map(([n, l]) => p2card(n, l)).join('')}</div>`;
+const p2card = (name, lab, k) => `<div class="p2card">${k ? p2ico(k, 70) : ''}<b>${name}</b><span>${lab}</span></div>`, p2cards = L => `<div class="p2cards">${L.map(([n, l, k]) => p2card(n, l, k)).join('')}</div>`;
 Object.assign(Q, {
   p2tool({ task, ok, opts }) {
     const q = `${task} ควรใช้เครื่องมือใดเหมาะสมที่สุด`;
@@ -17315,9 +17366,9 @@ Object.assign(Q, {
     return { prompt: ask === 'word' ? 'เลือกคำเติมในช่องว่าง' : q, say: ask === 'word' ? `${A.name} สูงกว่า หรือเตี้ยกว่า ${B.name}` : q, mount(bd, ctx) {
       const fig = h('div', { class: 'p2wwrap', html: p2wallSVG(items, { ...o, guides: true, plate: false }) });
       if (ask === 'word') { const blank = h('span', { class: 'blank' }, '?'), W = words || ['สูงกว่า', 'เตี้ยกว่า'], r = A.cm > B.cm ? W[0] : A.cm < B.cm ? W[1] : W[2];
-        bd.append(h('div', { class: 'colstack' }, fig, h('div', { class: 'sentence' }, h('span', { class: 'lab' }, A.name), blank, h('span', { class: 'lab' }, B.name)), wordChoices(ctx, r, blank, 'ดูเส้นประที่ยอดของทั้งสองตัว แล้วอ่านตัวเลขบนไม้วัด', W))); return; }
+        bd.append(ppSide(fig, h('div', { class: 'colstack' }, h('div', { class: 'sentence p2wsen' }, h('span', { class: 'lab' }, A.name), blank, h('span', { class: 'lab' }, B.name)), wordChoices(ctx, r, blank, 'ดูเส้นประที่ยอดของทั้งสองตัว แล้วอ่านตัวเลขบนไม้วัด', W)))); bd.classList.add('p2wsd'); return; } /* v189: รูปซ้าย ตอบขวา */
       const hint = ask === 'h' ? `ดูเส้นประจากยอด${A.name}ไปที่ไม้วัด อ่านตัวเลข${mc ? ' แล้วเปลี่ยน 100 เซนติเมตร เป็น 1 เมตร' : ''}` : `${A.name}สูง ${A.cm} ซม. ${B.name}สูง ${B.cm} ซม. → ลบกัน`;
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, fig, ask === 'h' && mc && A.cm >= 100 ? mcInput(ctx, A.cm, { hint }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(ask === 'h' ? A.cm : d), { hint }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เซนติเมตร')))); } };
+      bd.append(ppSide(fig, ask === 'h' && mc && A.cm >= 100 ? mcInput(ctx, A.cm, { hint }) : ppAns(ctx, ask === 'h' ? A.cm : d, hint, 'เซนติเมตร'))); bd.classList.add('p2wsd'); } };
   },
   /* tap the tallest / shortest one right on the wall */
   p2wallTap({ items, o, ask }) {
@@ -17327,7 +17378,7 @@ Object.assign(Q, {
       fig.querySelectorAll('.p2w-it').forEach(g => g.addEventListener('click', e => { e.stopPropagation(); if (fig.dataset.done) return; const ok = +g.dataset.i === t;
         if (ok) { fig.dataset.done = 1; g.classList.add('on'); } else { g.classList.remove('bad'); void g.getBBox(); g.classList.add('bad'); }
         ctx.check(ok, ask === 'tall' ? 'ดูว่ายอดของใครอยู่สูงที่สุดบนไม้วัด' : 'ดูว่ายอดของใครอยู่ต่ำที่สุดบนไม้วัด'); }));
-      bd.append(h('div', { class: 'colstack' }, fig, h('div', { class: 'cap ixcap' }, 'แตะที่ตัวในภาพได้เลย'))); } };
+      bd.append(h('div', { class: 'colstack p2wtap' }, fig, h('div', { class: 'cap ixcap' }, 'แตะที่ตัวในภาพได้เลย'))); } };
   },
   /* build a length out of metre sticks and centimetres */
   p2build({ cm }) {
@@ -17370,7 +17421,7 @@ Object.assign(Q, {
 });
 
 /* ---------- data: teaching (not used in the games) ---------- */
-const P2L_T_WALL = [{ e: 'kid0', name: 'ต้นข้าว', cm: 118 }, { e: 'kid3', name: 'ใบเตย', cm: 104 }, { e: 'teddy', name: 'ตุ๊กตาหมี', cm: 62 }, { e: 'dog', name: 'ถุงทอง', cm: 45 }];
+const P2L_T_WALL = [{ e: 'kid0', name: 'ต้นข้าว', cm: 120 }, { e: 'kid3', name: 'ใบเตย', cm: 110 }, { e: 'teddy', name: 'ตุ๊กตาหมี', cm: 60 }, { e: 'dog', name: 'ถุงทอง', cm: 40 }]; /* v189: ทุกค่าตรงขีด อ่านได้ไม่ต้องกะ */
 const P2L_T_WALL2 = [{ e: 'camel', name: 'อูฐ', cm: 160 }, { e: 'lion', name: 'สิงโต', cm: 110 }, { e: 'ostrich', name: 'นกกระจอกเทศ', cm: 130 }, { e: 'kid4', name: 'น้องฟ้า', cm: 120 }];
 const P2L_T_JUMP = [{ name: 'ต้นกล้า', cm: 345 }, { name: 'ปุยฝ้าย', cm: 308 }, { name: 'ภูผา', cm: 362 }, { name: 'ใบบัว', cm: 297 }];
 const P2L_T_MAP = { W: 560, H: 330, nodes: { home: [70, 250, 'บ้านต้นกล้า', 'house'], shop: [250, 60, 'ร้านไอศกรีม', 'shop', -1], school: [490, 230, 'โรงเรียน', 'school'], palm: [280, 290, 'สวนมะพร้าว', 'palm'] },
@@ -17379,8 +17430,8 @@ const P2L_T_MAP = { W: 560, H: 330, nodes: { home: [70, 250, 'บ้านต้
 const P2W_TOOL = [['วัดความยาวดินสอ', 'ruler', ['ruler', 'tape', 'reel']], ['วัดรอบเอวเพื่อทำชุดนักเรียน', 'tape', ['tape', 'ruler', 'meter']], ['วัดความสูงของประตูบ้าน', 'reel', ['reel', 'ruler', 'tape']],
   ['วัดความยาวรอบต้นแขน', 'tape', ['tape', 'ruler', 'meter']], ['วัดความยาวโต๊ะเรียนในห้อง', 'meter', ['meter', 'tape', 'ruler']], ['วัดความยาวสมุด', 'ruler', ['ruler', 'reel', 'meter']], ['วัดระยะจากหน้าบ้านไปโรงรถ', 'reel', ['reel', 'ruler', 'tape']]];
 const P2W_RUL = [{ k: 'brush', name: 'พู่กัน', a: 2, b: 12, col: 'yellow' }, { k: 'pencil', name: 'ดินสอ', a: 3, b: 17, col: 'mint' }, { k: 'eraser', name: 'ยางลบ', a: 13, b: 16 }, { k: 'pen', name: 'ปากกา', a: 5, b: 18 }, { k: 'sharpener', name: 'กบเหลาดินสอ', a: 7, b: 9 }];
-const P2W_WALL2 = { items: [{ e: 'kid1', name: 'สมหญิง', cm: 60 }, { e: 'kid2', name: 'สมรัก', cm: 74 }, { e: 'cat', name: 'โกโก้', cm: 35 }, { e: 'teddy', name: 'หมี', cm: 70 }], o: { max: 80 } };
-const P2W_WALL4 = { items: [{ e: 'girl', name: 'ผู้หญิง', cm: 94 }, { e: 'dog', name: 'สุนัข', cm: 48 }, { e: 'rabbit', name: 'กระต่าย', cm: 36 }, { e: 'cat', name: 'แมว', cm: 28 }], o: { max: 100 } };
+const P2W_WALL2 = { items: [{ e: 'kid1', name: 'สมหญิง', cm: 60 }, { e: 'kid2', name: 'สมรัก', cm: 75 }, { e: 'cat', name: 'โกโก้', cm: 35 }, { e: 'teddy', name: 'หมี', cm: 70 }], o: { max: 80 } };
+const P2W_WALL4 = { items: [{ e: 'girl', name: 'ผู้หญิง', cm: 95 }, { e: 'dog', name: 'สุนัข', cm: 50 }, { e: 'rabbit', name: 'กระต่าย', cm: 35 }, { e: 'cat', name: 'แมว', cm: 30 }], o: { max: 100 } };
 const P2W_WALL5 = { items: [{ e: 'tv', name: 'โทรทัศน์', cm: 60 }, { e: 'sofa', name: 'โซฟา', cm: 80 }, { e: 'lamp', name: 'โคมไฟ', cm: 110 }, { e: 'fridge', name: 'ตู้เย็น', cm: 140 }], o: { max: 150 } };
 const P2W_WALL6 = { items: [{ e: 'ostrich', name: 'นกกระจอกเทศ', cm: 150 }, { e: 'giraffe', name: 'ยีราฟ', cm: 190 }, { e: 'elephant', name: 'ช้าง', cm: 130 }, { e: 'goat', name: 'แพะ', cm: 110 }], o: { max: 200, mc: true } };
 const P2W_WALL10 = { items: [{ e: 'elephant', name: 'ช้าง', cm: 140 }, { e: 'giraffe', name: 'ยีราฟ', cm: 180 }, { e: 'lion', name: 'สิงโต', cm: 90 }, { e: 'chick', name: 'ไก่', cm: 50 }], o: { max: 200, mc: true } };
@@ -17430,7 +17481,7 @@ const P2W_ST2 = [
 const L2L = (no, place, title, short, goal, teach, game) => ({ id: 80 + no, place, title, short, tone: TONES5[(no + 3) % 6], goal, teach, game, gameN: 10 }); /* v188: เกมละ 10 ข้อ */
 const P2W_CMPH = ['สูงกว่า', 'เตี้ยกว่า', 'สูงเท่ากับ'], P2W_CMPL = ['ยาวกว่า', 'สั้นกว่า', 'ยาวเท่ากับ'], P2W_CMPD = ['มากกว่า', 'น้อยกว่า', 'เท่ากับ'];
 const p2wq = (W, x) => Q.p2wall({ items: reshuffle(W.items), o: W.o, ...x });
-const p2wallSort = (W, dir) => Q.ixSort({ side: 'h', q: `เรียงชื่อตามความสูงจาก<span class="hl">${dir === 'asc' ? 'เตี้ยที่สุดไปสูงที่สุด' : 'สูงที่สุดไปเตี้ยที่สุด'}</span>`, fig: p2wallSVG(W.items, { ...W.o, guides: true }), items: W.items.map(it => ({ label: it.name, v: it.cm })), dir, slotLabels: dir === 'asc' ? ['เตี้ยที่สุด', '', '', 'สูงที่สุด'] : ['สูงที่สุด', '', '', 'เตี้ยที่สุด'] });
+const p2wallSort = (W, dir) => Q.ixSort({ side: 'v', q: `เรียงชื่อตามความสูงจาก<span class="hl">${dir === 'asc' ? 'เตี้ยที่สุดไปสูงที่สุด' : 'สูงที่สุดไปเตี้ยที่สุด'}</span>`, fig: p2wallSVG(W.items, { ...W.o, guides: true }), items: W.items.map(it => ({ label: it.name, v: it.cm })), dir, slotLabels: dir === 'asc' ? ['เตี้ยที่สุด', '', '', 'สูงที่สุด'] : ['สูงที่สุด', '', '', 'เตี้ยที่สุด'] });
 const LESSONS_P2C3 = [
   L2L(1, 'หาดไม้บรรทัด', 'การวัดความยาวเป็นเมตรและเซนติเมตร', 'วัดเป็น ม. และ ซม.', 'เลือกเครื่องมือวัดให้เหมาะสม วัดความยาวที่ไม่ได้เริ่มที่ 0 และวัดความสูงเป็นเซนติเมตร เมตรและเซนติเมตร',
     [T('ยินดีต้อนรับสู่ <b>ชายหาดวัดความยาว</b>! รู้จัก<b>เครื่องมือวัด</b>แบบต่าง ๆ — กดเปิดทีละภาพ', 'ยินดีต้อนรับสู่ชายหาดวัดความยาว รู้จักเครื่องมือวัดแบบต่าง ๆ กดเปิดทีละภาพ', el => el.append(simP2Tools())),
@@ -17445,8 +17496,8 @@ const LESSONS_P2C3 = [
        qPlay(Q.ixMatch({ rows: 1, q: 'จับคู่สิ่งที่จะวัดกับเครื่องมือ', pairs: [['ความยาวยางลบ', p2toolLab('ruler')], ['รอบศีรษะ', p2toolLab('tape')], ['ความสูงโต๊ะครู', p2toolLab('meter')], ['ความยาวสนามเด็กเล่น', p2toolLab('reel')]] }), 'สายวัดตัวโค้งได้ ใช้วัดรอบตัว')),
      T('ไม่ต้องเริ่มที่ 0 ก็วัดได้! <b>ลากดินสอ</b>ไปวางตรงไหนก็ได้ ความยาว = ปลาย − จุดเริ่ม', 'ไม่ต้องเริ่มที่ศูนย์ก็วัดได้ ลากดินสอไปวางตรงไหนก็ได้ ความยาว เท่ากับ ปลาย ลบ จุดเริ่ม', el => el.append(simRulerDrag({ k: 'pencil', name: 'ดินสอ', a: 4, b: 13, col: 'coral' }))),
      T('ตัวอย่างทีละขั้น: ปากกาวางเริ่มที่ 6', 'ตัวอย่างทีละขั้น', p4ex([['① จุดเริ่ม', 'ปลายข้างหนึ่งตรงกับเลข 6'], ['② ปลายอีกข้าง', 'ตรงกับเลข 18'], ['③ ลบกัน', '18 − 6 = 12']], 'ปากกายาว <b>12 เซนติเมตร</b>', '', () => h('div', { class: 'p2rwrap', html: p2rulerSVG([{ k: 'pen', name: 'ปากกา', a: 6, b: 18 }]) }))),
-     T('วัด<b>ความสูง</b>: เลื่อน<b>แถบสีแดง</b>ลงมาแตะยอดศีรษะของแต่ละคน', 'วัดความสูง เลื่อนแถบสีแดงลงมาแตะยอดศีรษะของแต่ละคน', el => el.append(simWall(P2L_T_WALL, { max: 140 }))),
-     T('ตัวอย่างทีละขั้น: ใครสูงกว่า สูงกว่ากี่เซนติเมตร', 'ตัวอย่างทีละขั้น', p4ex([['① อ่านค่า', 'ต้นข้าวสูง 118 ซม. · ใบเตยสูง 104 ซม.'], ['② เปรียบเทียบ', '118 > 104 → ต้นข้าวสูงกว่า'], ['③ ผลต่าง', '118 − 104 = 14']], 'ต้นข้าว<b>สูงกว่า</b>ใบเตย <b>14 เซนติเมตร</b>'))],
+     T('วัด<b>ความสูง</b>: เลื่อน<b>แถบสีแดง</b>ลงมาแตะยอดศีรษะของแต่ละคน', 'วัดความสูง เลื่อนแถบสีแดงลงมาแตะยอดศีรษะของแต่ละคน', el => el.append(simWall(P2L_T_WALL, { max: 140, snap: 10 }))),
+     T('ตัวอย่างทีละขั้น: ใครสูงกว่า สูงกว่ากี่เซนติเมตร', 'ตัวอย่างทีละขั้น', p4ex([['① อ่านค่า', 'ต้นข้าวสูง 120 ซม. · ใบเตยสูง 110 ซม.'], ['② เปรียบเทียบ', '120 > 110 → ต้นข้าวสูงกว่า'], ['③ ผลต่าง', '120 − 110 = 10']], 'ต้นข้าว<b>สูงกว่า</b>ใบเตย <b>10 เซนติเมตร</b>'))],
     () => { const r = shuffle(P2W_RUL); return [...pkF(P2W_TOOL, 2).map(([task, ok, opts]) => Q.p2tool({ task, ok, opts })), Q.p2rulLen({ it: r[0] }), Q.p2rulCmp({ a: r[1], b: r[2] }),
       p2wq(P2W_WALL2, { i: rnd(0, 3) }), Q.p2wallTap({ ...pick([P2W_WALL4, P2W_WALL5]), ask: pick(['tall', 'short']) }), p2wq(P2W_WALL6, { i: rnd(0, 3) })]; }),
   L2L(2, 'หาดร้อยเซนติ', 'ความสัมพันธ์ระหว่างเมตรกับเซนติเมตร', 'เมตร ↔ เซนติเมตร', 'บอกความสัมพันธ์ 1 เมตร = 100 เซนติเมตร เปลี่ยนหน่วยความยาว และคาดคะเนความยาวเป็นเมตร',
@@ -17458,18 +17509,18 @@ const LESSONS_P2C3 = [
       ...pkF(P2W_EST, 2).map(([e, name, more]) => Q.meterJudge({ e, name, more }))]; }),
   L2L(3, 'หาดพุ่งแหลน', 'การเปรียบเทียบความยาว (1)', 'เปรียบเทียบความยาว (1)', 'เปรียบเทียบความยาวและความสูงที่เป็นเมตรและเซนติเมตร เรียงลำดับ และหาผลต่าง',
     [T('แตะ <b>2 ตัว</b> เพื่อเปรียบเทียบความสูง — ต่างกันกี่เซนติเมตร', 'แตะสองตัว เพื่อเปรียบเทียบความสูง ต่างกันกี่เซนติเมตร', el => el.append(simWall(P2L_T_WALL2, { max: 180, mc: true, mode: 'cmp' }))),
-     T('ผลกระโดดไกล — <b>แตะเรียงอันดับ</b> 1 2 3', 'ผลกระโดดไกล แตะเรียงอันดับ หนึ่ง สอง สาม', qPlay(Q.ixSort({ side: 'h', q: 'ใครได้อันดับ 1 2 3', items: P2L_T_JUMP.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['อันดับ 1', 'อันดับ 2', 'อันดับ 3'], fig: p2trackSVG(P2L_T_JUMP, { lo: 280, hi: 380, st: 20, sand: true, lab: v => mcTxt(v, 1) }) }), 'ไกลที่สุดได้อันดับ 1')),
+     T('ผลกระโดดไกล — <b>แตะเรียงอันดับ</b> 1 2 3', 'ผลกระโดดไกล แตะเรียงอันดับ หนึ่ง สอง สาม', qPlay(Q.ixSort({ side: 'v', q: 'ใครได้อันดับ 1 2 3', items: P2L_T_JUMP.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['อันดับ 1', 'อันดับ 2', 'อันดับ 3'], fig: p2trackSVG(P2L_T_JUMP, { lo: 280, hi: 380, st: 20, sand: true, lab: v => mcTxt(v, 1) }) }), 'ไกลที่สุดได้อันดับ 1')),
      T('ตัวอย่างทีละขั้น: 3 ม. 45 ซม. กับ 3 ม. 8 ซม.', 'ตัวอย่างทีละขั้น', p4ex([['① เทียบเมตร', '3 เมตร = 3 เมตร (เท่ากัน)'], ['② เทียบเซนติเมตร', '45 > 8'], ['สรุป', '3 ม. 45 ซม. ยาวกว่า 3 ม. 8 ซม. อยู่ 45 − 8 = 37 ซม.']], 'ต้นกล้ากระโดด<b>ไกลกว่า</b>ปุยฝ้าย <b>37 เซนติเมตร</b>'))],
     () => { const W = P2W_WALL10, I = W.items; return [p2wq(W, { i: 0 }), p2wq(W, { i: 1, j: 2, ask: 'word' }), Q.p2wallTap({ ...W, ask: pick(['tall', 'short']) }), p2wq(W, { i: 2, j: 3, ask: 'diff' }), p2wallSort(W, 'asc'),
       Q.ixSort({ q: 'ผลการแข่งขันพุ่งแหลน: ใครได้<span class="hl">เหรียญทอง เงิน ทองแดง</span>', items: P2W_JAV.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['เหรียญทอง', 'เหรียญเงิน', 'เหรียญทองแดง'], fig: p2trackSVG(P2W_JAV, { lo: 5100, hi: 5300, st: 50, lab: v => mcTxt(v, 1) }) }),
-      Q.p4Pick({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; }),
+      p2PickSide({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; }),
   L2L(4, 'หาดเทียบหน่วย', 'การเปรียบเทียบความยาว (2)', 'เปรียบเทียบความยาว (2)', 'เปรียบเทียบความยาวที่เขียนต่างหน่วยกัน โดยเปลี่ยนเป็นเซนติเมตรก่อน',
     [T('ความยาวเขียน<b>ต่างหน่วย</b> — กด<b>เปลี่ยนเป็นเซนติเมตร</b>ทั้งคู่ แล้วเปรียบเทียบ', 'ความยาวเขียนต่างหน่วย กดเปลี่ยนเป็นเซนติเมตรทั้งคู่ แล้วเปรียบเทียบ', el => el.append(simCmpUnits([[['ไม้ไผ่', '3 ม. 5 ซม.', 305], ['เชือก', '350 ซม.', 350]], [['ท่อน้ำ', '2 ม. 40 ซม.', 240], ['ราวตากผ้า', '240 ซม.', 240]], [['เรือคายัก', '4 ม. 12 ซม.', 412], ['กระดานโต้คลื่น', '298 ซม.', 298]]]))),
      T('ตัวอย่างทีละขั้น: เรียงความยาว 3 อย่าง', 'ตัวอย่างทีละขั้น', p4ex([['① เปลี่ยนหน่วย', 'ตาข่าย 2 ม. 75 ซม. = 275 ซม. · เชือก 312 ซม. · ไม้พาย 1 ม. 90 ซม. = 190 ซม.'], ['② เทียบ', '312 > 275 > 190'], ['③ เรียงจากยาวไปสั้น', 'เชือก → ตาข่าย → ไม้พาย']], '<b>เชือก</b>ยาวที่สุด · <b>ไม้พาย</b>สั้นที่สุด'))],
     () => { const A = P2W_ANI, L = P2W_LONG, T_ = P2W_TALL, pr = pkF(P2W_LONGQ, 2), ap = pkF([[0, 1], [3, 2], [4, 5], [0, 3], [4, 1], [0, 4], [5, 2], [1, 5]], 2);
       return [Q.p4Pick({ fig: p2cards(A), q: `สัตว์ชนิดใด<span class="hl">สูงที่สุด</span>`, opts: ['กวาง', 'อูฐ', ...pkF(['ม้า', 'วัว', 'แรด', 'ฮิปโปโปเตมัส'], 2)], right: 'กวาง', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วหาค่าที่มากที่สุด' }),
         ...ap.map(([i, j]) => Q.p2cmpWord({ a: A[i], b: A[j], words: P2W_CMPH.slice(0, 2) })), ...pr.map(([i, j]) => Q.p2cmpWord({ a: L[i], b: L[j], words: P2W_CMPL })),
-        Q.p2cmpWord({ a: T_[3], b: T_[1], words: P2W_CMPH }), Q.ixSort({ q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; }),
+        Q.p2cmpWord({ a: T_[3], b: T_[1], words: P2W_CMPH }), Q.ixSort({ side: 'v', q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; }),
   L2L(5, 'หาดแผนที่', 'การวัดและเปรียบเทียบระยะทาง', 'ระยะทาง', 'หาระยะทางจากแผนที่ เปรียบเทียบระยะทาง และใช้หน่วยเมตร เซนติเมตร',
     [T('<b>แตะถนน</b>ทีละเส้นตามเส้นทาง — ระยะทางจะบวกให้ดู แล้วเทียบว่าทางไหนใกล้กว่า', 'แตะถนนทีละเส้นตามเส้นทาง ระยะทางจะบวกให้ดู แล้วเทียบว่าทางไหนใกล้กว่า', el => el.append(simRoute(P2L_T_MAP, [{ q: 'จากบ้านไปโรงเรียน ผ่านร้านไอศกรีม', e: [0, 1] }, { q: 'จากบ้านไปโรงเรียน ผ่านสวนมะพร้าว', e: [2, 3] }]))),
      T('ตัวอย่างทีละขั้น: เส้นทางไหนใกล้กว่า', 'ตัวอย่างทีละขั้น', p4ex([['① ผ่านร้านไอศกรีม', '315 + 480 = 795 เมตร'], ['② ผ่านสวนมะพร้าว', '260 + 590 = 850 เมตร'], ['③ เทียบ', '795 < 850 → ต่างกัน 850 − 795 = 55 เมตร']], 'ทางผ่าน<b>ร้านไอศกรีม</b>ใกล้กว่า <b>55 เมตร</b>'))],
@@ -17508,14 +17559,14 @@ LESSONS_P2C3[1].game = () => { const c = shuffle(P2W_C2M), m = shuffle(P2W_M2C.f
     ...pkF(P2W_EST, 3).map(([e, name, more]) => Q.meterJudge({ e, name, more }))]; };
 LESSONS_P2C3[2].game = () => { const W = P2W_WALL10;
   return [p2wq(W, { i: 0 }), p2wq(W, { i: 3 }), Q.p2wallTap({ ...W, ask: 'tall' }), p2wq(W, { i: 1, j: 2, ask: 'word' }), p2wq(W, { i: 0, j: 3, ask: 'word' }), p2wq(W, { i: 2, j: 3, ask: 'diff' }), p2wq(W, { i: 1, j: 0, ask: 'diff' }), p2wallSort(W, 'asc'),
-    Q.ixSort({ side: 'h', q: 'ผลการแข่งขันพุ่งแหลน: ใครได้<span class="hl">เหรียญทอง เงิน ทองแดง</span>', items: P2W_JAV.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['เหรียญทอง', 'เหรียญเงิน', 'เหรียญทองแดง'], fig: p2trackSVG(P2W_JAV, { lo: 5100, hi: 5300, st: 50, lab: v => mcTxt(v, 1) }) }),
-    Q.p4Pick({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; };
+    Q.ixSort({ side: 'v', q: 'ผลการแข่งขันพุ่งแหลน: ใครได้<span class="hl">เหรียญทอง เงิน ทองแดง</span>', items: P2W_JAV.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['เหรียญทอง', 'เหรียญเงิน', 'เหรียญทองแดง'], fig: p2trackSVG(P2W_JAV, { lo: 5100, hi: 5300, st: 50, lab: v => mcTxt(v, 1) }) }),
+    p2PickSide({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; };
 LESSONS_P2C3[3].game = () => { const A = P2W_ANI, L = P2W_LONG, T_ = P2W_TALL, pr = pkF(P2W_LONGQ, 3), ap = pkF([[0, 1], [3, 2], [4, 5], [0, 3], [4, 1], [0, 4], [5, 2], [1, 5]], 3);
   return [...ap.map(([i, j]) => Q.p2cmpWord({ a: A[i], b: A[j], words: P2W_CMPH.slice(0, 2) })), ...pr.map(([i, j]) => Q.p2cmpWord({ a: L[i], b: L[j], words: P2W_CMPL })),
     Q.p2cmpWord({ a: [...T_[3], 'house'], b: [...T_[1], 'flag'], words: P2W_CMPH }),
-    Q.p4Pick({ fig: p2cards(A), q: `สัตว์ชนิดใด<span class="hl">สูงที่สุด</span>`, opts: ['ช้าง', 'อูฐ', ...pkF(['แพะ', 'สิงโต', 'นกกระจอกเทศ', 'หมีแพนด้า'], 2)], right: 'ช้าง', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วหาค่าที่มากที่สุด' }),
-    Q.ixSort({ side: 'h', q: 'เรียงความยาวจาก<span class="hl">ยาวที่สุดไปสั้นที่สุด</span>', fig: `<div class="w2srt">${[L[1], L[2], L[5]].map(([n, t, v, k]) => `<div class="w2sc">${p2ico(k, 96)}<b>${n}</b><span>${t}</span></div>`).join('')}</div>`, items: [L[1], L[2], L[5]].map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['ยาวที่สุด', '', 'สั้นที่สุด'] }),
-    Q.ixSort({ q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; };
+    p2PickSide({ fig: p2cards(A.map(([n, t, v, k]) => [n, t, k])), q: `สัตว์ชนิดใด<span class="hl">สูงที่สุด</span>`, opts: ['ช้าง', 'อูฐ', ...pkF(['แพะ', 'สิงโต', 'นกกระจอกเทศ', 'หมีแพนด้า'], 2)], right: 'ช้าง', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วหาค่าที่มากที่สุด' }),
+    Q.ixSort({ side: 'v', q: 'เรียงความยาวจาก<span class="hl">ยาวที่สุดไปสั้นที่สุด</span>', fig: `<div class="w2srt">${[L[1], L[2], L[5]].map(([n, t, v, k]) => `<div class="w2sc">${p2ico(k, 96)}<b>${n}</b><span>${t}</span></div>`).join('')}</div>`, items: [L[1], L[2], L[5]].map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['ยาวที่สุด', '', 'สั้นที่สุด'] }),
+    Q.ixSort({ side: 'v', q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; };
 LESSONS_P2C3[4].game = () => { const T_ = P2W_TRIP, far = Math.random() < .5;
   return [Q.p2conv({ cm: 1008, to: 'mc' }), Q.p2conv({ cm: 1150, to: 'mc' }), Q.p2cmpWord({ a: T_[3], b: T_[2], words: P2W_CMPD, pre: 'ระยะทางไป' }), Q.p2cmpWord({ a: T_[1], b: T_[2], words: P2W_CMPD, pre: 'ระยะทางไป' }),
     Q.p4Pick({ fig: p2cards(T_.map(x => ['ไป' + x[0], x[1]])), q: `จากโรงเรียนไปที่ใด<span class="hl">${far ? 'ไกลที่สุด' : 'ใกล้ที่สุด'}</span>`, opts: T_.map(x => x[0]), right: far ? 'สนามกีฬา' : 'โรงพยาบาล', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วเปรียบเทียบ' }),
@@ -29550,6 +29601,7 @@ function showSettings() {
     sw('speak', 'อ่านออกเสียงคำสั่ง (ภาษาไทย)'),
     sw('sfx', 'เสียงเอฟเฟกต์'),
     sw('penAnywhere', 'Apple Pencil เขียนทดบนที่ว่างได้ทุกที่'),
+    sw('askNudge', 'ไก่น้อยถาม “มีอะไรถามมั้ย” ทุก 30 วินาที ระหว่างเล่นเกม'),
     sw('unlockAll', 'ปลดล็อกทุกด่าน (สำหรับครู)', () => { m.remove(); showMap(); }),
     sw('showFinal', 'แสดงด่านบอสใหญ่ประจำชั้นเสมอ (ปกติจะปรากฏเมื่อชนะบอสครบทุกบท)', () => { m.remove(); showMap(); }),
     h('div', { class: 'setrow' }, h('span', null, 'ขนาดหน้าจอ (ซูม) · ใช้สองนิ้วถ่าง/หุบได้'), zoomCtl()),
@@ -30084,14 +30136,14 @@ function startGame(li) {
     bub.classList.add('in-card');
     const card = h('div', { class: 'card stage-card', style: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } }, bub, body);
     stage.append(h('div', { class: 'screen qwrap' }, card));
-    let attempts = 0, done = false, extra = '', lastWhy = '';
+    let attempts = 0, done = false, extra = '', lastWhy = '', qh = null;
     const PH = '<div class="bsub ph">&nbsp;</div>'; // reserve the feedback line so the screen does not jump when feedback appears
     const withPrompt = () => q.prompt + (extra && extra !== q.prompt ? `<div class="bsub">${extra}</div>` : PH);
     const ctx = {
       check(ok, hint) {
         if (done) return;
         if (ok) {
-          done = true; markAns(body, true); if (!attempts) firstTry++; else missed.push(q.say || q.prompt);
+          done = true; qh && qh.done(); markAns(body, true); if (!attempts) firstTry++; else missed.push(q.say || q.prompt);
           sfx.ok(); const praise = pick(['ถูกต้อง! เก่งมาก', 'เยี่ยมไปเลย!', 'สุดยอด!', 'ถูกต้องแล้ว เก่งจัง']);
           const why = attempts && lastWhy ? `<div class="whyx"><b>ทำไมคำตอบก่อนหน้านี้ผิด</b> ${lastWhy}</div>` : ''; // wrong first, right later → still explain the mistake (ผู้ใช้ขอ)
           bub.set(q.prompt + `<div class="bsub">${attempts ? 'ถูกต้องแล้ว! แก้ได้เก่งมาก' : praise}${why}</div>`, 'good', 'wow'); say(attempts ? 'ถูกต้องแล้ว ' + String(lastWhy || '').replace(/<[^>]+>/g, '') : praise);
@@ -30106,7 +30158,7 @@ function startGame(li) {
         } else {
           attempts++; { const pk = ctx.__pick; ctx.__pick = null; const hs = hint ? String(hint) : ''; if (hs || pk) lastWhy = (pk && pk.length < 60 ? `เลือก “${pk}” ซึ่งไม่ถูก` + (hs ? ' — ' : '') : '') + hs; } sfx.no(); markAns(body, false); const r = tryStep(attempts, hint, body);
           if (r.reveal) { // 3rd wrong try: show the answer, then move on
-            done = true; missed.push(q.say || q.prompt); revealAll(body, ctx, q); awaiting = true;
+            done = true; qh && qh.done(); missed.push(q.say || q.prompt); revealAll(body, ctx, q); awaiting = true;
             bub.set(q.prompt + `<div class="bsub">${r.html}</div>`, 'bad', 'think'); say(r.say);
             pbar.firstChild.style.width = ((i + 1) / qs.length * 100) + '%';
             document.body.append(h('div', { class: 'sheet rv-sheet' }, h('span', { class: 'ok' }, icon('eye')), h('span', { class: 't' }, 'ดูเฉลยแล้ว จำไว้นะ'),
@@ -30117,7 +30169,7 @@ function startGame(li) {
       },
       say(t) { extra = t; bub.set(withPrompt(), null, 'happy'); say(t); }
     };
-    trackPick(body); q.mount(body, ctx); ixDropBlank(body); calcZoom(body); qLayout(body); fitBody(body);
+    trackPick(body); q.mount(body, ctx); qh = qHelp(body, q, () => done); ixDropBlank(body); calcZoom(body); qLayout(body); fitBody(body);
     backHandler = () => { sfx.page(); L.teach && L.teach.length ? startTeach(li, L.teach.length - 1, true) : showMap(L.city); };
     window.__dbg = { ctx, advance, q, i };
     say(q.say || q.prompt);
