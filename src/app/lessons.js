@@ -44,7 +44,7 @@ function liveSplit(n) {
 }
 function revealPart(whole, a) {
   const pw = partWhole(whole, a, whole - a, { q: 'b' });
-  const c = h('div', { class: 'counters' }); for (let i = 0; i < whole; i++) c.append(h('span', { class: 'counter' + (i < a ? '' : ' b') }));
+  const c = h('div', { class: 'counters' + (whole > 7 ? ' five' : '') }); for (let i = 0; i < whole; i++) c.append(h('span', { class: 'counter' + (i < a ? '' : ' b') }));
   const btn = h('button', { class: 'btn accent ia', onclick: e => { e.stopPropagation(); pw.fill(whole - a); btn.remove(); sfx.ok(); say(`${WORD[whole]} แบ่งเป็น ${WORD[a]} กับ ${WORD[whole - a]}`, true); } }, 'แตะเพื่อดูคำตอบ');
   return row(col(pw), col(c, btn));
 }
@@ -84,13 +84,13 @@ function writingGame(nums) {
 function partWholeTeach(lo, hi) {
   const n = hi, a = n - 2;
   return [
-    { t: `มีตัวนับ ${n} ตัว เป็นสีแดง ${a} ตัว และสีฟ้า 2 ตัว`, v: el => { const c = h('div', { class: 'counters' }); for (let i = 0; i < n; i++) c.append(h('span', { class: 'counter pop' + (i < a ? '' : ' b'), style: { animation: `popIn .4s var(--spring) ${i * .1}s both` } })); el.append(c); } },
+    { t: `มีตัวนับ ${n} ตัว เป็นสีแดง ${a} ตัว และสีฟ้า 2 ตัว`, v: el => { const c = h('div', { class: 'counters' + (n > 7 ? ' five' : '') }); for (let i = 0; i < n; i++) c.append(h('span', { class: 'counter pop' + (i < a ? '' : ' b'), style: { animation: `popIn .4s var(--spring) ${i * .1}s both` } })); el.append(c); } },
     { t: `${a} กับ 2 เรียกว่า <span class="hl">ส่วนย่อย</span> รวมกันได้ ${n} เรียกว่า <span class="hl">ส่วนรวม</span>`, v: el => el.append(partWhole(n, a, 2)) },
     { t: `ลอง<b>แตะตัวนับ</b>เพื่อย้ายไปอีกส่วน ดูสิว่าส่วนย่อยเปลี่ยนไปอย่างไร แต่ส่วนรวมยังเป็น ${n} เสมอ`, s: `ลองแตะตัวนับเพื่อย้ายไปอีกส่วน ส่วนรวมยังเป็น ${WORD[n]} เสมอ`, v: el => el.append(liveSplit(n)) },
     { t: `${n} แบ่งเป็นส่วนย่อยได้หลายแบบ`, v: el => el.append(waysToMake(n)) },
     { t: lo === 0 ? 'ถ้าแบ่ง 4 เป็น 1 กับ 3 แล้ว 0 ล่ะ? 4 แบ่งเป็น 4 กับ 0 ได้ด้วยนะ' : `ลองดู ${lo + 1} แบ่งได้แบบไหนบ้าง`, v: el => el.append(waysToMake(lo === 0 ? 4 : lo + 1)) },
-    { t: 'ถ้ารู้ส่วนรวมและส่วนย่อย 1 ส่วน ก็หาอีกส่วนได้ — ลองนับตัวนับสีฟ้าดูนะ', v: el => { const w = rnd(Math.max(3, lo + 2), hi), a2 = rnd(1, w - 1); el.append(revealPart(w, a2)); } },
-    { t: 'เข้าใจแล้วไปเล่นเกมกัน!', v: el => el.append(mascot('wow', 'big')) }
+    { t: 'ถ้ารู้ส่วนรวมและส่วนย่อย 1 ส่วน ก็หาอีกส่วนได้ — ลองนับตัวนับสีฟ้าดูนะ', v: el => { const w = rnd(Math.max(3, lo + 2), hi), a2 = rnd(1, w - 1); el.append(revealPart(w, a2)); } }
+    /* v200: 'เข้าใจแล้วไปเล่นเกมกัน!' page removed — the chick already says it on the last page (ผู้ใช้ขอ: บอกครั้งเดียว) */
   ];
 }
 function partWholeGame(lo, hi) {

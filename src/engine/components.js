@@ -143,11 +143,11 @@ function partWhole(whole, a, b, opts = {}) {
 }
 /* interactive splitter: tap counters to move between two parts (live simulation) */
 function splitter(n, onChange, opts = {}) {
-  const wrap = h('div', { class: 'counters ia' });
+  const wrap = h('div', { class: 'counters ia' + (n > 7 ? ' five' : '') }); /* v200: 8–10 counters in rows of 5 */
   const state = Array.from({ length: n }, (_, i) => i < (opts.a ?? n) ? 0 : 1);
   state.forEach((s, i) => {
     const c = h('button', { class: 'counter tap' + (s ? ' b' : ''), 'aria-label': 'ตัวนับ' });
-    c.onclick = e => { e.stopPropagation(); state[i] ^= 1; c.classList.toggle('b', !!state[i]); sfx.pop(i); const a = state.filter(x => !x).length; onChange && onChange(a, n - a); };
+    c.onclick = e => { e.stopPropagation(); state[i] ^= 1; const a = state.filter(x => !x).length; state.forEach((_, k) => { state[k] = k < a ? 0 : 1; wrap.children[k].classList.toggle('b', !!state[k]); }); sfx.pop(i); onChange && onChange(a, n - a); }; /* v200: keep red first, blue after — mixed colours were hard to count */
     wrap.append(c);
   });
   wrap.parts = () => { const a = state.filter(x => !x).length; return [a, n - a]; };
@@ -278,16 +278,16 @@ function linker(wrap, svg, o) {
       live.setAttribute('d', curve(from, [x, y])); dot.setAttribute('cx', x); dot.setAttribute('cy', y); if (k < 1) requestAnimationFrame(step); else res(); };
     requestAnimationFrame(step); });
   async function finish(a, b, start, end) {
-    a.classList.remove('sel'); b.classList.remove('hover');
+    a.classList.remove('sel', 'linking'); b.classList.remove('hover', 'linking');
     const ok = o.onLink(a, b);
     if (ok) { live.remove(); dot.remove(); settle(a, b); [a, b].forEach(x => { x.classList.remove('snap'); void x.offsetWidth; x.classList.add('snap'); }); navigator.vibrate && navigator.vibrate(12); }
     else await retract(start, end, 'bad', 340);
   }
-  const free = el => !el.classList.contains('paired');
+  const free = el => !el.classList.contains('paired') && !el.classList.contains('linking'); /* v200: an item whose line is still flying is not free — fast double taps linked the same pair twice */
   wrap.addEventListener('pointerdown', async e => {
     const it = e.target.closest(o.sel); if (!it || !free(it) || drag) return;
     e.preventDefault(); e.stopPropagation();
-    if (sel && sel !== it && o.canLink(sel, it)) { const a = sel; sel = null; const p = anchor(a), q = anchor(it); it.classList.add('hover'); await shoot(p, q); finish(a, it, p, q); return; }
+    if (sel && sel !== it && o.canLink(sel, it)) { const a = sel; sel = null; const p = anchor(a), q = anchor(it); it.classList.add('hover'); a.classList.add('linking'); it.classList.add('linking'); await shoot(p, q); finish(a, it, p, q); return; }
     sel && sel.classList.remove('sel'); sel = it; it.classList.add('sel'); sfx.tap();
     try { wrap.setPointerCapture(e.pointerId); } catch (_) {}
     const wr = wrap.getBoundingClientRect(), k = sc(), start = anchor(it);
@@ -321,7 +321,7 @@ function linker(wrap, svg, o) {
     if (drag.moved && !raf) raf = requestAnimationFrame(frame); }, { passive: true });
   const end = async e => { if (!drag || e.pointerId !== drag.id) return; const d = drag; drag = null; cancelAnimationFrame(raf); raf = 0;
     if (!d.moved) return; // a tap: stay selected for tap-tap mode
-    if (d.snap) { sel = null; const from = d.cur || d.snap.at; await new Promise(res => { const t0 = performance.now(); const st = t => { const k = Math.min(1, (t - t0) / 90), x = from[0] + (d.snap.at[0] - from[0]) * k, y = from[1] + (d.snap.at[1] - from[1]) * k; live.setAttribute('d', curve(d.start, [x, y])); dot.setAttribute('cx', x); dot.setAttribute('cy', y); k < 1 ? requestAnimationFrame(st) : res(); }; requestAnimationFrame(st); });
+    if (d.snap) { sel = null; d.it.classList.add('linking'); d.snap.t.classList.add('linking'); const from = d.cur || d.snap.at; await new Promise(res => { const t0 = performance.now(); const st = t => { const k = Math.min(1, (t - t0) / 90), x = from[0] + (d.snap.at[0] - from[0]) * k, y = from[1] + (d.snap.at[1] - from[1]) * k; live.setAttribute('d', curve(d.start, [x, y])); dot.setAttribute('cx', x); dot.setAttribute('cy', y); k < 1 ? requestAnimationFrame(st) : res(); }; requestAnimationFrame(st); });
       await finish(d.it, d.snap.t, d.start, d.snap.at); }
     else { const to = d.cur || d.pt; await retract(d.start, to); } };
   wrap.addEventListener('pointerup', end); wrap.addEventListener('pointercancel', end);
@@ -342,6 +342,7 @@ function matchBoard(ctx, left, right, opts = {}) {
     canLink: (a, b) => a.dataset.side !== b.dataset.side,
     onLink: (a, b) => {
       const [l, r] = a.dataset.side === 'l' ? [a, b] : [b, a];
+      if (l.classList.contains('paired') || r.classList.contains('paired')) return false;
       if (l.dataset.key === r.dataset.key) {
         l.classList.add('paired'); r.classList.add('paired'); sfx.pop(done); done++;
         if (done === left.length) ctx.check(true); else ctx.progress && ctx.progress();
@@ -356,7 +357,7 @@ function matchBoard(ctx, left, right, opts = {}) {
 
 /* ---------- one-to-one pairing of two rows (comparison) ---------- */
 function pairRows(ea, a, eb, b, opts = {}) {
-  const wrap = h('div', { class: 'pairs ia' });
+  const wrap = h('div', { class: 'pairs' + (opts.interactive ? ' ia' : '') }); /* v200: a picture-only pairing is not a task — 'ia' locked the teach page with nothing to do */
   const svg = document.createElementNS(SVGNS, 'svg');
   const rowA = h('div', { class: 'rowp' }), rowB = h('div', { class: 'rowp' });
   for (let i = 0; i < a; i++) rowA.append(h('span', { class: 'pi', 'data-r': 'a' }, art(ea)));
@@ -365,13 +366,13 @@ function pairRows(ea, a, eb, b, opts = {}) {
   let n = 0;
   const free = r => [...wrap.querySelectorAll(`.pi[data-r="${r}"]:not(.paired)`)];
   const ctr = el => { const wr = wrap.getBoundingClientRect(), r = el.getBoundingClientRect(); return [r.left + r.width / 2 - wr.left, el.dataset.r === 'a' ? r.bottom - wr.top : r.top - wr.top]; };
-  const mark = (x, y) => { x.classList.add('paired'); y.classList.add('paired'); x.classList.remove('sel'); y.classList.remove('sel'); n++; sfx.pop(n);
+  const mark = (x, y) => { if (x.classList.contains('paired') || y.classList.contains('paired')) return false; x.classList.add('paired'); y.classList.add('paired'); x.classList.remove('sel'); y.classList.remove('sel'); n++; sfx.pop(n);
     if (n === Math.min(a, b)) { [...free('a'), ...free('b')].forEach(el => el.classList.add('left')); opts.onDone && opts.onDone(); } return true; };
   const lk = linker(wrap, svg, { sel: '.pi', dir: 'v', anchor: ctr, canLink: (x, y) => opts.interactive && x.dataset.r !== y.dataset.r, onLink: mark });
   wrap.autoPair = async (delay = 450) => { const A = free('a'), B = free('b'); for (let i = 0; i < Math.min(A.length, B.length); i++) { await sleep(delay); if (!wrap.isConnected) return; mark(A[i], B[i]); lk.settle(A[i], B[i]); } };
   if (!opts.interactive) wrap.style.pointerEvents = 'none';
   wrap.addEventListener('click', e => e.stopPropagation());
-  wrap.isDone = () => n === Math.min(a, b);
+  wrap.isDone = () => n >= Math.min(a, b);
   return wrap;
 }
 

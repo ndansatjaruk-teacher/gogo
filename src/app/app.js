@@ -579,7 +579,7 @@ function teachPractice(L) {
   [1].forEach(n => L.teach.push({ t: `<b>ลองทำเอง 1 ข้อ</b> — อ่านโจทย์ แล้วตอบ`, s: `ลองทำเองหนึ่งข้อ อ่านโจทย์แล้วตอบ`, prac: n,
     v(el) { const q = pickQ(); if (!q) { el.append(fNote('ทบทวนตัวอย่างอีกครั้ง แล้วไปเล่นเกมกันเลย')); return; } L.__prac.add(qSig(q)); if (q.__dup) L.__prac.add(q.__dup); qAtoms(q).forEach(a => L.__prac.add(a));
       promptOnce(q); this.t = q.prompt; this.s = q.say || q.prompt; // v109: the chick asks the question, like in the game
-      const sim = qSim(q, 'พร้อมเล่นเกมแล้ว!', { bub: window.__teachBub }), tg = null /* ตัวช่วยคิด removed (ผู้ใช้ขอ) — thinkGuide kept for later */, pr = h('div', { class: 'colstack prac' }, tg, sim);
+      const sim = qSim(q, 'เก่งมาก!', { bub: window.__teachBub }) /* v200: the last page says “ไปเล่นเกม” — say it once only */, tg = null /* ตัวช่วยคิด removed (ผู้ใช้ขอ) — thinkGuide kept for later */, pr = h('div', { class: 'colstack prac' }, tg, sim);
       /* picture LEFT · question top-right · thinking helper under it · answer bottom-right (qsArrange), fixed places so nothing moves after answering */
       const R = sim.querySelector(':scope > .qs-r') || (sim.classList.contains('qs-stack') ? sim : null); if (R && tg) R.insertBefore(tg, R.querySelector(':scope > .qsim-body')); pr.classList.toggle('qs-figp', !!R);
       pr.classList.add('prac-game'); el.append(pr); } }));
