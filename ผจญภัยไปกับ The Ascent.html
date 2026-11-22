@@ -3930,6 +3930,16 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .ixs .ncard.ixc0{--c:#E3F2FD;--c2:#9CCBF0}.ixs .ncard.ixc1{--c:#FFF3D6;--c2:#F2C94C}.ixs .ncard.ixc2{--c:#E8F8EE;--c2:#8FD6AE}.ixs .ncard.ixc3{--c:#FDECF2;--c2:#F2A7C3}.ixs .ncard.ixc4{--c:#F1ECFF;--c2:#C9B8F0}
 .ixs .ncard[class*="ixc"]{background:var(--c);box-shadow:0 4px 0 var(--c2);border:2px solid var(--c2)}
 .mtrowtap .dva-hit{cursor:pointer}.mtrowtap svg{max-width:100%}.mtarr-sim{min-height:250px;align-items:center}
+/* v192 · หน้าผลบอสใหญ่: บทที่พลาดเกิน 3 บท ย่อเป็นปุ่มเล็กบรรทัดเดียว */
+.evmore{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:4px 8px;font-size:.86rem;color:#6B6585}
+.evmore .chip{font:inherit;font-weight:700;color:#3D3760;background:#fff;border:1.5px solid #E6DDBF;border-radius:999px;padding:3px 10px;cursor:pointer}
+.evmore .chip:hover{background:#FFF6DD}
+/* v192 · หน้าผลที่มีรายงานหลายบท (3 แถวขึ้นไป): ย่อรูปบอสและระยะห่าง ให้ปุ่ม สู้ใหม่/กลับไปทบทวน อยู่ในจอโดยไม่ต้องเลื่อน */
+.boss-result:has(.evalbox .evrow:nth-of-type(3)){gap:var(--s2)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) .boss-end{width:clamp(96px,11cqw,120px)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) h2{font-size:clamp(1.5rem,3.2cqw,2.1rem)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) .evrow{padding:3px 8px}
+.boss-result:has(.bigstars) .boss-end{width:clamp(110px,12cqw,140px)} /* v192: หน้าชนะ (มีดาว) ให้ปุ่มอยู่ในจอ */
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -20253,6 +20263,70 @@ LESSONS_P2C7.push({ id: 979, boss: true, place: 'อ่าวนาฬิกา'
   winLine: 'ชนะปีศาจปลาหมึกนาฬิกาแล้ว! บอกเวลาได้แม่นยำมาก', loseLine: 'ปีศาจปลาหมึกนาฬิกายังเร็วกว่า กลับไปทวนแล้วสู้ใหม่นะ!' });
 
 /* =========================================================
+   GRADE 2 · TERM 1 EXAM — สอบปลายภาคเรียนที่ 1  (ชายหาด · เมือง 73 · บอส 1098)
+   40 ข้อ ครบบทที่ 1–5 (จำนวนนับไม่เกิน 1,000 · บวกลบ · ความยาว · น้ำหนัก · การคูณ) เรียงตามบท ง่าย → ยาก ในแต่ละบท
+   แบบข้อสอบปรนัย 3 ตัวเลือกตามแนวข้อสอบปลายภาค ป.2 — โจทย์ ตัวเลข ชื่อ และบริบทแต่งใหม่ทั้งหมด (ไม่คัดลอกข้อสอบของผู้อื่น)
+   a = ตำแหน่งคำตอบใน opts ที่เขียน (ตัวเลือกถูกเขียนไว้ก่อนเสมอ) · ตำแหน่งจริงสุ่มใหม่ทุกครั้งที่เริ่มสอบ
+   ch = บทที่ · lv = ด่านที่สอนเรื่องนั้น (ใช้แนะนำด่านที่ควรทบทวน) · ตรวจคำตอบทุกข้อด้วย tests/term_exam.py
+   ========================================================= */
+const T1_MAP = { W: 560, H: 300, nodes: { home: [90, 250, 'บ้านแก้ว', 'house'], school: [290, 62, 'โรงเรียน', 'school', -1], park: [480, 250, 'สวนสาธารณะ', 'park'] },
+  edges: [['home', 'school', 350, -40, 0, .3], ['school', 'park', 275, 44, 0, .3], ['home', 'park', 540, 0, 20, 0]] };
+const T1_BOSS = { 1: 59, 2: 79, 3: 99, 4: 919, 5: 939 }; /* บอสท้ายบท → รายงานผลแยกตามบท */
+const T1_EXAM = [
+  /* บทที่ 1 จำนวนนับไม่เกิน 1,000 และ 0 */
+  { ch: 1, lv: 43, q: '๖๐๗ อ่านว่าอย่างไร', opts: ['หกร้อยเจ็ด', 'หกร้อยเจ็ดสิบ', 'หกสิบเจ็ด'], a: 0 },
+  { ch: 1, lv: 43, q: '“เก้าร้อยสิบสาม” เขียนเป็นตัวเลขฮินดูอารบิกได้อย่างไร', opts: ['913', '930', '9013'], a: 0 },
+  { ch: 1, lv: 44, q: '528 ตัวเลข 2 อยู่ในหลักใด และมีค่าเท่าไร', opts: ['หลักสิบ มีค่า 20', 'หลักหน่วย มีค่า 2', 'หลักร้อย มีค่า 200'], a: 0 },
+  { ch: 1, lv: 44, q: 'ข้อใดเขียนในรูปกระจายได้ถูกต้อง', opts: ['470 = 400 + 70', '470 = 400 + 7', '470 = 40 + 70'], a: 0 },
+  { ch: 1, lv: 46, q: 'ข้อใดถูกต้อง', opts: ['๗๕๖ &lt; 765', '๓๐๙ &gt; 390', '๔๔๐ = 404'], a: 0, legend: true },
+  { ch: 1, lv: 48, q: 'ข้อใดเรียงลำดับจำนวนจากมากไปน้อย', opts: ['851   815   581', '518   581   815', '851   581   815'], a: 0 },
+  { ch: 1, lv: 52, q: '☐   ☐   518   418   318 เป็นแบบรูปที่ลดลงทีละ 100 จำนวนใน ☐ ตามลำดับคือข้อใด', opts: ['718, 618', '618, 718', '708, 608'], a: 0 },
+  { ch: 1, lv: 49, q: 'ใช้เลขโดด 4, 9, 2 ครบทุกตัว ตัวละ 1 ครั้ง เขียนเป็นจำนวนคู่ที่มากที่สุดได้จำนวนใด', opts: ['942', '924', '492'], a: 0 },
+  /* บทที่ 2 การบวกและการลบจำนวนนับไม่เกิน 1,000 */
+  { ch: 2, lv: 62, q: '352 + 427 = ☐   ☐ คือจำนวนใด', opts: ['779', '775', '797'], a: 0 },
+  { ch: 2, lv: 66, q: '968 − 534 = ☐   ☐ คือจำนวนใด', opts: ['434', '424', '444'], a: 0 },
+  { ch: 2, lv: 64, q: 'ตั้งบวก 486 + 357 แล้วได้ผลบวกเท่าไร', fig: `<div class="p4colwrap">${p4stackHTML([{ t: 486 }, { s: '+', t: 357 }, { line: true }], 3)}</div>`, /* vertLayout รับแค่ 2 หลัก → ใช้ตั้งบวก 3 หลัก */ opts: ['843', '733', '833'], a: 0 },
+  { ch: 2, lv: 68, q: '702 − 365 = ☐   ☐ คือจำนวนใด', opts: ['337', '463', '447'], a: 0 },
+  { ch: 2, lv: 69, q: 'ถ้า 583 + 216 = 799 ข้อใดถูกต้อง', opts: ['799 − 216 = 583', '799 + 216 = 583', '583 − 216 = 799'], a: 0 },
+  { ch: 2, lv: 70, q: '☐ − 248 = 375   ☐ คือจำนวนใด', opts: ['623', '127', '613'], a: 0 },
+  { ch: 2, lv: 73, q: 'นิดมีสติกเกอร์ 420 แผ่น ได้รับเพิ่มอีกจำนวนหนึ่ง รวมเป็น 735 แผ่น ข้อใดเป็นประโยคสัญลักษณ์ที่ใช้หาจำนวนสติกเกอร์ที่นิดได้รับเพิ่ม', opts: ['420 + ☐ = 735', '735 + 420 = ☐', '☐ − 420 = 735'], a: 0 },
+  { ch: 2, lv: 71, q: 'สวนของลุงชัยมีต้นมะม่วง 276 ต้น มีต้นลำไยมากกว่าต้นมะม่วง 158 ต้น สวนนี้มีต้นลำไยกี่ต้น', opts: ['434 ต้น', '118 ต้น', '424 ต้น'], a: 0 },
+  { ch: 2, lv: 72, q: 'ร้านค้ามีไข่ไก่ 650 ฟอง ตอนเช้าขายไป 238 ฟอง ตอนบ่ายขายไปอีก 197 ฟอง ร้านค้าเหลือไข่ไก่กี่ฟอง', opts: ['215 ฟอง', '435 ฟอง', '225 ฟอง'], a: 0 },
+  /* บทที่ 3 การวัดความยาว */
+  { ch: 3, lv: 81, q: 'ถ้าต้องการวัดความยาวของห้องเรียน ควรใช้เครื่องมือใด และใช้หน่วยใด', opts: ['ไม้เมตร หน่วยเป็นเมตร', 'ไม้บรรทัด หน่วยเป็นเซนติเมตร', 'ตาชั่ง หน่วยเป็นกิโลกรัม'], a: 0 },
+  { ch: 3, lv: 81, q: 'จากภาพ ดินสอยาวกี่เซนติเมตร', fig: p2rulerSVG([{ k: 'pencil', name: 'ดินสอ', a: 3, b: 11, col: 'mint' }]), opts: ['8 เซนติเมตร', '11 เซนติเมตร', '14 เซนติเมตร'], a: 0 },
+  { ch: 3, lv: 82, q: '3 เมตร 45 เซนติเมตร เท่ากับกี่เซนติเมตร', opts: ['345 เซนติเมตร', '48 เซนติเมตร', '305 เซนติเมตร'], a: 0 },
+  { ch: 3, lv: 82, q: '608 เซนติเมตร เท่ากับเท่าไร', opts: ['6 เมตร 8 เซนติเมตร', '60 เมตร 8 เซนติเมตร', '6 เมตร 80 เซนติเมตร'], a: 0 },
+  { ch: 3, lv: 84, q: 'ต้นสูง 1 เมตร 28 เซนติเมตร ฝนสูง 135 เซนติเมตร ข้อใดถูกต้อง', opts: ['ฝนสูงกว่าต้น 7 เซนติเมตร', 'ต้นสูงกว่าฝน 7 เซนติเมตร', 'ฝนสูงกว่าต้น 17 เซนติเมตร'], a: 0 },
+  { ch: 3, lv: 86, q: '4 เมตร 65 เซนติเมตร + 2 เมตร 50 เซนติเมตร เท่ากับเท่าไร', opts: ['7 เมตร 15 เซนติเมตร', '6 เมตร 15 เซนติเมตร', '7 เมตร 5 เซนติเมตร'], a: 0 },
+  { ch: 3, lv: 87, q: 'เชือกยาว 8 เมตร ตัดไปผูกว่าว 3 เมตร 40 เซนติเมตร เหลือเชือกยาวเท่าไร', opts: ['4 เมตร 60 เซนติเมตร', '5 เมตร 60 เซนติเมตร', '5 เมตร 40 เซนติเมตร'], a: 0 },
+  { ch: 3, lv: 85, q: 'จากภาพ ถ้าแก้วเดินจากบ้านไปสวนสาธารณะโดยผ่านโรงเรียน จะเดินไกลกว่าเดินไปทางตรงกี่เมตร', fig: p2mapSVG(T1_MAP), opts: ['85 เมตร', '625 เมตร', '185 เมตร'], a: 0 },
+  /* บทที่ 4 การวัดน้ำหนัก */
+  { ch: 4, lv: 901, q: 'จากภาพ ทุเรียนหนักเท่าไร', fig: w2fig(3400, 'kd', 'durian', 'mint'), opts: ['3 กิโลกรัม 4 ขีด', '4 กิโลกรัม 3 ขีด', '3 กิโลกรัม 6 ขีด'], a: 0 },
+  { ch: 4, lv: 902, q: 'จากภาพ ปูหนักกี่กรัม', fig: w2fig(650, 'g', 'crab', 'sky'), opts: ['650 กรัม', '600 กรัม', '700 กรัม'], a: 0 },
+  { ch: 4, lv: 904, q: '5 กิโลกรัม เท่ากับกี่ขีด', opts: ['50 ขีด', '500 ขีด', '5 ขีด'], a: 0 },
+  { ch: 4, lv: 904, q: '7 ขีด เท่ากับกี่กรัม', opts: ['700 กรัม', '70 กรัม', '7 กรัม'], a: 0 },
+  { ch: 4, lv: 906, q: 'ข้อใดถูกต้อง', opts: ['ครึ่งกิโลกรัม เบากว่า 6 ขีด', 'ครึ่งกิโลกรัม หนักกว่า 6 ขีด', 'ครึ่งกิโลกรัม หนักเท่ากับ 6 ขีด'], a: 0 },
+  { ch: 4, lv: 907, q: 'ส้มหนัก 2 กิโลกรัม 7 ขีด มังคุดหนัก 1 กิโลกรัม 5 ขีด ส้มและมังคุดหนักรวมกันเท่าไร', opts: ['4 กิโลกรัม 2 ขีด', '3 กิโลกรัม 2 ขีด', '4 กิโลกรัม 12 ขีด'], a: 0 },
+  { ch: 4, lv: 910, q: 'แม่มีแป้ง 1 กิโลกรัม ใช้ทำขนมไป 350 กรัม แม่เหลือแป้งกี่กรัม', opts: ['650 กรัม', '750 กรัม', '350 กรัม'], a: 0 },
+  /* บทที่ 5 การคูณ */
+  { ch: 5, lv: 921, q: 'จากภาพ เขียนเป็นประโยคสัญลักษณ์แสดงการคูณได้อย่างไร', fig: `<div class="p4-fig">${mtGroupsSVG(4, 6, 'orange')}</div>`, opts: ['4 × 6 = 24', '4 + 6 = 10', '4 × 4 = 16'], a: 0 },
+  { ch: 5, lv: 923, q: 'ข้อใดถูกต้อง', opts: ['7 × 1 = 7', '7 × 0 = 7', '1 × 0 = 1'], a: 0 },
+  { ch: 5, lv: 926, q: '8 × 6 = ☐   ☐ คือจำนวนใด', opts: ['48', '42', '54'], a: 0 },
+  { ch: 5, lv: 922, q: 'ถ้า 9 × 7 = 63 แล้ว 7 × 9 เท่ากับเท่าไร', opts: ['63', '16', '72'], a: 0 },
+  { ch: 5, lv: 928, q: '40 × 6 = ☐   ☐ คือจำนวนใด', opts: ['240', '46', '204'], a: 0 },
+  { ch: 5, lv: 930, q: '76 × 4 = ☐   ☐ คือจำนวนใด', opts: ['304', '284', '314'], a: 0 },
+  { ch: 5, lv: 931, q: '☐ × 8 = 72   ☐ คือจำนวนใด', opts: ['9', '8', '64'], a: 0 },
+  { ch: 5, lv: 932, q: 'ชาวสวนปลูกต้นกล้า 8 แถว แถวละ 47 ต้น ปลูกต้นกล้าได้ทั้งหมดกี่ต้น', opts: ['376 ต้น', '326 ต้น', '55 ต้น'], a: 0 }];
+const T1_N = T1_EXAM.length, T1_TIME = 60 * 60, T1_PASS = Math.ceil(.8 * T1_N - 1e-9);
+/* ตำแหน่งคำตอบสุ่มทุกครั้ง แต่ข้อเรียงตามบทเหมือนข้อสอบจริง */
+function t1Exam() { return T1_EXAM.map(q => { const n = q.opts.length, r = rnd(0, n - 1); return { ...q, opts: [...q.opts.slice(r), ...q.opts.slice(0, r)], a: (q.a - r + n) % n, from: T1_BOSS[q.ch] }; }); }
+const LESSONS_P2T1 = [{ id: 1098, boss: true, bonus: true, place: 'อ่าวสอบปลายภาค', title: 'ด่านบอส: สอบปลายภาคเรียนที่ 1 ป.2', short: 'สอบ 40 ข้อ · จับเวลา', tone: 'sky',
+  goal: `ปีศาจปลาหมึกบทที่ 1–5 รวมร่างกันแล้ว! ข้อสอบปลายภาคเรียนที่ 1 จำนวน ${T1_N} ข้อ ครบทั้ง 5 บท มีทั้งข้อง่ายและข้อยาก ทำให้เสร็จภายใน ${T1_TIME / 60} นาที ตอบถูกอย่างน้อย ${T1_PASS} ข้อเพื่อชนะ`,
+  get exam() { return this._ex || (this._ex = t1Exam()); }, examGen: t1Exam, pass: T1_PASS, timeLimit: T1_TIME, bossName: 'ราชาปลาหมึกปลายภาค', bossPal: 'night', emblem: 'ภ.1', bossKind: 'mega',
+  winLine: 'ชนะราชาปลาหมึกปลายภาคแล้ว! พร้อมขึ้นภาคเรียนที่ 2', loseLine: 'ราชาปลาหมึกยังไม่ยอมแพ้ ทบทวนแล้วมาสู้ใหม่นะ!' }];
+
+/* =========================================================
    GRADE 3 · CHAPTER 2 — การบวกและการลบจำนวนนับไม่เกิน 100,000  (ป่าดิบชื้น · เมือง 50 · ด่าน 111–118 · บอส 129)
    reuses the column engine of ป.4 (p4colPlan / p4colHTML / simColumn), bar models (p4pwSVG / p4cmpSVG), unknowns (p4uSolve)
    new: Q.p3colFill — the child works the column themself: one place at a time, taps the digit to borrow from, the carry appears above
@@ -27988,7 +28062,7 @@ const MEGA2_FIX = [
 function megaExam2() { const fromIx = (E, ix, n, ch) => shuffle(ix.map(i => E[i]).filter(Boolean)).slice(0, n).map(q => ({ ...q, ch }));
   const add = [...fromIx(EXAM_P2C4, [1, 2, 4, 5, 6], 1, 4), ...fromIx(EXAM_P2C9, [0, 1, 2, 3, 13], 1, 9), ...fromIx(EXAM_P2C9, [4, 5], 1, 9), ...fromIx(EXAM_P2C9, [17, 18], 1, 9),
     ...(() => { const C = [[0, 1], [2, 3, 4], [5, 6, 7], [8, 9], [10, 11], [12, 13], [14, 15], [16, 17], [18, 19]]; return shuffle(C).slice(0, 4).map(g => ({ ...EXAM_P2C11[pick(g)], ch: 11 })); })()];
-  const B = CITIES.filter(c => c.grade === 2 && !c.final).map(c => c.lessons.find(L => L.boss && L.bossKind !== 'mega')); /* from = บอสท้ายบท → แพ้แล้วแนะนำบทที่ควรทบทวนได้ */
+  const B = CITIES.filter(c => c.grade === 2 && !c.final).map(c => c.lessons.find(L => L.boss && L.bossKind !== 'mega')).filter(Boolean); /* (v192: เมืองสอบปลายภาคไม่มีบอสท้ายบท → ตัดออก ไม่ให้เลขบทเลื่อน) from = บอสท้ายบท → แพ้แล้วแนะนำบทที่ควรทบทวนได้ */
   const rot = q => { const n = q.opts.length, r = rnd(0, n - 1); return r ? { ...q, opts: [...q.opts.slice(r), ...q.opts.slice(0, r)], a: (q.a - r + n) % n } : q; }; /* ตำแหน่งคำตอบสุ่มทุกครั้ง */
   const all = [...MEGA2_FIX, ...add].map(q => ({ ...rot(q), from: (B[q.ch - 1] || {}).id }));
   return all.sort((a, b) => a.ch - b.ch); } /* เรียงตามบทเหมือนข้อสอบ */
@@ -28414,6 +28488,8 @@ const CITIES = [
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['umbrella', 'palm', 'boat', 'palm'], small: ['crab', 'shell', 'starfish', 'lifebuoy', 'shell', 'crab'] } },
   { id: 47, grade: 2, name: 'ชายหาดสูตรคูณ', chapter: 'บทที่ 5 การคูณ', lessons: LESSONS_P2C5,
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['palm', 'umbrella', 'palm', 'boat'], small: ['starfish', 'shell', 'crab', 'lifebuoy', 'starfish', 'shell'] } },
+  { id: 73, grade: 2, name: 'อ่าวสอบปลายภาค 1', chapter: 'สอบปลายภาคเรียนที่ 1 · บทที่ 1–5', lessons: LESSONS_P2T1,
+    theme: { beach: true, hills: ['#DCE8F5', '#E6EEF7', '#D8E4F2'], far: '#E8F0FA', edge: ['palm', 'boat', 'palm', 'umbrella'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'crab', 'shell'] } },
   { id: 48, grade: 2, term: 2, name: 'ชายหาดแบ่งเท่ากัน', chapter: 'บทที่ 6 การหาร', lessons: LESSONS_P2C6,
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['umbrella', 'palm', 'boat', 'palm'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'crab', 'shell'] } },
   { id: 49, grade: 2, term: 2, name: 'ชายหาดนาฬิกา', chapter: 'บทที่ 7 เวลา', lessons: LESSONS_P2C7,
@@ -29473,7 +29549,7 @@ function shell({ top, bottom, lesson, world }) {
 const unlocked = i => { if (SET.unlockAll || i === 0) return true; const Li = LESSONS[i], Lp = LESSONS[i - 1], gOf = L => CITIES.find(c => c.id === L.city).grade; if (Li.city !== Lp.city && gOf(Li) !== gOf(Lp)) return true; let j = i - 1; if (!LESSONS[i].bonus) while (j > 0 && LESSONS[j].bonus) j--; return (SAVE.stars[LESSONS[j].id] || 0) > 0; };
 const cityOf = L => CITIES.find(c => c.id === L.city);
 /* a grade's grand boss (city.secret) stays hidden until every chapter boss of that grade is beaten — or the teacher switch in settings is on */
-const finalReady = c => CITIES.filter(x => x.grade === c.grade && !x.final).every(x => x.lessons.filter(L => L.boss).every(L => SAVE.stars[L.id]));
+const finalReady = c => CITIES.filter(x => x.grade === c.grade && !x.final).every(x => x.lessons.filter(L => L.boss && !L.bonus).every(L => SAVE.stars[L.id])); /* v192: บอสสอบปลายภาค (bonus) ไม่บังคับ */
 const cityShown = c => !c.secret || finalReady(c) || SET.showFinal || SET.unlockAll;
 const nextShownCity = c => CITIES.slice(CITIES.indexOf(c) + 1).find(cityShown);
 const cityOpen = c => c.secret ? cityShown(c) : unlocked(LESSONS.indexOf(c.lessons[0]));
@@ -30467,10 +30543,13 @@ function megaReport(L, ex, answers) {
   const rows = [...by.values()].filter(r => r.miss).sort((a, b) => b.miss / b.n - a.miss / a.n || b.miss - a.miss);
   if (!rows.length) return h('div', { class: 'evalbox good' }, h('b', null, 'ผลการประเมิน'), h('div', null, 'ตอบถูกทุกข้อ เข้าใจครบทุกบท!'));
   return h('div', { class: 'evalbox' }, h('b', null, 'ผลการประเมิน · บทที่ควรกลับไปทบทวน (เรียงจากบทที่พลาดมากที่สุด)'),
-    ...rows.map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1], T = [...r.topics.entries()].sort((a, b) => b[1] - a[1])[0], ti = T ? LESSONS.indexOf(T[0]) : -1;
+    ...rows.slice(0, 3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1], T = [...r.topics.entries()].sort((a, b) => b[1] - a[1])[0], ti = T ? LESSONS.indexOf(T[0]) : -1;
       return h('div', { class: 'evrow' }, h('span', { class: 'evn num' }, `${r.miss}/${r.n}`), h('span', { class: 'evt' }, h('b', null, r.c.chapter), h('small', null, T ? `ทบทวนด่าน ${T[0].no} · ${T[0].title}` : r.c.name)),
         ti >= 0 ? h('button', { class: 'btn sm info', onclick: () => startTeach(ti, 0, true) }, icon('book'), 'ทวนด่านนี้') : null,
-        h('button', { class: 'btn sm', onclick: () => goCity(r.c.id) }, icon('map'), ch ? `ไปบทที่ ${ch}` : 'ไปบทนี้')); }));
+        h('button', { class: 'btn sm', onclick: () => goCity(r.c.id) }, icon('map'), ch ? `ไปบทที่ ${ch}` : 'ไปบทนี้')); }),
+    /* v192: แสดงเต็มแค่ 3 บทที่พลาดมากที่สุด (หน้าผลต้องพอดีจอ) — บทที่เหลือย่อเป็นบรรทัดเดียว กดไปบทนั้นได้ */
+    rows.length > 3 ? h('div', { class: 'evmore' }, h('span', null, 'บทอื่นที่ยังพลาด:'), ...rows.slice(3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1];
+      return h('button', { class: 'chip', onclick: () => goCity(r.c.id) }, `${ch ? 'บทที่ ' + ch : r.c.name} · ผิด ${r.miss}/${r.n}`); })) : null);
 }
 /* the grand boss appears only after every chapter boss of the grade is beaten: announce it once */
 function finalReveal(grade) {
