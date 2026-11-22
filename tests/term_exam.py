@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Answer check for the term exams: ป.1 (term 1 = lesson 398 · term 2 = 397 · src/grades/p1/p1e.js), ป.2 (1098 · 1097 · src/grades/p2/p2e.js)
-ป.3 (1198 · 1197 · src/grades/p3/p3e.js), ป.4 (1598 · 1597 · src/grades/p4/p4x.js)
-and ป.5 (1698 · 1697 · src/grades/p5/p5x.js).
+ป.3 (1198 · 1197 · src/grades/p3/p3e.js), ป.4 (1598 · 1597 · src/grades/p4/p4x.js), ป.5 (1698 · 1697 · src/grades/p5/p5x.js)
+and ป.6 (898 · 897 · src/grades/p6/p6x.js).
 
     python3 tools/build.py && python3 tests/term_exam.py
 
@@ -9,7 +9,7 @@ The answer key below is worked out here in Python, separately from the game file
 the option at `a` must equal the computed answer, and none of the other options may equal it.
 Also checked: 40 items, 3 different options each, chapters 1–5 in order, every chapter present, `lv` is a lesson of
 that chapter's city, `from` is that chapter's boss, the answer position is shuffled each attempt but stays right,
-and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000 · ป.4–5 no limit).
+and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000 · ป.4–6 no limit).
 Figure answers are worked out from the figure's own data (pictures to count, blocks, balance, scale, chart, line-up, shelf, race, pattern, length board, column sums).
 Pictograph answers are checked against the pictures actually drawn (icons × key), calendar answers with Python's own calendar. CHROME=/path/to/chrome uses that browser.
 """
@@ -292,6 +292,50 @@ EXAMS = [
     dict(name='ป.5 ภาค 2', grade=5, limit=10 ** 7, var='P5T2_EXAM', lesson=1697, city=82, key=KEY10, check=CHECK10,
          lv={4: range(591, 597), 5: range(601, 615), 6: range(621, 629), 7: range(631, 651), 8: range(661, 673)},
          boss={4: 599, 5: 619, 6: 629, 7: 659, 8: 679})] + EXAMS
+
+# ---------- ป.6 ----------
+from math import gcd, lcm
+def is_prime(n): return n > 1 and all(n % k for k in range(2, int(n ** .5) + 1))
+def frac_true2(opts):  # comparisons that may hold mixed numbers: "2 3/4 > 2 5/8"
+    out = []
+    for o in opts:
+        op = next(x for x in (' > ', ' < ', ' = ') if x in o); a, b = o.split(op); A, B = FR(a), FR(b)
+        if (op == ' > ' and A > B) or (op == ' < ' and A < B) or (op == ' = ' and A == B): out.append(o)
+    return out
+def ratio(a, b): f = Fraction(a, b); return f'{f.numerator} : {f.denominator}'
+P6_PIE = {'ค่าอาหาร': 35, 'ค่าเล่าเรียน': 20, 'ค่าเดินทาง': 15, 'เงินออม': 10, 'อื่น ๆ': 20}  # same data as P6T_PIE (30,000 บาท)
+assert sum(P6_PIE.values()) == 100
+KEY11 = [
+    None, None, None, str(gcd(48, 72)), str(lcm(12, 18)), str(gcd(36, 54, 90)), str(lcm(8, 12, 20)), f'{gcd(120, 84)} ซม.', f'{lcm(6, 8, 10)} วินาที',
+    None, None, None, str(Fraction(5, 6) + Fraction(3, 4) - Fraction(2, 3)), mixed(FR('4 1/3') - FR('1 5/6')), str((Fraction(3, 4) + Fraction(1, 8)) * Fraction(4, 7)),
+    str(Fraction(2, 3) + Fraction(1, 2) * Fraction(4, 9)), f'{1800 * (1 - Fraction(2, 5)) * (1 - Fraction(1, 3))} บาท', str(Fraction(3, 4) * (1 - Fraction(1, 3)) + Fraction(1, 6)),
+    norm(D(13) / 20), norm(D('4.8') / D('0.6')), norm(D('0.36') / D('0.004')), norm(D('12.42') / D('2.7')), norm(D('7.5') / D('0.125')),
+    f"{D('35.40') * 50:,.0f} บาท", f"{norm(D('6.75') / D('0.45'))} ขวด", f"{D(500) - D('3.5') * D('84.50'):.2f} บาท",
+    str(exact(260 * 35, 100)), f'ร้อยละ {exact(180 * 100, 250)}', f'{1500 - exact(1500 * 15, 100) - 100:,} บาท', f'{exact(690 * 100, 115)} บาท', f'{8000 - exact(8000 * 12, 100):,} บาท',
+    ratio(18, 24), None, f'{exact(750 * 2, 5)} กรัม', f"{norm(D('7.4') * 5)} กิโลเมตร",
+    str(31 + 8), str(12 + 5), str(3 * 2 ** 6), str(4 + 19 * 5), f'{2 * 15 + 2} คน']
+CHECK11 = {0: lambda o: [x for x in o if all(36 % int(t) == 0 for t in x.split())], 1: lambda o: [x for x in o if all(is_prime(int(t)) for t in x.split())],
+           2: lambda o: [x for x in o if (lambda f: eval('*'.join(f)) == 84 and all(is_prime(int(t)) for t in f))(x.split(' × '))],
+           9: frac_true, 10: frac_true2, 11: lambda o: [x for x in o if (lambda v: v == sorted(v, reverse=True))([FR(t) for t in x.split(' , ')])],
+           32: lambda o: [x for x in o if Fraction(*map(int, x.split(' : '))) == Fraction(5, 8) and x != '5 : 8']}
+KEY12 = [
+    'รูปสามเหลี่ยมหน้าจั่ว', 'รูปสามเหลี่ยมมุมป้าน' if max(35, 45, 100) > 90 else '?', f'{180 // 3}°', f'{180 - 64 - 48}°', f'{exact(180 - 40, 2)}°', f'{exact(54, 3)} ซม.',
+    f'{exact(16 * 9, 2)} ตารางเซนติเมตร', f'{exact(96 * 2, 12)} ซม.', f'{(30 + 40 + 50) * 120 + exact(30 * 40, 2) * 10:,} บาท',
+    'รูปเจ็ดเหลี่ยม', f'{(6 - 2) * 180:,}°', f'{exact((5 - 2) * 180, 5)}°', f"{norm(D('6.5') * 8)} ซม.", f'{exact((8 + 14) * 6, 2)} ตารางเซนติเมตร',
+    f'{exact(10 * 18, 2)} ตารางเซนติเมตร', f'{6 * 10 + exact(6 * 4, 2)} ตารางเซนติเมตร', f'{exact((25 + 35) * 18, 2) - 6 * 6:,} ตารางเมตร',
+    'เส้นผ่านศูนย์กลาง', f'{9 * 2} ซม.', f'{Fraction(22, 7) * 35} ซม.', f'{Fraction(22, 7) * 14 * 14} ตารางเซนติเมตร', f'{2 * Fraction(22, 7) * 35} ซม.',
+    f'{14 * 14 - Fraction(22, 7) * 7 * 7} ตารางเซนติเมตร', f'{88 / (2 * Fraction(22, 7))} เมตร', f'{int(Fraction(22, 7) * (28 ** 2 - 21 ** 2)):,} ตารางเมตร',
+    'พีระมิดฐานสี่เหลี่ยม', 'ทรงกระบอก', f'{3 + 2} หน้า', 'ปริซึมสามเหลี่ยม', f'{4 * 5 * 6 + 3 * 3 * 10} ลูกบาศก์เซนติเมตร', f'{exact(50 * 80 * 60, 1000)} ลิตร',
+    f'{exact(1200, 10 * 15)} ซม.', f'{exact(40 * 60 * 50 * 3, 4 * 1000)} ลิตร',
+    f'{exact(25 * 360, 100)}°', max(P6_PIE, key=P6_PIE.get), f"{exact(30000 * P6_PIE['เงินออม'], 100):,} บาท", f"{exact(30000 * (P6_PIE['ค่าอาหาร'] - P6_PIE['ค่าเดินทาง']), 100):,} บาท",
+    f"ร้อยละ {P6_PIE['ค่าเดินทาง'] + P6_PIE['เงินออม']}", f'{exact(240 * (100 - 30 - 25 - 15), 100)} คน', f"{exact(30000 * (P6_PIE['เงินออม'] + 5), 100):,} บาท"]
+CHECK12 = {}
+EXAMS = [
+    dict(name='ป.6 ภาค 1', grade=6, limit=10 ** 7, var='P6T1_EXAM', lesson=898, city=83, key=KEY11, check=CHECK11,
+         lv={1: range(701, 715), 2: range(731, 743), 3: range(751, 761), 4: range(771, 786), 5: range(791, 796)}, boss={1: 719, 2: 749, 3: 769, 4: 789, 5: 799}),
+    dict(name='ป.6 ภาค 2', grade=6, limit=10 ** 7, var='P6T2_EXAM', lesson=897, city=84, key=KEY12, check=CHECK12,
+         lv={6: range(801, 816), 7: range(821, 833), 8: range(841, 853), 9: range(861, 869), 10: range(871, 877)},
+         boss={6: 819, 7: 839, 8: 859, 9: 869, 10: 879})] + EXAMS
 
 ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.v || x.say || JSON.stringify(x)), a: q.a, ch: q.ch, lv: q.lv, fig: !!(q.fig || q.pic || q.blocks != null || q.chart || q.bal || q.scale || q.line || q.grid || q.race || q.shelf || q.solid || q.shape || q.seq || q.lenb || q.vert || q.vsub || q.gchart),
     d: { pic: q.pic, blocks: q.blocks, chart: q.chart, bal: q.bal, scale: q.scale, line: q.line, grid: q.grid, race: q.race, shelf: q.shelf, seq: q.seq, lenb: q.lenb, vert: q.vert, vsub: q.vsub, gchart: q.gchart } };

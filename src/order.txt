@@ -66,6 +66,7 @@ grades/p4/p4r.js
 grades/p4/p4g.js
 grades/p4/p4x.js
 grades/p5/p5x.js
+grades/p6/p6x.js
 app/lessons.js
 app/learn.js
 app/wpic.js

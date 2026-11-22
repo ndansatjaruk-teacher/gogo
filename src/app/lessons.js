@@ -2780,6 +2780,8 @@ const CITIES = [
     theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['snowpine', 'tent', 'goat', 'cairn'], small: ['goat', 'edelweiss', 'snowpine', 'cairn', 'rock', 'pine'] } },
   { id: 28, grade: 6, name: 'ภูเขาแบบรูป', chapter: 'บทที่ 5 แบบรูป', lessons: LESSONS_P6C5,
     theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['cairn', 'snowpine', 'tent', 'goat'], small: ['edelweiss', 'rock', 'snowpine', 'goat', 'cairn', 'pine'] } },
+  { id: 83, grade: 6, name: 'ยอดเขาสอบปลายภาค 1', chapter: 'สอบปลายภาคเรียนที่ 1 · บทที่ 1–5', lessons: LESSONS_P6T1, story: P6T1_STORY,
+    theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['cairn', 'snowpine', 'tent', 'goat'], small: ['edelweiss', 'rock', 'snowpine', 'goat', 'cairn', 'pine'] } },
   { id: 29, grade: 6, term: 2, name: 'ภูเขาสามเหลี่ยม', chapter: 'บทที่ 6 รูปสามเหลี่ยม', lessons: LESSONS_P6C6,
     theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['tent', 'cairn', 'goat', 'snowpine'], small: ['cairn', 'goat', 'edelweiss', 'tent', 'rock', 'pine'] } },
   { id: 30, grade: 6, term: 2, name: 'ภูเขาหลายเหลี่ยม', chapter: 'บทที่ 7 รูปหลายเหลี่ยม', lessons: LESSONS_P6C7,
@@ -2790,6 +2792,8 @@ const CITIES = [
     theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['tent', 'snowpine', 'cairn', 'goat'], small: ['cairn', 'rock', 'snowpine', 'edelweiss', 'goat', 'pine'] } },
   { id: 33, grade: 6, term: 2, name: 'ภูเขาข้อมูล', chapter: 'บทที่ 10 การนำเสนอข้อมูล', lessons: LESSONS_P6C10,
     theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['goat', 'cairn', 'tent', 'snowpine'], small: ['edelweiss', 'goat', 'rock', 'cairn', 'pine', 'snowpine'] } },
+  { id: 84, grade: 6, term: 2, name: 'ยอดเขาสอบปลายภาค 2', chapter: 'สอบปลายภาคเรียนที่ 2 · บทที่ 6–10', lessons: LESSONS_P6T2, story: P6T2_STORY,
+    theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['cairn', 'snowpine', 'tent', 'goat'], small: ['edelweiss', 'rock', 'snowpine', 'goat', 'cairn', 'pine'] } },
   { id: 71, grade: 6, term: 2, name: 'ยอดเขาจอมเยติ', chapter: 'ด่านสุดท้าย ป.6 · บอสใหญ่รวมร่าง', lessons: LESSONS_MEGA6, final: true, secret: true,
     theme: { mountain: true, hills: ['#C9D6E6', '#BCCADC', '#D6E1EE'], far: '#E6EEF7', edge: ['snowpine', 'cairn', 'snowpine', 'sumflag'], small: ['edelweiss', 'goat', 'cairn', 'snowpine', 'edelweiss', 'goat'] } }
 ];
