@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-396 types
+397 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -203,19 +203,20 @@
 | `Q.mnFromDot` | `{ s, e }` | [`grades/p3/p3m.js:82`](../src/grades/p3/p3m.js#L82) |
 | `Q.mnPay` | `{ s, e, name }` | [`grades/p3/p3m.js:71`](../src/grades/p3/p3m.js#L71) |
 | `Q.mnToDot` | `{ s }` | [`grades/p3/p3m.js:78`](../src/grades/p3/p3m.js#L78) |
-| `Q.mtArr` | `{ r, c }` | [`grades/p2/p2x.js:156`](../src/grades/p2/p2x.js#L156) |
-| `Q.mtCmp` | `{ l, r }` | [`grades/p2/p2x.js:208`](../src/grades/p2/p2x.js#L208) |
-| `Q.mtCol` | `{ a, b }` | [`grades/p2/p2x.js:205`](../src/grades/p2/p2x.js#L205) |
-| `Q.mtFact` | `{ a, b, e }` | [`grades/p2/p2x.js:165`](../src/grades/p2/p2x.js#L165) |
-| `Q.mtFill` | `{ n, ks, blanks }` | [`grades/p2/p2x.js:173`](../src/grades/p2/p2x.js#L173) |
-| `Q.mtPic` | `{ g, s, e, what, grp, unit }` | [`grades/p2/p2x.js:145`](../src/grades/p2/p2x.js#L145) |
-| `Q.mtPop` | `{ facts }` | [`grades/p2/p2x.js:181`](../src/grades/p2/p2x.js#L181) |
-| `Q.mtRep` | `{ n, k }` | [`grades/p2/p2x.js:150`](../src/grades/p2/p2x.js#L150) |
-| `Q.mtSkip` | `{ n, k = 8, blanks }` | [`grades/p2/p2x.js:193`](../src/grades/p2/p2x.js#L193) |
-| `Q.mtStory` | `{ text, a, b, unit, fig }` | [`grades/p2/p2x.js:219`](../src/grades/p2/p2x.js#L219) |
-| `Q.mtSwap` | `{ a, b }` | [`grades/p2/p2x.js:160`](../src/grades/p2/p2x.js#L160) |
-| `Q.mtTens` | `{ a, t }` | [`grades/p2/p2x.js:200`](../src/grades/p2/p2x.js#L200) |
-| `Q.mtUnk` | `{ a, b, pos }` | [`grades/p2/p2x.js:214`](../src/grades/p2/p2x.js#L214) |
+| `Q.mtArr` | `{ r, c }` | [`grades/p2/p2x.js:185`](../src/grades/p2/p2x.js#L185) |
+| `Q.mtCmp` | `{ l, r }` | [`grades/p2/p2x.js:250`](../src/grades/p2/p2x.js#L250) |
+| `Q.mtCol` | `{ a, b }` | [`grades/p2/p2x.js:247`](../src/grades/p2/p2x.js#L247) |
+| `Q.mtFact` | `{ a, b, e }` | [`grades/p2/p2x.js:194`](../src/grades/p2/p2x.js#L194) |
+| `Q.mtFill` | `{ n, ks, blanks }` | [`grades/p2/p2x.js:202`](../src/grades/p2/p2x.js#L202) |
+| `Q.mtOne` | `{ a, b }` | [`grades/p2/p2x.js:222`](../src/grades/p2/p2x.js#L222) |
+| `Q.mtPic` | `{ g, s, e, what, grp, unit }` | [`grades/p2/p2x.js:174`](../src/grades/p2/p2x.js#L174) |
+| `Q.mtPop` | `{ facts }` | [`grades/p2/p2x.js:210`](../src/grades/p2/p2x.js#L210) |
+| `Q.mtRep` | `{ n, k }` | [`grades/p2/p2x.js:179`](../src/grades/p2/p2x.js#L179) |
+| `Q.mtSkip` | `{ n, k = 8, blanks }` | [`grades/p2/p2x.js:235`](../src/grades/p2/p2x.js#L235) |
+| `Q.mtStory` | `{ text, a, b, unit, fig }` | [`grades/p2/p2x.js:261`](../src/grades/p2/p2x.js#L261) |
+| `Q.mtSwap` | `{ a, b }` | [`grades/p2/p2x.js:189`](../src/grades/p2/p2x.js#L189) |
+| `Q.mtTens` | `{ a, t }` | [`grades/p2/p2x.js:242`](../src/grades/p2/p2x.js#L242) |
+| `Q.mtUnk` | `{ a, b, pos }` | [`grades/p2/p2x.js:256`](../src/grades/p2/p2x.js#L256) |
 | `Q.numToWord` | `{ n, from = 'digit' }` | [`engine/questions.js:585`](../src/engine/questions.js#L585) |
 | `Q.objSolid` | `{ obj, kind, name }` | [`engine/questions.js:1136`](../src/engine/questions.js#L1136) |
 | `Q.p2build` | `{ cm }` | [`grades/p2/p2l.js:308`](../src/grades/p2/p2l.js#L308) |

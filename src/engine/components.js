@@ -43,6 +43,15 @@ function qHelp(body, q, isDone, o = {}) {
   document.body.append(wrap); return wrap;
 }
 
+/* v190 (ผู้ใช้ขอ): ลูกโป่งตอบถูก → แตกเป็นกระดาษสีชิ้นเล็ก ๆ (ตอบผิดไม่แตก) */
+function popConfetti(el, n = 22) {
+  if (REDUCED() || !el) return; const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * .42, cols = ['#F5B52E', '#FF6F7D', '#4C9BF0', '#2FBF8C', '#8E7CF0', '#FFD76A'];
+  for (let i = 0; i < n; i++) { const s = h('span', { class: 'pcf' }), a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 60, w = 5 + Math.random() * 5;
+    Object.assign(s.style, { left: cx + 'px', top: cy + 'px', width: w + 'px', height: (i % 3 ? w : w * 1.8) + 'px', background: cols[i % cols.length], borderRadius: i % 3 === 1 ? '50%' : '2px' }); document.body.append(s);
+    s.animate([{ transform: 'translate(-50%,-50%) rotate(0)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d - 10}px) rotate(${Math.random() * 360}deg)`, opacity: 1, offset: .55 },
+      { transform: `translate(${Math.cos(a) * d * 1.15}px,${Math.sin(a) * d + 50}px) rotate(${Math.random() * 540}deg)`, opacity: 0 }], { duration: 900 + Math.random() * 300, easing: 'cubic-bezier(.2,.8,.4,1)' }).onfinish = () => s.remove(); }
+}
+
 /* ---------- object displays ---------- */
 function objRow(e, n, opts = {}) {
   const w = h('div', { class: 'objs', style: opts.size ? { '--os': opts.size } : null });

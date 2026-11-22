@@ -417,13 +417,13 @@ function showIntro(i) {
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--coral-soft)', color: 'var(--coral-2)' } }, icon('sparkle')), h('span', null, h('b', null, 'ตอบถูก'), ` — โจมตี${L.bossName} 1 ครั้ง`)),
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--gold-soft)', color: '#8A6200' } }, icon('crown')), h('span', null, h('b', null, `ถูก ${L.pass} ข้อขึ้นไป`), ' — ชนะบอส ' + (CITIES[CITIES.indexOf(cityOf(L)) + 1] ? 'และเปิดเมืองถัดไป' : '')))) :
     h('ul', { class: 'feat' },
-      h('li', null, h('span', { class: 'fi', style: { background: 'var(--sky-soft)', color: 'var(--sky-2)' } }, icon('book')), h('span', null, h('b', null, 'เรียน'), ' — แตะตรงไหนก็ได้เพื่อไปทีละขั้น')),
+      L.noTeach ? null : h('li', null, h('span', { class: 'fi', style: { background: 'var(--sky-soft)', color: 'var(--sky-2)' } }, icon('book')), h('span', null, h('b', null, 'เรียน'), ' — แตะตรงไหนก็ได้เพื่อไปทีละขั้น')),
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--gold-soft)', color: '#8A6200' } }, icon('game')), h('span', null, h('b', null, 'เล่น'), ' — ตอบด้วยการกดตัวเลข หรือเขียนด้วยนิ้ว/ปากกา')),
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--mint-soft)', color: 'var(--mint-2)' } }, icon('pencil')), h('span', null, h('b', null, 'ทด'), ' — เปิดกระดาษทดได้ทั้งจอ Apple Pencil เขียนบนที่ว่างได้ทันที'))),
     null, // IPST clip links removed (ผู้ใช้ขอ)
     L.boss ? h('div', { class: 'actions' }, h('button', { class: 'btn danger lg', onclick: () => { m.remove(); startBoss(i); } }, icon('flag'), 'เริ่มสอบ · สู้บอส')) :
     h('div', { class: 'actions' },
-      h('button', { class: 'btn primary lg', onclick: () => { m.remove(); startTeach(i); } }, icon('book'), 'เริ่มเรียน'),
+      L.noTeach ? null : h('button', { class: 'btn primary lg', onclick: () => { m.remove(); startTeach(i); } }, icon('book'), 'เริ่มเรียน'), /* v190: ด่านทดสอบไม่มีการสอน */
       h('button', { class: 'btn accent lg', onclick: () => { m.remove(); startGame(i); } }, icon('game'), 'เล่นเกมเลย'))
   ]);
   say(L.title);
@@ -915,7 +915,7 @@ function qBalance(list, N, extra = []) { if (list.length <= N && !extra.length) 
 function gameSet(L, N0) {
   const K = L.bonus ? [] : bossKeys(L), out = [], seen = new Set(), spare = [], boss = [];
   const first = ixBundle(L.game()); first.forEach(qKind0);
-  const N = N0 || L.gameN || Math.min(15, Math.max(GAME_N, Math.ceil(2.5 * new Set(first.map(q => q.__kind)).size))), NC = Math.min(30, N * 2);
+  const N = N0 || L.gameN || Math.min(15, Math.max(GAME_N, Math.ceil(2.5 * new Set(first.map(q => q.__kind)).size))), NC = Math.max(N, Math.min(30, N * 2)); /* v190: เกม 40 ข้อ */
   const base = {}; // the same story with new numbers at most twice per game
   /* the same wording with only another picture reads as the same question (ผู้ใช้เจอข้อซ้ำ) — one per game, a second only when the pool is short */
   const look = {}, lk = q => { qSig(q); const p = String(q.story || q.prompt || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); return p + '|' + (String(q.__txt || '').match(/\d+(?:[.,]\d+)*/g) || []).join(','); };
@@ -957,7 +957,7 @@ function startGame(li) {
   const L = LESSONS[li]; GAME_LID = L.id; const qs = gameSet(L); let i = 0, firstTry = 0; const missed = [];
   const pbar = h('div', { class: 'pbar' }, h('b', { style: { width: '0%' } })), cnt = h('div');
   const review = h('button', { class: 'btn', 'aria-label': 'ทบทวนบทเรียน' }, icon('book'), h('span', { class: 'lbl-r' }, 'ทบทวน'));
-  review.onclick = () => startTeach(li, 0, true);
+  review.onclick = () => startTeach(li, 0, true); if (L.noTeach) review.style.visibility = 'hidden';
   const stage = shell({ lesson: true, world: WORLD_OF(cityOf(L)), top: lessonTop(L, 'เกมผ่านด่าน'), bottom: [review, h('div', { class: 'mid' }, pbar, cnt), h('div', { class: 'bar-spacer', 'aria-hidden': 'true' })] });
   let awaiting = false;
   function show() {

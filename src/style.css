@@ -3872,3 +3872,27 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .ixs-v{grid-template-columns:minmax(0,1.7fr) minmax(230px,1fr)}.ixs-v .p2sd-l > svg,.ixs-v .p2sd-l svg.p2track{width:100%!important;max-width:none;height:auto;max-height:min(62cqh,500px)}.ixs-v .p2sd-l{width:100%}.ixs-v .p2sd-l .p2cards{zoom:1.3}.ixs-v .p2sd-l .w2srt{zoom:1.2}
 .p2pkfig .p2cards{zoom:1.3;max-width:520px}.p2card svg{display:block;margin:0 auto 2px}
 .mjq{gap:22px}.mjq .est-it svg{width:clamp(90px,11cqw,130px);height:auto}.mjq .mstick{transform:scale(1.2)}
+.pcf{position:fixed;z-index:60;pointer-events:none}
+/* v190 ชายหาดสูตรคูณ: ตารางเรียงลงก่อน · การ์ดสีฟ้า · การ์ดพลิก · เติมคำตอบ */
+.mttab{grid-auto-flow:column;grid-template-rows:repeat(6,auto)}.mttab.one{grid-auto-flow:row;grid-template-rows:none}
+@media (max-width:560px){.mttab{grid-auto-flow:row;grid-template-rows:none}}
+.mtcwrap{width:100%;gap:10px}.mtc-top{gap:14px;align-items:center;justify-content:center}
+.mtcards{display:grid;grid-template-rows:repeat(4,auto);grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(8px,1.2cqw,14px);width:min(860px,100%)}
+.mtcard{height:clamp(60px,10.5cqh,86px);border-radius:16px;background:#E3F2FD;border:2.5px solid #9CCBF0;box-shadow:0 3px 0 #B9DAF5;cursor:pointer;display:grid;place-items:center;padding:0;font:800 clamp(20px,2.6cqw,30px) var(--font-num);color:#1E5F95}
+.mtcard b{color:#0F6CBF}.mtcard.on{background:#FFF0B3;border-color:#F2C94C;box-shadow:0 3px 0 #E8C25A}
+.mtcard.flip{background:none;border:0;box-shadow:none;perspective:700px}
+.mtc-in{position:relative;display:block;width:100%;height:100%;transition:transform .5s var(--ease);transform-style:preserve-3d}
+.mtcard.open .mtc-in{transform:rotateY(180deg)}
+.mtc-f{position:absolute;inset:0;display:grid;place-items:center;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.mtc-q{background:#F3EEFF;border:2.5px solid #C9B8F0;box-shadow:0 3px 0 #D9CCF5;color:#4A3A86}.mtc-q .mtq{font-size:.95em;min-width:40px}
+.mtc-a{background:#E3F2FD;border:2.5px solid #9CCBF0;box-shadow:0 3px 0 #B9DAF5;transform:rotateY(180deg)}
+.mtflip-h{font-size:clamp(16px,1.9cqw,20px);background:#FFF8DD;border-radius:14px;padding:8px 16px;text-align:center}
+.mtfa{grid-template-columns:minmax(0,1.1fr) minmax(260px,1fr);align-items:center}.mtfall{max-width:460px}.mtfall .mtf{font-size:clamp(18px,2.1cqw,22px)}.mtrow.rv .mtf b{color:#C2410C}
+.mtfa-l{font-size:clamp(18px,2.2cqw,24px)}
+.mtpw .lbig{margin-top:4px}
+.mtball.off{opacity:.35;filter:grayscale(.6)}.mtone{min-height:180px}.mtone .mtball{width:104px;height:120px}.mtone .mtball span{height:104px;font-size:32px}
+@media (prefers-reduced-motion:reduce){.mtc-in{transition:none}}
+.mtc-f{display:flex;align-items:center;justify-content:center;gap:.3em}
+.pw-fig svg.mtpic,.mtpw svg.mtpic{max-width:none!important;width:min(560px,46cqw);height:auto}
+.mttab.mtfall{max-width:540px;width:100%;gap:8px}.mttab.mtfall .mtrow{padding:6px 14px}.mttab.mtfall .mtf{font-size:clamp(20px,2.5cqw,27px)}
+.mtpw .lbig{font-size:clamp(26px,3.2cqw,36px)}
