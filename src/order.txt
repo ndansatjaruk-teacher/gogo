@@ -44,6 +44,7 @@ grades/p2/p2x.js
 grades/p2/p2d.js
 grades/p2/p2t.js
 grades/p2/p2e.js
+grades/p1/p1e.js
 grades/p3/p3b.js
 grades/p3/p3w.js
 grades/p3/p3v.js

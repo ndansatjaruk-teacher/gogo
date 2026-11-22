@@ -5,7 +5,7 @@ Thai primary-school maths game (ป.1–ป.6) built into ONE HTML file from `sr
 - Edit only `src/`. Never edit or commit `ผจญภัยไปกับ The Ascent.html` — GitHub Actions rebuilds it after merge.
 - All `src/**/*.js` files share one global scope, joined in `src/order.txt` order. New files must be added there; top-level names must be unique (use the file's prefix).
 - Many functions are written on one long line: never insert a `//` comment mid-line (it silently comments out the rest) — use `/* */`.
-- After every change: `python3 tools/build.py --check` then `python3 tests/smoke.py --grade <n>` (or `--lesson <id>`). For `src/grades/p5/p5q.js` also run `tests/construction/edge_cases.py` and `solve_all.py`. For `src/grades/p2/p2e.js` (ป.2 term exams) also run `tests/term_exam.py`.
+- After every change: `python3 tools/build.py --check` then `python3 tests/smoke.py --grade <n>` (or `--lesson <id>`). For `src/grades/p5/p5q.js` also run `tests/construction/edge_cases.py` and `solve_all.py`. For `src/grades/p1/p1e.js` / `src/grades/p2/p2e.js` (term exams) also run `tests/term_exam.py`.
 - Changed questions in ป.1–ป.3: also `python3 tests/range.py --grade <n>` (numbers above the grade's range, incl. step results).
 - Look at the result at 1180×820 (iPad landscape): every screen must fit without scrolling.
 - docs/QUESTION-TYPES.md lists every `Q.*` question type — reuse before writing new ones; regenerate with `python3 tools/catalog.py`.

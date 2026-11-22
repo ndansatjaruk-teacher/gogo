@@ -1079,13 +1079,13 @@ function megaReport(L, ex, answers) {
   const rows = [...by.values()].filter(r => r.miss).sort((a, b) => b.miss / b.n - a.miss / a.n || b.miss - a.miss);
   if (!rows.length) return h('div', { class: 'evalbox good' }, h('b', null, 'ผลการประเมิน'), h('div', null, 'ตอบถูกทุกข้อ เข้าใจครบทุกบท!'));
   return h('div', { class: 'evalbox' }, h('b', null, 'ผลการประเมิน · บทที่ควรกลับไปทบทวน (เรียงจากบทที่พลาดมากที่สุด)'),
-    ...rows.slice(0, 3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1], T = [...r.topics.entries()].sort((a, b) => b[1] - a[1])[0], ti = T ? LESSONS.indexOf(T[0]) : -1;
+    ...rows.slice(0, rows.length > 5 ? 2 : 3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1], T = [...r.topics.entries()].sort((a, b) => b[1] - a[1])[0], ti = T ? LESSONS.indexOf(T[0]) : -1;
       return h('div', { class: 'evrow' }, h('span', { class: 'evn num' }, `${r.miss}/${r.n}`), h('span', { class: 'evt' }, h('b', null, r.c.chapter), h('small', null, T ? `ทบทวนด่าน ${T[0].no} · ${T[0].title}` : r.c.name)),
         ti >= 0 ? h('button', { class: 'btn sm info', onclick: () => startTeach(ti, 0, true) }, icon('book'), 'ทวนด่านนี้') : null,
         h('button', { class: 'btn sm', onclick: () => goCity(r.c.id) }, icon('map'), ch ? `ไปบทที่ ${ch}` : 'ไปบทนี้')); }),
-    /* v192: แสดงเต็มแค่ 3 บทที่พลาดมากที่สุด (หน้าผลต้องพอดีจอ) — บทที่เหลือย่อเป็นบรรทัดเดียว กดไปบทนั้นได้ */
-    rows.length > 3 ? h('div', { class: 'evmore' }, h('span', null, 'บทอื่นที่ยังพลาด:'), ...rows.slice(3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1];
-      return h('button', { class: 'chip', onclick: () => goCity(r.c.id) }, `${ch ? 'บทที่ ' + ch : r.c.name} · ผิด ${r.miss}/${r.n}`); })) : null);
+    /* v192: แสดงเต็มแค่ 3 บทที่พลาดมากที่สุด (v194: พลาดเกิน 5 บท → แสดงเต็ม 2 บท) (หน้าผลต้องพอดีจอ) — บทที่เหลือย่อเป็นบรรทัดเดียว กดไปบทนั้นได้ */
+    rows.length > 3 ? h('div', { class: 'evmore' }, h('span', null, 'บทอื่นที่ยังพลาด:'), ...rows.slice(rows.length > 5 ? 2 : 3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1];
+      return h('button', { class: 'chip', onclick: () => goCity(r.c.id) }, `${ch ? 'บท ' + ch : r.c.name} ผิด ${r.miss}/${r.n}`); })) : null);
 }
 /* the grand boss appears only after every chapter boss of the grade is beaten: announce it once */
 function finalReveal(grade) {

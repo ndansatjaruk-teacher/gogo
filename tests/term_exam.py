@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Answer check for the ป.2 term exams (term 1 = lesson 1098 · term 2 = lesson 1097 · src/grades/p2/p2e.js).
+"""Answer check for the term exams: ป.1 (term 1 = lesson 398 · term 2 = 397 · src/grades/p1/p1e.js) and ป.2 (term 1 = 1098 · term 2 = 1097 · src/grades/p2/p2e.js).
 
     python3 tools/build.py && python3 tests/term_exam.py
 
@@ -7,10 +7,11 @@ The answer key below is worked out here in Python, separately from the game file
 the option at `a` must equal the computed answer, and none of the other options may equal it.
 Also checked: 40 items, 3 different options each, chapters 1–5 in order, every chapter present, `lv` is a lesson of
 that chapter's city, `from` is that chapter's boss, the answer position is shuffled each attempt but stays right,
-and no number in a question is above 1,000 (ป.2 range).
+and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000).
+Figure answers are worked out from the figure's own data (pictures to count, blocks, balance, scale, chart, line-up, shelf, race, pattern, length board, column sums).
 Pictograph answers are checked against the pictures actually drawn (icons × key), calendar answers with Python's own calendar. CHROME=/path/to/chrome uses that browser.
 """
-import os, pathlib, re, sys
+import json, os, pathlib, re, sys
 from playwright.sync_api import sync_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -86,14 +87,66 @@ def pp_answer(tag, rows, unit):
     else: n = v[tag[3:]]
     return f'{n:g} {unit}'
 EXAMS = [
-    dict(name='ภาค 1', var='T1_EXAM', lesson=1098, city=73, key=KEY1, check=CHECK1,
+    dict(name='ป.2 ภาค 1', grade=2, limit=1000, var='T1_EXAM', lesson=1098, city=73, key=KEY1, check=CHECK1,
          lv={1: range(41, 53), 2: range(61, 74), 3: range(81, 89), 4: range(901, 911), 5: list(range(921, 933)) + [938]},
          boss={1: 59, 2: 79, 3: 99, 4: 919, 5: 939}),
-    dict(name='ภาค 2', var='T2_EXAM', lesson=1097, city=74, key=KEY2, check=CHECK2,
+    dict(name='ป.2 ภาค 2', grade=2, limit=1000, var='T2_EXAM', lesson=1097, city=74, key=KEY2, check=CHECK2,
          lv={6: range(941, 953), 7: range(961, 970), 8: range(981, 990), 9: range(1001, 1006), 10: range(1021, 1026), 11: range(1041, 1044)},
          boss={6: 959, 7: 979, 8: 999, 9: 1019, 10: 1039, 11: 1059})]
 # page side: every item with plain-text options (`say` for picture options) and, for pictographs, the drawn rows
-ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.say), a: q.a, ch: q.ch, lv: q.lv, fig: !!q.fig };
+# ---------- ป.1 ----------
+TH_U = ['ศูนย์', 'หนึ่ง', 'สอง', 'สาม', 'สี่', 'ห้า', 'หก', 'เจ็ด', 'แปด', 'เก้า']
+def th_word(n):
+    if n < 10: return TH_U[n]
+    t, u = divmod(n, 10)
+    return ('' if t == 1 else 'ยี่' if t == 2 else TH_U[t]) + 'สิบ' + ('' if u == 0 else 'เอ็ด' if u == 1 else TH_U[u])
+WORD = {th_word(n): n for n in range(100)}
+TH_D = str.maketrans('๐๑๒๓๔๕๖๗๘๙', '0123456789')
+def same_num(opts):  # "8   ๘   แปด": Arabic, Thai digits and word all the same number
+    return [o for o in opts if (lambda a, t, w: w in WORD and int(a) == int(t.translate(TH_D)) == WORD[w])(*o.split())]
+def ordered(desc):
+    return lambda opts: [o for o in opts if (lambda v: v == sorted(v, reverse=desc))([int(x) for x in o.split()])]
+def ev(x): return eval(x.replace('×', '*').replace('÷', '//').replace('−', '-'))
+def true_eq(opts): return [o for o in opts if (lambda l, r: ev(l) == ev(r))(*o.split('='))]
+def val_is(v): return lambda opts: [o for o in opts if ev(o) == v]
+def val_max(opts): return [max(opts, key=ev)]
+def chart_n(lab): return lambda d: next(x['n'] for x in d['chart']['data'] if x['label'] == lab)
+SIDE = ['ข้างซ้าย', 'ตรงกลาง', 'ข้างขวา']
+def shelf_of(e): return lambda d: next(f'ชั้นที่ {r + 1} {SIDE[c]}' for r, row in enumerate(d['shelf']) for c, x in enumerate(row) if x == e)
+def seq_gap(d):  # the token the repeating unit puts at the gap
+    s, b = d['seq']; per = next(k for k in range(1, len(s)) if all(s[i] == s[i % k] for i in range(len(s))))
+    return json.dumps({'tok': s[b % per]}, separators=(',', ':'), ensure_ascii=False)
+KEY3 = [
+    lambda d: str(sum(n for _, n in d['pic'])), None, '0', None, None, str(10 - 4),
+    lambda d: str(sum(n for _, n in d['pic'])), str(6 + 2), None, '9', str(9 - 5), f'{4 + 5} ลูก',
+    str(8 - 3), f'{7 - 4} ตัว', None, str(6 + 2), None, f'{10 - 3 - 2} แท่ง',
+    lambda d: str(d['blocks']), '17', '๑๔'.translate(TH_D), str(1 * 10 + 5), None, None,
+    str(12 + 5), str(8 + 7), str(19 - 6), str(16 - 9), str(17 - 8), f'{13 + 6} ฟอง', f'{20 - 8 + 5} ก้อน',
+    lambda d: f"{chart_n('ก้อง')(d)} ผล", lambda d: min(d['chart']['data'], key=lambda x: x['n'])['label'], lambda d: f"{chart_n('ฝน')(d) - chart_n('มิ้นท์')(d)} ผล", '{"tally":7}',
+    lambda d: 'หนักกว่า' if d['bal'][2] > 0 else 'เบากว่า' if d['bal'][2] < 0 else 'หนักเท่ากับ', lambda d: f"{d['bal'][1][1]} ลูก" if d['bal'][2] == 0 else '?',
+    lambda d: f"{d['scale'][0]} กิโลกรัม", 'ยางลบ 1 ก้อน', f'{9 - 6} กิโลกรัม']
+CHECK3 = {1: same_num, 3: true_cmp, 4: ordered(False), 8: val_is(10), 14: true_eq, 16: val_is(4), 22: true_cmp, 23: ordered(True)}
+KEY4 = [
+    lambda d: d['line'][d['line'].index('มายด์') - 1], lambda d: d['line'][d['line'].index('มายด์') + 1] if d['line'].index('น้ำ') - d['line'].index('มายด์') == 2 else '?',
+    lambda d: next(d['grid'][r - 1][c] for r, row in enumerate(d['grid']) for c, x in enumerate(row) if x == 'บีม'),
+    lambda d: sorted(d['race'], key=lambda x: -x['pos'])[1]['name'], shelf_of('grape'), f'{4 - 1} คน',
+    'ทรงกระบอก', 'หมวกวันเกิด', 'วงรี', 'รูปสามเหลี่ยม', 'รูปสี่เหลี่ยม', seq_gap,
+    lambda d: str(d['blocks']), '47', None, 'หลักสิบ มีค่า 70', str(90 + 4), None, str(45 + 10),
+    lambda d: min(d['lenb'][0], key=lambda x: x['len'])['name'], lambda d: f"{d['lenb'][0][0]['len']} หน่วย", lambda d: f"{d['lenb'][0][0]['len']} เซนติเมตร", 'เมตร', f'{52 - 35} เซนติเมตร',
+    str(43 + 5), str(32 + 46), str(58 + 7), lambda d: str(sum(d['vert'])), None,
+    str(68 - 5), lambda d: str(d['vsub'][0] - d['vsub'][1]), None, str(51 + 24), str(90 - 36),
+    f'{26 + 13} ตัว', f'{85 - 42} เล่ม', '47 + ☐ = 60', f'{38 + 15} ดวง', f'{41 - 34} คน', f'{50 - 18 + 25} เม็ด']
+CHECK4 = {14: same_num, 17: lambda o: [x for x in o if 58 < int(x) < 63], 28: val_max, 31: true_eq}
+EXAMS = [
+    dict(name='ป.1 ภาค 1', grade=1, limit=20, var='P1T1_EXAM', lesson=398, city=75, key=KEY3, check=CHECK3,
+         lv={1: range(1, 14), 2: range(21, 28), 3: range(31, 39), 4: range(201, 209), 5: range(211, 220), 6: range(231, 234), 7: range(241, 248)},
+         boss={1: 14, 2: 28, 3: 39, 4: 209, 5: 229, 6: 239, 7: 249}),
+    dict(name='ป.1 ภาค 2', grade=1, limit=100, var='P1T2_EXAM', lesson=397, city=76, key=KEY4, check=CHECK4,
+         lv={8: range(251, 255), 9: range(261, 269), 10: range(271, 281), 11: range(291, 299), 12: range(301, 306), 13: range(311, 320), 14: range(331, 340)},
+         boss={8: 259, 9: 269, 10: 289, 11: 299, 12: 309, 13: 329, 14: 349})] + EXAMS
+
+ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.say || JSON.stringify(x)), a: q.a, ch: q.ch, lv: q.lv, fig: !!(q.fig || q.pic || q.blocks != null || q.chart || q.bal || q.scale || q.line || q.grid || q.race || q.shelf || q.solid || q.shape || q.seq || q.lenb || q.vert || q.vsub),
+    d: { pic: q.pic, blocks: q.blocks, chart: q.chart, bal: q.bal, scale: q.scale, line: q.line, grid: q.grid, race: q.race, shelf: q.shelf, seq: q.seq, lenb: q.lenb, vert: q.vert, vsub: q.vsub } };
   if (q.fig && /class="pp /.test(q.fig)) { const d = document.createElement('div'); d.innerHTML = q.fig; const k = +d.querySelector('.pp-key').textContent.match(/แทนจำนวน\D*(\d+)/)[1];
     o.pp = [...d.querySelectorAll('.pp-row')].map(r => [r.querySelector('.pp-lab').textContent, (r.querySelectorAll('.pp-i:not(.half)').length + r.querySelectorAll('.pp-i.half').length / 2) * k]); o.unit = q.opts[q.a].split(' ').pop(); }
   return o; })"""
@@ -101,7 +154,7 @@ ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => ty
 def check(pg, E):
     errs, var = [], E['var']
     base = pg.evaluate(ITEMS, var)
-    runs = pg.evaluate(f"Array.from({{ length: 30 }}, () => LESSONS.find(L => L.id === {E['lesson']}).examGen().map(q => ({{ opts: q.opts.map(x => typeof x === 'string' ? x : x.say), a: q.a, from: q.from }})))")
+    runs = pg.evaluate(f"Array.from({{ length: 30 }}, () => LESSONS.find(L => L.id === {E['lesson']}).examGen().map(q => ({{ opts: q.opts.map(x => typeof x === 'string' ? x : x.say || JSON.stringify(x)), a: q.a, from: q.from }})))")
     setup = pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {E['lesson']}), c = cityOf(L); return {{ city: c.id, grade: c.grade, n: L.exam.length, pass: L.pass, mega: L.bossKind, story: !!c.story, bonus: !!L.bonus }} }})()")
     key, chk = E['key'], E['check']
     if len(base) != 40: errs.append(f'expected 40 items, got {len(base)}')
@@ -116,13 +169,14 @@ def check(pg, E):
         if not 0 <= q['a'] < len(o): errs.append(f'{tag}: bad a'); continue
         if q['lv'] not in E['lv'][q['ch']]: errs.append(f"{tag}: lv {q['lv']} is not a lesson of chapter {q['ch']}")
         want = key[i] if i < len(key) else None
+        if callable(want): want = want(q['d'])
         if isinstance(want, str) and want.startswith('PP:'):
             if not q.get('pp'): errs.append(f'{tag}: no pictograph'); continue
             want = pp_answer(want, q['pp'], q['unit'])
         right = chk[i](o) if i in chk else [x for x in o if x == want]
         if right != [o[q['a']]]: errs.append(f"{tag}: marked {o[q['a']]!r}, computed {right or want!r}")
         for n in re.findall(r'\d[\d,]*', re.sub(r'<[^>]+>', ' ', q['q'])):
-            if int(n.replace(',', '')) > 1000: errs.append(f'{tag}: number {n} above ป.2 range')
+            if int(n.replace(',', '')) > E['limit']: errs.append(f'{tag}: number {n} above the range ({E["limit"]})')
     for r in runs:
         for i, q in enumerate(r):
             if q['opts'][q['a']] != base[i]['opts'][base[i]['a']]: errs.append(f'shuffled run: ข้อ {i + 1} answer moved wrong'); break
@@ -131,8 +185,8 @@ def check(pg, E):
     for r in runs:
         for q in r: pos[q['a']] += 1
     if min(pos.values()) == 0: errs.append(f'answer position never shuffled: {pos}')
-    if setup != {'city': E['city'], 'grade': 2, 'n': 40, 'pass': 32, 'mega': 'mega', 'story': True, 'bonus': True}: errs.append(f'lesson setup: {setup}')
-    print(f"ป.2 {E['name']}: {len(base)} items · chapters " + ' '.join(f'{c}:{chs.count(c)}' for c in sorted(set(chs))) + f' · figures {sum(q["fig"] for q in base)} · answer positions over 30 runs {pos}')
+    if setup != {'city': E['city'], 'grade': E['grade'], 'n': 40, 'pass': 32, 'mega': 'mega', 'story': True, 'bonus': True}: errs.append(f'lesson setup: {setup}')
+    print(f"{E['name']}: {len(base)} items · chapters " + ' '.join(f'{c}:{chs.count(c)}' for c in sorted(set(chs))) + f' · figures {sum(q["fig"] for q in base)} · answer positions over 30 runs {pos}')
     return [f"{E['name']}: {e}" for e in errs]
 
 def main():

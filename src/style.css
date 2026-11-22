@@ -3925,13 +3925,13 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .mtrowtap .dva-hit{cursor:pointer}.mtrowtap svg{max-width:100%}.mtarr-sim{min-height:250px;align-items:center}
 /* v192 · หน้าผลบอสใหญ่: บทที่พลาดเกิน 3 บท ย่อเป็นปุ่มเล็กบรรทัดเดียว */
 .evmore{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:4px 8px;font-size:.86rem;color:#6B6585}
-.evmore .chip{font:inherit;font-weight:700;color:#3D3760;background:#fff;border:1.5px solid #E6DDBF;border-radius:999px;padding:3px 10px;cursor:pointer}
+.evmore .chip{font:inherit;font-size:.82rem;font-weight:700;color:#3D3760;background:#fff;border:1.5px solid #E6DDBF;border-radius:999px;padding:2px 8px;cursor:pointer;white-space:nowrap}
 .evmore .chip:hover{background:#FFF6DD}
 /* v192 · หน้าผลที่มีรายงานหลายบท (3 แถวขึ้นไป): ย่อรูปบอสและระยะห่าง ให้ปุ่ม สู้ใหม่/กลับไปทบทวน อยู่ในจอโดยไม่ต้องเลื่อน */
-.boss-result:has(.evalbox .evrow:nth-of-type(3)){gap:var(--s2)}
-.boss-result:has(.evalbox .evrow:nth-of-type(3)) .boss-end{width:clamp(96px,11cqw,120px)}
-.boss-result:has(.evalbox .evrow:nth-of-type(3)) h2{font-size:clamp(1.5rem,3.2cqw,2.1rem)}
-.boss-result:has(.evalbox .evrow:nth-of-type(3)) .evrow{padding:3px 8px}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)),.boss-result:has(.evmore){gap:var(--s2)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) .boss-end,.boss-result:has(.evmore) .boss-end{width:clamp(96px,11cqw,120px)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) h2,.boss-result:has(.evmore) h2{font-size:clamp(1.5rem,3.2cqw,2.1rem)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) .evrow,.boss-result:has(.evmore) .evrow{padding:3px 8px}
 .boss-result:has(.bigstars) .boss-end{width:clamp(110px,12cqw,140px)} /* v192: หน้าชนะ (มีดาว) ให้ปุ่มอยู่ในจอ */
 /* v192 · เรื่องเล่าสอบปลายภาค: ป้ายบทใต้บอสแต่ละตัว */
 .st-mlab{position:absolute;left:50%;top:100%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(.7rem,1.4cqw,.9rem);font-weight:800;color:#1E1447;background:#FFD45C;border-radius:999px;padding:1px 8px;margin-top:2px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
