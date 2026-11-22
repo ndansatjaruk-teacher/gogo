@@ -3923,3 +3923,13 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .ixs .ncard.ixc0{--c:#E3F2FD;--c2:#9CCBF0}.ixs .ncard.ixc1{--c:#FFF3D6;--c2:#F2C94C}.ixs .ncard.ixc2{--c:#E8F8EE;--c2:#8FD6AE}.ixs .ncard.ixc3{--c:#FDECF2;--c2:#F2A7C3}.ixs .ncard.ixc4{--c:#F1ECFF;--c2:#C9B8F0}
 .ixs .ncard[class*="ixc"]{background:var(--c);box-shadow:0 4px 0 var(--c2);border:2px solid var(--c2)}
 .mtrowtap .dva-hit{cursor:pointer}.mtrowtap svg{max-width:100%}.mtarr-sim{min-height:250px;align-items:center}
+/* v192 · หน้าผลบอสใหญ่: บทที่พลาดเกิน 3 บท ย่อเป็นปุ่มเล็กบรรทัดเดียว */
+.evmore{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:4px 8px;font-size:.86rem;color:#6B6585}
+.evmore .chip{font:inherit;font-weight:700;color:#3D3760;background:#fff;border:1.5px solid #E6DDBF;border-radius:999px;padding:3px 10px;cursor:pointer}
+.evmore .chip:hover{background:#FFF6DD}
+/* v192 · หน้าผลที่มีรายงานหลายบท (3 แถวขึ้นไป): ย่อรูปบอสและระยะห่าง ให้ปุ่ม สู้ใหม่/กลับไปทบทวน อยู่ในจอโดยไม่ต้องเลื่อน */
+.boss-result:has(.evalbox .evrow:nth-of-type(3)){gap:var(--s2)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) .boss-end{width:clamp(96px,11cqw,120px)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) h2{font-size:clamp(1.5rem,3.2cqw,2.1rem)}
+.boss-result:has(.evalbox .evrow:nth-of-type(3)) .evrow{padding:3px 8px}
+.boss-result:has(.bigstars) .boss-end{width:clamp(110px,12cqw,140px)} /* v192: หน้าชนะ (มีดาว) ให้ปุ่มอยู่ในจอ */

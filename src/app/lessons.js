@@ -2242,7 +2242,7 @@ const MEGA2_FIX = [
 function megaExam2() { const fromIx = (E, ix, n, ch) => shuffle(ix.map(i => E[i]).filter(Boolean)).slice(0, n).map(q => ({ ...q, ch }));
   const add = [...fromIx(EXAM_P2C4, [1, 2, 4, 5, 6], 1, 4), ...fromIx(EXAM_P2C9, [0, 1, 2, 3, 13], 1, 9), ...fromIx(EXAM_P2C9, [4, 5], 1, 9), ...fromIx(EXAM_P2C9, [17, 18], 1, 9),
     ...(() => { const C = [[0, 1], [2, 3, 4], [5, 6, 7], [8, 9], [10, 11], [12, 13], [14, 15], [16, 17], [18, 19]]; return shuffle(C).slice(0, 4).map(g => ({ ...EXAM_P2C11[pick(g)], ch: 11 })); })()];
-  const B = CITIES.filter(c => c.grade === 2 && !c.final).map(c => c.lessons.find(L => L.boss && L.bossKind !== 'mega')); /* from = บอสท้ายบท → แพ้แล้วแนะนำบทที่ควรทบทวนได้ */
+  const B = CITIES.filter(c => c.grade === 2 && !c.final).map(c => c.lessons.find(L => L.boss && L.bossKind !== 'mega')).filter(Boolean); /* (v192: เมืองสอบปลายภาคไม่มีบอสท้ายบท → ตัดออก ไม่ให้เลขบทเลื่อน) from = บอสท้ายบท → แพ้แล้วแนะนำบทที่ควรทบทวนได้ */
   const rot = q => { const n = q.opts.length, r = rnd(0, n - 1); return r ? { ...q, opts: [...q.opts.slice(r), ...q.opts.slice(0, r)], a: (q.a - r + n) % n } : q; }; /* ตำแหน่งคำตอบสุ่มทุกครั้ง */
   const all = [...MEGA2_FIX, ...add].map(q => ({ ...rot(q), from: (B[q.ch - 1] || {}).id }));
   return all.sort((a, b) => a.ch - b.ch); } /* เรียงตามบทเหมือนข้อสอบ */
@@ -2668,6 +2668,8 @@ const CITIES = [
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['umbrella', 'palm', 'boat', 'palm'], small: ['crab', 'shell', 'starfish', 'lifebuoy', 'shell', 'crab'] } },
   { id: 47, grade: 2, name: 'ชายหาดสูตรคูณ', chapter: 'บทที่ 5 การคูณ', lessons: LESSONS_P2C5,
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['palm', 'umbrella', 'palm', 'boat'], small: ['starfish', 'shell', 'crab', 'lifebuoy', 'starfish', 'shell'] } },
+  { id: 73, grade: 2, name: 'อ่าวสอบปลายภาค 1', chapter: 'สอบปลายภาคเรียนที่ 1 · บทที่ 1–5', lessons: LESSONS_P2T1,
+    theme: { beach: true, hills: ['#DCE8F5', '#E6EEF7', '#D8E4F2'], far: '#E8F0FA', edge: ['palm', 'boat', 'palm', 'umbrella'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'crab', 'shell'] } },
   { id: 48, grade: 2, term: 2, name: 'ชายหาดแบ่งเท่ากัน', chapter: 'บทที่ 6 การหาร', lessons: LESSONS_P2C6,
     theme: { beach: true, hills: ['#FBEFD2', '#F9E7C3', '#FDF3DD'], far: '#FFF6E3', edge: ['umbrella', 'palm', 'boat', 'palm'], small: ['shell', 'crab', 'starfish', 'lifebuoy', 'crab', 'shell'] } },
   { id: 49, grade: 2, term: 2, name: 'ชายหาดนาฬิกา', chapter: 'บทที่ 7 เวลา', lessons: LESSONS_P2C7,

@@ -82,7 +82,7 @@ function shell({ top, bottom, lesson, world }) {
 const unlocked = i => { if (SET.unlockAll || i === 0) return true; const Li = LESSONS[i], Lp = LESSONS[i - 1], gOf = L => CITIES.find(c => c.id === L.city).grade; if (Li.city !== Lp.city && gOf(Li) !== gOf(Lp)) return true; let j = i - 1; if (!LESSONS[i].bonus) while (j > 0 && LESSONS[j].bonus) j--; return (SAVE.stars[LESSONS[j].id] || 0) > 0; };
 const cityOf = L => CITIES.find(c => c.id === L.city);
 /* a grade's grand boss (city.secret) stays hidden until every chapter boss of that grade is beaten — or the teacher switch in settings is on */
-const finalReady = c => CITIES.filter(x => x.grade === c.grade && !x.final).every(x => x.lessons.filter(L => L.boss).every(L => SAVE.stars[L.id]));
+const finalReady = c => CITIES.filter(x => x.grade === c.grade && !x.final).every(x => x.lessons.filter(L => L.boss && !L.bonus).every(L => SAVE.stars[L.id])); /* v192: บอสสอบปลายภาค (bonus) ไม่บังคับ */
 const cityShown = c => !c.secret || finalReady(c) || SET.showFinal || SET.unlockAll;
 const nextShownCity = c => CITIES.slice(CITIES.indexOf(c) + 1).find(cityShown);
 const cityOpen = c => c.secret ? cityShown(c) : unlocked(LESSONS.indexOf(c.lessons[0]));
@@ -1076,10 +1076,13 @@ function megaReport(L, ex, answers) {
   const rows = [...by.values()].filter(r => r.miss).sort((a, b) => b.miss / b.n - a.miss / a.n || b.miss - a.miss);
   if (!rows.length) return h('div', { class: 'evalbox good' }, h('b', null, 'ผลการประเมิน'), h('div', null, 'ตอบถูกทุกข้อ เข้าใจครบทุกบท!'));
   return h('div', { class: 'evalbox' }, h('b', null, 'ผลการประเมิน · บทที่ควรกลับไปทบทวน (เรียงจากบทที่พลาดมากที่สุด)'),
-    ...rows.map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1], T = [...r.topics.entries()].sort((a, b) => b[1] - a[1])[0], ti = T ? LESSONS.indexOf(T[0]) : -1;
+    ...rows.slice(0, 3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1], T = [...r.topics.entries()].sort((a, b) => b[1] - a[1])[0], ti = T ? LESSONS.indexOf(T[0]) : -1;
       return h('div', { class: 'evrow' }, h('span', { class: 'evn num' }, `${r.miss}/${r.n}`), h('span', { class: 'evt' }, h('b', null, r.c.chapter), h('small', null, T ? `ทบทวนด่าน ${T[0].no} · ${T[0].title}` : r.c.name)),
         ti >= 0 ? h('button', { class: 'btn sm info', onclick: () => startTeach(ti, 0, true) }, icon('book'), 'ทวนด่านนี้') : null,
-        h('button', { class: 'btn sm', onclick: () => goCity(r.c.id) }, icon('map'), ch ? `ไปบทที่ ${ch}` : 'ไปบทนี้')); }));
+        h('button', { class: 'btn sm', onclick: () => goCity(r.c.id) }, icon('map'), ch ? `ไปบทที่ ${ch}` : 'ไปบทนี้')); }),
+    /* v192: แสดงเต็มแค่ 3 บทที่พลาดมากที่สุด (หน้าผลต้องพอดีจอ) — บทที่เหลือย่อเป็นบรรทัดเดียว กดไปบทนั้นได้ */
+    rows.length > 3 ? h('div', { class: 'evmore' }, h('span', null, 'บทอื่นที่ยังพลาด:'), ...rows.slice(3).map(r => { const ch = (r.c.chapter.match(/^บทที่ (\d+)/) || [])[1];
+      return h('button', { class: 'chip', onclick: () => goCity(r.c.id) }, `${ch ? 'บทที่ ' + ch : r.c.name} · ผิด ${r.miss}/${r.n}`); })) : null);
 }
 /* the grand boss appears only after every chapter boss of the grade is beaten: announce it once */
 function finalReveal(grade) {
