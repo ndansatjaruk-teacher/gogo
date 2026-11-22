@@ -85,6 +85,16 @@ const learnStep = (t, s, cards, sum) => cards.map((c, k) => {
 
 /* ② ตัวอย่างทีละขั้น WITH PICTURES — every step can change the picture (ผู้ใช้ขอ: ตัวอย่างทีละขั้นต้องมีรูปประกอบ)
    rows: [[label, html, fig]] — fig = html string | () => node | null (keeps the previous picture) */
+/* v188: เครื่องมือหลายแบบอยู่หน้าเดียว เปิดทีละภาพ พร้อมบอกการใช้งาน — list: [[svgHTML, name, how, uses[]]] */
+function toolReveal(list, fin) {
+  const box = h('div', { class: 'colstack w2tools' }, h6wait()), grid = h('div', { class: 'w2tgrid' }), out = fNote(); let k = 0;
+  const cards = list.map((x, i) => { const c = h('div', { class: 'w2tc' }, h('span', { class: 'w2tq' }, String(i + 1))); grid.append(c); return c; });
+  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); if (k >= cards.length) return; const [svg, name, how, uses] = list[k], c = cards[k];
+    c.innerHTML = `<span class="w2tsvgw">${svg}</span><b class="w2tn">${name}</b><span class="w2th">${how}</span><ul>${uses.map(u => `<li>${u}</li>`).join('')}</ul>`;
+    c.classList.add('on'); sfx.pop(k + 2); say(`${name} ${how} ใช้${uses.join(' ')}`.replace(/<[^>]+>/g, ''), true); k++;
+    if (k >= cards.length) { btn.remove(); out.innerHTML = fin; teachDone(box); } else btn.lastChild.textContent = 'เปิดภาพต่อไป'; } }, icon('right'), h('span', null, 'เปิดภาพแรก'));
+  box.append(grid, btn, out); return box;
+}
 function picWalk(rows, finalHTML, sayEnd, fig0) {
   window.__lastWalk = rows.map(r => [r[0], r[1]]);
   const pane = h('div', { class: 'pw-fig' }), list = h('div', { class: 'colstack fstory pw-list' }), out = fNote(); let k = 0;

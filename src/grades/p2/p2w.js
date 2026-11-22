@@ -99,8 +99,7 @@ function w2CwO(a, b, op, m = 'kd') { const sp = m === 'kd' ? 1 : 3, U = m === 'k
     hint: op === '+' ? (m === 'kd' ? 'บวกช่องขีดก่อน ครบ 10 ขีด เขียนที่เหลือ แล้วทด 1 ไปหลักหน่วยของกิโลกรัม' : 'บวกกรัมทีละหลักจากขวา หลักร้อยของกรัมครบ 10 (= 1,000 กรัม) ทด 1 ไปหลักหน่วยของกิโลกรัม')
       : (m === 'kd' ? 'ลบช่องขีดก่อน ไม่พอ แตะหลักหน่วยของกิโลกรัมเพื่อกระจาย 1 กิโลกรัม = 10 ขีด' : 'ลบกรัมทีละหลักจากขวา ไม่พอ แตะตัวเลขทางซ้ายเพื่อกระจาย') }; }
 /* the board on the left (with its instructions under it), keypad on the right */
-function w2CwMount(el, ctx, a, b, op, m, lab) { el.classList.add('w2cw'); colWork(el, ctx, w2CwO(a, b, op, m));
-  const R = el.querySelector('.g4sd-r'); if (R && lab) R.prepend(lab); }
+const w2CwMount = (el, ctx, a, b, op, m, lab) => cwMount(el, ctx, w2CwO(a, b, op, m), lab);
 /* column layout kg | ขีด (or กรัม) for + and − */
 function w2ColHTML(a, b, op, m = 'kd', o = {}) {
   const sp = g => [w2kg(g), m === 'kd' ? w2kd(g) : w2gr(g)], A = sp(a), B = sp(b), R = sp(op === '+' ? a + b : a - b);
@@ -129,15 +128,7 @@ const W2_TOOLS_INFO = [
   ['hang', '<b>แขวน</b>ของไว้ที่ตะขอ เข็มบอกน้ำหนัก', ['ชั่งเนื้อหมู ปลา ในตลาด', 'ชั่งถุงหรือกระสอบ']],
   ['body', '<b>ยืน</b>บนเครื่องชั่ง ตัวเลขหรือเข็มบอกน้ำหนัก', ['ชั่งน้ำหนักตัวคน', 'ที่บ้าน โรงเรียน โรงพยาบาล']],
   ['balance', 'วางของข้างหนึ่ง <b>ตุ้มน้ำหนัก</b>อีกข้าง ให้แขนเท่ากัน', ['ชั่งของเบา ๆ ทีละนิด', 'เช่น ยาจีน ทองคำ']]];
-function simW2Tools() {
-  const box = h('div', { class: 'colstack w2tools' }, h6wait()), grid = h('div', { class: 'w2tgrid' }); let k = 0;
-  const cards = W2_TOOLS_INFO.map(([t], i) => { const c = h('div', { class: 'w2tc' }, h('span', { class: 'w2tq' }, String(i + 1))); grid.append(c); return c; });
-  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); if (k >= cards.length) return; const [t, how, uses] = W2_TOOLS_INFO[k], c = cards[k];
-    c.innerHTML = `<svg viewBox="0 0 64 64" class="w2tsvg" aria-hidden="true">${W2_TOOL[t][1]}</svg><b class="w2tn">${W2_TOOL[t][0]}</b><span class="w2th">${how}</span><ul>${uses.map(u => `<li>${u}</li>`).join('')}</ul>`;
-    c.classList.add('on'); sfx.pop(k + 2); say(`${W2_TOOL[t][0]} ${how} ใช้${uses.join(' ')}`.replace(/<[^>]+>/g, ''), true); k++;
-    if (k >= cards.length) { btn.remove(); out.innerHTML = 'เลือกเครื่องชั่งให้<b>เหมาะกับสิ่งที่จะชั่ง</b> ✓'; teachDone(box); } else btn.lastChild.textContent = 'เปิดภาพต่อไป'; } }, icon('right'), h('span', null, 'เปิดภาพแรก')), out = fNote();
-  box.append(grid, btn, out); return box;
-}
+const simW2Tools = () => toolReveal(W2_TOOLS_INFO.map(([t, how, uses]) => [`<svg viewBox="0 0 64 64" class="w2tsvg" aria-hidden="true">${W2_TOOL[t][1]}</svg>`, W2_TOOL[t][0], how, uses]), 'เลือกเครื่องชั่งให้<b>เหมาะกับสิ่งที่จะชั่ง</b> ✓');
 /* 1 kg = 10 ขีด = 1,000 กรัม — change the number of ขีด blocks and read all three units */
 function simW2Units() {
   let d = 13; const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'w2bars' }), out = fNote(), seen = new Set();

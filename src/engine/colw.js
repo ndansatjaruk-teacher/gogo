@@ -85,6 +85,8 @@ function colWork(bd, ctx, o) {
     range(0, n - 1).forEach(i => { const w = want(i); if (w === '') delete S.res.r[i]; else S.res.r[i] = w; }); S.bad = new Set(); S.ok = true; undo.style.display = 'none'; info.innerHTML = `${eq} = <b>${ans}</b>`; say1(''); paint(); };
   paint(); bd.append(g4Side(h('div', { class: 'e4w-fig' }, grid), info, kp, msg, undo)); return grid;
 }
+/* v188: กระดานหน่วยผสมในเกม — keypad ขวา · lab (ถ้ามี) ไว้บนสุดของคอลัมน์ขวา */
+function cwMount(el, ctx, o, lab) { el.classList.add('w2cw'); colWork(el, ctx, o); const R = el.querySelector('.g4sd-r'); if (R && lab) R.prepend(lab); return el; }
 Object.assign(Q, {
   colW({ nums, op, prompt, say, sig, plain, ...rest }) { /* plain: ไม่มีช่องทด / ไม่ให้กระจาย (ด่านที่ยังไม่เรียนทด) */ const vb = op === '+' ? 'บวก' : op === '−' ? 'ลบ' : 'คูณ', p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), eq = nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `);
     return { prompt: prompt || `ตั้ง${vb} <b class="num">${eq}</b>`, say: say || `ตั้ง${vb} ${eq.replace(/,/g, '')}`, __sig: sig || `cw ${nums.join(op)}`, mount(bd, ctx) { colWork(bd, ctx, { nums, op, plain, ...rest }); } }; }

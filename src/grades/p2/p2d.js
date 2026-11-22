@@ -29,7 +29,7 @@ function duoInput(ctx, want, U, o = {}) {
     if (val[cur] === '') { msg.textContent = `กดจำนวน${nm(cur)} (ถ้าไม่มีให้กด 0)`; return; }
     const other = 1 - cur; if (val[other] === '') { cur = other; paint(); msg.textContent = `ต่อไปกด${nm(cur)} (ถ้าไม่มีให้กด 0)`; return; }
     const good = +val[0] === want[0] && +val[1] === want[1]; if (good) { done = true; wrap.classList.add('done'); }
-    ctx.check(good, o.hint); if (!good) { val[0] = val[1] = ''; cur = 0; paint(); } };
+    ctx.check(good, o.hint); if (!good && !done) { val[0] = val[1] = ''; cur = 0; paint(); } }; /* v188: ครั้งที่ 3 เฉลยแล้ว อย่าล้าง */
   const kp = h('div', { class: 'keypad' });
   [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: () => type(d) }, d)));
   kp.append(h('button', { class: 'btn', 'aria-label': 'ลบ', onclick: () => { sfx.tap(); val[cur] = val[cur].slice(0, -1); paint(); } }, icon('left')), h('button', { class: 'btn', onclick: () => type(0) }, '0'), h('button', { class: 'btn primary', 'aria-label': 'ส่งคำตอบ', onclick: ok }, icon('check')));
