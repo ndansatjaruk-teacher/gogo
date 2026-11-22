@@ -277,7 +277,7 @@ const LESSONS_P2C8 = [
 const vX = (q, r, extra, unit = 'ลิตร', fig) => { const out = [r], n = fig ? 3 : 4; [...extra, r - 1, r + 1, r + 10].forEach(x => { if (out.length < n && x > 0 && !out.includes(x)) out.push(x); }); return { q, fig, opts: out.map(v => `${v} ${unit}`), a: 0 }; };
 const EXAM_P2C8 = d6spread([
   { q: 'ตวงน้ำยาเคมี 50 มิลลิลิตร ควรใช้เครื่องมือใด', opts: ['กระบอกตวง', 'ลิตรตวงน้ำมัน', 'ช้อนตวง', 'ถ้วยตวง'], a: 0 },
-  { q: 'ตวงเกลือป่นใส่อาหาร ควรใช้เครื่องมือใด', opts: ['ช้อนตวง', 'กระบอกตวง', 'ลิตรตวงน้ำมัน', 'ถังน้ำ'], a: 0 },
+  { q: 'ตวงเกลือป่นใส่อาหาร ควรใช้เครื่องมือใด', opts: ['ช้อนตวง', 'กระบอกตวง', 'ลิตรตวงน้ำมัน', 'ถ้วยตวง'], a: 0 },
   vX('จากภาพ น้ำส้มในกล่องตวงได้กี่แก้ว', 3, [2, 4], 'แก้ว', `<div class="vwrap">${vPourFig('carton', 3, 'glass', { srcName: 'น้ำส้ม', col: vLiq.juice })}</div>`),
   vX('จากภาพ น้ำแอปเปิลในกล่องตวงได้กี่ขวด', 7, [6, 8], 'ขวด', `<div class="vwrap">${vPourFig('carton', 7, 'bottle', { srcName: 'น้ำแอปเปิล', col: vLiq.apple })}</div>`),
   vX('จากภาพ เมล็ดกาแฟในกระสอบตวงได้กี่ช้อน', 6, [5, 7], 'ช้อน', `<div class="vwrap">${vPourFig('sack', 6, 'scoop', { srcName: 'เมล็ดกาแฟ', col: V_DRY.coffee, dry: 1 })}</div>`),
