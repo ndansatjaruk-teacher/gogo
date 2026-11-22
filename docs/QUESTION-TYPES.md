@@ -218,17 +218,17 @@
 | `Q.mtUnk` | `{ a, b, pos }` | [`grades/p2/p2x.js:214`](../src/grades/p2/p2x.js#L214) |
 | `Q.numToWord` | `{ n, from = 'digit' }` | [`engine/questions.js:585`](../src/engine/questions.js#L585) |
 | `Q.objSolid` | `{ obj, kind, name }` | [`engine/questions.js:1136`](../src/engine/questions.js#L1136) |
-| `Q.p2build` | `{ cm }` | [`grades/p2/p2l.js:304`](../src/grades/p2/p2l.js#L304) |
-| `Q.p2cmpWord` | `{ a, b, words, pre = '', hint }` | [`grades/p2/p2l.js:316`](../src/grades/p2/p2l.js#L316) |
-| `Q.p2conv` | `{ cm, to }` | [`grades/p2/p2l.js:310`](../src/grades/p2/p2l.js#L310) |
-| `Q.p2mapQ` | `{ M, q, a, opts }` | [`grades/p2/p2l.js:323`](../src/grades/p2/p2l.js#L323) |
-| `Q.p2mcCol` | `{ a, b, op, text }` | [`grades/p2/p2l.js:328`](../src/grades/p2/p2l.js#L328) |
-| `Q.p2mcStory` | `{ text, a, b, op, fig, why }` | [`grades/p2/p2l.js:332`](../src/grades/p2/p2l.js#L332) |
-| `Q.p2rulCmp` | `{ a, b }` | [`grades/p2/p2l.js:275`](../src/grades/p2/p2l.js#L275) |
-| `Q.p2rulLen` | `{ it }` | [`grades/p2/p2l.js:270`](../src/grades/p2/p2l.js#L270) |
-| `Q.p2tool` | `{ task, ok, opts }` | [`grades/p2/p2l.js:266`](../src/grades/p2/p2l.js#L266) |
-| `Q.p2wall` | `{ items, o, i, j, ask = 'h', words }` | [`grades/p2/p2l.js:283`](../src/grades/p2/p2l.js#L283) |
-| `Q.p2wallTap` | `{ items, o, ask }` | [`grades/p2/p2l.js:294`](../src/grades/p2/p2l.js#L294) |
+| `Q.p2build` | `{ cm }` | [`grades/p2/p2l.js:308`](../src/grades/p2/p2l.js#L308) |
+| `Q.p2cmpWord` | `{ a, b, words, pre = '', hint }` | [`grades/p2/p2l.js:320`](../src/grades/p2/p2l.js#L320) |
+| `Q.p2conv` | `{ cm, to }` | [`grades/p2/p2l.js:314`](../src/grades/p2/p2l.js#L314) |
+| `Q.p2mapQ` | `{ M, q, a, opts }` | [`grades/p2/p2l.js:327`](../src/grades/p2/p2l.js#L327) |
+| `Q.p2mcCol` | `{ a, b, op, text }` | [`grades/p2/p2l.js:332`](../src/grades/p2/p2l.js#L332) |
+| `Q.p2mcStory` | `{ text, a, b, op, fig, why }` | [`grades/p2/p2l.js:336`](../src/grades/p2/p2l.js#L336) |
+| `Q.p2rulCmp` | `{ a, b }` | [`grades/p2/p2l.js:279`](../src/grades/p2/p2l.js#L279) |
+| `Q.p2rulLen` | `{ it }` | [`grades/p2/p2l.js:274`](../src/grades/p2/p2l.js#L274) |
+| `Q.p2tool` | `{ task, ok, opts }` | [`grades/p2/p2l.js:270`](../src/grades/p2/p2l.js#L270) |
+| `Q.p2wall` | `{ items, o, i, j, ask = 'h', words }` | [`grades/p2/p2l.js:287`](../src/grades/p2/p2l.js#L287) |
+| `Q.p2wallTap` | `{ items, o, ask }` | [`grades/p2/p2l.js:298`](../src/grades/p2/p2l.js#L298) |
 | `Q.p3colFill` | `{ a, b, op }` | [`grades/p3/p3b.js:16`](../src/grades/p3/p3b.js#L16) |
 | `Q.p4Calc` | `{ expr }` | [`grades/p4/p4b.js:213`](../src/grades/p4/p4b.js#L213) |
 | `Q.p4Div` | `{ D, k, fig, label }` | [`grades/p4/p4m.js:251`](../src/grades/p4/p4m.js#L251) |

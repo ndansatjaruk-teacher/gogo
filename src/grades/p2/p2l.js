@@ -258,10 +258,14 @@ const P2_TOOLS_INFO = [['ruler', 'ตัวเลขบอก<b>เซนติ�
   ['reel', 'ดึงออกมาได้<b>ยาวมาก</b> แล้วม้วนเก็บได้', ['วัดระยะยาว ๆ เช่น ห้อง สนาม', 'วัดความสูงของบ้าน ประตู']]];
 const simP2Tools = () => toolReveal(P2_TOOLS_INFO.map(([k, how, uses]) => [p2ico(P2_TOOLS[k][1], 150), P2_TOOLS[k][0], how, uses]), 'เลือกเครื่องมือวัดให้<b>เหมาะกับสิ่งที่จะวัด</b> ✓');
 
+/* v189: เลือกตอบ — ข้อมูลที่กำหนด (การ์ด) ทางซ้าย ตัวใหญ่ · ตัวเลือกทางขวา */
+const p2PickSide = o => Object.assign(Q.p4Pick(o), { mount(bd, ctx) { const ch = choices(ctx, shuffle(o.opts.slice()).map(v => ({ value: v, label: v })), o.right, { hint: o.hint }); ch.classList.add('pp-opts'); ch.querySelectorAll('.opt').forEach(x => x.classList.add('fopt', 'txt'));
+  bd.append(h('div', { class: 't6-q p4-q' }, ppSide(h('div', { class: 'p2pkfig', html: o.fig }), ch))); } });
+
 /* ---------- question types (prefix p2) ---------- */
 const P2_TOOLS = { ruler: ['ไม้บรรทัด', 't_ruler'], meter: ['ไม้เมตร', 't_meter'], tape: ['สายวัดตัว', 't_tape'], reel: ['สายวัดชนิดตลับ', 't_reel'] };
 const p2toolLab = k => `<span class="p2tl">${p2ico(P2_TOOLS[k][1], 40)}<b>${P2_TOOLS[k][0]}</b></span>`;
-const p2card = (name, lab) => `<div class="p2card"><b>${name}</b><span>${lab}</span></div>`, p2cards = L => `<div class="p2cards">${L.map(([n, l]) => p2card(n, l)).join('')}</div>`;
+const p2card = (name, lab, k) => `<div class="p2card">${k ? p2ico(k, 70) : ''}<b>${name}</b><span>${lab}</span></div>`, p2cards = L => `<div class="p2cards">${L.map(([n, l, k]) => p2card(n, l, k)).join('')}</div>`;
 Object.assign(Q, {
   p2tool({ task, ok, opts }) {
     const q = `${task} ควรใช้เครื่องมือใดเหมาะสมที่สุด`;
@@ -286,9 +290,9 @@ Object.assign(Q, {
     return { prompt: ask === 'word' ? 'เลือกคำเติมในช่องว่าง' : q, say: ask === 'word' ? `${A.name} สูงกว่า หรือเตี้ยกว่า ${B.name}` : q, mount(bd, ctx) {
       const fig = h('div', { class: 'p2wwrap', html: p2wallSVG(items, { ...o, guides: true, plate: false }) });
       if (ask === 'word') { const blank = h('span', { class: 'blank' }, '?'), W = words || ['สูงกว่า', 'เตี้ยกว่า'], r = A.cm > B.cm ? W[0] : A.cm < B.cm ? W[1] : W[2];
-        bd.append(h('div', { class: 'colstack' }, fig, h('div', { class: 'sentence' }, h('span', { class: 'lab' }, A.name), blank, h('span', { class: 'lab' }, B.name)), wordChoices(ctx, r, blank, 'ดูเส้นประที่ยอดของทั้งสองตัว แล้วอ่านตัวเลขบนไม้วัด', W))); return; }
+        bd.append(ppSide(fig, h('div', { class: 'colstack' }, h('div', { class: 'sentence p2wsen' }, h('span', { class: 'lab' }, A.name), blank, h('span', { class: 'lab' }, B.name)), wordChoices(ctx, r, blank, 'ดูเส้นประที่ยอดของทั้งสองตัว แล้วอ่านตัวเลขบนไม้วัด', W)))); bd.classList.add('p2wsd'); return; } /* v189: รูปซ้าย ตอบขวา */
       const hint = ask === 'h' ? `ดูเส้นประจากยอด${A.name}ไปที่ไม้วัด อ่านตัวเลข${mc ? ' แล้วเปลี่ยน 100 เซนติเมตร เป็น 1 เมตร' : ''}` : `${A.name}สูง ${A.cm} ซม. ${B.name}สูง ${B.cm} ซม. → ลบกัน`;
-      bd.append(h('div', { class: 't6-q p4-q p2q' }, fig, ask === 'h' && mc && A.cm >= 100 ? mcInput(ctx, A.cm, { hint }) : h('div', { class: 'rowstack' }, answerBox(ctx, String(ask === 'h' ? A.cm : d), { hint }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เซนติเมตร')))); } };
+      bd.append(ppSide(fig, ask === 'h' && mc && A.cm >= 100 ? mcInput(ctx, A.cm, { hint }) : ppAns(ctx, ask === 'h' ? A.cm : d, hint, 'เซนติเมตร'))); bd.classList.add('p2wsd'); } };
   },
   /* tap the tallest / shortest one right on the wall */
   p2wallTap({ items, o, ask }) {
@@ -298,7 +302,7 @@ Object.assign(Q, {
       fig.querySelectorAll('.p2w-it').forEach(g => g.addEventListener('click', e => { e.stopPropagation(); if (fig.dataset.done) return; const ok = +g.dataset.i === t;
         if (ok) { fig.dataset.done = 1; g.classList.add('on'); } else { g.classList.remove('bad'); void g.getBBox(); g.classList.add('bad'); }
         ctx.check(ok, ask === 'tall' ? 'ดูว่ายอดของใครอยู่สูงที่สุดบนไม้วัด' : 'ดูว่ายอดของใครอยู่ต่ำที่สุดบนไม้วัด'); }));
-      bd.append(h('div', { class: 'colstack' }, fig, h('div', { class: 'cap ixcap' }, 'แตะที่ตัวในภาพได้เลย'))); } };
+      bd.append(h('div', { class: 'colstack p2wtap' }, fig, h('div', { class: 'cap ixcap' }, 'แตะที่ตัวในภาพได้เลย'))); } };
   },
   /* build a length out of metre sticks and centimetres */
   p2build({ cm }) {
@@ -341,7 +345,7 @@ Object.assign(Q, {
 });
 
 /* ---------- data: teaching (not used in the games) ---------- */
-const P2L_T_WALL = [{ e: 'kid0', name: 'ต้นข้าว', cm: 118 }, { e: 'kid3', name: 'ใบเตย', cm: 104 }, { e: 'teddy', name: 'ตุ๊กตาหมี', cm: 62 }, { e: 'dog', name: 'ถุงทอง', cm: 45 }];
+const P2L_T_WALL = [{ e: 'kid0', name: 'ต้นข้าว', cm: 120 }, { e: 'kid3', name: 'ใบเตย', cm: 110 }, { e: 'teddy', name: 'ตุ๊กตาหมี', cm: 60 }, { e: 'dog', name: 'ถุงทอง', cm: 40 }]; /* v189: ทุกค่าตรงขีด อ่านได้ไม่ต้องกะ */
 const P2L_T_WALL2 = [{ e: 'camel', name: 'อูฐ', cm: 160 }, { e: 'lion', name: 'สิงโต', cm: 110 }, { e: 'ostrich', name: 'นกกระจอกเทศ', cm: 130 }, { e: 'kid4', name: 'น้องฟ้า', cm: 120 }];
 const P2L_T_JUMP = [{ name: 'ต้นกล้า', cm: 345 }, { name: 'ปุยฝ้าย', cm: 308 }, { name: 'ภูผา', cm: 362 }, { name: 'ใบบัว', cm: 297 }];
 const P2L_T_MAP = { W: 560, H: 330, nodes: { home: [70, 250, 'บ้านต้นกล้า', 'house'], shop: [250, 60, 'ร้านไอศกรีม', 'shop', -1], school: [490, 230, 'โรงเรียน', 'school'], palm: [280, 290, 'สวนมะพร้าว', 'palm'] },
@@ -350,8 +354,8 @@ const P2L_T_MAP = { W: 560, H: 330, nodes: { home: [70, 250, 'บ้านต้
 const P2W_TOOL = [['วัดความยาวดินสอ', 'ruler', ['ruler', 'tape', 'reel']], ['วัดรอบเอวเพื่อทำชุดนักเรียน', 'tape', ['tape', 'ruler', 'meter']], ['วัดความสูงของประตูบ้าน', 'reel', ['reel', 'ruler', 'tape']],
   ['วัดความยาวรอบต้นแขน', 'tape', ['tape', 'ruler', 'meter']], ['วัดความยาวโต๊ะเรียนในห้อง', 'meter', ['meter', 'tape', 'ruler']], ['วัดความยาวสมุด', 'ruler', ['ruler', 'reel', 'meter']], ['วัดระยะจากหน้าบ้านไปโรงรถ', 'reel', ['reel', 'ruler', 'tape']]];
 const P2W_RUL = [{ k: 'brush', name: 'พู่กัน', a: 2, b: 12, col: 'yellow' }, { k: 'pencil', name: 'ดินสอ', a: 3, b: 17, col: 'mint' }, { k: 'eraser', name: 'ยางลบ', a: 13, b: 16 }, { k: 'pen', name: 'ปากกา', a: 5, b: 18 }, { k: 'sharpener', name: 'กบเหลาดินสอ', a: 7, b: 9 }];
-const P2W_WALL2 = { items: [{ e: 'kid1', name: 'สมหญิง', cm: 60 }, { e: 'kid2', name: 'สมรัก', cm: 74 }, { e: 'cat', name: 'โกโก้', cm: 35 }, { e: 'teddy', name: 'หมี', cm: 70 }], o: { max: 80 } };
-const P2W_WALL4 = { items: [{ e: 'girl', name: 'ผู้หญิง', cm: 94 }, { e: 'dog', name: 'สุนัข', cm: 48 }, { e: 'rabbit', name: 'กระต่าย', cm: 36 }, { e: 'cat', name: 'แมว', cm: 28 }], o: { max: 100 } };
+const P2W_WALL2 = { items: [{ e: 'kid1', name: 'สมหญิง', cm: 60 }, { e: 'kid2', name: 'สมรัก', cm: 75 }, { e: 'cat', name: 'โกโก้', cm: 35 }, { e: 'teddy', name: 'หมี', cm: 70 }], o: { max: 80 } };
+const P2W_WALL4 = { items: [{ e: 'girl', name: 'ผู้หญิง', cm: 95 }, { e: 'dog', name: 'สุนัข', cm: 50 }, { e: 'rabbit', name: 'กระต่าย', cm: 35 }, { e: 'cat', name: 'แมว', cm: 30 }], o: { max: 100 } };
 const P2W_WALL5 = { items: [{ e: 'tv', name: 'โทรทัศน์', cm: 60 }, { e: 'sofa', name: 'โซฟา', cm: 80 }, { e: 'lamp', name: 'โคมไฟ', cm: 110 }, { e: 'fridge', name: 'ตู้เย็น', cm: 140 }], o: { max: 150 } };
 const P2W_WALL6 = { items: [{ e: 'ostrich', name: 'นกกระจอกเทศ', cm: 150 }, { e: 'giraffe', name: 'ยีราฟ', cm: 190 }, { e: 'elephant', name: 'ช้าง', cm: 130 }, { e: 'goat', name: 'แพะ', cm: 110 }], o: { max: 200, mc: true } };
 const P2W_WALL10 = { items: [{ e: 'elephant', name: 'ช้าง', cm: 140 }, { e: 'giraffe', name: 'ยีราฟ', cm: 180 }, { e: 'lion', name: 'สิงโต', cm: 90 }, { e: 'chick', name: 'ไก่', cm: 50 }], o: { max: 200, mc: true } };
@@ -401,7 +405,7 @@ const P2W_ST2 = [
 const L2L = (no, place, title, short, goal, teach, game) => ({ id: 80 + no, place, title, short, tone: TONES5[(no + 3) % 6], goal, teach, game, gameN: 10 }); /* v188: เกมละ 10 ข้อ */
 const P2W_CMPH = ['สูงกว่า', 'เตี้ยกว่า', 'สูงเท่ากับ'], P2W_CMPL = ['ยาวกว่า', 'สั้นกว่า', 'ยาวเท่ากับ'], P2W_CMPD = ['มากกว่า', 'น้อยกว่า', 'เท่ากับ'];
 const p2wq = (W, x) => Q.p2wall({ items: reshuffle(W.items), o: W.o, ...x });
-const p2wallSort = (W, dir) => Q.ixSort({ side: 'h', q: `เรียงชื่อตามความสูงจาก<span class="hl">${dir === 'asc' ? 'เตี้ยที่สุดไปสูงที่สุด' : 'สูงที่สุดไปเตี้ยที่สุด'}</span>`, fig: p2wallSVG(W.items, { ...W.o, guides: true }), items: W.items.map(it => ({ label: it.name, v: it.cm })), dir, slotLabels: dir === 'asc' ? ['เตี้ยที่สุด', '', '', 'สูงที่สุด'] : ['สูงที่สุด', '', '', 'เตี้ยที่สุด'] });
+const p2wallSort = (W, dir) => Q.ixSort({ side: 'v', q: `เรียงชื่อตามความสูงจาก<span class="hl">${dir === 'asc' ? 'เตี้ยที่สุดไปสูงที่สุด' : 'สูงที่สุดไปเตี้ยที่สุด'}</span>`, fig: p2wallSVG(W.items, { ...W.o, guides: true }), items: W.items.map(it => ({ label: it.name, v: it.cm })), dir, slotLabels: dir === 'asc' ? ['เตี้ยที่สุด', '', '', 'สูงที่สุด'] : ['สูงที่สุด', '', '', 'เตี้ยที่สุด'] });
 const LESSONS_P2C3 = [
   L2L(1, 'หาดไม้บรรทัด', 'การวัดความยาวเป็นเมตรและเซนติเมตร', 'วัดเป็น ม. และ ซม.', 'เลือกเครื่องมือวัดให้เหมาะสม วัดความยาวที่ไม่ได้เริ่มที่ 0 และวัดความสูงเป็นเซนติเมตร เมตรและเซนติเมตร',
     [T('ยินดีต้อนรับสู่ <b>ชายหาดวัดความยาว</b>! รู้จัก<b>เครื่องมือวัด</b>แบบต่าง ๆ — กดเปิดทีละภาพ', 'ยินดีต้อนรับสู่ชายหาดวัดความยาว รู้จักเครื่องมือวัดแบบต่าง ๆ กดเปิดทีละภาพ', el => el.append(simP2Tools())),
@@ -416,8 +420,8 @@ const LESSONS_P2C3 = [
        qPlay(Q.ixMatch({ rows: 1, q: 'จับคู่สิ่งที่จะวัดกับเครื่องมือ', pairs: [['ความยาวยางลบ', p2toolLab('ruler')], ['รอบศีรษะ', p2toolLab('tape')], ['ความสูงโต๊ะครู', p2toolLab('meter')], ['ความยาวสนามเด็กเล่น', p2toolLab('reel')]] }), 'สายวัดตัวโค้งได้ ใช้วัดรอบตัว')),
      T('ไม่ต้องเริ่มที่ 0 ก็วัดได้! <b>ลากดินสอ</b>ไปวางตรงไหนก็ได้ ความยาว = ปลาย − จุดเริ่ม', 'ไม่ต้องเริ่มที่ศูนย์ก็วัดได้ ลากดินสอไปวางตรงไหนก็ได้ ความยาว เท่ากับ ปลาย ลบ จุดเริ่ม', el => el.append(simRulerDrag({ k: 'pencil', name: 'ดินสอ', a: 4, b: 13, col: 'coral' }))),
      T('ตัวอย่างทีละขั้น: ปากกาวางเริ่มที่ 6', 'ตัวอย่างทีละขั้น', p4ex([['① จุดเริ่ม', 'ปลายข้างหนึ่งตรงกับเลข 6'], ['② ปลายอีกข้าง', 'ตรงกับเลข 18'], ['③ ลบกัน', '18 − 6 = 12']], 'ปากกายาว <b>12 เซนติเมตร</b>', '', () => h('div', { class: 'p2rwrap', html: p2rulerSVG([{ k: 'pen', name: 'ปากกา', a: 6, b: 18 }]) }))),
-     T('วัด<b>ความสูง</b>: เลื่อน<b>แถบสีแดง</b>ลงมาแตะยอดศีรษะของแต่ละคน', 'วัดความสูง เลื่อนแถบสีแดงลงมาแตะยอดศีรษะของแต่ละคน', el => el.append(simWall(P2L_T_WALL, { max: 140 }))),
-     T('ตัวอย่างทีละขั้น: ใครสูงกว่า สูงกว่ากี่เซนติเมตร', 'ตัวอย่างทีละขั้น', p4ex([['① อ่านค่า', 'ต้นข้าวสูง 118 ซม. · ใบเตยสูง 104 ซม.'], ['② เปรียบเทียบ', '118 > 104 → ต้นข้าวสูงกว่า'], ['③ ผลต่าง', '118 − 104 = 14']], 'ต้นข้าว<b>สูงกว่า</b>ใบเตย <b>14 เซนติเมตร</b>'))],
+     T('วัด<b>ความสูง</b>: เลื่อน<b>แถบสีแดง</b>ลงมาแตะยอดศีรษะของแต่ละคน', 'วัดความสูง เลื่อนแถบสีแดงลงมาแตะยอดศีรษะของแต่ละคน', el => el.append(simWall(P2L_T_WALL, { max: 140, snap: 10 }))),
+     T('ตัวอย่างทีละขั้น: ใครสูงกว่า สูงกว่ากี่เซนติเมตร', 'ตัวอย่างทีละขั้น', p4ex([['① อ่านค่า', 'ต้นข้าวสูง 120 ซม. · ใบเตยสูง 110 ซม.'], ['② เปรียบเทียบ', '120 > 110 → ต้นข้าวสูงกว่า'], ['③ ผลต่าง', '120 − 110 = 10']], 'ต้นข้าว<b>สูงกว่า</b>ใบเตย <b>10 เซนติเมตร</b>'))],
     () => { const r = shuffle(P2W_RUL); return [...pkF(P2W_TOOL, 2).map(([task, ok, opts]) => Q.p2tool({ task, ok, opts })), Q.p2rulLen({ it: r[0] }), Q.p2rulCmp({ a: r[1], b: r[2] }),
       p2wq(P2W_WALL2, { i: rnd(0, 3) }), Q.p2wallTap({ ...pick([P2W_WALL4, P2W_WALL5]), ask: pick(['tall', 'short']) }), p2wq(P2W_WALL6, { i: rnd(0, 3) })]; }),
   L2L(2, 'หาดร้อยเซนติ', 'ความสัมพันธ์ระหว่างเมตรกับเซนติเมตร', 'เมตร ↔ เซนติเมตร', 'บอกความสัมพันธ์ 1 เมตร = 100 เซนติเมตร เปลี่ยนหน่วยความยาว และคาดคะเนความยาวเป็นเมตร',
@@ -429,18 +433,18 @@ const LESSONS_P2C3 = [
       ...pkF(P2W_EST, 2).map(([e, name, more]) => Q.meterJudge({ e, name, more }))]; }),
   L2L(3, 'หาดพุ่งแหลน', 'การเปรียบเทียบความยาว (1)', 'เปรียบเทียบความยาว (1)', 'เปรียบเทียบความยาวและความสูงที่เป็นเมตรและเซนติเมตร เรียงลำดับ และหาผลต่าง',
     [T('แตะ <b>2 ตัว</b> เพื่อเปรียบเทียบความสูง — ต่างกันกี่เซนติเมตร', 'แตะสองตัว เพื่อเปรียบเทียบความสูง ต่างกันกี่เซนติเมตร', el => el.append(simWall(P2L_T_WALL2, { max: 180, mc: true, mode: 'cmp' }))),
-     T('ผลกระโดดไกล — <b>แตะเรียงอันดับ</b> 1 2 3', 'ผลกระโดดไกล แตะเรียงอันดับ หนึ่ง สอง สาม', qPlay(Q.ixSort({ side: 'h', q: 'ใครได้อันดับ 1 2 3', items: P2L_T_JUMP.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['อันดับ 1', 'อันดับ 2', 'อันดับ 3'], fig: p2trackSVG(P2L_T_JUMP, { lo: 280, hi: 380, st: 20, sand: true, lab: v => mcTxt(v, 1) }) }), 'ไกลที่สุดได้อันดับ 1')),
+     T('ผลกระโดดไกล — <b>แตะเรียงอันดับ</b> 1 2 3', 'ผลกระโดดไกล แตะเรียงอันดับ หนึ่ง สอง สาม', qPlay(Q.ixSort({ side: 'v', q: 'ใครได้อันดับ 1 2 3', items: P2L_T_JUMP.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['อันดับ 1', 'อันดับ 2', 'อันดับ 3'], fig: p2trackSVG(P2L_T_JUMP, { lo: 280, hi: 380, st: 20, sand: true, lab: v => mcTxt(v, 1) }) }), 'ไกลที่สุดได้อันดับ 1')),
      T('ตัวอย่างทีละขั้น: 3 ม. 45 ซม. กับ 3 ม. 8 ซม.', 'ตัวอย่างทีละขั้น', p4ex([['① เทียบเมตร', '3 เมตร = 3 เมตร (เท่ากัน)'], ['② เทียบเซนติเมตร', '45 > 8'], ['สรุป', '3 ม. 45 ซม. ยาวกว่า 3 ม. 8 ซม. อยู่ 45 − 8 = 37 ซม.']], 'ต้นกล้ากระโดด<b>ไกลกว่า</b>ปุยฝ้าย <b>37 เซนติเมตร</b>'))],
     () => { const W = P2W_WALL10, I = W.items; return [p2wq(W, { i: 0 }), p2wq(W, { i: 1, j: 2, ask: 'word' }), Q.p2wallTap({ ...W, ask: pick(['tall', 'short']) }), p2wq(W, { i: 2, j: 3, ask: 'diff' }), p2wallSort(W, 'asc'),
       Q.ixSort({ q: 'ผลการแข่งขันพุ่งแหลน: ใครได้<span class="hl">เหรียญทอง เงิน ทองแดง</span>', items: P2W_JAV.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['เหรียญทอง', 'เหรียญเงิน', 'เหรียญทองแดง'], fig: p2trackSVG(P2W_JAV, { lo: 5100, hi: 5300, st: 50, lab: v => mcTxt(v, 1) }) }),
-      Q.p4Pick({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; }),
+      p2PickSide({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; }),
   L2L(4, 'หาดเทียบหน่วย', 'การเปรียบเทียบความยาว (2)', 'เปรียบเทียบความยาว (2)', 'เปรียบเทียบความยาวที่เขียนต่างหน่วยกัน โดยเปลี่ยนเป็นเซนติเมตรก่อน',
     [T('ความยาวเขียน<b>ต่างหน่วย</b> — กด<b>เปลี่ยนเป็นเซนติเมตร</b>ทั้งคู่ แล้วเปรียบเทียบ', 'ความยาวเขียนต่างหน่วย กดเปลี่ยนเป็นเซนติเมตรทั้งคู่ แล้วเปรียบเทียบ', el => el.append(simCmpUnits([[['ไม้ไผ่', '3 ม. 5 ซม.', 305], ['เชือก', '350 ซม.', 350]], [['ท่อน้ำ', '2 ม. 40 ซม.', 240], ['ราวตากผ้า', '240 ซม.', 240]], [['เรือคายัก', '4 ม. 12 ซม.', 412], ['กระดานโต้คลื่น', '298 ซม.', 298]]]))),
      T('ตัวอย่างทีละขั้น: เรียงความยาว 3 อย่าง', 'ตัวอย่างทีละขั้น', p4ex([['① เปลี่ยนหน่วย', 'ตาข่าย 2 ม. 75 ซม. = 275 ซม. · เชือก 312 ซม. · ไม้พาย 1 ม. 90 ซม. = 190 ซม.'], ['② เทียบ', '312 > 275 > 190'], ['③ เรียงจากยาวไปสั้น', 'เชือก → ตาข่าย → ไม้พาย']], '<b>เชือก</b>ยาวที่สุด · <b>ไม้พาย</b>สั้นที่สุด'))],
     () => { const A = P2W_ANI, L = P2W_LONG, T_ = P2W_TALL, pr = pkF(P2W_LONGQ, 2), ap = pkF([[0, 1], [3, 2], [4, 5], [0, 3], [4, 1], [0, 4], [5, 2], [1, 5]], 2);
       return [Q.p4Pick({ fig: p2cards(A), q: `สัตว์ชนิดใด<span class="hl">สูงที่สุด</span>`, opts: ['กวาง', 'อูฐ', ...pkF(['ม้า', 'วัว', 'แรด', 'ฮิปโปโปเตมัส'], 2)], right: 'กวาง', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วหาค่าที่มากที่สุด' }),
         ...ap.map(([i, j]) => Q.p2cmpWord({ a: A[i], b: A[j], words: P2W_CMPH.slice(0, 2) })), ...pr.map(([i, j]) => Q.p2cmpWord({ a: L[i], b: L[j], words: P2W_CMPL })),
-        Q.p2cmpWord({ a: T_[3], b: T_[1], words: P2W_CMPH }), Q.ixSort({ q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; }),
+        Q.p2cmpWord({ a: T_[3], b: T_[1], words: P2W_CMPH }), Q.ixSort({ side: 'v', q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; }),
   L2L(5, 'หาดแผนที่', 'การวัดและเปรียบเทียบระยะทาง', 'ระยะทาง', 'หาระยะทางจากแผนที่ เปรียบเทียบระยะทาง และใช้หน่วยเมตร เซนติเมตร',
     [T('<b>แตะถนน</b>ทีละเส้นตามเส้นทาง — ระยะทางจะบวกให้ดู แล้วเทียบว่าทางไหนใกล้กว่า', 'แตะถนนทีละเส้นตามเส้นทาง ระยะทางจะบวกให้ดู แล้วเทียบว่าทางไหนใกล้กว่า', el => el.append(simRoute(P2L_T_MAP, [{ q: 'จากบ้านไปโรงเรียน ผ่านร้านไอศกรีม', e: [0, 1] }, { q: 'จากบ้านไปโรงเรียน ผ่านสวนมะพร้าว', e: [2, 3] }]))),
      T('ตัวอย่างทีละขั้น: เส้นทางไหนใกล้กว่า', 'ตัวอย่างทีละขั้น', p4ex([['① ผ่านร้านไอศกรีม', '315 + 480 = 795 เมตร'], ['② ผ่านสวนมะพร้าว', '260 + 590 = 850 เมตร'], ['③ เทียบ', '795 < 850 → ต่างกัน 850 − 795 = 55 เมตร']], 'ทางผ่าน<b>ร้านไอศกรีม</b>ใกล้กว่า <b>55 เมตร</b>'))],
@@ -479,14 +483,14 @@ LESSONS_P2C3[1].game = () => { const c = shuffle(P2W_C2M), m = shuffle(P2W_M2C.f
     ...pkF(P2W_EST, 3).map(([e, name, more]) => Q.meterJudge({ e, name, more }))]; };
 LESSONS_P2C3[2].game = () => { const W = P2W_WALL10;
   return [p2wq(W, { i: 0 }), p2wq(W, { i: 3 }), Q.p2wallTap({ ...W, ask: 'tall' }), p2wq(W, { i: 1, j: 2, ask: 'word' }), p2wq(W, { i: 0, j: 3, ask: 'word' }), p2wq(W, { i: 2, j: 3, ask: 'diff' }), p2wq(W, { i: 1, j: 0, ask: 'diff' }), p2wallSort(W, 'asc'),
-    Q.ixSort({ side: 'h', q: 'ผลการแข่งขันพุ่งแหลน: ใครได้<span class="hl">เหรียญทอง เงิน ทองแดง</span>', items: P2W_JAV.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['เหรียญทอง', 'เหรียญเงิน', 'เหรียญทองแดง'], fig: p2trackSVG(P2W_JAV, { lo: 5100, hi: 5300, st: 50, lab: v => mcTxt(v, 1) }) }),
-    Q.p4Pick({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; };
+    Q.ixSort({ side: 'v', q: 'ผลการแข่งขันพุ่งแหลน: ใครได้<span class="hl">เหรียญทอง เงิน ทองแดง</span>', items: P2W_JAV.map(x => ({ label: x.name, v: x.cm })), dir: 'desc', k: 3, slotLabels: ['เหรียญทอง', 'เหรียญเงิน', 'เหรียญทองแดง'], fig: p2trackSVG(P2W_JAV, { lo: 5100, hi: 5300, st: 50, lab: v => mcTxt(v, 1) }) }),
+    p2PickSide({ fig: p2cards(P2W_JAV.map(x => [x.name, mcTxt(x.cm, 1)])), q: 'ใครพุ่งแหลนได้ระยะทาง<span class="hl">ใกล้ที่สุด</span>', opts: P2W_JAV.map(x => x.name), right: 'สมชาย', hint: 'เทียบเมตรก่อน 51 ม. น้อยกว่า 52 ม. แล้วเทียบเซนติเมตร' })]; };
 LESSONS_P2C3[3].game = () => { const A = P2W_ANI, L = P2W_LONG, T_ = P2W_TALL, pr = pkF(P2W_LONGQ, 3), ap = pkF([[0, 1], [3, 2], [4, 5], [0, 3], [4, 1], [0, 4], [5, 2], [1, 5]], 3);
   return [...ap.map(([i, j]) => Q.p2cmpWord({ a: A[i], b: A[j], words: P2W_CMPH.slice(0, 2) })), ...pr.map(([i, j]) => Q.p2cmpWord({ a: L[i], b: L[j], words: P2W_CMPL })),
     Q.p2cmpWord({ a: [...T_[3], 'house'], b: [...T_[1], 'flag'], words: P2W_CMPH }),
-    Q.p4Pick({ fig: p2cards(A), q: `สัตว์ชนิดใด<span class="hl">สูงที่สุด</span>`, opts: ['ช้าง', 'อูฐ', ...pkF(['แพะ', 'สิงโต', 'นกกระจอกเทศ', 'หมีแพนด้า'], 2)], right: 'ช้าง', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วหาค่าที่มากที่สุด' }),
-    Q.ixSort({ side: 'h', q: 'เรียงความยาวจาก<span class="hl">ยาวที่สุดไปสั้นที่สุด</span>', fig: `<div class="w2srt">${[L[1], L[2], L[5]].map(([n, t, v, k]) => `<div class="w2sc">${p2ico(k, 96)}<b>${n}</b><span>${t}</span></div>`).join('')}</div>`, items: [L[1], L[2], L[5]].map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['ยาวที่สุด', '', 'สั้นที่สุด'] }),
-    Q.ixSort({ q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; };
+    p2PickSide({ fig: p2cards(A.map(([n, t, v, k]) => [n, t, k])), q: `สัตว์ชนิดใด<span class="hl">สูงที่สุด</span>`, opts: ['ช้าง', 'อูฐ', ...pkF(['แพะ', 'สิงโต', 'นกกระจอกเทศ', 'หมีแพนด้า'], 2)], right: 'ช้าง', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วหาค่าที่มากที่สุด' }),
+    Q.ixSort({ side: 'v', q: 'เรียงความยาวจาก<span class="hl">ยาวที่สุดไปสั้นที่สุด</span>', fig: `<div class="w2srt">${[L[1], L[2], L[5]].map(([n, t, v, k]) => `<div class="w2sc">${p2ico(k, 96)}<b>${n}</b><span>${t}</span></div>`).join('')}</div>`, items: [L[1], L[2], L[5]].map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['ยาวที่สุด', '', 'สั้นที่สุด'] }),
+    Q.ixSort({ side: 'v', q: 'เรียงสถานที่ตามความสูงจาก<span class="hl">สูงที่สุดไปเตี้ยที่สุด</span>', fig: p2cards(T_), items: T_.filter(x => x[0] !== 'บ้าน').map(x => ({ label: x[0], v: x[2] })), dir: 'desc', slotLabels: ['สูงที่สุด', '', '', '', 'เตี้ยที่สุด'] })]; };
 LESSONS_P2C3[4].game = () => { const T_ = P2W_TRIP, far = Math.random() < .5;
   return [Q.p2conv({ cm: 1008, to: 'mc' }), Q.p2conv({ cm: 1150, to: 'mc' }), Q.p2cmpWord({ a: T_[3], b: T_[2], words: P2W_CMPD, pre: 'ระยะทางไป' }), Q.p2cmpWord({ a: T_[1], b: T_[2], words: P2W_CMPD, pre: 'ระยะทางไป' }),
     Q.p4Pick({ fig: p2cards(T_.map(x => ['ไป' + x[0], x[1]])), q: `จากโรงเรียนไปที่ใด<span class="hl">${far ? 'ไกลที่สุด' : 'ใกล้ที่สุด'}</span>`, opts: T_.map(x => x[0]), right: far ? 'สนามกีฬา' : 'โรงพยาบาล', hint: 'เปลี่ยนเป็นเซนติเมตรทั้งหมดก่อน แล้วเปรียบเทียบ' }),

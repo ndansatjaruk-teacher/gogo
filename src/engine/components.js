@@ -20,6 +20,29 @@ function bubbleRow(html, opts = {}) {
   return row;
 }
 
+/* v189 (ผู้ใช้ขอ): คำแนะนำ (กรอบเหลือง เช่น วิธีใช้กระดานทด) ไม่วางบนจอ — ย้ายไปไว้ในปุ่ม ? มุมขวาล่าง กดถามได้เมื่องง
+   ทุก 30 วินาที (ถ้ายังไม่ตอบ) ขึ้นคำพูด “มีอะไรถามมั้ย?” ข้างปุ่ม — ปิดได้ในตั้งค่า (SET.askNudge) · ตอบเสร็จแล้วคืนกรอบเดิมกลับที่ (แสดงคำตอบ)
+   คำสั่งที่จำเป็น (ขั้นที่ 1: เลือก… · ให้เข็มชี้ …) ยังอยู่บนจอ · ใส่ class "qhelp" ให้กล่องใดก็ได้ที่เป็นคำแนะนำ หรือ q.help (HTML) */
+const QHELP_SEL = '.e4w-info, .qhelp';
+function qHelp(body, q, isDone, o = {}) {
+  document.querySelectorAll('.qh').forEach(x => x.done ? x.done() : x.remove());
+  const nodes = [...body.querySelectorAll(QHELP_SEL)].map(n => ({ n, p: n.parentNode, nx: n.nextSibling }));
+  const store = h('div', { class: 'qh-store' }); nodes.forEach(x => store.append(x.n));
+  const has = nodes.length || q.help;
+  const pop = h('div', { class: 'qh-pop', hidden: true }, h('div', { class: 'qh-h' }, 'คำแนะนำ'), store, q.help ? h('div', { class: 'qh-x', html: q.help }) : null,
+    has ? null : h('div', { class: 'qh-x', html: 'อ่านโจทย์ด้านบนอีกครั้ง หรือกดปุ่มลำโพงเพื่อฟังโจทย์<br>ลองทำดูก่อน — ถ้าตอบผิด ไก่น้อยจะบอกใบ้ให้' }));
+  const btn = h('button', { class: 'qh-btn ia', 'aria-label': 'ขอคำแนะนำ', 'aria-expanded': 'false' }, '?'), ask = h('div', { class: 'qh-ask', 'aria-live': 'polite' }, 'มีอะไรถามมั้ย? กด ? ได้เลย');
+  const wrap = h('div', { class: 'qh' + (o.teach ? ' qh-teach' : '') }, pop, ask, btn);
+  const close = () => { pop.hidden = true; btn.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); };
+  btn.onclick = e => { e.stopPropagation(); sfx.tap(); ask.classList.remove('on'); btn.classList.remove('wig');
+    if (!pop.hidden) { close(); return; } pop.hidden = false; btn.classList.add('on'); btn.setAttribute('aria-expanded', 'true'); say(pop.innerText.replace(/^คำแนะนำ\s*/, '').replace(/[✓→·]/g, ' '), true); };
+  pop.addEventListener('click', e => { e.stopPropagation(); close(); });
+  let sec = 0; const t = setInterval(() => { if (!wrap.isConnected) { clearInterval(t); return; } if (!body.isConnected || isDone()) { wrap.done(); return; }
+    if (++sec % 30 || SET.askNudge === false || !pop.hidden) return; ask.classList.add('on'); btn.classList.add('wig'); setTimeout(() => { ask.classList.remove('on'); btn.classList.remove('wig'); }, 4500); }, 1000);
+  wrap.done = () => { clearInterval(t); nodes.forEach(x => { if (x.p && x.p.isConnected) x.p.insertBefore(x.n, x.nx && x.nx.parentNode === x.p ? x.nx : null); }); wrap.remove(); };
+  document.body.append(wrap); return wrap;
+}
+
 /* ---------- object displays ---------- */
 function objRow(e, n, opts = {}) {
   const w = h('div', { class: 'objs', style: opts.size ? { '--os': opts.size } : null });

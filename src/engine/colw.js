@@ -16,9 +16,9 @@ const cwFmt = (v, p) => { const s = String(v).padStart(p + 1, '0'), w = s.slice(
 /* v187 (ผู้ใช้ขอ: บวกลบน้ำหนักทดเหมือนบทบวกลบ) หน่วยผสม — o.pv(i) ป้ายหลัก · o.grp(n) [[ชื่อกลุ่ม, จำนวนหลัก], …] จากซ้าย ·
    o.split = จำนวนหลักทางขวาที่เป็นหน่วยย่อย (ขีด 1 · กรัม 3) → ระบายสีและมีเส้นแบ่ง · o.eq / o.ans ข้อความโจทย์-คำตอบ · o.nm(i) ชื่อหลักในคำอธิบาย */
 function cwTint(grid, n, split) { if (!split) return; let c = 0;
-  [...grid.children].forEach(el => { if (el.classList.contains('ln') || el.classList.contains('pgr') || el.classList.contains('pt')) return; const k = c % (n + 1); c++; if (!k) return; const i = n - k;
+  [...grid.children].forEach(el => { if (el.classList.contains('ln') || el.classList.contains('pgr') || el.classList.contains('pt') || el.classList.contains('gp')) return; const k = c % (n + 1); c++; if (!k) return; const i = n - k;
     if (i < split) el.classList.add('cwu'); if (i === split - 1) el.classList.add('cwdv'); }); }
-const cwGrp = (o, n) => o.grp ? '<span class="pgr"></span>' + o.grp(n).map(([t, c, k]) => `<span class="pg pgr ${k || ''}" style="grid-column:span ${c}">${t}</span>`).join('') : '';
+const cwGrp = (o, n) => o.grp ? '<span class="pgr"></span>' + o.grp(n).filter(([t, c]) => c > 0).map(([t, c, k]) => `<span class="pg pgr ${k || ''}" style="grid-column:span ${c}">${t}</span>`).join('<span class="pgr gp"></span>') : '';
 function colWork(bd, ctx, o) {
   const op = o.op, nums = o.nums.map(x => String(x).replace(/,/g, '')), p = op === '×' ? 0 : Math.max(...nums.map(cwPl)), V = nums.map(s => cwInt(s, p));
   const R = op === '+' ? V.reduce((x, y) => x + y, 0) : op === '−' ? V[0] - V[1] : V[0] * V[1], len = v => String(v).length, dg = (v, i) => Math.floor(v / 10 ** i) % 10;
@@ -31,8 +31,8 @@ function colWork(bd, ctx, o) {
   const needZ = op === '×' ? [] : nums.flatMap((s, j) => range(0, n - 1).filter(i => i < shown(j) && i < p - PL[j]).map(i => j + ':' + i));
   const S = { zf: new Set(), carry: {}, cur: range(0, n - 1).map(i => dg(V[0], i)), res: Object.fromEntries(rowsE.map(k => [k, {}])), sel: { k: rowsE[0], i: 0 }, bad: new Set(), ok: false, hist: [] };
   const grid = h('div', { class: 'p4col e4col e4w cw ia' }), info = h('div', { class: 'p4steplab e4w-info' }), msg = h('div', { class: 'pad-msg e4w-msg' });
-  let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : ''); grid.style.gridTemplateColumns = cols;
-  const span = n + 1 + (p ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; } return x; };
+  const gp = o.split && n > o.split ? o.split : 0; /* v189: เว้นช่องระหว่างหน่วยใหญ่กับหน่วยย่อย */ let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : '') + (gp && i === gp ? ' .75em' : ''); grid.style.gridTemplateColumns = cols;
+  const span = n + 1 + (p ? 1 : 0) + (gp ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; if (gp && i === gp) x += '<span class="gp"></span>'; } return x; };
   const eq = o.eq || nums.map(s => cwFmt(cwInt(s, p), p)).join(` ${op} `), ans = o.ans || cwFmt(R, p);
   const paint = () => {
     let x = cwGrp(o, n) + row('<span></span>', i => `<span class="pn">${(o.pv ? o.pv(i) : CW_PV[i - p]) || ''}</span>`);
@@ -138,8 +138,8 @@ function colWalk(nums0, op, o = {}) {
   add(`คำตอบ <b class="num">${eqTxt} = ${ans}</b>`, -1, S => { S.ok = true; });
   /* ---- board ---- */
   const grid = h('div', { class: 'p4col e4col e4w cw cwk' }), cur0 = range(0, n - 1).map(i => dg(V[0], i));
-  let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : ''); grid.style.gridTemplateColumns = cols;
-  const span = n + 1 + (p ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; } return x; };
+  const gp = o.split && n > o.split ? o.split : 0; /* v189: เว้นช่องระหว่างหน่วยใหญ่กับหน่วยย่อย */ let cols = '1.1em'; for (let i = n - 1; i >= 0; i--) cols += ' 1.25em' + (p && i === p ? ' .42em' : '') + (gp && i === gp ? ' .75em' : ''); grid.style.gridTemplateColumns = cols;
+  const span = n + 1 + (p ? 1 : 0) + (gp ? 1 : 0), row = (lead, f, pt = '') => { let x = lead; for (let i = n - 1; i >= 0; i--) { x += f(i); if (p && i === p) x += `<span class="pt">${pt}</span>`; if (gp && i === gp) x += '<span class="gp"></span>'; } return x; };
   const fresh = () => ({ zf: new Set(), carry: {}, cur: cur0.slice(), res: Object.fromEntries(rows.map(k => [k, {}])), nw: new Set(), ok: false });
   let k = 0; const stateAt = m => { const S = fresh(); for (let j = 0; j < m; j++) { S.nw = new Set(); ST[j].f(S); } return S; };
   const paint = () => { const S = stateAt(k), st = k ? ST[k - 1] : null, hl = st ? st.hl : -1, hc = i => i === hl ? ' cw-hl' : '';

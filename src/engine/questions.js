@@ -1313,7 +1313,7 @@ Object.assign(Q, {
   /* practice: longer or shorter than 1 metre */
   meterJudge({ e, name, more }) {
     const right = more ? 'ยาวกว่า 1 เมตร' : 'สั้นกว่า 1 เมตร', q = `${name}ยาวกว่าหรือสั้นกว่า 1 เมตร?`;
-    return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 'rowstack' }, h('span', { class: 'est-it' }, art(e), h('b', null, name)), h('span', { class: 'cap', style: { fontSize: '22px' } }, 'กับ'), h('span', { class: 'est-it' }, h('span', { class: 'mstick' }, h('i'), h('i'), h('i'), h('i'), h('i')), h('b', null, 'ไม้เมตร (1 เมตร)')))); textOpts(bd, ctx, ['ยาวกว่า 1 เมตร', 'สั้นกว่า 1 เมตร'], right, '1 เมตร ยาวประมาณจากพื้นถึงเอวของผู้ใหญ่ หรือกางแขนของเด็ก ป.1'); } };
+    return { prompt: q, say: q, mount(bd, ctx) { const col = h('div', { class: 'colstack mjq' }, h('div', { class: 'rowstack' }, h('span', { class: 'est-it' }, art(e), h('b', null, name)), h('span', { class: 'cap', style: { fontSize: '22px' } }, 'กับ'), h('span', { class: 'est-it' }, h('span', { class: 'mstick' }, h('i'), h('i'), h('i'), h('i'), h('i')), h('b', null, 'ไม้เมตร (1 เมตร)')))); bd.append(col); /* v189: รูปบน ตัวเลือกล่าง */ textOpts(col, ctx, ['ยาวกว่า 1 เมตร', 'สั้นกว่า 1 เมตร'], right, '1 เมตร ยาวประมาณจากพื้นถึงเอวของผู้ใหญ่ หรือกางแขนของเด็ก ป.1'); } };
   },
   /* which unit fits: cm or m */
   unitPick({ name, e, m }) {

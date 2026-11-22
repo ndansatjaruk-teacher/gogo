@@ -435,6 +435,7 @@ function showSettings() {
     sw('speak', 'อ่านออกเสียงคำสั่ง (ภาษาไทย)'),
     sw('sfx', 'เสียงเอฟเฟกต์'),
     sw('penAnywhere', 'Apple Pencil เขียนทดบนที่ว่างได้ทุกที่'),
+    sw('askNudge', 'ไก่น้อยถาม “มีอะไรถามมั้ย” ทุก 30 วินาที ระหว่างเล่นเกม'),
     sw('unlockAll', 'ปลดล็อกทุกด่าน (สำหรับครู)', () => { m.remove(); showMap(); }),
     sw('showFinal', 'แสดงด่านบอสใหญ่ประจำชั้นเสมอ (ปกติจะปรากฏเมื่อชนะบอสครบทุกบท)', () => { m.remove(); showMap(); }),
     h('div', { class: 'setrow' }, h('span', null, 'ขนาดหน้าจอ (ซูม) · ใช้สองนิ้วถ่าง/หุบได้'), zoomCtl()),
@@ -969,14 +970,14 @@ function startGame(li) {
     bub.classList.add('in-card');
     const card = h('div', { class: 'card stage-card', style: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 } }, bub, body);
     stage.append(h('div', { class: 'screen qwrap' }, card));
-    let attempts = 0, done = false, extra = '', lastWhy = '';
+    let attempts = 0, done = false, extra = '', lastWhy = '', qh = null;
     const PH = '<div class="bsub ph">&nbsp;</div>'; // reserve the feedback line so the screen does not jump when feedback appears
     const withPrompt = () => q.prompt + (extra && extra !== q.prompt ? `<div class="bsub">${extra}</div>` : PH);
     const ctx = {
       check(ok, hint) {
         if (done) return;
         if (ok) {
-          done = true; markAns(body, true); if (!attempts) firstTry++; else missed.push(q.say || q.prompt);
+          done = true; qh && qh.done(); markAns(body, true); if (!attempts) firstTry++; else missed.push(q.say || q.prompt);
           sfx.ok(); const praise = pick(['ถูกต้อง! เก่งมาก', 'เยี่ยมไปเลย!', 'สุดยอด!', 'ถูกต้องแล้ว เก่งจัง']);
           const why = attempts && lastWhy ? `<div class="whyx"><b>ทำไมคำตอบก่อนหน้านี้ผิด</b> ${lastWhy}</div>` : ''; // wrong first, right later → still explain the mistake (ผู้ใช้ขอ)
           bub.set(q.prompt + `<div class="bsub">${attempts ? 'ถูกต้องแล้ว! แก้ได้เก่งมาก' : praise}${why}</div>`, 'good', 'wow'); say(attempts ? 'ถูกต้องแล้ว ' + String(lastWhy || '').replace(/<[^>]+>/g, '') : praise);
@@ -991,7 +992,7 @@ function startGame(li) {
         } else {
           attempts++; { const pk = ctx.__pick; ctx.__pick = null; const hs = hint ? String(hint) : ''; if (hs || pk) lastWhy = (pk && pk.length < 60 ? `เลือก “${pk}” ซึ่งไม่ถูก` + (hs ? ' — ' : '') : '') + hs; } sfx.no(); markAns(body, false); const r = tryStep(attempts, hint, body);
           if (r.reveal) { // 3rd wrong try: show the answer, then move on
-            done = true; missed.push(q.say || q.prompt); revealAll(body, ctx, q); awaiting = true;
+            done = true; qh && qh.done(); missed.push(q.say || q.prompt); revealAll(body, ctx, q); awaiting = true;
             bub.set(q.prompt + `<div class="bsub">${r.html}</div>`, 'bad', 'think'); say(r.say);
             pbar.firstChild.style.width = ((i + 1) / qs.length * 100) + '%';
             document.body.append(h('div', { class: 'sheet rv-sheet' }, h('span', { class: 'ok' }, icon('eye')), h('span', { class: 't' }, 'ดูเฉลยแล้ว จำไว้นะ'),
@@ -1002,7 +1003,7 @@ function startGame(li) {
       },
       say(t) { extra = t; bub.set(withPrompt(), null, 'happy'); say(t); }
     };
-    trackPick(body); q.mount(body, ctx); ixDropBlank(body); calcZoom(body); qLayout(body); fitBody(body);
+    trackPick(body); q.mount(body, ctx); qh = qHelp(body, q, () => done); ixDropBlank(body); calcZoom(body); qLayout(body); fitBody(body);
     backHandler = () => { sfx.page(); L.teach && L.teach.length ? startTeach(li, L.teach.length - 1, true) : showMap(L.city); };
     window.__dbg = { ctx, advance, q, i };
     say(q.say || q.prompt);
