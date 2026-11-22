@@ -3879,6 +3879,30 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .ixs-v{grid-template-columns:minmax(0,1.7fr) minmax(230px,1fr)}.ixs-v .p2sd-l > svg,.ixs-v .p2sd-l svg.p2track{width:100%!important;max-width:none;height:auto;max-height:min(62cqh,500px)}.ixs-v .p2sd-l{width:100%}.ixs-v .p2sd-l .p2cards{zoom:1.3}.ixs-v .p2sd-l .w2srt{zoom:1.2}
 .p2pkfig .p2cards{zoom:1.3;max-width:520px}.p2card svg{display:block;margin:0 auto 2px}
 .mjq{gap:22px}.mjq .est-it svg{width:clamp(90px,11cqw,130px);height:auto}.mjq .mstick{transform:scale(1.2)}
+.pcf{position:fixed;z-index:60;pointer-events:none}
+/* v190 ชายหาดสูตรคูณ: ตารางเรียงลงก่อน · การ์ดสีฟ้า · การ์ดพลิก · เติมคำตอบ */
+.mttab{grid-auto-flow:column;grid-template-rows:repeat(6,auto)}.mttab.one{grid-auto-flow:row;grid-template-rows:none}
+@media (max-width:560px){.mttab{grid-auto-flow:row;grid-template-rows:none}}
+.mtcwrap{width:100%;gap:10px}.mtc-top{gap:14px;align-items:center;justify-content:center}
+.mtcards{display:grid;grid-template-rows:repeat(4,auto);grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:clamp(8px,1.2cqw,14px);width:min(860px,100%)}
+.mtcard{height:clamp(60px,10.5cqh,86px);border-radius:16px;background:#E3F2FD;border:2.5px solid #9CCBF0;box-shadow:0 3px 0 #B9DAF5;cursor:pointer;display:grid;place-items:center;padding:0;font:800 clamp(20px,2.6cqw,30px) var(--font-num);color:#1E5F95}
+.mtcard b{color:#0F6CBF}.mtcard.on{background:#FFF0B3;border-color:#F2C94C;box-shadow:0 3px 0 #E8C25A}
+.mtcard.flip{background:none;border:0;box-shadow:none;perspective:700px}
+.mtc-in{position:relative;display:block;width:100%;height:100%;transition:transform .5s var(--ease);transform-style:preserve-3d}
+.mtcard.open .mtc-in{transform:rotateY(180deg)}
+.mtc-f{position:absolute;inset:0;display:grid;place-items:center;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.mtc-q{background:#F3EEFF;border:2.5px solid #C9B8F0;box-shadow:0 3px 0 #D9CCF5;color:#4A3A86}.mtc-q .mtq{font-size:.95em;min-width:40px}
+.mtc-a{background:#E3F2FD;border:2.5px solid #9CCBF0;box-shadow:0 3px 0 #B9DAF5;transform:rotateY(180deg)}
+.mtflip-h{font-size:clamp(16px,1.9cqw,20px);background:#FFF8DD;border-radius:14px;padding:8px 16px;text-align:center}
+.mtfa{grid-template-columns:minmax(0,1.1fr) minmax(260px,1fr);align-items:center}.mtfall{max-width:460px}.mtfall .mtf{font-size:clamp(18px,2.1cqw,22px)}.mtrow.rv .mtf b{color:#C2410C}
+.mtfa-l{font-size:clamp(18px,2.2cqw,24px)}
+.mtpw .lbig{margin-top:4px}
+.mtball.off{opacity:.35;filter:grayscale(.6)}.mtone{min-height:180px}.mtone .mtball{width:104px;height:120px}.mtone .mtball span{height:104px;font-size:32px}
+@media (prefers-reduced-motion:reduce){.mtc-in{transition:none}}
+.mtc-f{display:flex;align-items:center;justify-content:center;gap:.3em}
+.pw-fig svg.mtpic,.mtpw svg.mtpic{max-width:none!important;width:min(560px,46cqw);height:auto}
+.mttab.mtfall{max-width:540px;width:100%;gap:8px}.mttab.mtfall .mtrow{padding:6px 14px}.mttab.mtfall .mtf{font-size:clamp(20px,2.5cqw,27px)}
+.mtpw .lbig{font-size:clamp(26px,3.2cqw,36px)}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -5361,6 +5385,15 @@ function qHelp(body, q, isDone, o = {}) {
     if (++sec % 30 || SET.askNudge === false || !pop.hidden) return; ask.classList.add('on'); btn.classList.add('wig'); setTimeout(() => { ask.classList.remove('on'); btn.classList.remove('wig'); }, 4500); }, 1000);
   wrap.done = () => { clearInterval(t); nodes.forEach(x => { if (x.p && x.p.isConnected) x.p.insertBefore(x.n, x.nx && x.nx.parentNode === x.p ? x.nx : null); }); wrap.remove(); };
   document.body.append(wrap); return wrap;
+}
+
+/* v190 (ผู้ใช้ขอ): ลูกโป่งตอบถูก → แตกเป็นกระดาษสีชิ้นเล็ก ๆ (ตอบผิดไม่แตก) */
+function popConfetti(el, n = 22) {
+  if (REDUCED() || !el) return; const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * .42, cols = ['#F5B52E', '#FF6F7D', '#4C9BF0', '#2FBF8C', '#8E7CF0', '#FFD76A'];
+  for (let i = 0; i < n; i++) { const s = h('span', { class: 'pcf' }), a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 60, w = 5 + Math.random() * 5;
+    Object.assign(s.style, { left: cx + 'px', top: cy + 'px', width: w + 'px', height: (i % 3 ? w : w * 1.8) + 'px', background: cols[i % cols.length], borderRadius: i % 3 === 1 ? '50%' : '2px' }); document.body.append(s);
+    s.animate([{ transform: 'translate(-50%,-50%) rotate(0)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d - 10}px) rotate(${Math.random() * 360}deg)`, opacity: 1, offset: .55 },
+      { transform: `translate(${Math.cos(a) * d * 1.15}px,${Math.sin(a) * d + 50}px) rotate(${Math.random() * 540}deg)`, opacity: 0 }], { duration: 900 + Math.random() * 300, easing: 'cubic-bezier(.2,.8,.4,1)' }).onfinish = () => s.remove(); }
 }
 
 /* ---------- object displays ---------- */
@@ -19004,6 +19037,35 @@ function mtCover(n, kMax = 12, o = {}) {
     out.innerHTML = `เก่งมาก! จำแม่ ${n} ได้ครบทั้ง ${kMax} ข้อ 🎉`.replace(' 🎉', ''); teachDone(box); o.onDone && o.onDone(); };
   start(); box.append(out, pickBox, tab); return box;
 }
+/* v190 (ผู้ใช้ขอ) ทุกแม่: ① การ์ดสีฟ้า 12 ใบ (เรียงลงก่อน) แตะฟัง/ท่องตาม ② การ์ดพลิกคว่ำ “n × k = ?” แตะพลิกดู แตะอีกครั้งพลิกกลับ ③ เติมคำตอบเอง (ไม่มีตัวเลือก) */
+function mtCards(n) {
+  const box = h('div', { class: 'colstack mtcwrap' }, h6wait()), grid = h('div', { class: 'mtcards ia' }), heard = new Set(); let timer = null;
+  const cards = range(1, 12).map(k => { const c = h('button', { class: 'mtcard' }, h('span', { class: 'mtcf', html: `${n} × ${k} = <b>${n * k}</b>` }));
+    c.onclick = e => { e.stopPropagation(); stop(); hl(k); say(mtChantTxt(n, k), true); }; grid.append(c); return c; });
+  const hl = k => { cards.forEach((c, i) => c.classList.toggle('on', i === k - 1)); heard.add(k); if (heard.size >= 12) teachDone(box); };
+  const stop = () => { clearTimeout(timer); timer = null; play.replaceChildren(icon('play'), 'ท่องพร้อมกันทั้งแม่'); };
+  const run = k => { if (k > 12 || !box.isConnected) { stop(); return; } hl(k); say(mtChantTxt(n, k), true); sfx.pop(k % 8); timer = setTimeout(() => run(k + 1), SET.mute ? 900 : 1700); };
+  const play = h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); if (timer) return stop(); play.replaceChildren(icon('close'), 'หยุด'); run(1); } }, icon('play'), 'ท่องพร้อมกันทั้งแม่');
+  box.append(h('div', { class: 'rowstack mtc-top' }, h('div', { class: 'cap' }, 'แตะการ์ดเพื่อฟัง หรือกด “ท่องพร้อมกัน” แล้วออกเสียงตาม'), play), grid); return box;
+}
+function mtFlip(n) {
+  const box = h('div', { class: 'colstack mtcwrap' }), grid = h('div', { class: 'mtcards ia' });
+  const cards = range(1, 12).map(k => { const c = h('button', { class: 'mtcard flip open', 'aria-label': `${n} คูณ ${k}` }, h('span', { class: 'mtc-in' },
+      h('span', { class: 'mtc-f mtc-q', html: `${n} × ${k} = <i class="mtq">?</i>` }), h('span', { class: 'mtc-f mtc-a', html: `${n} × ${k} = <b>${n * k}</b>` })));
+    c.onclick = e => { e.stopPropagation(); sfx.tap(); c.classList.toggle('open'); if (c.classList.contains('open')) say(mtChantTxt(n, k), true); }; grid.append(c); return c; });
+  cards.forEach((c, i) => setTimeout(() => c.classList.remove('open'), 500 + i * 70)); /* ทุกใบพลิกคว่ำ — ฝึกได้ตามความเร็วของตัวเอง ไม่ต้องรอ */
+  setTimeout(() => teachDone(box), 1400);
+  box.append(h('div', { class: 'mtflip-h', html: 'นึกคำตอบในใจก่อน — <b>จำไม่ได้ แตะการ์ดพลิกดูได้</b> แตะอีกครั้งพลิกกลับ · ฝึกจนไม่ต้องพลิกเลย!' }), grid); return box;
+}
+function mtFillAll(n) {
+  const box = h('div', { class: 'colstack' }, h6wait()), tab = h('div', { class: 'mttab sm mtfall' }), slot = h('div', { class: 'colstack' }), out = h('div', { class: 'p4steplab mtfa-l' }); let k = 1, tries = 0; const rev = new Set();
+  const draw = () => { tab.innerHTML = range(1, 12).map(j => `<div class="mtrow${j === k ? ' on' : ''}${j >= k ? ' hid' : ''}${rev.has(j) ? ' rv' : ''}"><span class="mtf">${n} × ${j} = ${j >= k ? '<i class="mtq">?</i>' : `<b>${n * j}</b>`}</span></div>`).join(''); };
+  const ask = () => { draw(); slot.innerHTML = ''; if (k > 12) { out.innerHTML = `เก่งมาก! เติมแม่ ${n} ครบ 12 ข้อแล้ว`; teachDone(box); return; } tries = 0; out.innerHTML = `<b>${n} × ${k}</b> เท่ากับเท่าไร`;
+    const kk = k; slot.append(answerBox({ say: t => say(t), check: ok => { if (kk !== k) return; if (ok) { mtHit(n, k, !tries); sfx.ok(); k++; setTimeout(ask, 300); return; } tries++; sfx.no();
+      if (tries >= 3) { rev.add(k); out.innerHTML = `${n} × ${k} = <b>${n * k}</b> — จำไว้นะ`; say(mtChantTxt(n, k), true); k++; setTimeout(ask, 1700); }
+      else out.innerHTML = tries === 1 ? `ยังไม่ใช่ ลองอีกครั้ง: <b>${n} × ${k}</b>` : `คำใบ้: ${n} × ${k - 1} = ${n * (k - 1)} แล้วเพิ่มอีก ${n}`; } }, String(n * k))); };
+  box.append(h('div', { class: 'g4sd p2sd mtfa' }, h('div', { class: 'p2sd-l' }, tab), h('div', { class: 'g4sd-r' }, out, slot))); ask(); return box;
+}
 /* mastery book — 2..12 × 1..12, colour = how well each fact is remembered */
 function mtBook() {
   const g = h('div', { class: 'mtbook' }); let good = 0, all = 0;
@@ -19098,10 +19160,23 @@ Object.assign(Q, {
         if (r >= facts.length) { const sec = Math.round((Date.now() - t0) / 1000); head.innerHTML = `ครบ ${facts.length} ข้อใน <b>${sec}</b> วินาที!`; sky.innerHTML = ''; return ctx.check(true); }
         const [a, b] = facts[r], p = a * b; let first = true; head.innerHTML = `${a} <span class="fop">×</span> ${b} <span class="fop">=</span> <span class="fsign">?</span>`; sky.innerHTML = '';
         shuffle([p, ...mtNear(a, b)]).forEach((v, i) => { const bl = h('button', { class: 'mtball c' + i, style: { animationDelay: (i * .35) + 's' } }, h('span', null, String(v)));
-          bl.onclick = e => { e.stopPropagation(); if (v === p) { if (first) mtHit(a, b, true); bl.classList.add('pop'); sfx.pop(r + 2); say(mtChantTxt(a, b), true); r++; setTimeout(round, 380); }
+          bl.onclick = e => { e.stopPropagation(); if (v === p) { if (first) mtHit(a, b, true); bl.classList.add('pop'); popConfetti(bl); sfx.pop(r + 2); say(mtChantTxt(a, b), true); r++; setTimeout(round, 380); }
             else { if (first) { first = false; mtHit(a, b, false); } miss++; bl.classList.remove('bad'); void bl.offsetWidth; bl.classList.add('bad'); sfx.no(); ctx.say(`ยังไม่ใช่ ${a} × ${b} นับเพิ่มทีละ ${b} ไป ${a} ครั้ง`); } };
           sky.append(bl); }); };
       bd.append(h('div', { class: 'colstack' }, dots, head, sky)); round(); } };
+  },
+  /* v190: ข้อเดียว แตะลูกโป่งคำตอบ — ถูกแตกเป็นกระดาษสี ผิดไม่แตก (นับครั้งผิดตามปกติ) */
+  mtOne({ a, b }) { const p = a * b;
+    return { prompt: `${a} × ${b} = ?  <small>แตะลูกโป่งที่เป็นคำตอบ</small>`, say: `${a} คูณ ${b} เท่ากับเท่าไร`, __sig: 'mt1 ' + mtKey(a, b), mount(bd, ctx) { let first = true;
+      const head = h('div', { class: 'fbig p4big mt-big', html: `${a} <span class="fop">×</span> ${b} <span class="fop">=</span> <span class="fsign">?</span>` }), sky = h('div', { class: 'mtsky ia rvl mtone' }), opts = shuffle([p, ...mtNear(a, b)]);
+      const done = bl => { bl.classList.add('pop'); popConfetti(bl); head.querySelector('.fsign').textContent = p; };
+      const balls = opts.map((v, i) => { const bl = h('button', { class: 'mtball c' + i, style: { animationDelay: (i * .35) + 's' } }, h('span', null, String(v)));
+        bl.onclick = e => { e.stopPropagation(); if (sky.classList.contains('ia-off') || bl.disabled) return;
+          if (v === p) { if (first) mtHit(a, b, true); done(bl); sfx.pop(3); sky.classList.add('ia-off'); ctx.check(true); }
+          else { if (first) { first = false; mtHit(a, b, false); } bl.classList.remove('bad'); void bl.offsetWidth; bl.classList.add('bad', 'off'); bl.disabled = true; ctx.check(false, `นับเพิ่มทีละ ${b} ไป ${a} ครั้ง หรือท่องแม่ ${a}`); } };
+        sky.append(bl); return bl; });
+      sky.reveal = () => done(balls[opts.indexOf(p)]);
+      bd.append(h('div', { class: 'colstack' }, head, sky)); } };
   },
   /* skip counting on a number line */
   mtSkip({ n, k = 8, blanks }) { const q = `นับเพิ่มทีละ ${n} แล้วเติมจำนวนที่หายไป`;
@@ -19176,44 +19251,49 @@ const MT_LEARN = {
 };
 const MT_SUM = { 2: 'แม่ 2 นับเพิ่มทีละ 2', 5: 'แม่ 5 ลงท้ายด้วย 0 หรือ 5', 10: 'แม่ 10 เติม 0 ต่อท้าย', 3: 'แม่ 3 นับเพิ่มทีละ 3', 4: 'แม่ 4 = แม่ 2 สองเท่า', 6: 'แม่ 6 = แม่ 5 + อีก 1 กลุ่ม', 7: 'แม่ 7 นับเพิ่มทีละ 7', 8: 'แม่ 8 = แม่ 4 สองเท่า', 9: 'แม่ 9 = แม่ 10 ลบออก' };
 const mtBuildWalk = (n, e) => pexStep(`ตัวอย่างทีละขั้น: สร้างแม่ ${n} ด้วยภาพ`, 'ตัวอย่างทีละขั้น', range(1, 5).map(k => [`${n} × ${k}`, `${k} กลุ่ม กลุ่มละ ${n} → ${range(1, k).map(i => n * i).join(', ')} → <b>${n * k}</b>`, mtGroupsSVG(k, n, e, { run: true })]), `ท่องต่อไปเรื่อย ๆ: แต่ละบรรทัด<b>เพิ่มอีก ${n}</b>`);
+const mtTablePractice = n => [T(`การ์ดสูตรคูณแม่ ${n}: แตะฟัง แล้วท่องตาม`, `การ์ดสูตรคูณแม่ ${n} แตะฟัง แล้วท่องตาม`, el => el.append(mtCards(n))),
+  T(`พลิกการ์ดแม่ ${n}: ฝึกจำ`, `พลิกการ์ดแม่ ${n} ฝึกจำ`, el => el.append(mtFlip(n))), T(`เติมคำตอบแม่ ${n} ให้ครบ`, `เติมคำตอบแม่ ${n} ให้ครบ`, el => el.append(mtFillAll(n)))];
 const mtTryChant = n => T(`ลองท่องแม่ ${n}: ฟังแล้วออกเสียงตาม`, `ลองท่องแม่ ${n} ฟังแล้วออกเสียงตาม`, el => el.append(mtChant(n)));
 const mtTryCover = n => T(`ลองปิดคำตอบแม่ ${n}: นึกให้ได้เอง`, `ลองปิดคำตอบแม่ ${n} นึกให้ได้เอง`, el => el.append(mtCover(n)));
 const LESSONS_P2C5 = [
   L2X(1, 'หาดกลุ่มละเท่ากัน', 'ความหมายของการคูณ (1)', 'ความหมายการคูณ (1)', 'บอกความหมายของการคูณจากการรวมกลุ่มที่มีจำนวนเท่า ๆ กัน และเขียนประโยคสัญลักษณ์การคูณ',
-    [...learnStep('ยินดีต้อนรับสู่ <b>ชายหาดสูตรคูณ</b>! รู้จัก<b>การคูณ</b>', 'ยินดีต้อนรับสู่ชายหาดสูตรคูณ รู้จักการคูณ', [
-      { fig: mtGroupsSVG(3, 4, 'strawberry', { box: 'plate' }), name: 'กลุ่มละเท่า ๆ กัน', text: 'สตรอว์เบอร์รี 3 จาน จานละ <b>4</b> ผล ทุกจานมีเท่ากัน' },
-      { fig: mtGroupsSVG(3, 4, 'strawberry', { run: true }), name: 'นับเพิ่มทีละ 4', text: '4 + 4 + 4 = <b>12</b> — บวกจำนวนเดิมซ้ำ ๆ' },
-      { fig: lbig('3 × 4 = 12'), name: 'เขียนสั้น ๆ ด้วยการคูณ', text: '<b>3 กลุ่ม กลุ่มละ 4</b> เขียนว่า 3 × 4 อ่านว่า “สามคูณสี่” · เครื่องหมาย × อ่านว่า “คูณ”' }], 'กลุ่มละเท่า ๆ กัน → บวกซ้ำ → เขียนเป็นการคูณ'),
+    [T('ยินดีต้อนรับสู่ <b>ชายหาดสูตรคูณ</b>! รู้จัก<b>การคูณ</b>', 'ยินดีต้อนรับสู่ชายหาดสูตรคูณ รู้จักการคูณ', el => el.append(picWalk([ /* v190: ภาพเดียวต่อเนื่อง คำอธิบายเปลี่ยนไปทีละขั้น */
+      ['กลุ่มละเท่า ๆ กัน', 'สตรอว์เบอร์รี 3 จาน จานละ <b>4</b> ผล ทุกจานมีเท่ากัน', mtGroupsSVG(3, 4, 'strawberry', { box: 'plate' })],
+      ['นับเพิ่มทีละ 4', '4, 8, 12 → 4 + 4 + 4 = <b>12</b> — บวกจำนวนเดิมซ้ำ ๆ', mtGroupsSVG(3, 4, 'strawberry', { box: 'plate', run: true })],
+      ['เขียนสั้น ๆ ด้วยการคูณ', '<b>3 กลุ่ม กลุ่มละ 4</b> เขียนว่า 3 × 4 อ่านว่า “สามคูณสี่” · × อ่านว่า “คูณ”', `<div class="colstack mtpw">${mtGroupsSVG(3, 4, 'strawberry', { box: 'plate', run: true })}${lbig('3 × 4 = 12')}</div>`]],
+      'กลุ่มละเท่า ๆ กัน → บวกซ้ำ → เขียนเป็นการคูณ'))),
      pexStep('ตัวอย่างทีละขั้น: ไข่ในแผง', 'ตัวอย่างทีละขั้น', [['① ดูภาพ', 'มีไข่ 5 แผง แผงละ 2 ฟอง', mtGroupsSVG(5, 2, 'egg', { box: 'bag' })], ['② นับเพิ่มทีละ 2', '2, 4, 6, 8, 10', mtGroupsSVG(5, 2, 'egg', { box: 'bag', run: true })], ['③ ประโยคการบวก', '2 + 2 + 2 + 2 + 2 = 10', null], ['④ ประโยคการคูณ', '5 กลุ่ม กลุ่มละ 2 → <b>5 × 2 = 10</b>', null]], 'มีไข่ทั้งหมด <b>10</b> ฟอง'),
      T('ลองเอง: เปลี่ยนจำนวนกลุ่มและจำนวนในแต่ละกลุ่ม', 'ลองเอง เปลี่ยนจำนวนกลุ่มและจำนวนในแต่ละกลุ่ม', el => el.append(simMtGroups()))],
     () => [...pkF(MTW_PIC, 3).map(o => Q.mtPic(o)), ...pkF(MTW_REP, 2).map(([n, k]) => Q.mtRep({ n, k }))]),
   L2X(2, 'หาดแถวละเท่ากัน', 'ความหมายของการคูณ (2)', 'ความหมายการคูณ (2)', 'เขียนประโยคสัญลักษณ์การคูณจากแผนภาพแถว และรู้ว่าสลับที่ตัวคูณแล้วผลคูณเท่าเดิม',
-    [...learnStep('รู้จัก<b>แผนภาพจัดแถว</b>', 'รู้จักแผนภาพจัดแถว', [
-      { fig: mtArraySVG(3, 5), name: 'จัดของเป็นแถว แถวละเท่า ๆ กัน', text: '3 แถว แถวละ 5 จุด' },
-      { fig: mtArraySVG(3, 5, { run: true }), name: 'นับทีละแถว', text: '5, 10, 15 → <b>3 × 5 = 15</b>' },
-      { fig: lpair(mtArraySVG(3, 5), mtArraySVG(5, 3), '↻'), name: 'หมุนแผนภาพ จำนวนจุดเท่าเดิม', text: '<b>3 × 5 = 5 × 3 = 15</b> — สลับที่ตัวคูณได้' }], 'แถวละเท่ากัน → คูณ · สลับที่ตัวคูณ ผลคูณเท่าเดิม'),
+    [T('รู้จัก<b>แผนภาพจัดแถว</b>', 'รู้จักแผนภาพจัดแถว', el => el.append(picWalk([
+      ['จัดของเป็นแถว', '3 แถว แถวละ <b>5</b> จุด ทุกแถวมีเท่ากัน', mtArraySVG(3, 5)],
+      ['นับทีละแถว', '5, 10, 15 → <b>3 × 5 = 15</b>', mtArraySVG(3, 5, { run: true })],
+      ['หมุนแผนภาพ', 'หมุนเป็น 5 แถว แถวละ 3 จุด จำนวนจุดเท่าเดิม → <b>3 × 5 = 5 × 3 = 15</b>', lpair(mtArraySVG(3, 5), mtArraySVG(5, 3), '↻')]],
+      'แถวละเท่ากัน → คูณ · สลับที่ตัวคูณ ผลคูณเท่าเดิม'))),
      pexStep('ตัวอย่างทีละขั้น: ที่นั่งในห้องเรียน', 'ตัวอย่างทีละขั้น', [['① ดูภาพ', 'โต๊ะเรียน 4 แถว แถวละ 6 ตัว', mtArraySVG(4, 6, { col: '#FFD45C' })], ['② นับทีละแถว', '6, 12, 18, 24', mtArraySVG(4, 6, { col: '#FFD45C', run: true })], ['③ ประโยคการคูณ', '<b>4 × 6 = 24</b>', null], ['④ หมุนดู', '6 แถว แถวละ 4 ก็ได้ 24 → 6 × 4 = 24', mtArraySVG(6, 4, { col: '#FFD45C' })]], 'มีโต๊ะเรียนทั้งหมด <b>24</b> ตัว'),
      T('ลองเอง: เพิ่มแถว เพิ่มจุด แล้วหมุนแผนภาพ', 'ลองเอง เพิ่มแถว เพิ่มจุด แล้วหมุนแผนภาพ', el => el.append(simMtArray()))],
     () => { const A = shuffle([[2, 6], [3, 4], [4, 5], [5, 3], [2, 8], [3, 6]]); return [Q.mtArr({ r: A[0][0], c: A[0][1] }), Q.mtArr({ r: A[1][0], c: A[1][1] }), Q.mtSwap({ a: 4, b: 7 }), Q.mtSwap({ a: 8, b: 3 }),
       Q.ixMatch({ q: 'จับคู่แผนภาพกับประโยคการคูณ', pairs: A.slice(2, 5).map(([r, c]) => [`<div class="mtmini">${mtArraySVG(r, c)}</div>`, `${r} × ${c} = ${r * c}`]) })]; }),
   L2X(3, 'หาดหนึ่งศูนย์', 'หนึ่งและศูนย์กับการคูณ', 'หนึ่งและศูนย์', 'หาผลคูณของจำนวนใด ๆ กับ 1 และกับ 0',
-    [...learnStep('รู้จัก<b>การคูณด้วย 1 และ 0</b>', 'รู้จักการคูณด้วยหนึ่งและศูนย์', [
-      { fig: mtGroupsSVG(4, 1, 'apple'), name: 'คูณด้วย 1', text: '4 จาน จานละ 1 ผล → <b>4 × 1 = 4</b> ได้จำนวนเดิม' },
-      { fig: mtGroupsSVG(1, 4, 'apple'), name: '1 คูณจำนวนใด', text: '1 จาน มี 4 ผล → <b>1 × 4 = 4</b>' },
-      { fig: mtGroupsSVG(4, 0, 'apple'), name: 'คูณด้วย 0', text: '4 จาน ไม่มีผลไม้สักผล → <b>4 × 0 = 0</b>' },
-      { fig: lbig('0 × 7 = 0'), name: '0 กลุ่ม ก็ไม่มีอะไรเลย', text: 'จำนวนใดคูณกับ 0 ได้ <b>0</b> เสมอ' }], 'คูณ 1 ได้จำนวนเดิม · คูณ 0 ได้ 0'),
+    [T('รู้จัก<b>การคูณด้วย 1 และ 0</b>', 'รู้จักการคูณด้วยหนึ่งและศูนย์', el => el.append(picWalk([
+      ['คูณด้วย 1', '4 จาน จานละ 1 ผล → <b>4 × 1 = 4</b> ได้จำนวนเดิม', mtGroupsSVG(4, 1, 'apple')],
+      ['เก็บแอปเปิลรวมจานเดียว', '1 จาน มี 4 ผล → <b>1 × 4 = 4</b>', mtGroupsSVG(1, 4, 'apple')],
+      ['คูณด้วย 0', 'ยกแอปเปิลออกหมด 4 จาน ไม่มีสักผล → <b>4 × 0 = 0</b>', mtGroupsSVG(4, 0, 'apple')],
+      ['0 กลุ่ม', 'ไม่มีจานเลย ก็ไม่มีแอปเปิล → <b>0 × 7 = 0</b> · จำนวนใดคูณกับ 0 ได้ 0 เสมอ', `<div class="colstack mtpw">${lbig('0 กลุ่ม กลุ่มละ 7 → ไม่มีเลย')}${lbig('0 × 7 = 0')}</div>`]],
+      'คูณ 1 ได้จำนวนเดิม · คูณ 0 ได้ 0'))),
      pexStep('ตัวอย่างทีละขั้น', 'ตัวอย่างทีละขั้น', [['① 6 × 1', '6 กลุ่ม กลุ่มละ 1 → 1, 2, 3, 4, 5, 6', mtGroupsSVG(6, 1, 'orange')], ['② ผล', '6 × 1 = <b>6</b>', null], ['③ 6 × 0', '6 กลุ่ม กลุ่มละ 0 → ไม่มีเลย', mtGroupsSVG(6, 0, 'orange')], ['④ ผล', '6 × 0 = <b>0</b>', null]], '6 × 1 = <b>6</b> · 6 × 0 = <b>0</b>'),
      T('ลองเอง: จานละ 0 จานละ 1', 'ลองเอง จานละศูนย์ จานละหนึ่ง', el => el.append(simMtZero()))],
     () => [...pkF(MTW_01, 3).map(([a, b]) => Q.mtFact({ a, b, e: 'apple' })), Q.mtPop({ facts: pkF(MTW_01, 5) }), Q.ixGroup({ q: 'แตะการ์ด แล้วแตะกล่องที่ใช่', bins: ['ผลคูณเป็น 0', 'ผลคูณเท่ากับจำนวนเดิม'], items: pkF(MTW_01, 6).map(([a, b]) => ({ label: `${a} × ${b}`, bin: a && b ? 1 : 0, why: a && b ? 'คูณด้วย 1 ได้จำนวนเดิม' : 'มี 0 เป็นตัวคูณ ผลคูณเป็น 0' })) })]),
   L2X(4, 'หาดแม่สองห้าสิบ', 'การคูณจำนวนหนึ่งหลักกับจำนวนหนึ่งหลัก (1)', 'แม่ 2 · 5 · 10', 'ท่องและใช้สูตรคูณแม่ 2 แม่ 5 และแม่ 10',
-    [...mtTablePages([2, 5, 10], 'รู้จัก<b>สูตรคูณ</b> แม่ 2 แม่ 5 แม่ 10'), mtBuildWalk(2, 'cookie'), mtTryChant(2), mtTryCover(2), mtTryChant(5), mtTryCover(5)],
+    [...mtTablePages([2, 5, 10], 'รู้จัก<b>สูตรคูณ</b> แม่ 2 แม่ 5 แม่ 10'), mtBuildWalk(2, 'cookie'), ...[2, 5, 10].flatMap(mtTablePractice)],
     mtTableGame([2, 5, 10])),
   L2X(5, 'หาดแม่สามสี่', 'การคูณจำนวนหนึ่งหลักกับจำนวนหนึ่งหลัก (2)', 'แม่ 3 · 4', 'ท่องและใช้สูตรคูณแม่ 3 และแม่ 4',
-    [...mtTablePages([3, 4], 'รู้จัก<b>สูตรคูณ</b> แม่ 3 แม่ 4'), mtBuildWalk(3, 'strawberry'), mtTryChant(3), mtTryCover(3), mtTryChant(4), mtTryCover(4)], mtTableGame([3, 4])),
+    [...mtTablePages([3, 4], 'รู้จัก<b>สูตรคูณ</b> แม่ 3 แม่ 4'), mtBuildWalk(3, 'strawberry'), ...[3, 4].flatMap(mtTablePractice)], mtTableGame([3, 4])),
   L2X(6, 'หาดแม่หกเจ็ด', 'การคูณจำนวนหนึ่งหลักกับจำนวนหนึ่งหลัก (3)', 'แม่ 6 · 7', 'ท่องและใช้สูตรคูณแม่ 6 และแม่ 7',
-    [...mtTablePages([6, 7], 'รู้จัก<b>สูตรคูณ</b> แม่ 6 แม่ 7'), mtBuildWalk(6, 'orange'), mtTryChant(6), mtTryCover(6), mtTryChant(7), mtTryCover(7)], mtTableGame([6, 7])),
+    [...mtTablePages([6, 7], 'รู้จัก<b>สูตรคูณ</b> แม่ 6 แม่ 7'), mtBuildWalk(6, 'orange'), ...[6, 7].flatMap(mtTablePractice)], mtTableGame([6, 7])),
   L2X(7, 'หาดแม่แปดเก้า', 'การคูณจำนวนหนึ่งหลักกับจำนวนหนึ่งหลัก (4)', 'แม่ 8 · 9', 'ท่องและใช้สูตรคูณแม่ 8 และแม่ 9 และทบทวนสูตรคูณทั้งหมด',
-    [...mtTablePages([8, 9], 'รู้จัก<b>สูตรคูณ</b> แม่ 8 แม่ 9'), mtBuildWalk(9, 'apple'), mtTryChant(8), mtTryCover(8), mtTryChant(9), mtTryCover(9)], mtTableGame([8, 9])),
+    [...mtTablePages([8, 9], 'รู้จัก<b>สูตรคูณ</b> แม่ 8 แม่ 9'), mtBuildWalk(9, 'apple'), ...[8, 9].flatMap(mtTablePractice)], mtTableGame([8, 9])),
   L2X(8, 'หาดคูณสิบ', 'การคูณจำนวนหนึ่งหลักกับ 10 20 30 … 90', 'คูณ 10 20 … 90', 'หาผลคูณของจำนวนหนึ่งหลักกับ 10 20 30 … 90',
     [...learnStep('การคูณกับ <b>10 20 30 … 90</b>', 'การคูณกับสิบ ยี่สิบ สามสิบ ถึงเก้าสิบ', [
       { fig: mtRodsSVG(1, 2, 0), name: '20 คือ 2 สิบ', text: 'ไม้ 1 แท่ง = 1 สิบ · 20 = 2 แท่ง' },
@@ -19255,15 +19335,13 @@ const LESSONS_P2C5 = [
      T('ลองทำเอง', 'ลองทำเอง', el => el.append(qSim(Q.mtStory({ text: 'มีดินสอ 5 กล่อง กล่องละ 8 แท่ง มีดินสอทั้งหมดกี่แท่ง', a: 5, b: 8, unit: 'แท่ง', fig: mtGroupsSVG(5, 8, 'pencil', { box: 'bag' }) }), 'ถูกต้อง!')))],
     () => pkF(MTW_ST, 5).map(s => Q.mtStory({ ...s, fig: s.fig ? s.fig() : null })))
 ];
-/* ด่านพิเศษ: ลานท่องสูตรคูณ — practice any table any time; the quiz pulls the facts the child remembers least */
-LESSONS_P2C5.splice(7, 0, { id: 938, bonus: true, place: 'ลานท่องสูตรคูณ', title: 'ด่านพิเศษ: ลานท่องสูตรคูณ', short: 'ท่องสูตรคูณ', tone: 'yellow', learned: true,
-  goal: 'ฝึกท่องสูตรคูณแม่ 2 ถึงแม่ 12 ซ้ำได้ทุกวัน ข้อที่ยังจำไม่แม่นจะถูกถามบ่อยขึ้น จนจำได้ทุกข้อ',
-  teach: [...learnStep('<b>ลานท่องสูตรคูณ</b> — ฝึกทุกวัน จำได้จริง', 'ลานท่องสูตรคูณ ฝึกทุกวัน จำได้จริง', [
-      { fig: lbig('① ท่องตาม'), name: 'ฟังแล้วออกเสียงตาม', text: '“สองหนึ่งสอง สองสองสี่ …” ท่องทีละบรรทัดหรือทั้งแม่' },
-      { fig: lbig('② ปิดคำตอบ'), name: 'ซ่อนคำตอบ แล้วนึกให้ได้เอง', text: 'รอบแรกซ่อนครึ่งหนึ่ง รอบสองซ่อนทั้งหมด' },
-      { fig: lbig('③ เกมทดสอบไว'), name: 'ข้อที่ตอบผิดจะกลับมาถามอีก', text: 'ตอบถูกบ่อย ๆ ข้อนั้นจะกลายเป็น<b>สีเขียว</b>ในสมุดสูตรคูณ' }], 'ฝึกวันละนิด ทุกวัน แล้วดูสมุดสูตรคูณเป็นสีเขียวทั้งหมด'),
-    T('เลือกแม่ที่จะฝึก แล้วเลือกวิธีฝึก', 'เลือกแม่ที่จะฝึก แล้วเลือกวิธีฝึก', el => el.append(mtTrainer()))],
-  game: () => { const T2 = range(2, 12); return [Q.mtPop({ facts: mtFacts(T2, 5) }), ...mtFacts(T2, 5).map(([a, b]) => Q.mtFact({ a, b })), Q.mtPop({ facts: mtFacts(T2, 5) }), mtMatchQ(mtUniq(T2, 4)), Q.mtFill({ n: pick(range(3, 9)), ks: range(1, 12), blanks: shuffle(range(2, 12)).slice(0, 4).sort((x, y) => x - y) })]; } });
+/* v190 (ผู้ใช้ขอ): ด่านพิเศษ “ลานทดสอบสูตรคูณ” — ไม่มีการสอน เข้าเกมเลย · 40 ข้อ ปนทุกแม่ (2–10 × 2–12) ไม่ซ้ำ
+   แตะลูกโป่ง (ถูก → แตกเป็นกระดาษสี) สลับกับพิมพ์คำตอบทุกข้อที่ 4 · ข้อที่ยังจำไม่แม่น (SAVE.mt) ถูกสุ่มบ่อยกว่า */
+const mtTest40 = () => { const F = [], seen = new Set(); mtFacts(range(2, 10), 120).forEach(f => { const k = mtKey(...f); if (f[0] > 1 && f[1] > 1 && !seen.has(k)) { seen.add(k); F.push(f); } });
+  return F.slice(0, 40).map(([a, b], i) => i % 4 === 3 ? Object.assign(Q.mtFact({ a, b }), { __sig: 'mtf ' + mtKey(a, b) }) : Q.mtOne({ a, b })); };
+LESSONS_P2C5.splice(7, 0, { id: 938, bonus: true, place: 'ลานทดสอบสูตรคูณ', title: 'ด่านพิเศษ: ทดสอบสูตรคูณ 40 ข้อ', short: 'ทดสอบสูตรคูณ', tone: 'yellow', learned: true, noTeach: true, gameN: 40,
+  goal: 'ทดสอบสูตรคูณแม่ 2 ถึงแม่ 10 จำนวน 40 ข้อ คละทุกแม่ — แตะลูกโป่งที่เป็นคำตอบ หรือพิมพ์คำตอบ ข้อที่ยังจำไม่แม่นจะถูกถามบ่อยขึ้น',
+  teach: [], game: mtTest40 });
 
 /* ---------- boss 939: ข้อสอบท้ายบทการคูณ — แต่งใหม่ทั้งหมด ---------- */
 const MT_POST = [
@@ -29583,13 +29661,13 @@ function showIntro(i) {
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--coral-soft)', color: 'var(--coral-2)' } }, icon('sparkle')), h('span', null, h('b', null, 'ตอบถูก'), ` — โจมตี${L.bossName} 1 ครั้ง`)),
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--gold-soft)', color: '#8A6200' } }, icon('crown')), h('span', null, h('b', null, `ถูก ${L.pass} ข้อขึ้นไป`), ' — ชนะบอส ' + (CITIES[CITIES.indexOf(cityOf(L)) + 1] ? 'และเปิดเมืองถัดไป' : '')))) :
     h('ul', { class: 'feat' },
-      h('li', null, h('span', { class: 'fi', style: { background: 'var(--sky-soft)', color: 'var(--sky-2)' } }, icon('book')), h('span', null, h('b', null, 'เรียน'), ' — แตะตรงไหนก็ได้เพื่อไปทีละขั้น')),
+      L.noTeach ? null : h('li', null, h('span', { class: 'fi', style: { background: 'var(--sky-soft)', color: 'var(--sky-2)' } }, icon('book')), h('span', null, h('b', null, 'เรียน'), ' — แตะตรงไหนก็ได้เพื่อไปทีละขั้น')),
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--gold-soft)', color: '#8A6200' } }, icon('game')), h('span', null, h('b', null, 'เล่น'), ' — ตอบด้วยการกดตัวเลข หรือเขียนด้วยนิ้ว/ปากกา')),
       h('li', null, h('span', { class: 'fi', style: { background: 'var(--mint-soft)', color: 'var(--mint-2)' } }, icon('pencil')), h('span', null, h('b', null, 'ทด'), ' — เปิดกระดาษทดได้ทั้งจอ Apple Pencil เขียนบนที่ว่างได้ทันที'))),
     null, // IPST clip links removed (ผู้ใช้ขอ)
     L.boss ? h('div', { class: 'actions' }, h('button', { class: 'btn danger lg', onclick: () => { m.remove(); startBoss(i); } }, icon('flag'), 'เริ่มสอบ · สู้บอส')) :
     h('div', { class: 'actions' },
-      h('button', { class: 'btn primary lg', onclick: () => { m.remove(); startTeach(i); } }, icon('book'), 'เริ่มเรียน'),
+      L.noTeach ? null : h('button', { class: 'btn primary lg', onclick: () => { m.remove(); startTeach(i); } }, icon('book'), 'เริ่มเรียน'), /* v190: ด่านทดสอบไม่มีการสอน */
       h('button', { class: 'btn accent lg', onclick: () => { m.remove(); startGame(i); } }, icon('game'), 'เล่นเกมเลย'))
   ]);
   say(L.title);
@@ -30081,7 +30159,7 @@ function qBalance(list, N, extra = []) { if (list.length <= N && !extra.length) 
 function gameSet(L, N0) {
   const K = L.bonus ? [] : bossKeys(L), out = [], seen = new Set(), spare = [], boss = [];
   const first = ixBundle(L.game()); first.forEach(qKind0);
-  const N = N0 || L.gameN || Math.min(15, Math.max(GAME_N, Math.ceil(2.5 * new Set(first.map(q => q.__kind)).size))), NC = Math.min(30, N * 2);
+  const N = N0 || L.gameN || Math.min(15, Math.max(GAME_N, Math.ceil(2.5 * new Set(first.map(q => q.__kind)).size))), NC = Math.max(N, Math.min(30, N * 2)); /* v190: เกม 40 ข้อ */
   const base = {}; // the same story with new numbers at most twice per game
   /* the same wording with only another picture reads as the same question (ผู้ใช้เจอข้อซ้ำ) — one per game, a second only when the pool is short */
   const look = {}, lk = q => { qSig(q); const p = String(q.story || q.prompt || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); return p + '|' + (String(q.__txt || '').match(/\d+(?:[.,]\d+)*/g) || []).join(','); };
@@ -30123,7 +30201,7 @@ function startGame(li) {
   const L = LESSONS[li]; GAME_LID = L.id; const qs = gameSet(L); let i = 0, firstTry = 0; const missed = [];
   const pbar = h('div', { class: 'pbar' }, h('b', { style: { width: '0%' } })), cnt = h('div');
   const review = h('button', { class: 'btn', 'aria-label': 'ทบทวนบทเรียน' }, icon('book'), h('span', { class: 'lbl-r' }, 'ทบทวน'));
-  review.onclick = () => startTeach(li, 0, true);
+  review.onclick = () => startTeach(li, 0, true); if (L.noTeach) review.style.visibility = 'hidden';
   const stage = shell({ lesson: true, world: WORLD_OF(cityOf(L)), top: lessonTop(L, 'เกมผ่านด่าน'), bottom: [review, h('div', { class: 'mid' }, pbar, cnt), h('div', { class: 'bar-spacer', 'aria-hidden': 'true' })] });
   let awaiting = false;
   function show() {
