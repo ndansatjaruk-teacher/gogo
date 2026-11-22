@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Answer check for the term exams: ป.1 (term 1 = lesson 398 · term 2 = 397 · src/grades/p1/p1e.js), ป.2 (1098 · 1097 · src/grades/p2/p2e.js)
-and ป.3 (1198 · 1197 · src/grades/p3/p3e.js).
+ป.3 (1198 · 1197 · src/grades/p3/p3e.js) and ป.4 (1598 · 1597 · src/grades/p4/p4x.js).
 
     python3 tools/build.py && python3 tests/term_exam.py
 
@@ -8,7 +8,7 @@ The answer key below is worked out here in Python, separately from the game file
 the option at `a` must equal the computed answer, and none of the other options may equal it.
 Also checked: 40 items, 3 different options each, chapters 1–5 in order, every chapter present, `lv` is a lesson of
 that chapter's city, `from` is that chapter's boss, the answer position is shuffled each attempt but stays right,
-and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000).
+and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000 · ป.4 no limit).
 Figure answers are worked out from the figure's own data (pictures to count, blocks, balance, scale, chart, line-up, shelf, race, pattern, length board, column sums).
 Pictograph answers are checked against the pictures actually drawn (icons × key), calendar answers with Python's own calendar. CHROME=/path/to/chrome uses that browser.
 """
@@ -206,6 +206,50 @@ EXAMS = [
     dict(name='ป.3 ภาค 2', grade=3, limit=100000, var='P3T2_EXAM', lesson=1197, city=78, key=KEY6, check=CHECK6,
          lv={8: range(1301, 1310), 9: range(1321, 1332), 10: range(1241, 1253), 11: range(1261, 1271), 12: range(1281, 1292), 13: range(1401, 1407)},
          boss={8: 1319, 9: 1339, 10: 1259, 11: 1279, 12: 1299, 13: 1419})] + EXAMS
+
+# ---------- ป.4 ----------
+from decimal import Decimal as D
+TH_POS[:] = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน']
+PLACE[:] = ['หน่วย', 'สิบ', 'ร้อย', 'พัน', 'หมื่น', 'แสน', 'ล้าน']
+UNITS.update({'สัปดาห์': 10080, 'วัน': 1440, 'วินาที': 1 / 60})
+UNIT_RE = re.compile(r'([\d,]+(?:\.\d+)?)\s*(' + '|'.join(sorted(UNITS, key=len, reverse=True)) + ')')
+def rnd_to(n, k): return (n + k // 2) // k * k
+def exact(a, b): assert a % b == 0, (a, b); return a // b
+def ym(m): return f'{m // 12} ปี {m % 12} เดือน'
+def FR(s): w, _, f = s.rpartition(' '); return int(w or 0) + Fraction(f)
+def mixed(x): w, r = divmod(x.numerator, x.denominator); return f'{w} {r}/{x.denominator}' if w and r else str(x)
+def ang_kind(a): return 'มุมแหลม' if a < 90 else 'มุมฉาก' if a == 90 else 'มุมป้าน' if a < 180 else 'มุมตรง' if a == 180 else 'มุมกลับ'
+DEC_POS = ['', 'หนึ่ง', 'สอง', 'สาม']
+def dec_place(x, dg): f = x.split('.')[1]; p = f.index(str(dg)) + 1; return f'ทศนิยมตำแหน่งที่{DEC_POS[p]} มีค่า {D(dg) / 10 ** p}'
+P4_TW = {'เดิน': (34, 28), 'จักรยาน': (25, 17), 'รถโรงเรียน': (41, 53), 'รถผู้ปกครอง': (30, 36)}  # same data as P4T_TW
+P4_BAR = dict(zip(['นิทาน', 'สารคดี', 'การ์ตูน', 'นวนิยาย'], [350, 200, 450, 150]))       # same data as P4T_BAR
+KEY7 = [
+    f'{3450206:,}', th_big(527038), place_of(8463215, 4), None, f'{rnd_to(4786, 10):,}', f'{rnd_to(62500, 1000):,}', f'{rnd_to(2849999, 100000):,}', None,
+    f'{254739 + 418586:,}', f'{800000 - 356428:,}', f'{rnd_to(38690, 1000) + rnd_to(51230, 1000):,}', f'{502317 - 186450:,}', f'{128300 + 49875:,}',
+    f'{245800 - 37650:,} ตัว', f'{1850000 - 1125500:,} บาท', f'{960000 - 425500 - 318750:,} บาท',
+    f'{4325 * 6:,}', f'{738 * 46:,}', f'{3600 * 500:,}', f'{1207 * 35:,}', f'{exact(5184, 6):,}', f'{exact(7560, 40):,}', f'{9345 // 23} เศษ {9345 % 23}', f'{exact(87236, 452):,}',
+    f'{36 * 245:,}', f'{exact(exact(9360, 24), 15)} กล่อง',
+    f'{(12500 - 4750) * 8:,}', f'{45000 - 12800 + 6300:,}', f'{exact(840, 12) * 5:,}', f'{150 + 36 * 4:,}', f'{exact(48 + 72, 6) - 9}', f'{15 * 12 - 148} เล่ม',
+    f'{exact(18 + 15 + 20 + 11, 4)} คะแนน', f'{exact(120 + 135 + 98 + 142 + 105, 5)} แก้ว',
+    f'{5 * 60 + 20} วินาที', f'{3 * 24 + 6} ชั่วโมง', f'{2 * 12 + 5} เดือน', None, hm(24 * 60 + 6 * 60 + 20 - (21 * 60 + 45)), ym(42 * 12 + 3 - (9 * 12 + 8))]
+CHECK7 = {3: ordered2(False), 7: lambda o: [x for x in o if rnd_to(num(x), 10000) == 350000], 37: qty_max}
+KEY8 = [
+    str(Fraction(3, 5)), None, str(3 * 5 + 2) + '/5', mixed(Fraction(23, 4)), str(exact(3 * 40, 8)), str(Fraction(18, 24)), None, str(Fraction(1, 4) + Fraction(3, 8)), mixed(FR('2 1/2') - FR('1 3/4')),
+    'ศูนย์จุดเจ็ด', str(D(37) / 100), dec_place('6.452', 5), None, str(D('4.68') + D('2.75')), str(D(10) - D('3.45')), str(D('12.506') + D('3.85')),
+    f"{D('5.4') - D('1.75')} เมตร", f"{D(500) - D('125.50') - D('48.75')} บาท",
+    '1 จุด', 'จุด B', '180°', ang_kind(125), None, ang_kind(250), f'{360 - 75}°',
+    'ด้านทั้งสี่ยาวเท่ากัน', '15 ซม.', f'{2 * (18 + 7)} ซม.', f'{3 * 10000:,} ตารางเซนติเมตร', f'{12 * 5} ตารางเมตร', f'{14 * 14} ตารางเมตร', f'{exact(130, 2) - 40} เมตร', f'{4 * 6 * 250:,} บาท',
+    f"{P4_TW['รถโรงเรียน'][1]} คน", f'{sum(b for b, g in P4_TW.values())} คน', min(P4_TW, key=lambda k: sum(P4_TW[k])),
+    f"{P4_BAR['การ์ตูน']} เล่ม", f"{P4_BAR['นิทาน'] - P4_BAR['นวนิยาย']} เล่ม", f'{sum(P4_BAR.values()):,} เล่ม', '500']
+CHECK8 = {1: lambda o: [x for x in o if FR(x) > 1 and ' ' not in x], 6: frac_true, 12: lambda o: [x for x in o if (lambda v: v == sorted(v))([D(t) for t in x.split()])],
+          22: lambda o: [x for x in o if all(int(t.rstrip('°')) < 90 for t in x.split())]}
+EXAMS = [
+    dict(name='ป.4 ภาค 1', grade=4, limit=10 ** 7, var='P4T1_EXAM', lesson=1598, city=79, key=KEY7, check=CHECK7,
+         lv={1: range(401, 410), 2: range(421, 434), 3: range(441, 461), 4: range(471, 485), 5: range(491, 499)},
+         boss={1: 419, 2: 439, 3: 469, 4: 489, 5: 499}),
+    dict(name='ป.4 ภาค 2', grade=4, limit=10 ** 7, var='P4T2_EXAM', lesson=1597, city=80, key=KEY8, check=CHECK8,
+         lv={6: range(1421, 1439), 7: range(1441, 1456), 8: range(1461, 1469), 9: range(1481, 1495), 10: range(1501, 1506)},
+         boss={6: 1439, 7: 1459, 8: 1479, 9: 1499, 10: 1509})] + EXAMS
 
 ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.v || x.say || JSON.stringify(x)), a: q.a, ch: q.ch, lv: q.lv, fig: !!(q.fig || q.pic || q.blocks != null || q.chart || q.bal || q.scale || q.line || q.grid || q.race || q.shelf || q.solid || q.shape || q.seq || q.lenb || q.vert || q.vsub),
     d: { pic: q.pic, blocks: q.blocks, chart: q.chart, bal: q.bal, scale: q.scale, line: q.line, grid: q.grid, race: q.race, shelf: q.shelf, seq: q.seq, lenb: q.lenb, vert: q.vert, vsub: q.vsub } };
