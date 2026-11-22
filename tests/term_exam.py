@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Answer check for the term exams: ป.1 (term 1 = lesson 398 · term 2 = 397 · src/grades/p1/p1e.js), ป.2 (1098 · 1097 · src/grades/p2/p2e.js)
-ป.3 (1198 · 1197 · src/grades/p3/p3e.js) and ป.4 (1598 · 1597 · src/grades/p4/p4x.js).
+ป.3 (1198 · 1197 · src/grades/p3/p3e.js), ป.4 (1598 · 1597 · src/grades/p4/p4x.js)
+and ป.5 (1698 · 1697 · src/grades/p5/p5x.js).
 
     python3 tools/build.py && python3 tests/term_exam.py
 
@@ -8,7 +9,7 @@ The answer key below is worked out here in Python, separately from the game file
 the option at `a` must equal the computed answer, and none of the other options may equal it.
 Also checked: 40 items, 3 different options each, chapters 1–5 in order, every chapter present, `lv` is a lesson of
 that chapter's city, `from` is that chapter's boss, the answer position is shuffled each attempt but stays right,
-and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000 · ป.4 no limit).
+and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000 · ป.4–5 no limit).
 Figure answers are worked out from the figure's own data (pictures to count, blocks, balance, scale, chart, line-up, shelf, race, pattern, length board, column sums).
 Pictograph answers are checked against the pictures actually drawn (icons × key), calendar answers with Python's own calendar. CHROME=/path/to/chrome uses that browser.
 """
@@ -251,8 +252,49 @@ EXAMS = [
          lv={6: range(1421, 1439), 7: range(1441, 1456), 8: range(1461, 1469), 9: range(1481, 1495), 10: range(1501, 1506)},
          boss={6: 1439, 7: 1459, 8: 1479, 9: 1499, 10: 1509})] + EXAMS
 
-ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.v || x.say || JSON.stringify(x)), a: q.a, ch: q.ch, lv: q.lv, fig: !!(q.fig || q.pic || q.blocks != null || q.chart || q.bal || q.scale || q.line || q.grid || q.race || q.shelf || q.solid || q.shape || q.seq || q.lenb || q.vert || q.vsub),
-    d: { pic: q.pic, blocks: q.blocks, chart: q.chart, bal: q.bal, scale: q.scale, line: q.line, grid: q.grid, race: q.race, shelf: q.shelf, seq: q.seq, lenb: q.lenb, vert: q.vert, vsub: q.vsub } };
+# ---------- ป.5 ----------
+from decimal import ROUND_HALF_UP
+def norm(x): s = format(D(x).normalize(), 'f'); return s
+def qround(x, q): return str(D(x).quantize(D(q), rounding=ROUND_HALF_UP))
+def gser(d, k): return d['gchart']['series'][k]['v']
+def gcat(d): return d['gchart']['cats']
+def side(p, q): return (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2
+def quad_name(P):  # rhombus test straight from the vertices (all sides equal, corners not right angles)
+    s = [side(P[i], P[(i + 1) % 4]) for i in range(4)]; dot = (P[1][0] - P[0][0]) * (P[3][0] - P[0][0]) + (P[1][1] - P[0][1]) * (P[3][1] - P[0][1])
+    return ('รูปสี่เหลี่ยมจัตุรัส' if dot == 0 else 'รูปสี่เหลี่ยมขนมเปียกปูน') if len(set(s)) == 1 else '?'
+KEY9 = [
+    None, None, None, mixed(Fraction(17, 6)), str(Fraction(2, 3) + Fraction(1, 4)), str(Fraction(5, 6) - Fraction(3, 8)), mixed(FR('3 1/2') + FR('1 2/3')),
+    str(Fraction(3, 4) * 36), str(Fraction(2, 5) * Fraction(3, 7)), mixed(FR('2 1/4') * 8), str(1 / FR('3 1/2')), str(6 / Fraction(3, 4)), str(Fraction(4, 9) / Fraction(2, 3)),
+    str(Fraction(1, 2) * (Fraction(2, 3) + Fraction(1, 6))), mixed(FR('5 3/4') - FR('2 1/2')), f'{1200 - 1200 // 3 - 1200 // 4} บาท',
+    norm(D(3) / 25), norm(D(7) / 8), qround('17.49', '1'), qround('8.396', '0.01'), norm(D('2.75') * 8), norm(D('0.047') * 1000), norm(D('3.6') * D('0.25')),
+    norm(D('15.36') / 6), norm(D(7) / 4), norm(D('62.5') / 100), f"{norm(D('2.35') * 100)} เซนติเมตร", f'{norm(D(4350) / 1000)} กิโลกรัม', f"{int(D('1.25') * 1000):,} มิลลิลิตร",
+    f"{norm(D('32.50') * D('3.2'))} บาท", f"{int(4 * D('1.85') / D('0.5'))} ขวด",
+    'มีการย่นระยะของแกน', 'ส่วนสูงของต้นไม้ที่วัดทุกสัปดาห์',
+    lambda d: next(c for c, a, b in zip(gcat(d), gser(d, 0), gser(d, 1)) if b > a) if sum(b > a for a, b in zip(gser(d, 0), gser(d, 1))) == 1 else '?',
+    lambda d: f"{gser(d, 0)[gcat(d).index('กีฬา')] - gser(d, 1)[gcat(d).index('กีฬา')]} คน", lambda d: f"{gser(d, 0)[gcat(d).index('วิทยาศาสตร์')] + gser(d, 1)[gcat(d).index('วิทยาศาสตร์')]} คน",
+    lambda d: max(zip(gser(d, 0), gcat(d)))[1], lambda d: f"{gser(d, 0)[1] - gser(d, 0)[3]} องศาเซลเซียส", lambda d: f"{norm(D(sum(gser(d, 0))) / len(gser(d, 0)))} องศาเซลเซียส",
+    lambda d: f'{sum(gser(d, 0)) - sum(gser(d, 1))} คน']
+CHECK9 = {0: lambda o: [x for x in o if FR(x) > Fraction(1, 2)], 1: frac_true, 2: lambda o: [x for x in o if (lambda v: v == sorted(v))([FR(t) for t in x.split(' , ')])]}
+KEY10 = [
+    f'{exact(35, 5)} บาท', f'{exact(72 * 7, 4)} บาท', 'ไข่ไก่ 10 ฟอง ราคา 45 บาท ไข่ไก่ 6 ฟองราคาเท่าไร', f'{exact(300 * 15, 180)} ลิตร', f'{exact(105 * 8, 3)} บาท',
+    f'{exact(360 * 3, 45)} นาที', f'{int(200 / (D(39) / 6))} ขวด',
+    f'ร้อยละ {Fraction(7, 20) * 100}', norm(D(45) / 100), f'ร้อยละ {Fraction(6, 40) * 100}', str(exact(360 * 25, 100)), f'{800 - exact(800 * 55, 100)} คน',
+    str(exact(72 * 100, 30)), f'{450 - exact(450 * 20, 100)} บาท', f'{2700 - 2400} บาท', f'ร้อยละ {exact((600 - 500) * 100, 500)}', f'{1200 + exact(1200 * 15, 100):,} บาท',
+    'เส้นตั้งฉาก', 'ระยะห่างระหว่างเส้นขนานเท่ากันตลอด', '8 มุม', f'{180 - 65}°', '48°', 'ขนานกัน' if 72 + 108 == 180 else 'ไม่ขนานกัน', f'{exact(180, 5)}°',
+    quad_name([[0, 0], [5, 0], [8, 4], [3, 4]]), 'รูปสี่เหลี่ยมคางหมู', 'รูปสี่เหลี่ยมขนมเปียกปูน', f'{14 * 9} ตารางเซนติเมตร', f'{exact(12 * 16, 2)} ตารางเซนติเมตร',
+    f'{exact((10 + 16) * 7, 2)} ตารางเซนติเมตร', f'{2 * (15 + 8)} ซม.', f'{exact(480, 24)} เมตร', f'{exact((30 + 50) * 20, 2) * 15:,} บาท',
+    'ปริซึมห้าเหลี่ยม', f'{4 * 3 * 2} ลูกบาศก์หน่วย', f'{8 * 15 * 6} ลูกบาศก์เซนติเมตร', '1,000 ลูกบาศก์เซนติเมตร', f"{int(D('2.5') * 1000):,} ลิตร",
+    f'{exact(30 * 50 * 40, 1000)} ลิตร', f"{int(1 * 2 * (D('1.5') - D('0.6')) * 1000):,} ลิตร"]
+CHECK10 = {}
+EXAMS = [
+    dict(name='ป.5 ภาค 1', grade=5, limit=10 ** 7, var='P5T1_EXAM', lesson=1698, city=81, key=KEY9, check=CHECK9,
+         lv={1: range(501, 531), 2: range(541, 563), 3: range(571, 583)}, boss={1: 539, 2: 569, 3: 589}),
+    dict(name='ป.5 ภาค 2', grade=5, limit=10 ** 7, var='P5T2_EXAM', lesson=1697, city=82, key=KEY10, check=CHECK10,
+         lv={4: range(591, 597), 5: range(601, 615), 6: range(621, 629), 7: range(631, 651), 8: range(661, 673)},
+         boss={4: 599, 5: 619, 6: 629, 7: 659, 8: 679})] + EXAMS
+
+ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.v || x.say || JSON.stringify(x)), a: q.a, ch: q.ch, lv: q.lv, fig: !!(q.fig || q.pic || q.blocks != null || q.chart || q.bal || q.scale || q.line || q.grid || q.race || q.shelf || q.solid || q.shape || q.seq || q.lenb || q.vert || q.vsub || q.gchart),
+    d: { pic: q.pic, blocks: q.blocks, chart: q.chart, bal: q.bal, scale: q.scale, line: q.line, grid: q.grid, race: q.race, shelf: q.shelf, seq: q.seq, lenb: q.lenb, vert: q.vert, vsub: q.vsub, gchart: q.gchart } };
   if (q.fig && /class="pp /.test(q.fig)) { const d = document.createElement('div'); d.innerHTML = q.fig; const k = +d.querySelector('.pp-key').textContent.match(/แทนจำนวน\D*(\d+)/)[1];
     o.pp = [...d.querySelectorAll('.pp-row')].map(r => [r.querySelector('.pp-lab').textContent, (r.querySelectorAll('.pp-i:not(.half)').length + r.querySelectorAll('.pp-i.half').length / 2) * k]); o.unit = q.opts[q.a].split(' ').pop(); }
   return o; })"""
