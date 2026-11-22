@@ -57,6 +57,7 @@ grades/p3/p3s.js
 grades/p3/p3c.js
 grades/p3/p3f.js
 grades/p3/p3k.js
+grades/p3/p3e.js
 grades/p4/p4t.js
 grades/p4/p4f.js
 grades/p4/p4e.js

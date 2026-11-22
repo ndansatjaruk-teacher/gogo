@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Answer check for the term exams: ป.1 (term 1 = lesson 398 · term 2 = 397 · src/grades/p1/p1e.js) and ป.2 (term 1 = 1098 · term 2 = 1097 · src/grades/p2/p2e.js).
+"""Answer check for the term exams: ป.1 (term 1 = lesson 398 · term 2 = 397 · src/grades/p1/p1e.js), ป.2 (1098 · 1097 · src/grades/p2/p2e.js)
+and ป.3 (1198 · 1197 · src/grades/p3/p3e.js).
 
     python3 tools/build.py && python3 tests/term_exam.py
 
@@ -7,7 +8,7 @@ The answer key below is worked out here in Python, separately from the game file
 the option at `a` must equal the computed answer, and none of the other options may equal it.
 Also checked: 40 items, 3 different options each, chapters 1–5 in order, every chapter present, `lv` is a lesson of
 that chapter's city, `from` is that chapter's boss, the answer position is shuffled each attempt but stays right,
-and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000).
+and no number in a question is above the grade's range (ป.1 term 1 ≤ 20 · ป.1 term 2 ≤ 100 · ป.2 ≤ 1,000 · ป.3 ≤ 100,000).
 Figure answers are worked out from the figure's own data (pictures to count, blocks, balance, scale, chart, line-up, shelf, race, pattern, length board, column sums).
 Pictograph answers are checked against the pictures actually drawn (icons × key), calendar answers with Python's own calendar. CHROME=/path/to/chrome uses that browser.
 """
@@ -145,7 +146,68 @@ EXAMS = [
          lv={8: range(251, 255), 9: range(261, 269), 10: range(271, 281), 11: range(291, 299), 12: range(301, 306), 13: range(311, 320), 14: range(331, 340)},
          boss={8: 259, 9: 269, 10: 289, 11: 299, 12: 309, 13: 329, 14: 349})] + EXAMS
 
-ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.say || JSON.stringify(x)), a: q.a, ch: q.ch, lv: q.lv, fig: !!(q.fig || q.pic || q.blocks != null || q.chart || q.bal || q.scale || q.line || q.grid || q.race || q.shelf || q.solid || q.shape || q.seq || q.lenb || q.vert || q.vsub),
+# ---------- ป.3 ----------
+from fractions import Fraction
+TH_POS = ['', 'สิบ', 'ร้อย', 'พัน', 'หมื่น']
+def th_big(n):  # Thai reading of 0 < n < 100,000
+    s, d = '', str(n)
+    for i, ch in enumerate(d):
+        p, v = len(d) - 1 - i, int(ch)
+        if v == 0: continue
+        if p == 1: s += ('' if v == 1 else 'ยี่' if v == 2 else TH_U[v]) + 'สิบ'
+        elif p == 0: s += 'เอ็ด' if v == 1 and n > 10 and d[-2] != '0' else TH_U[v]
+        else: s += TH_U[v] + TH_POS[p]
+    return s
+def num(x): return int(x.replace(',', ''))
+def ev2(x): return eval(x.replace(',', '').replace('×', '*').replace('÷', '/').replace('−', '-'))
+def true_eq2(opts): return [o for o in opts if (lambda l, r: ev2(l) == ev2(r))(*o.split('='))]
+def ordered2(desc): return lambda opts: [o for o in opts if (lambda v: v == sorted(v, reverse=desc))([num(x) for x in o.split()])]
+def val_max2(opts): return [max(opts, key=ev2)]
+UNITS = {'กิโลเมตร': 100000, 'เมตร': 100, 'เซนติเมตร': 1, 'มิลลิเมตร': .1, 'กิโลกรัม': 1000, 'ขีด': 100, 'กรัม': 1, 'ลิตร': 1000, 'มิลลิลิตร': 1,
+         'บาท': 100, 'สตางค์': 1, 'ชั่วโมง': 60, 'นาที': 1}
+UNIT_RE = re.compile(r'([\d,]+(?:\.\d+)?)\s*(' + '|'.join(sorted(UNITS, key=len, reverse=True)) + ')')
+def qty(s): return round(sum(float(n.replace(',', '')) * UNITS[u] for n, u in UNIT_RE.findall(s)), 3)
+def qty_max(opts): return [max(opts, key=qty)]
+def frac_true(opts):
+    out = []
+    for o in opts:
+        a, op, b = o.split(' '); A, B = Fraction(a), Fraction(b)
+        if (op == '>' and A > B) or (op == '<' and A < B) or (op == '=' and A == B): out.append(o)
+    return out
+def hm(m): return f'{m // 60} ชั่วโมง {m % 60} นาที'
+def two(big, small, B, b, base):  # 2300 → "2 กิโลกรัม 300 กรัม" (drop a zero part)
+    x, y = divmod(base, b)
+    return ' '.join(p for p in [f'{x:,} {big}' if x else '', f'{y:,} {small}' if y else ''] if p)
+PLACE = ['หน่วย', 'สิบ', 'ร้อย', 'พัน', 'หมื่น']
+def place_of(n, dgt): s = str(n); p = len(s) - 1 - s.index(str(dgt)); return f'หลัก{PLACE[p]} มีค่า {dgt * 10 ** p:,}'
+KEY5 = [
+    f'{63040:,}', th_big(47205), place_of(85316, 5), None, None, f'{4750 + 250:,}',
+    f'{43215 + 32471:,}', f'{28647 + 39586:,}', f'{60003 - 27458:,}', f'{42300 - 15780:,}', f'{31207 + 8945:,}', f'{34560 * 2 + 8750:,} ขวด',
+    '14 นาฬิกา 35 นาที', '9 นาฬิกา 50 นาที', f'{3 * 60} นาที', hm(10 * 60 + 15 - (7 * 60 + 40)), None, hm(17 * 60 + 45 - (9 * 60 + 30)),
+    'รูปหัวใจ', 'พับรูปตามแกนสมมาตร แล้วสองข้างทับกันสนิท', '4 แกน', 'มีมากมายนับไม่ถ้วน',
+    '23', 'PP:ป.3/3', 'PP:ป.3/1-ป.3/2', 'PP:all', f'{52 - 29} คน',
+    '3/8', '2/7', None, None, str(Fraction(2, 9) + Fraction(5, 9)), str(1 - Fraction(3, 8)), f'{10 - 3 - 4}/10',
+    f'{7 * 3000:,}', f'{846 * 7:,}', f'{68 * 40:,}', f'{57 * 36:,}', f'{7254 // 9:,}' if 7254 % 9 == 0 else '?', f'{48 * 12 * 7:,} บาท']
+CHECK5 = {3: true_eq2, 4: ordered2(True), 16: qty_max, 29: frac_true, 30: frac_true}
+KEY6 = [
+    str(96 // 4), f'{79 // 6} เศษ {79 % 6}', str(735 // 5), str(4816 // 8), str(2457 // 7), f'{126 * 9:,}', f'{500 // 6} กล่อง เหลือ {500 % 6} ฟอง',
+    two('เซนติเมตร', 'มิลลิเมตร', 0, 10, 86), f'{4 * 100 + 5} เซนติเมตร', two('กิโลเมตร', 'เมตร', 0, 1000, 6250), 'สายวัดตัว', None,
+    two('กิโลเมตร', 'เมตร', 0, 1000, 15600 - 8850), two('เมตร', 'เซนติเมตร', 0, 100, 2500 - 6 * 350),
+    two('กิโลกรัม', 'กรัม', 0, 1000, 2300), f'{5080:,} กรัม', two('กิโลกรัม', 'กรัม', 0, 1000, 3600), 'น้ำตาลทราย 1 ถุงใหญ่', None,
+    two('กิโลกรัม', 'กรัม', 0, 1000, 12650 + 7480), two('กิโลกรัม', 'กรัม', 0, 1000, 3 * 1250 - 2800),
+    '650 มิลลิลิตร', f'{2075:,} มิลลิลิตร', 'ช้อนชา', None, two('ลิตร', 'มิลลิลิตร', 0, 1000, 6 * 250), two('ลิตร', 'มิลลิลิตร', 0, 1000, 4500 // 3),
+    two('บาท', 'สตางค์', 0, 100, 350), '45.75 บาท', f'{100 // 5} เหรียญ', None, f'{(2850 + 1375) / 100:.2f} บาท', f'{(10000 - 3 * 1250) / 100:.2f} บาท', f'{(3500 + 2750) / 100:.2f} บาท',
+    f'{(4560 + 2340) // 6:,}', f'{9000 - 125 * 8:,}', None, '(8 × 15) + (6 × 12) = ☐', f'{(438 + 402) // 8} กลุ่ม', f'{9 * 24 * 35:,} บาท']
+CHECK6 = {11: qty_max, 18: qty_max, 24: qty_max, 30: qty_max, 36: val_max2}
+EXAMS = [
+    dict(name='ป.3 ภาค 1', grade=3, limit=100000, var='P3T1_EXAM', lesson=1198, city=77, key=KEY5, check=CHECK5,
+         lv={1: range(101, 107), 2: range(111, 119), 3: range(1201, 1212), 4: range(1221, 1225), 5: range(1341, 1346), 6: range(1361, 1371), 7: range(1381, 1390)},
+         boss={1: 109, 2: 129, 3: 1219, 4: 1239, 5: 1359, 6: 1379, 7: 1399}),
+    dict(name='ป.3 ภาค 2', grade=3, limit=100000, var='P3T2_EXAM', lesson=1197, city=78, key=KEY6, check=CHECK6,
+         lv={8: range(1301, 1310), 9: range(1321, 1332), 10: range(1241, 1253), 11: range(1261, 1271), 12: range(1281, 1292), 13: range(1401, 1407)},
+         boss={8: 1319, 9: 1339, 10: 1259, 11: 1279, 12: 1299, 13: 1419})] + EXAMS
+
+ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.v || x.say || JSON.stringify(x)), a: q.a, ch: q.ch, lv: q.lv, fig: !!(q.fig || q.pic || q.blocks != null || q.chart || q.bal || q.scale || q.line || q.grid || q.race || q.shelf || q.solid || q.shape || q.seq || q.lenb || q.vert || q.vsub),
     d: { pic: q.pic, blocks: q.blocks, chart: q.chart, bal: q.bal, scale: q.scale, line: q.line, grid: q.grid, race: q.race, shelf: q.shelf, seq: q.seq, lenb: q.lenb, vert: q.vert, vsub: q.vsub } };
   if (q.fig && /class="pp /.test(q.fig)) { const d = document.createElement('div'); d.innerHTML = q.fig; const k = +d.querySelector('.pp-key').textContent.match(/แทนจำนวน\D*(\d+)/)[1];
     o.pp = [...d.querySelectorAll('.pp-row')].map(r => [r.querySelector('.pp-lab').textContent, (r.querySelectorAll('.pp-i:not(.half)').length + r.querySelectorAll('.pp-i.half').length / 2) * k]); o.unit = q.opts[q.a].split(' ').pop(); }
@@ -154,7 +216,7 @@ ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => ty
 def check(pg, E):
     errs, var = [], E['var']
     base = pg.evaluate(ITEMS, var)
-    runs = pg.evaluate(f"Array.from({{ length: 30 }}, () => LESSONS.find(L => L.id === {E['lesson']}).examGen().map(q => ({{ opts: q.opts.map(x => typeof x === 'string' ? x : x.say || JSON.stringify(x)), a: q.a, from: q.from }})))")
+    runs = pg.evaluate(f"Array.from({{ length: 30 }}, () => LESSONS.find(L => L.id === {E['lesson']}).examGen().map(q => ({{ opts: q.opts.map(x => typeof x === 'string' ? x : x.v || x.say || JSON.stringify(x)), a: q.a, from: q.from }})))")
     setup = pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {E['lesson']}), c = cityOf(L); return {{ city: c.id, grade: c.grade, n: L.exam.length, pass: L.pass, mega: L.bossKind, story: !!c.story, bonus: !!L.bonus }} }})()")
     key, chk = E['key'], E['check']
     if len(base) != 40: errs.append(f'expected 40 items, got {len(base)}')
@@ -176,7 +238,7 @@ def check(pg, E):
         right = chk[i](o) if i in chk else [x for x in o if x == want]
         if right != [o[q['a']]]: errs.append(f"{tag}: marked {o[q['a']]!r}, computed {right or want!r}")
         for n in re.findall(r'\d[\d,]*', re.sub(r'<[^>]+>', ' ', q['q'])):
-            if int(n.replace(',', '')) > E['limit']: errs.append(f'{tag}: number {n} above the range ({E["limit"]})')
+            if float(n.replace(',', '')) > E['limit']: errs.append(f'{tag}: number {n} above the range ({E["limit"]})')
     for r in runs:
         for i, q in enumerate(r):
             if q['opts'][q['a']] != base[i]['opts'][base[i]['a']]: errs.append(f'shuffled run: ข้อ {i + 1} answer moved wrong'); break
