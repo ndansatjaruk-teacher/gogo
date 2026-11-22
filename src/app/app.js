@@ -124,13 +124,13 @@ function cloudTransition(cb, title, sub) {
 }
 function goCity(id) {
   const c = CITIES.find(x => x.id === id);
-  if (c.final) { finalStory(c); return; }
+  if (c.final || c.story) { finalStory(c); return; } /* v192: เมืองสอบปลายภาค (story) = เรื่องเล่าแล้วเข้าสอบเลย เหมือนบอสใหญ่ */
   cloudTransition(() => showMap(id), c.name, `${gradeOf(c).name}${c.term ? ' · ภาคเรียนที่ ' + c.term : ''} · ${c.chapter}`);
 }
 
 /* ---------------- FINAL CASTLE: a short story that flows straight into the timed exam ---------------- */
 function finalStory(city) {
-  const L = city.lessons[0], li = LESSONS.indexOf(L), G = city.grade, gName = gradeOf(city).name, minis = megaMinis(G), mini = (m, st = 'idle') => bossSVG(st, m[0], m[1], m[2]);
+  const L = city.lessons[0], li = LESSONS.indexOf(L), G = city.grade, gName = gradeOf(city).name, SL = city.story, minis = SL ? megaMinisOf(SL.bosses) : megaMinis(G), mini = (m, st = 'idle') => bossSVG(st, m[0], m[1], m[2]);
   const ov = h('div', { class: 'story-ov' }), stage = h('div', { class: 'story-stage' }), cap = h('div', { class: 'story-cap' }), skip = h('button', { class: 'btn sm story-skip' }, 'ข้าม', icon('right'));
   ov.append(h('div', { class: 'story-sky' }, h('i', { class: 'st-moon' }), ...range(1, 26).map(k => h('i', { class: 'st-star', style: { left: (k * 37) % 100 + '%', top: (k * 23) % 55 + '%', animationDelay: (k % 7) * .3 + 's' } }))), stage, cap, skip);
   document.body.append(ov); hush(); let done = false, T = [];
@@ -145,16 +145,19 @@ function finalStory(city) {
   const peak = h('div', { class: 'st-castle st-peak', html: `<svg viewBox="0 0 200 140" aria-hidden="true"><path d="M0 140 L60 60 L90 92 L120 30 L200 140 Z" fill="#3A3F7A"/><path d="M120 30 L104 52 L114 50 L120 60 L128 50 L138 54 Z M60 60 L50 74 L60 70 L68 76 Z" fill="#E8F1FF"/><path d="M120 30 V14 l14 5 l-14 5" fill="#FF5A6A" stroke="#E8F1FF" stroke-width="1.4"/><path d="M84 140 v-14 q8 -10 16 0 v14 Z" fill="#FF5A6A" opacity=".75"/><rect x="88" y="108" width="8" height="10" rx="4" fill="#FFD45C" class="st-win"/><path d="M0 128 q50 -10 100 0 t100 0 V140 H0 Z" fill="#DDE8F7"/></svg>` });
   const temple = h('div', { class: 'st-castle st-temple', html: `<svg viewBox="0 0 200 140" aria-hidden="true"><path d="M52 132 V78 h96 V132 Z M60 78 V62 h80 V78 Z M70 62 V48 h60 V62 Z M84 48 V34 h32 V48 Z" fill="#2E4A3A"/><path d="M92 132 v-22 q8 -12 16 0 v22 Z" fill="#FF5A6A" opacity=".75"/><rect x="96" y="38" width="8" height="8" rx="4" fill="#FFD45C" class="st-win"/><path d="M0 140 V96 q20 -30 40 -6 q14 -34 30 -10 V140 Z M200 140 V92 q-18 -30 -38 -4 q-16 -30 -30 -6 V140 Z" fill="#1F5A3A"/><path d="M0 132 H200 V140 H0 Z" fill="#163F2A"/></svg>` });
   const castle = G === 3 ? temple : G === 6 ? peak : G === 5 ? cave : G === 4 ? desert : G === 2 ? h('div', { class: 'st-castle st-sea', html: `<svg viewBox="0 0 200 140" aria-hidden="true"><path d="M70 140 V112 q10 -22 30 -26 q22 4 32 26 V140 Z" fill="#1E1447"/><rect x="94" y="52" width="14" height="40" fill="#2B2E5C"/><path d="M92 52 h18 l-3 -10 h-12 z" fill="#2B2E5C"/><circle cx="101" cy="46" r="5" fill="#FFE27A"/><path class="st-beam" d="M101 46 L200 26 L200 66 Z" fill="#FFE27A" opacity=".25"/><path d="M0 118 q25 -12 50 0 t50 0 t50 0 t50 0 V140 H0 Z" fill="#2F6FA0"/><path d="M0 126 q25 -10 50 0 t50 0 t50 0 t50 0 V140 H0 Z" fill="#1F4F7A"/></svg>` }) : castleP1;
-  if (REDUCED()) { stage.append(castle); line(G === 3 ? 'งูยักษ์ทุกตัวของ ป.3 รวมร่างเป็นราชางูยักษ์!' : G === 6 ? 'ราชาเยติทุกตัวของ ป.6 รวมร่างเป็นจอมเยติ!' : G === 5 ? 'ราชาหมีทุกตัวของ ป.5 รวมร่างเป็นจอมราชาหมี!' : G === 4 ? 'แมงป่องทุกตัวของ ป.4 รวมร่างเป็นจักรพรรดิแมงป่อง!' : G === 2 ? 'ปีศาจปลาหมึกทุกตัวของ ป.2 รวมร่างเป็นราชาปลาหมึกยักษ์!' : 'บอสทุกตัวของ ป.1 รวมร่างเป็นจอมราชาปีศาจ!', true); at(1800, go); return; }
-  stage.append(castle); line(G === 3 ? 'คืนฝนตก… ณ วิหารโบราณกลางป่าดิบชื้นของ ป.3' : G === 6 ? 'คืนพายุหิมะ… บนยอดเขาที่สูงที่สุดของ ป.6' : G === 5 ? 'ณ ถ้ำที่ลึกที่สุดของ ป.5… คริสตัลเริ่มส่องแสงวูบวาบ' : G === 4 ? 'คืนเดือนหงาย… ณ ใจกลางทะเลทรายของ ป.4' : G === 2 ? 'คืนพระจันทร์เต็มดวง… ณ อ่าวลึกสุดของชายหาด ป.2' : 'ณ ปราสาทราชาปีศาจ… บนยอดเขาสุดท้ายของ ป.1');
-  at(2600, () => { castle.classList.add('shake'); sfx.roar(); line(G === 3 ? 'ต้นไม้ไหวทั้งป่า… มีเสียงขู่ฟ่อดังมาจากในวิหาร!' : G === 6 ? 'หิมะถล่มลงมา… มีเงายักษ์ปรากฏบนยอดเขา!' : G === 5 ? 'ผนังถ้ำสั่นสะเทือน… มีเสียงคำรามดังมาจากความมืด!' : G === 4 ? 'ผืนทรายสั่นสะเทือน… มีอะไรบางอย่างมุดขึ้นมาจากใต้ทราย!' : G === 2 ? 'ทะเลปั่นป่วน… มีอะไรบางอย่างโผล่ขึ้นมาจากใต้น้ำ!' : '“ใครกล้าบุกเข้ามาในปราสาทของพวกเรา!”'); });
+  if (REDUCED()) { stage.append(castle); line(SL ? SL.reduced : G === 3 ? 'งูยักษ์ทุกตัวของ ป.3 รวมร่างเป็นราชางูยักษ์!' : G === 6 ? 'ราชาเยติทุกตัวของ ป.6 รวมร่างเป็นจอมเยติ!' : G === 5 ? 'ราชาหมีทุกตัวของ ป.5 รวมร่างเป็นจอมราชาหมี!' : G === 4 ? 'แมงป่องทุกตัวของ ป.4 รวมร่างเป็นจักรพรรดิแมงป่อง!' : G === 2 ? 'ปีศาจปลาหมึกทุกตัวของ ป.2 รวมร่างเป็นราชาปลาหมึกยักษ์!' : 'บอสทุกตัวของ ป.1 รวมร่างเป็นจอมราชาปีศาจ!', true); at(1800, go); return; }
+  stage.append(castle); line(SL ? SL.intro : G === 3 ? 'คืนฝนตก… ณ วิหารโบราณกลางป่าดิบชื้นของ ป.3' : G === 6 ? 'คืนพายุหิมะ… บนยอดเขาที่สูงที่สุดของ ป.6' : G === 5 ? 'ณ ถ้ำที่ลึกที่สุดของ ป.5… คริสตัลเริ่มส่องแสงวูบวาบ' : G === 4 ? 'คืนเดือนหงาย… ณ ใจกลางทะเลทรายของ ป.4' : G === 2 ? 'คืนพระจันทร์เต็มดวง… ณ อ่าวลึกสุดของชายหาด ป.2' : 'ณ ปราสาทราชาปีศาจ… บนยอดเขาสุดท้ายของ ป.1');
+  at(2600, () => { castle.classList.add('shake'); sfx.roar(); line(SL ? SL.shake : G === 3 ? 'ต้นไม้ไหวทั้งป่า… มีเสียงขู่ฟ่อดังมาจากในวิหาร!' : G === 6 ? 'หิมะถล่มลงมา… มีเงายักษ์ปรากฏบนยอดเขา!' : G === 5 ? 'ผนังถ้ำสั่นสะเทือน… มีเสียงคำรามดังมาจากความมืด!' : G === 4 ? 'ผืนทรายสั่นสะเทือน… มีอะไรบางอย่างมุดขึ้นมาจากใต้ทราย!' : G === 2 ? 'ทะเลปั่นป่วน… มีอะไรบางอย่างโผล่ขึ้นมาจากใต้น้ำ!' : '“ใครกล้าบุกเข้ามาในปราสาทของพวกเรา!”'); });
   const ring = h('div', { class: 'st-ring' }); at(3200, () => stage.append(ring));
-  minis.forEach((m, i) => at(4200 + i * 260, () => { const a = Math.PI + (i / Math.max(1, minis.length - 1)) * Math.PI, el = h('span', { class: 'st-mini', html: mini(m, i % 2 ? 'laugh' : 'roar'), style: { left: 50 + Math.cos(a) * 38 + '%', top: 54 + Math.sin(a) * 34 + '%' } }); ring.append(el); sfx.pop(i % 8); }));
-  const t1 = 4200 + minis.length * 260 + 400;
-  at(t1, () => line(G === 3 ? `งูยักษ์ทั้ง ${minis.length} ตัวที่เธอเคยชนะ เลื้อยกลับมาแล้ว!` : G === 6 ? `ราชาเยติทั้ง ${minis.length} ตัวที่เธอเคยชนะ ปีนขึ้นมาบนยอดเขาแล้ว!` : G === 5 ? `ราชาหมีทั้ง ${minis.length} ตัวที่เธอเคยชนะ เดินออกมาจากถ้ำแล้ว!` : G === 4 ? `แมงป่องทั้ง ${minis.length} ตัวที่เธอเคยชนะ คลานกลับมาแล้ว!` : G === 2 ? `ปีศาจปลาหมึกทั้ง ${minis.length} ตัวที่เธอเคยชนะ ว่ายกลับมาแล้ว!` : `ราชาปีศาจทั้ง ${minis.length} ตัวที่เธอเคยชนะ กลับมาแล้ว!`));
+  const step = SL ? 1500 : 260, chOf = id => { const B = LESSONS.find(x => x.id === id), c = B && cityOf(B); return c ? c.chapter : ''; }; /* v192: เรื่องเล่าสอบปลายภาค — บอสแต่ละบทโผล่ทีละตัว พร้อมบอกว่าเป็นบทอะไร (ทวนว่าภาคนี้เรียนอะไรมา) */
+  minis.forEach((m, i) => at(4200 + i * step, () => { const a = Math.PI + (i / Math.max(1, minis.length - 1)) * Math.PI, el = h('span', { class: 'st-mini', html: mini(m, i % 2 ? 'laugh' : 'roar'), style: { left: 50 + Math.cos(a) * 38 + '%', top: 54 + Math.sin(a) * 34 + '%' } });
+    if (SL) { const ch = chOf(SL.bosses[i]); el.append(h('small', { class: 'st-mlab num' }, (ch.match(/^บทที่ \d+/) || [''])[0])); cap.innerHTML = ''; cap.append(h('span', null, ch)); cap.classList.remove('on'); void cap.offsetWidth; cap.classList.add('on'); }
+    ring.append(el); sfx.pop(i % 8); }));
+  const t1 = 4200 + minis.length * step + 400;
+  at(t1, () => line(SL ? SL.back(minis.length) : G === 3 ? `งูยักษ์ทั้ง ${minis.length} ตัวที่เธอเคยชนะ เลื้อยกลับมาแล้ว!` : G === 6 ? `ราชาเยติทั้ง ${minis.length} ตัวที่เธอเคยชนะ ปีนขึ้นมาบนยอดเขาแล้ว!` : G === 5 ? `ราชาหมีทั้ง ${minis.length} ตัวที่เธอเคยชนะ เดินออกมาจากถ้ำแล้ว!` : G === 4 ? `แมงป่องทั้ง ${minis.length} ตัวที่เธอเคยชนะ คลานกลับมาแล้ว!` : G === 2 ? `ปีศาจปลาหมึกทั้ง ${minis.length} ตัวที่เธอเคยชนะ ว่ายกลับมาแล้ว!` : `ราชาปีศาจทั้ง ${minis.length} ตัวที่เธอเคยชนะ กลับมาแล้ว!`));
   at(t1 + 2400, () => { line('“พวกเรา… รวมร่าง!!!”', true); ring.classList.add('merge'); castle.classList.add('dim'); });
   at(t1 + 3600, () => { const flash = h('i', { class: 'st-flash' }); stage.append(flash); sfx.win(); ring.remove();
-    stage.append(h('div', { class: 'st-mega', html: bossSVG('roar', 'night', gName, 'mega') })); });
+    stage.append(h('div', { class: 'st-mega', html: bossSVG('roar', 'night', SL ? L.emblem : gName, 'mega') })); });
   at(t1 + 4400, () => { sfx.roar(); line(`ข้าคือ ${L.bossName}! ตอบให้ถูก ${L.pass} จาก ${L.exam.length} ข้อ ภายใน ${L.timeLimit / 60} นาที ถ้าทำได้!`, true); });
   const cnt = h('div', { class: 'st-count num' });
   [3, 2, 1].forEach((k, j) => at(t1 + 8200 + j * 900, () => { if (!cnt.isConnected) stage.append(cnt); cnt.textContent = k; cnt.classList.remove('pop'); void cnt.offsetWidth; cnt.classList.add('pop'); sfx.tap(); }));
@@ -179,9 +182,9 @@ function showMap(cityId) {
   const stage = shell({});
   app.querySelector('.topbar').style.display = 'none'; app.querySelector('.bottombar').style.display = 'none'; app.style.gridTemplateRows = '1fr';
   let city = CITIES.find(c => c.id === (cityId || defaultCity())) || CITIES[0];
-  if (city.final) { const g = CITIES.filter(c => c.grade === city.grade && !c.final); city = g[g.length - 1]; } // the castle has no map: it is a story straight into the exam
+  if (city.final || city.story) { const g = CITIES.slice(0, CITIES.indexOf(city)).filter(c => c.grade === city.grade && !c.final && !c.story); city = g[g.length - 1] || city; } /* the castle (and the term-exam bays, v192) have no map: a story straight into the exam → show the city before it */
   SAVE.city = city.id; persist(); setWorld(WORLD_OF(city));
-  backHandler = () => { const cs = CITIES.filter(c => c.grade === city.grade && !c.final), k = cs.indexOf(city); if (k > 0) goCity(cs[k - 1].id); };
+  backHandler = () => { const cs = CITIES.filter(c => c.grade === city.grade && !c.final && !c.story), k = cs.indexOf(city); if (k > 0) goCity(cs[k - 1].id); };
   const items = LESSONS.map((L, i) => ({ L, i })).filter(x => x.L.city === city.id), n = items.length;
   const total = Object.values(SAVE.stars).reduce((a, b) => a + b, 0), max = LESSONS.length * 3;
   const starCount = h('b', { class: 'num' }, total, h('small', null, ' / ' + max));
@@ -1028,7 +1031,7 @@ function startGame(li) {
       h('div', { class: 'actions' },
         h('button', { class: 'btn lg', onclick: () => startGame(li) }, icon('replay'), 'เล่นอีกครั้ง'),
         h('button', { class: 'btn lg info', onclick: () => showMap(L.city) }, icon('map'), 'แผนที่'),
-        nextIdx >= 0 ? h('button', { class: 'btn lg primary', onclick: () => { if (LESSONS[nextIdx].city !== L.city) { goCity(LESSONS[nextIdx].city); setTimeout(() => showIntro(nextIdx), 2300); } else { showMap(L.city); setTimeout(() => showIntro(nextIdx), 500); } } }, h('span', null, LESSONS[nextIdx].boss ? 'ไปสู้บอส' : 'ด่านต่อไป'), icon('right')) : null)));
+        nextIdx >= 0 ? h('button', { class: 'btn lg primary', onclick: () => { const NC = cityOf(LESSONS[nextIdx]); if (NC.story || NC.final) goCity(NC.id); else if (LESSONS[nextIdx].city !== L.city) { goCity(LESSONS[nextIdx].city); setTimeout(() => showIntro(nextIdx), 2300); } else { showMap(L.city); setTimeout(() => showIntro(nextIdx), 500); } } }, h('span', null, LESSONS[nextIdx].boss ? 'ไปสู้บอส' : 'ด่านต่อไป'), icon('right')) : null)));
     [0, 1, 2].forEach(k => k < stars && setTimeout(() => sfx.pop(k * 3 + 4), 320 + k * 220));
     cnt.textContent = 'จบด่าน'; pbar.firstChild.style.width = '100%';
   }

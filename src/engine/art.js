@@ -590,8 +590,11 @@ Object.assign(ART, {
 /* final P1 boss: all chapter bosses merged — the minis orbit the giant body */
 const innerSVG = svg => svg.replace(/^\s*<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
 function megaMinis(grade = 1) { return typeof CITIES === 'undefined' ? [] : CITIES.filter(c => c.grade === grade && !c.final).flatMap(c => c.lessons.filter(L => L.boss && L.bossKind !== 'mega')).map(L => [L.bossPal, L.emblem, L.bossKind || 'blob']); }
+/* v192: บอสรวมร่างของข้อสอบปลายภาค — emblem → { grade, bosses: [id บอสท้ายบทที่มารวมร่าง] } (ไฟล์ของแต่ละชั้นลงทะเบียนเอง เช่น MEGA_SET['ภ.1'] ใน p2e.js) */
+const MEGA_SET = {};
+function megaMinisOf(ids) { return typeof CITIES === 'undefined' ? [] : ids.map(id => CITIES.flatMap(c => c.lessons).find(L => L.id === id)).filter(Boolean).map(L => [L.bossPal, L.emblem, L.bossKind || 'blob']); }
 function megaBossSVG(state = 'idle', emblem = 'ป.1') {
-  const grade = emblem === 'ป.2' ? 2 : emblem === 'ป.3' ? 3 : emblem === 'ป.4' ? 4 : emblem === 'ป.5' ? 5 : emblem === 'ป.6' ? 6 : 1, minis = megaMinis(grade), n = minis.length, ring = minis.map(([pal, em, kind], i) => { const a = Math.PI * .92 + (i / Math.max(1, n - 1)) * Math.PI * 1.16, x = 60 + Math.cos(a) * 70 - 16, y = 74 + Math.sin(a) * 62 - 17;
+  const S = MEGA_SET[emblem], grade = S ? S.grade : emblem === 'ป.2' ? 2 : emblem === 'ป.3' ? 3 : emblem === 'ป.4' ? 4 : emblem === 'ป.5' ? 5 : emblem === 'ป.6' ? 6 : 1, minis = S ? megaMinisOf(S.bosses) : megaMinis(grade), n = minis.length, ring = minis.map(([pal, em, kind], i) => { const a = Math.PI * .92 + (i / Math.max(1, n - 1)) * Math.PI * 1.16, x = 60 + Math.cos(a) * 70 - 16, y = 74 + Math.sin(a) * 62 - 17;
     return `<g class="mega-mini" style="animation-delay:${(i * .12).toFixed(2)}s"><g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(.27)">${innerSVG(bossSVG(state === 'down' ? 'down' : i % 3 ? 'idle' : 'roar', pal, em, kind))}</g></g>`; }).join('');
   const core = innerSVG(bossSVG(state, 'night', emblem, grade === 2 ? 'octo' : grade === 3 ? 'snake' : grade === 4 ? 'scorp' : grade === 5 ? 'bear' : grade === 6 ? 'yeti' : 'blob'));
   return `<svg viewBox="-34 -6 188 150" class="boss-svg mega" aria-hidden="true">

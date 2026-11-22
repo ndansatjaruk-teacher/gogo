@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Answer check for the ป.2 term-1 exam (lesson 1098 · src/grades/p2/p2e.js).
+"""Answer check for the ป.2 term exams (term 1 = lesson 1098 · term 2 = lesson 1097 · src/grades/p2/p2e.js).
 
     python3 tools/build.py && python3 tests/term_exam.py
 
@@ -7,7 +7,8 @@ The answer key below is worked out here in Python, separately from the game file
 the option at `a` must equal the computed answer, and none of the other options may equal it.
 Also checked: 40 items, 3 different options each, chapters 1–5 in order, every chapter present, `lv` is a lesson of
 that chapter's city, `from` is that chapter's boss, the answer position is shuffled each attempt but stays right,
-and no number in a question is above 1,000 (ป.2 range). CHROME=/path/to/chrome uses that browser.
+and no number in a question is above 1,000 (ป.2 range).
+Pictograph answers are checked against the pictures actually drawn (icons × key), calendar answers with Python's own calendar. CHROME=/path/to/chrome uses that browser.
 """
 import os, pathlib, re, sys
 from playwright.sync_api import sync_playwright
@@ -37,7 +38,7 @@ def expanded_ok(opts):
     return [o for o in opts if (lambda l, r: int(l) == sum(int(x) for x in r.split('+')))(*o.split('='))]
 
 # expected answer of each item, in file order (computed, not copied from the file)
-KEY = [
+KEY1 = [
     'หกร้อยเจ็ด',                                   # ๖๐๗
     str(900 + 13),                                    # เก้าร้อยสิบสาม
     f'หลักสิบ มีค่า {2 * 10}',                       # 528
@@ -54,9 +55,85 @@ KEY = [
     kg_kd(34), '650 กรัม', f'{5 * 10} ขีด', f'{7 * 100} กรัม',
     'ครึ่งกิโลกรัม เบากว่า 6 ขีด' if 500 < 600 else '', kg_kd(27 + 15), f'{1000 - 350} กรัม',
     f'4 × 6 = {4 * 6}', '7 × 1 = 7', str(8 * 6), str(9 * 7), str(40 * 6), str(76 * 4), str(72 // 8), f'{8 * 47} ต้น']
-CHECKERS = {3: expanded_ok, 4: true_cmp, 5: order_desc}
-LV = {1: range(41, 53), 2: range(61, 74), 3: range(81, 89), 4: range(901, 911), 5: list(range(921, 933)) + [938]}
-BOSS = {1: 59, 2: 79, 3: 99, 4: 919, 5: 939}
+CHECK1 = {3: expanded_ok, 4: true_cmp, 5: order_desc}
+
+import datetime
+DAY = ['วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์', 'วันอาทิตย์']  # Python weekday()
+oct26 = [datetime.date(2026, 10, d) for d in range(1, 32)]
+def mixed_ok(opts):
+    out = []
+    for o in opts:
+        l, r = o.split('=')
+        if eval(l.replace('×', '*').replace('÷', '//').replace('−', '-')) == int(r): out.append(o)
+    return out
+KEY2 = [
+    '18 ÷ 3 = ☐', str(42 // 6), f'54 ÷ 9 = {54 // 9}', None, f'{59 // 7} เศษ {59 % 7}', None, str(6 * 8),
+    f'{75 // 8} กล่อง เหลือ {75 % 8} ฟอง',
+    'สิงหาคม', DAY[datetime.date(2026, 10, 23).weekday()], f'{sum(d.weekday() == 5 for d in oct26)} วัน',
+    '20 นาฬิกา 30 นาที', '10 นาฬิกา 25 นาที', '7 นาฬิกา 45 นาที', f'{(19 * 60 + 15) - (18 * 60 + 40)} นาที',
+    f"{DAY[(0 + 10) % 7]}ที่ {12 + 10}",
+    'ช้อนตวง', '6 แก้ว', f'ถังสีแดงมีน้ำมากกว่าถังสีฟ้า {12 - 9} ลิตร', f'{8 - 5} ลิตร', f'{6 * 5} ลิตร', f'{60 // 4} ครั้ง',
+    'ทรงสี่เหลี่ยมมุมฉาก', 'ลูกปิงปอง', 'รูปห้าเหลี่ยม', 'วงรีไม่มีมุม', 'วงกลม', {'tri.sky': 'รูปสามเหลี่ยมสีฟ้า'}[['tri.sky', 'tri.sky', 'ci.coral'][7 % 3]],
+    str((36 + 14) - 25), str(7 * (48 // 6)), str(90 - 8 * 9), None, f'{80 - 35 + 27} ผล', f'{96 // 8 * 15} บาท',
+    'PP:max', 'PP:น้ำฝน', 'PP:ภูผา-ใบเตย', 'PP:ทุเรียน', 'PP:เงาะ+ส้ม', 'PP:all']
+CHECK2 = {3: lambda o: [x for x in o if (lambda a, b: a % b == 0)(*map(int, x.split(' ÷ ')))], 5: lambda o: [max(o, key=lambda x: (lambda a, b: a // b)(*map(int, x.split(' ÷ '))))], 31: mixed_ok}
+def pp_answer(tag, rows, unit):
+    v = dict(rows)
+    if tag == 'PP:max': return max(v, key=v.get)
+    if tag == 'PP:all': n = sum(v.values())
+    elif '-' in tag: a, b = tag[3:].split('-'); n = v[a] - v[b]
+    elif '+' in tag: a, b = tag[3:].split('+'); n = v[a] + v[b]
+    else: n = v[tag[3:]]
+    return f'{n:g} {unit}'
+EXAMS = [
+    dict(name='ภาค 1', var='T1_EXAM', lesson=1098, city=73, key=KEY1, check=CHECK1,
+         lv={1: range(41, 53), 2: range(61, 74), 3: range(81, 89), 4: range(901, 911), 5: list(range(921, 933)) + [938]},
+         boss={1: 59, 2: 79, 3: 99, 4: 919, 5: 939}),
+    dict(name='ภาค 2', var='T2_EXAM', lesson=1097, city=74, key=KEY2, check=CHECK2,
+         lv={6: range(941, 953), 7: range(961, 970), 8: range(981, 990), 9: range(1001, 1006), 10: range(1021, 1026), 11: range(1041, 1044)},
+         boss={6: 959, 7: 979, 8: 999, 9: 1019, 10: 1039, 11: 1059})]
+# page side: every item with plain-text options (`say` for picture options) and, for pictographs, the drawn rows
+ITEMS = r"""v => eval(v).map(q => { const o = { q: q.q, opts: q.opts.map(x => typeof x === 'string' ? x : x.say), a: q.a, ch: q.ch, lv: q.lv, fig: !!q.fig };
+  if (q.fig && /class="pp /.test(q.fig)) { const d = document.createElement('div'); d.innerHTML = q.fig; const k = +d.querySelector('.pp-key').textContent.match(/แทนจำนวน\D*(\d+)/)[1];
+    o.pp = [...d.querySelectorAll('.pp-row')].map(r => [r.querySelector('.pp-lab').textContent, (r.querySelectorAll('.pp-i:not(.half)').length + r.querySelectorAll('.pp-i.half').length / 2) * k]); o.unit = q.opts[q.a].split(' ').pop(); }
+  return o; })"""
+
+def check(pg, E):
+    errs, var = [], E['var']
+    base = pg.evaluate(ITEMS, var)
+    runs = pg.evaluate(f"Array.from({{ length: 30 }}, () => LESSONS.find(L => L.id === {E['lesson']}).examGen().map(q => ({{ opts: q.opts.map(x => typeof x === 'string' ? x : x.say), a: q.a, from: q.from }})))")
+    setup = pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {E['lesson']}), c = cityOf(L); return {{ city: c.id, grade: c.grade, n: L.exam.length, pass: L.pass, mega: L.bossKind, story: !!c.story, bonus: !!L.bonus }} }})()")
+    key, chk = E['key'], E['check']
+    if len(base) != 40: errs.append(f'expected 40 items, got {len(base)}')
+    if len(key) != len(base): errs.append(f'key has {len(key)} answers for {len(base)} items')
+    chs = [q['ch'] for q in base]
+    if chs != sorted(chs): errs.append('items are not in chapter order')
+    if set(chs) != set(E['boss']): errs.append(f'chapters covered: {sorted(set(chs))}')
+    if len({q['q'] + '|'.join(q['opts']) for q in base}) != len(base): errs.append('duplicate item')
+    for i, q in enumerate(base):
+        o, tag = q['opts'], f"ข้อ {i + 1} ({q['q'][:40]})"
+        if len(o) != 3 or len(set(o)) != 3: errs.append(f'{tag}: needs 3 different options {o}')
+        if not 0 <= q['a'] < len(o): errs.append(f'{tag}: bad a'); continue
+        if q['lv'] not in E['lv'][q['ch']]: errs.append(f"{tag}: lv {q['lv']} is not a lesson of chapter {q['ch']}")
+        want = key[i] if i < len(key) else None
+        if isinstance(want, str) and want.startswith('PP:'):
+            if not q.get('pp'): errs.append(f'{tag}: no pictograph'); continue
+            want = pp_answer(want, q['pp'], q['unit'])
+        right = chk[i](o) if i in chk else [x for x in o if x == want]
+        if right != [o[q['a']]]: errs.append(f"{tag}: marked {o[q['a']]!r}, computed {right or want!r}")
+        for n in re.findall(r'\d[\d,]*', re.sub(r'<[^>]+>', ' ', q['q'])):
+            if int(n.replace(',', '')) > 1000: errs.append(f'{tag}: number {n} above ป.2 range')
+    for r in runs:
+        for i, q in enumerate(r):
+            if q['opts'][q['a']] != base[i]['opts'][base[i]['a']]: errs.append(f'shuffled run: ข้อ {i + 1} answer moved wrong'); break
+            if q['from'] != E['boss'][base[i]['ch']]: errs.append(f'ข้อ {i + 1}: from {q["from"]}'); break
+    pos = {k: 0 for k in range(3)}
+    for r in runs:
+        for q in r: pos[q['a']] += 1
+    if min(pos.values()) == 0: errs.append(f'answer position never shuffled: {pos}')
+    if setup != {'city': E['city'], 'grade': 2, 'n': 40, 'pass': 32, 'mega': 'mega', 'story': True, 'bonus': True}: errs.append(f'lesson setup: {setup}')
+    print(f"ป.2 {E['name']}: {len(base)} items · chapters " + ' '.join(f'{c}:{chs.count(c)}' for c in sorted(set(chs))) + f' · figures {sum(q["fig"] for q in base)} · answer positions over 30 runs {pos}')
+    return [f"{E['name']}: {e}" for e in errs]
 
 def main():
     errs = []
@@ -64,36 +141,9 @@ def main():
         b = p.chromium.launch(executable_path=os.environ.get('CHROME') or None); pg = b.new_page(); pe = []
         pg.on('pageerror', lambda e: pe.append(str(e)))
         pg.goto(HTML.as_uri()); pg.wait_for_timeout(600)
-        base = pg.evaluate('T1_EXAM.map(q => ({ q: q.q, opts: q.opts, a: q.a, ch: q.ch, lv: q.lv, fig: !!q.fig }))')
-        runs = pg.evaluate('Array.from({ length: 30 }, () => LESSONS.find(L => L.id === 1098).examGen().map(q => ({ q: q.q, opts: q.opts, a: q.a, from: q.from })))')
-        city = pg.evaluate('(() => { const L = LESSONS.find(L => L.id === 1098), c = cityOf(L); return { city: c.id, grade: c.grade, n: L.exam.length, pass: L.pass, boss: L.boss, mega: L.bossKind } })()')
+        for E in EXAMS: errs += check(pg, E)
         b.close()
     if pe: errs.append(f'page errors: {pe}')
-    if len(base) != 40: errs.append(f'expected 40 items, got {len(base)}')
-    if len(KEY) != len(base): errs.append(f'key has {len(KEY)} answers for {len(base)} items')
-    chs = [q['ch'] for q in base]
-    if chs != sorted(chs): errs.append('items are not in chapter order')
-    if set(chs) != {1, 2, 3, 4, 5}: errs.append(f'chapters covered: {sorted(set(chs))}')
-    if len({q['q'] + '|'.join(q['opts']) for q in base}) != len(base): errs.append('duplicate item')
-    for i, q in enumerate(base):
-        o, tag = q['opts'], f"ข้อ {i + 1} ({q['q'][:40]})"
-        if len(o) != 3 or len(set(o)) != 3: errs.append(f'{tag}: needs 3 different options {o}')
-        if not 0 <= q['a'] < len(o): errs.append(f'{tag}: bad a'); continue
-        if q['lv'] not in LV[q['ch']]: errs.append(f"{tag}: lv {q['lv']} is not a lesson of chapter {q['ch']}")
-        right = CHECKERS[i](o) if i in CHECKERS else [x for x in o if x == KEY[i]]
-        if right != [o[q['a']]]: errs.append(f"{tag}: marked {o[q['a']]!r}, computed {right or KEY[i]!r}")
-        for n in re.findall(r'\d[\d,]*', re.sub(r'<[^>]+>', ' ', q['q'])):
-            if int(n.replace(',', '')) > 1000: errs.append(f'{tag}: number {n} above ป.2 range')
-    for r in runs:
-        for i, q in enumerate(r):
-            if q['opts'][q['a']] != base[i]['opts'][base[i]['a']]: errs.append(f'shuffled run: ข้อ {i + 1} answer moved wrong'); break
-            if q['from'] != BOSS[base[i]['ch']]: errs.append(f'ข้อ {i + 1}: from {q["from"]}')
-    pos = {k: 0 for k in range(3)}
-    for r in runs:
-        for q in r: pos[q['a']] += 1
-    if min(pos.values()) == 0: errs.append(f'answer position never shuffled: {pos}')
-    if city != {'city': 73, 'grade': 2, 'n': 40, 'pass': 32, 'boss': True, 'mega': 'mega'}: errs.append(f'lesson setup: {city}')
-    print(f'ป.2 term-1 exam: {len(base)} items · chapters ' + ' '.join(f'{c}:{chs.count(c)}' for c in range(1, 6)) + f' · figures {sum(q["fig"] for q in base)} · answer positions over 30 runs {pos}')
     if errs:
         print('\n'.join('FAIL ' + e for e in errs)); sys.exit(1)
     print('OK — every answer matches the computed key')

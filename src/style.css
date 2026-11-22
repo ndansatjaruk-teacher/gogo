@@ -3933,3 +3933,5 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .boss-result:has(.evalbox .evrow:nth-of-type(3)) h2{font-size:clamp(1.5rem,3.2cqw,2.1rem)}
 .boss-result:has(.evalbox .evrow:nth-of-type(3)) .evrow{padding:3px 8px}
 .boss-result:has(.bigstars) .boss-end{width:clamp(110px,12cqw,140px)} /* v192: หน้าชนะ (มีดาว) ให้ปุ่มอยู่ในจอ */
+/* v192 · เรื่องเล่าสอบปลายภาค: ป้ายบทใต้บอสแต่ละตัว */
+.st-mlab{position:absolute;left:50%;top:100%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(.7rem,1.4cqw,.9rem);font-weight:800;color:#1E1447;background:#FFD45C;border-radius:999px;padding:1px 8px;margin-top:2px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
