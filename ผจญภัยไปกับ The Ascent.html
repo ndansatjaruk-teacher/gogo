@@ -4125,6 +4125,15 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .keypad.mi-kp{grid-template-columns:repeat(4,1fr)}
 .keypad.mi-kp .btn.sym{color:var(--ink,#2B2550);font-size:32px} /* v216 (ผู้ใช้ขอ): − / . สีดำเหมือนตัวเลข */
 .keypad.mi-kp .btn.ok2{grid-column:span 2;width:auto}
+.mi-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,3cqw,36px);width:min(980px,96cqw);align-items:start}
+.mi-scol{display:flex;flex-direction:column;gap:8px;align-items:stretch;padding:12px;border-radius:var(--r-lg);background:var(--well);box-shadow:var(--inset)}
+.mi-shead{font-size:clamp(30px,4cqw,44px);font-weight:900;text-align:center;display:flex;justify-content:center}
+.mi-skind{text-align:center;color:var(--ink-2);font-size:clamp(14px,1.7cqw,18px);font-weight:700}
+.mi-scol .fst-row{font-size:clamp(16px,2cqw,21px);flex-wrap:wrap}
+.mi-scol .mi-big{font-size:1.4em;color:var(--ink)}
+body[data-world=river] .fst-row span b{color:var(--ink)}
+body[data-world=river] .fnote.fres b{color:var(--ink)}
+.mi-tryopts .opt{min-width:clamp(110px,13cqw,150px);font-size:clamp(24px,3cqw,34px);font-weight:900}
 /* v219 (ผู้ใช้ขอ): ม.1 พื้นที่เหลือเยอะ — โจทย์ คำตอบ ปุ่มตัวเลข ตัวใหญ่ขึ้น · ตัวเลขสีดำ */
 body[data-world=river] .stage-card .tutor .speech{font-size:clamp(24px,2.8cqw,32px)}
 body[data-world=river] .qbody .fbig{font-size:clamp(40px,6cqw,68px)}
@@ -27218,6 +27227,35 @@ function miHopSim(list) {
     i++; if (i < list.length) setTimeout(() => { out.innerHTML = ''; run(); }, 1600); else teachDone(box); }), out); };
   run(); return h('div', { class: 'colstack' }, h6wait(), box);
 }
+/* v220 (ผู้ใช้ขอ): บวกเครื่องหมายเหมือนกัน — สอนคู่บวกกับคู่ลบเทียบกัน ใช้หลักเดียวกัน 3 ขั้น */
+function miSameSim(a, b) {
+  const col = (x, y, kind) => { const c = h('div', { class: 'mi-scol' }, h('div', { class: 'mi-shead num', html: miX(`${miP(x)} + ${miP(y)}`) }), h('small', { class: 'mi-skind' }, kind)); return c; };
+  const P = col(a, b, 'บวกทั้งคู่'), N = col(-a, -b, 'ลบทั้งคู่'), out = fNote(); let k = 0;
+  const steps = [['① ดูเครื่องหมาย', `บวกทั้งคู่ → <b>เหมือนกัน</b>`, `ลบทั้งคู่ → <b>เหมือนกัน</b>`],
+    ['② บวกค่าสัมบูรณ์', `${a} + ${b} = <b>${a + b}</b>`, `|${miN(-a)}| + |${miN(-b)}| = ${a} + ${b} = <b>${a + b}</b>`],
+    ['③ ใส่เครื่องหมายเดิม', `บวก → <b class="mi-big">${a + b}</b>`, `ลบ → <b class="mi-big">${miN(-a - b)}</b>`]];
+  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const [lab, p, n] = steps[k];
+    P.append(h('div', { class: 'fst-row' }, h('b', null, lab), h('span', { html: p }))); N.append(h('div', { class: 'fst-row' }, h('b', null, lab), h('span', { html: n }))); sfx.pop(k); k++;
+    if (k >= steps.length) { btn.remove(); out.innerHTML = `ขั้นตอน<b>เหมือนกันทุกขั้น</b> ต่างกันแค่เครื่องหมายที่ใส่กลับ (บวก → ผลเป็นบวก, ลบ → ผลเป็นลบ)`; sfx.ok();
+      say(`ใช้หลักเดียวกัน บวกค่าสัมบูรณ์แล้วใส่เครื่องหมายเดิม ${miSay(`${a} + ${b} = ${a + b}`)} และ ${miSay(`${miP(-a)} + ${miP(-b)} = ${miN(-a - b)}`)}`, true); teachDone(btn.parentNode || out); } } }, icon('right'), 'ขั้นต่อไป');
+  return h('div', { class: 'colstack' }, h6wait(), h('div', { class: 'mi-two' }, P, N), btn, out);
+}
+/* v220: ลองทำเอง — บวกจำนวนเต็มลบสองจำนวน เลือกคำตอบทีละขั้น */
+function miSameTry(list) {
+  const box = h('div', { class: 'colstack' }), wrap = h('div', { class: 'colstack' }, h6wait(), box); let i = 0;
+  const run = () => { const [a, b] = list[i], A = -a, B = -b, S = A + B, rows = h('div', { class: 'colstack fstory' }), ask = h('div', { class: 'cap' }), opts = h('div', { class: 'opts mi-tryopts' }), out = fNote(); let k = 0;
+    const qs = [{ q: 'เครื่องหมายของสองจำนวนนี้เป็นอย่างไร', ok: 'เหมือนกัน', bad: ['ต่างกัน'], lab: '① ดูเครื่องหมาย', row: 'ลบทั้งคู่ → <b>เหมือนกัน</b>', hint: `${miN(a)} และ ${miN(b)} มีเครื่องหมายลบทั้งคู่` },
+      { q: `บวกค่าสัมบูรณ์ |${miN(a)}| + |${miN(b)}| ได้เท่าไร`, ok: String(S), bad: [String(A - B), miN(-S)], lab: '② บวกค่าสัมบูรณ์', row: `${A} + ${B} = <b>${S}</b>`, hint: `|${miN(a)}| = ${A} และ |${miN(b)}| = ${B} แล้วนำมา<b>บวก</b>กัน` },
+      { q: 'ใส่เครื่องหมายเดิม ผลบวกคือเท่าไร', ok: miN(-S), bad: [String(S)], lab: '③ ใส่เครื่องหมายเดิม', row: `ลบ → <b>${miN(-S)}</b>`, hint: 'เครื่องหมายเดิมของทั้งสองจำนวนคือ<b>ลบ</b>' }];
+    const step = () => { const t = qs[k]; ask.innerHTML = t.q; opts.replaceChildren(...shuffle([t.ok, ...t.bad]).map(v => h('button', { class: 'opt ia num', onclick: e => { e.stopPropagation(); const bt = e.currentTarget;
+      if (v !== t.ok) { sfx.no(); bt.classList.remove('shake'); void bt.offsetWidth; bt.classList.add('shake'); out.innerHTML = 'ลองใหม่: ' + t.hint; return; }
+      out.innerHTML = ''; rows.append(h('div', { class: 'fst-row' }, h('b', null, t.lab), h('span', { html: t.row }))); sfx.pop(k * 2 + 2); k++;
+      if (k < qs.length) return step();
+      ask.remove(); opts.remove(); out.innerHTML = `ถูกต้อง! ${miP(a)} + ${miP(b)} = <b>${miN(-S)}</b>`; sfx.ok(); say(miSay(`ถูกต้อง ${miP(a)} + ${miP(b)} = ${miN(-S)}`), true);
+      i++; if (i < list.length) setTimeout(run, 1800); else teachDone(wrap); } }, v))); };
+    box.replaceChildren(h('div', { class: 'fbig', html: miX(`${miP(a)} + ${miP(b)} = ?`) }), rows, ask, opts, out); step(); };
+  run(); return wrap;
+}
 /* zero pairs: tap a + chip and a − chip to remove them; what is left is the answer */
 function miChipBoard(a, b, onDone, o = {}) {
   const row = s => h('div', { class: 'mi-chips' }), ra = row(), rb = row(), info = h('div', { class: 'cap' }, 'แตะชิป + 1 อัน กับชิป − 1 อัน = คู่ศูนย์ (หักล้างกันได้ 0)'); let sel = null, pairs = 0;
@@ -27448,7 +27486,9 @@ const LESSONS_M1C1 = [
     Q.miCmp({ a: 9, b: 7, la: '|−9|', lb: '7' }), Q.miCmp({ a: 5, b: 5, la: '|−5|', lb: '|5|' })]),
   LM1(4, 'แก่งบวกเดียวกัน', 'การบวกจำนวนเต็ม ตอนที่ 1', 'บวกบนเส้นจำนวน', 'หาผลบวกของจำนวนเต็มที่มีเครื่องหมายเหมือนกันโดยใช้เส้นจำนวน และโดยใช้ค่าสัมบูรณ์', [
     T('<b>บวกบนเส้นจำนวน</b>: เริ่มที่ตัวแรก บวกจำนวนบวก = กระโดดไปทาง<b>ขวา</b> · บวกจำนวนลบ = ไปทาง<b>ซ้าย</b> — แตะทีละช่อง', 'บวกบนเส้นจำนวน เริ่มที่ตัวแรก บวกจำนวนบวกไปทางขวา บวกจำนวนลบไปทางซ้าย', el => el.append(miHopSim([[3, 4], [-2, -5]]))),
-    T('ตัวอย่างทีละขั้น: (−6) + (−9) โดยใช้ค่าสัมบูรณ์', 'ตัวอย่างทีละขั้น ลบหก บวก ลบเก้า', el => el.append(dcWalk('(−6) + (−9)', [['① เครื่องหมายเหมือนกัน', 'เป็นจำนวนลบทั้งคู่'], ['② บวกค่าสัมบูรณ์', '6 + 9 = 15'], ['③ ใส่เครื่องหมายเดิม', 'ลบ → −15']], '<b>(−6) + (−9) = −15</b>')))
+    T('<b>หลักเดียวกัน</b>: <b>บวกทั้งคู่</b> หรือ <b>ลบทั้งคู่</b> ก็ทำ 3 ขั้นเหมือนกัน', 'บวกจำนวนที่มีเครื่องหมายเหมือนกัน ไม่ว่าบวกทั้งคู่หรือลบทั้งคู่ ใช้หลักเดียวกัน ดูเครื่องหมาย บวกค่าสัมบูรณ์ แล้วใส่เครื่องหมายเดิม', el => el.append(miSameSim(5, 8))),
+    T('ตัวอย่างทีละขั้น: (−6) + (−9) โดยใช้ค่าสัมบูรณ์', 'ตัวอย่างทีละขั้น ลบหก บวก ลบเก้า', el => el.append(dcWalk('(−6) + (−9)', [['① เครื่องหมายเหมือนกัน', 'เป็นจำนวนลบทั้งคู่'], ['② บวกค่าสัมบูรณ์', '6 + 9 = 15'], ['③ ใส่เครื่องหมายเดิม', 'ลบ → −15']], '<b>(−6) + (−9) = −15</b>'))),
+    T('<b>ลองทำเอง</b>: บวกจำนวนเต็มลบสองจำนวน — เลือกคำตอบทีละขั้น', 'ลองทำเอง บวกจำนวนเต็มลบสองจำนวน เลือกคำตอบทีละขั้น', el => el.append(miSameTry([[-12, -7], [-24, -18]])))
   ], () => [...MI_SUMS.same.slice(0, 4).map(([a, b]) => Q.miHopQ({ a, b })), MIQ.x('(−14) + (−9)', 'เครื่องหมายเหมือนกัน: บวกค่าสัมบูรณ์ แล้วใส่เครื่องหมายเดิม'), MIQ.x('(−25) + (−38)', 'บวกค่าสัมบูรณ์ 25 + 38 แล้วใส่เครื่องหมายลบ'), MIQ.x('18 + 27'), MIQ.x('(−33) + (−19)', 'บวกค่าสัมบูรณ์แล้วใส่เครื่องหมายลบ'), MIQ.x('(−8) + (−6) + (−5)', 'บวกจำนวนลบทุกตัว ผลเป็นลบ'), Q.miSignQ({ expr: '(−210) + (−95)' }), MIQ.x('(−40) + (−65)', 'บวกค่าสัมบูรณ์แล้วใส่เครื่องหมายลบ'),
     Q.miSignQ({ expr: '(−17) + (−8)' }), MIQ.x('(−7) + (−7) + (−7)', 'บวกจำนวนลบไปเรื่อย ๆ ผลยิ่งน้อยลง'), MIQ.x('(−150) + (−250)', 'บวกค่าสัมบูรณ์แล้วใส่เครื่องหมายลบ')]),
   LM1(5, 'แก่งคู่ศูนย์', 'การบวกจำนวนเต็ม ตอนที่ 2', 'บวกต่างเครื่องหมาย', 'หาผลบวกของจำนวนเต็มบวกกับจำนวนเต็มลบ ด้วยคู่ศูนย์ (ชิป) และด้วยค่าสัมบูรณ์', [
