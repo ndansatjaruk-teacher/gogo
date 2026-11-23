@@ -4119,6 +4119,14 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .keypad.mi-kp .btn.sym{color:var(--ink,#2B2550);font-size:32px} /* v216 (ผู้ใช้ขอ): − / . สีดำเหมือนตัวเลข */
 .keypad.mi-kp .btn.ok2{grid-column:span 2;width:auto}
 .mi-round{padding:6px 18px;border-radius:999px;background:#E4F4FD;box-shadow:var(--e1);font-size:clamp(17px,2.1cqw,22px);color:var(--ink)}
+.mi-sgn{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2cqw,20px);width:min(820px,94cqw)}
+.mi-sgc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:clamp(12px,2cqw,22px);border-radius:var(--r-lg);background:var(--surface);box-shadow:var(--e2);color:var(--ink)}
+.mi-sgc .mi-sgq{font-size:clamp(28px,4cqw,46px);font-weight:900}
+.mi-sgc .mi-sgr,.mi-sgc small{visibility:hidden}
+.mi-sgc .mi-sgr{font-size:clamp(30px,4.4cqw,50px);font-weight:900;color:var(--ink)}
+.mi-sgc small{font-size:clamp(18px,2.4cqw,26px);color:var(--ink-2)}
+.mi-sgc.on .mi-sgr,.mi-sgc.on small{visibility:visible;animation:popIn .3s var(--spring) both}
+.mi-sgc.on.pos{background:#E3F7EA;box-shadow:var(--e1),inset 0 0 0 3px #4CC27B}.mi-sgc.on.neg{background:#FDE8EA;box-shadow:var(--e1),inset 0 0 0 3px #E5505E}
 .mi-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,3cqw,36px);width:min(980px,96cqw);align-items:start}
 .mi-scol{display:flex;flex-direction:column;gap:8px;align-items:stretch;padding:12px;border-radius:var(--r-lg);background:var(--well);box-shadow:var(--inset)}
 .mi-shead{font-size:clamp(30px,4cqw,44px);font-weight:900;text-align:center;display:flex;justify-content:center}
@@ -4145,4 +4153,19 @@ body[data-world=river] .keypad.mi-kp .btn{width:clamp(70px,8cqw,90px);min-height
 body[data-world=river] .keypad.mi-kp .btn.ok2{width:auto}
 body[data-world=river] .keypad.mi-kp .btn .ic{width:30px;height:30px}
 body[data-world=river] .qbody .mi-nl{width:min(900px,96cqw)}
+/* v224 (ผู้ใช้ขอ): ม.1 ดูมีสีสันขึ้น — กรอบการ์ดไล่สีแม่น้ำ ปุ่มตัวเลือกหลากสี แป้นตัวเลขฟ้า ช่องคำตอบเหลือง · ตัวเลขยังสีดำ */
+body[data-world=river] .card.stage-card{border:5px solid transparent;background:linear-gradient(180deg,#FFFEFA 0%,#FFFDF6 60%,#F6FBFE 100%) padding-box,linear-gradient(135deg,#4FC3F7 0%,#4FD1A1 35%,#FFD45C 68%,#FF9AA6 100%) border-box;box-shadow:var(--e2),0 0 0 3px rgba(255,255,255,.7)}
+body[data-world=river] .tutor.in-card{border-bottom:3px dotted #9FD6F2}
+body[data-world=river] .qbody .opts .opt{--c:#E8F6FE;--c2:#8FCDEB}
+body[data-world=river] .qbody .opts .opt:nth-child(4n+2){--c:#E6F8EF;--c2:#86D6AE}
+body[data-world=river] .qbody .opts .opt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}
+body[data-world=river] .qbody .opts .opt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
+body[data-world=river] .keypad.mi-kp .btn:not(.primary):not(.sym){--c:#F2FAFE;--c2:#A9D9F0}
+body[data-world=river] .keypad.mi-kp .btn.sym{--c:#FFF6D9;--c2:#F2C45A}
+body[data-world=river] .mi-ans .ans-slot{background:#FFF9E6;box-shadow:inset 0 0 0 3px #FFD45C,var(--inset)}
+body[data-world=river] .mi-ans .ans-slot.filled{background:#fff;box-shadow:var(--e1),inset 0 0 0 3px #4FD1A1}
+body[data-world=river] .fst-row{border-left:6px solid #4FC3F7}
+body[data-world=river] .fst-row:nth-child(4n+2){border-left-color:#4FD1A1}body[data-world=river] .fst-row:nth-child(4n+3){border-left-color:#FFD45C}body[data-world=river] .fst-row:nth-child(4n+4){border-left-color:#FF9AA6}
+body[data-world=river] .exam-card .xopt:nth-child(4n+1){--c:#E8F6FE;--c2:#8FCDEB}body[data-world=river] .exam-card .xopt:nth-child(4n+2){--c:#E6F8EF;--c2:#86D6AE}
+body[data-world=river] .exam-card .xopt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}body[data-world=river] .exam-card .xopt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
 body[data-world=river] .qbody .opt .mi-x{flex-wrap:nowrap;white-space:nowrap}
