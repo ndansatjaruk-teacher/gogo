@@ -31096,7 +31096,7 @@ function lessonTop(L, phase) {
    or a sim calls teachDone(el). Free-exploration examples need a couple of taps. */
 const teachDone = el => el && el.dispatchEvent(new CustomEvent('teachdone', { bubbles: true }));
 const SEQ_BTN = b => b.matches('button.btn') && /\b(info|accent|primary)\b/.test(b.className) && !b.classList.contains('icon') && !b.classList.contains('sm') && !b.closest('.fstep,.keypad,.palette,.fnav,.restart');
-const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb'; /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
+const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb, .objcard, .solidbtn, .flipcard, .g2cell'; /* v206 (ผู้ใช้เจอ: แตะ 2 อันก็ไปต่อได้) — การ์ดสิ่งของ รูปทรง การ์ดพลิก การ์ดของ */ /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
 const ONCE_RE = /เพิ่มอีก|ขีดเพิ่ม|ใส่ลูกแก้ว|เพิ่มไม้|หมุน|ไล่ลง|หาสูงที่สุด|ดูวิธีวาด|ลองวาด/;
 function teachGate(vis, onDone) {
   let done = false, taps = 0; const seq = new Set([...vis.querySelectorAll('button')].filter(SEQ_BTN));
@@ -31476,10 +31476,12 @@ function qDiff(q) { if (q.__diff != null) return q.__diff; qSig(q); const t = St
 const qKind0 = q => { if (q.__kind) return q.__kind; if (q.__sig) return (q.__kind = String(q.__sig).split(' ')[0]); // no tag → the question's own code (same constructor = same kind)
   const c = String(q.mount || ''); let hs = 0; for (let i = 0; i < c.length; i++) hs = (hs * 31 + c.charCodeAt(i)) | 0; return (q.__kind = 'm:' + hs.toString(36)); };
 function qBalance(list, N, extra = []) { if (list.length <= N && !extra.length) return list; const pick = list.slice(0, N), rest = list.slice(N).concat(extra), cnt = {}; pick.forEach(q => cnt[q.__kind] = (cnt[q.__kind] || 0) + 1);
-  for (let g = 0; g < 40; g++) { const low = Object.keys(cnt).concat(rest.map(q => q.__kind)).find(k => (cnt[k] || 0) < 2 && rest.some(q => q.__kind === k)); if (!low) break;
-    const top = Object.keys(cnt).filter(k => cnt[k] > 2).sort((x, y) => cnt[y] - cnt[x])[0]; if (!top) break;
-    let at = -1; for (let i = pick.length - 1; i >= 0; i--) if (pick[i].__kind === top) { at = i; break; } const ri = rest.findIndex(q => q.__kind === low);
-    pick[at] = rest[ri]; rest.splice(ri, 1); cnt[top]--; cnt[low] = (cnt[low] || 0) + 1; }
+  /* v206 (ผู้ใช้ขอ: เกมที่มีหลายแบบ ให้ทำแต่ละแบบพอ ๆ กัน) — swap until no kind has 2+ more questions than another kind that still has questions left */
+  rest.forEach(q => { if (!(q.__kind in cnt)) cnt[q.__kind] = 0; });
+  for (let g = 0; g < 80; g++) { const avail = Object.keys(cnt).filter(k => rest.some(q => q.__kind === k)); if (!avail.length) break;
+    const low = avail.sort((x, y) => cnt[x] - cnt[y])[0], top = Object.keys(cnt).sort((x, y) => cnt[y] - cnt[x])[0]; if (cnt[top] - cnt[low] <= 1) break;
+    let at = -1; for (let i = pick.length - 1; i >= 0; i--) if (pick[i].__kind === top) { at = i; break; } const ri = rest.findIndex(q => q.__kind === low); if (at < 0 || ri < 0) break;
+    const out = pick[at]; pick[at] = rest[ri]; rest.splice(ri, 1); rest.push(out); cnt[top]--; cnt[low]++; }
   return pick; }
 /* v205 (ผู้ใช้ขอ): a question already shown as an example on the lesson's teaching pages is not asked again in the game —
    unless something in it is different. Each teaching page is rendered once off-screen (sound and timers off) and its text kept;
@@ -31524,7 +31526,12 @@ function gameSet(L, N0) {
   for (let j = 0; j < spare.length && out.length < NF; j++) { const q = spare[j]; if (!q) continue; const k = qSig(q); if (seen.has(k) || (q.__baseHard && (base[q.__base] || 0) >= q.__baseCap) || (L.__prac && L.__prac.has(k))) continue; add(q); spare[j] = null; }
   for (let j = 0; j < spare.length && out.length < 3; j++) { const q = spare[j]; if (!q || isDup(q) || (q.__baseHard && (base[q.__base] || 0) >= q.__baseCap)) continue; out.push(q); dupSeen.add(dupOf(q)); regA(q); seen.add(qSig(q)); spare[j] = null; } // v110: never the same question twice, even in a tiny pool
   // boss-like questions are never used, even when the lesson runs short (ผู้ใช้ย้ำ)
-  return out.map((q, i) => ({ q, i, d: qDiff(q) })).sort((a, b) => a.d - b.d || a.i - b.i).map(o => o.q); // easy → hard
+  const srt = out.map((q, i) => ({ q, i, d: qDiff(q) })).sort((a, b) => a.d - b.d || a.i - b.i).map(o => o.q); // easy → hard
+  if (srt.some(q => q.__tier != null)) return srt; // the lesson set its own order (ขั้นช่วยคิด → บล็อก → ตอบเลย)
+  /* v206 (ผู้ใช้ขอ): spread the kinds through the game — round by round, the easiest left of each kind */
+  const byK = new Map(); srt.forEach(q => { const k = qKind0(q); if (!byK.has(k)) byK.set(k, []); byK.get(k).push(q); });
+  if (byK.size < 2) return srt; const mix = []; while (mix.length < srt.length) for (const L2 of byK.values()) if (L2.length) mix.push(L2.shift());
+  return mix;
 }
 /* wrong-answer rule (ผู้ใช้ขอ): 1st wrong = try again · 2nd = hint (never one that gives the answer away) · 3rd = show the answer */
 const TRY_REVEAL = 3;
