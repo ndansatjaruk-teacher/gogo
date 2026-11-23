@@ -27228,6 +27228,15 @@ function miHopSim(list) {
     i++; if (i < list.length) setTimeout(() => { out.innerHTML = ''; run(); }, 1600); else teachDone(box); }), out); };
   run(); return h('div', { class: 'colstack no-side' }, h6wait(), box); /* v221 no-side: กล่องถูกวาดใหม่ทุกรอบ ห้ามย้ายคำอธิบายไปด้านข้าง */
 }
+/* v222: ตัวอย่าง 2 ข้อเทียบกันเป็น 2 คอลัมน์ แตะ "ขั้นต่อไป" แล้วทั้งสองฝั่งขึ้นขั้นพร้อมกัน · steps = [[ป้าย, ซ้าย, ขวา], …] */
+function miTwoWalk(L, R, steps, endHTML, sayEnd) {
+  const col = ([head, kind]) => h('div', { class: 'mi-scol' }, h('div', { class: 'mi-shead num', html: miX(head) }), kind ? h('small', { class: 'mi-skind', html: kind }) : '');
+  const P = col(L), N = col(R), out = fNote(); let k = 0;
+  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const [lab, l, r] = steps[k];
+    P.append(h('div', { class: 'fst-row' }, h('b', null, lab), h('span', { html: l }))); N.append(h('div', { class: 'fst-row' }, h('b', null, lab), h('span', { html: r }))); sfx.pop(k); k++;
+    if (k >= steps.length) { btn.remove(); out.innerHTML = endHTML || ''; sfx.ok(); if (sayEnd) say(sayEnd, true); teachDone(out); } } }, icon('right'), 'ขั้นต่อไป');
+  return h('div', { class: 'colstack no-side' }, h6wait(), h('div', { class: 'mi-two' }, P, N), btn, out);
+}
 /* v220 (ผู้ใช้ขอ): บวกเครื่องหมายเหมือนกัน — สอนคู่บวกกับคู่ลบเทียบกัน ใช้หลักเดียวกัน 3 ขั้น */
 function miSameSim(a, b) {
   const col = (x, y, kind) => { const c = h('div', { class: 'mi-scol' }, h('div', { class: 'mi-shead num', html: miX(`${miP(x)} + ${miP(y)}`) }), h('small', { class: 'mi-skind' }, kind)); return c; };
@@ -27294,14 +27303,14 @@ function miTripSim(start, moves, what = 'เรือ') {
 /* subtraction → addition of the opposite: tap the − sign, then the number */
 function miFlipSim(list) {
   const box = h('div', { class: 'colstack' }), out = fNote(); let i = 0;
-  const run = () => { const [a, b] = list[i]; let st = 0;
+  const run = () => { const [a, b, lab] = list[i]; let st = 0;
     const A = h('span', { class: 'mi-tok num' }, miP(a)), op = h('button', { class: 'mi-tok op ia' }, '−'), B = h('button', { class: 'mi-tok num ia' }, miP(b)), res = h('span', { class: 'mi-tok num q' }, '?');
     const line = h('div', { class: 'fbig mi-flip' }, A, op, B, h('b', { class: 'mi-op' }, '='), res), cap = h('div', { class: 'cap' }, '① แตะเครื่องหมาย − ให้เปลี่ยนเป็น +');
     op.onclick = e => { e.stopPropagation(); if (st !== 0) return; st = 1; op.textContent = '+'; op.classList.add('done'); sfx.pop(2); cap.textContent = `② แตะ ${miN(b)} ให้เปลี่ยนเป็นจำนวนตรงข้าม`; };
     B.onclick = e => { e.stopPropagation(); if (st !== 1) { sfx.no(); return; } st = 2; B.textContent = miP(-b); B.classList.add('done'); sfx.pop(4); res.textContent = miN(a - b); res.classList.remove('q');
       cap.innerHTML = `ลบด้วย ${miN(b)} = <b>บวกด้วยจำนวนตรงข้าม ${miN(-b)}</b>`; out.innerHTML = `${miP(a)} − ${miP(b)} = ${miP(a)} + ${miP(-b)} = <b>${miN(a - b)}</b>`; say(miSay(out.textContent), true);
       i++; if (i < list.length) setTimeout(() => { out.innerHTML = ''; run(); }, 2000); else teachDone(box); };
-    box.replaceChildren(line, cap, out); };
+    box.replaceChildren(lab ? h('div', { class: 'mi-round', html: lab }) : '', line, cap, out); };
   run(); return h('div', { class: 'colstack no-side' }, h6wait(), box); /* v221 no-side: กล่องถูกวาดใหม่ทุกรอบ ห้ามย้ายคำอธิบายไปด้านข้าง */
 }
 /* the gap between two values = larger − smaller (tap two points) */
@@ -27507,8 +27516,14 @@ const LESSONS_M1C1 = [
     Q.miStory({ text: 'ปลาว่ายอยู่ลึก 4 เมตรใต้ระดับน้ำ แล้วดำลงไปอีก 6 เมตร ปลาอยู่ที่ระดับใด (เมตร)', expr: '(−4) + (−6)', wrong: ['(−4) + 6', '4 + 6'], unit: 'เมตร', hint: 'ใต้ระดับน้ำ = ลบ · ดำลงไปอีก = บวกด้วยจำนวนลบ' }),
     Q.miStory({ text: 'ลิฟต์อยู่ชั้นใต้ดินชั้นที่ 2 (−2) ขึ้นไป 7 ชั้น แล้วลง 3 ชั้น ลิฟต์อยู่ชั้นใด', expr: '(−2) + 7 + (−3)', wrong: ['2 + 7 + 3', '(−2) + (−7) + 3'], hint: 'ขึ้น = บวก · ลง = บวกด้วยจำนวนลบ' })]),
   LM1(7, 'ท่าเรือพลิกลบ', 'การลบจำนวนเต็ม ตอนที่ 1', 'ลบ = บวกตรงข้าม', 'หาผลลบของจำนวนเต็มโดยเปลี่ยนการลบเป็นการบวกด้วยจำนวนตรงข้ามของตัวลบ', [
-    T('<b>ลบ = บวกด้วยจำนวนตรงข้าม</b>: แตะเครื่องหมาย − ให้เป็น + แล้วแตะตัวลบให้เป็นจำนวนตรงข้าม', 'ลบ เท่ากับ บวกด้วยจำนวนตรงข้าม แตะเครื่องหมายลบให้เป็นบวก แล้วแตะตัวลบให้เป็นจำนวนตรงข้าม', el => el.append(miFlipSim([[7, -4], [-6, 9], [-5, -8]]))),
-    T('ตัวอย่างทีละขั้น: ทำไมลบจำนวนลบ จึงได้มากขึ้น', 'ตัวอย่างทีละขั้น ทำไมลบจำนวนลบจึงได้มากขึ้น', el => el.append(dcWalk('5 − 3 , 5 − 2 , … , 5 − (−2)', [['① 5 − 3', '= 2'], ['② 5 − 2 , 5 − 1 , 5 − 0', '= 3 , 4 , 5 (ตัวลบน้อยลง 1 ผลมากขึ้น 1)'], ['③ 5 − (−1)', '= 6'], ['④ 5 − (−2)', '= 7 = 5 + 2']], '<b>ลบด้วยจำนวนลบ = บวกด้วยจำนวนบวก</b>')))
+    T('<b>ลบ = บวกด้วยจำนวนตรงข้าม</b>: แตะเครื่องหมาย − ให้เป็น + แล้วแตะตัวลบให้เป็นจำนวนตรงข้าม', 'ลบ เท่ากับ บวกด้วยจำนวนตรงข้าม แตะเครื่องหมายลบให้เป็นบวก แล้วแตะตัวลบให้เป็นจำนวนตรงข้าม', el => el.append(miFlipSim([[7, -4, 'แบบที่ 1 · ตัวแรกเป็น<b>จำนวนเต็มบวก</b>'], [-6, 9, 'แบบที่ 2 · ตัวแรกเป็น<b>จำนวนเต็มลบ</b>'], [-5, -8, 'แบบที่ 2 · ตัวแรกเป็น<b>จำนวนเต็มลบ</b>']]))),
+    T('ตัวอย่างทีละขั้น: ทำไมลบจำนวนลบ จึงได้มากขึ้น', 'ตัวอย่างทีละขั้น ทำไมลบจำนวนลบจึงได้มากขึ้น', el => el.append(dcWalk('5 − 3 , 5 − 2 , … , 5 − (−2)', [['① 5 − 3', '= 2'], ['② 5 − 2 , 5 − 1 , 5 − 0', '= 3 , 4 , 5 (ตัวลบน้อยลง 1 ผลมากขึ้น 1)'], ['③ 5 − (−1)', '= 6'], ['④ 5 − (−2)', '= 7 = 5 + 2']], '<b>ลบด้วยจำนวนลบ = บวกด้วยจำนวนบวก</b>'))),
+    T('ตัวอย่างทีละขั้น แบบที่ 1 ตัวแรกเป็น<b>จำนวนเต็มบวก</b>', 'ตัวอย่างทีละขั้น แบบที่หนึ่ง ตัวแรกเป็นจำนวนเต็มบวก', el => el.append(miTwoWalk(['4 − (−9)', 'ตัวแรกเป็นบวก · ตัวลบเป็นลบ'], ['3 − 8', 'ตัวแรกเป็นบวก · ตัวลบเป็นบวก'],
+      [['① เปลี่ยน − เป็น +', '4 + ☐', '3 + ☐'], ['② ตัวลบ → จำนวนตรงข้าม', '−9 → 9', '8 → −8'], ['③ บวก', '4 + 9 = <b>13</b>', '3 + (−8) = <b>−5</b>']],
+      'ตัวตั้ง<b>เหมือนเดิม</b> เปลี่ยนแค่ − เป็น + และตัวลบเป็นจำนวนตรงข้าม', 'ตัวตั้งเหมือนเดิม เปลี่ยนแค่เครื่องหมายลบเป็นบวก และตัวลบเป็นจำนวนตรงข้าม สี่ ลบ ลบเก้า ได้ สิบสาม สาม ลบ แปด ได้ ลบห้า'))),
+    T('ตัวอย่างทีละขั้น แบบที่ 2 ตัวแรกเป็น<b>จำนวนเต็มลบ</b>', 'ตัวอย่างทีละขั้น แบบที่สอง ตัวแรกเป็นจำนวนเต็มลบ', el => el.append(miTwoWalk(['(−6) − 8', 'ตัวแรกเป็นลบ · ตัวลบเป็นบวก'], ['(−7) − (−10)', 'ตัวแรกเป็นลบ · ตัวลบเป็นลบ'],
+      [['① เปลี่ยน − เป็น +', '(−6) + ☐', '(−7) + ☐'], ['② ตัวลบ → จำนวนตรงข้าม', '8 → −8', '−10 → 10'], ['③ บวก', '(−6) + (−8) = <b>−14</b>', '(−7) + 10 = <b>3</b>']],
+      'ตัวแรกเป็นลบก็ใช้หลักเดิม: ตัวตั้ง<b>ไม่เปลี่ยน</b> (−6 ยังเป็น −6) เปลี่ยนเฉพาะตัวลบ', 'ตัวแรกเป็นลบก็ใช้หลักเดิม ตัวตั้งไม่เปลี่ยน เปลี่ยนเฉพาะตัวลบ ลบหก ลบ แปด ได้ ลบสิบสี่ ลบเจ็ด ลบ ลบสิบ ได้ สาม')))
   ], () => [Q.miPick({ q: '9 − (−4) เท่ากับข้อใด', opts: ['9 + 4', '9 + (−4)', '(−9) + 4'], right: '9 + 4', hint: 'เปลี่ยน − เป็น + แล้วเปลี่ยนตัวลบ −4 เป็นจำนวนตรงข้ามคือ 4' }),
     Q.miPick({ q: '(−8) − 6 เท่ากับข้อใด', opts: ['(−8) + (−6)', '(−8) + 6', '8 + (−6)'], right: '(−8) + (−6)', hint: 'จำนวนตรงข้ามของ 6 คือ −6' }),
     Q.miPick({ q: '(−3) − (−10) เท่ากับข้อใด', opts: ['(−3) + 10', '(−3) + (−10)', '3 + 10'], right: '(−3) + 10', hint: 'จำนวนตรงข้ามของ −10 คือ 10 · ตัวตั้งไม่เปลี่ยน' }),
@@ -32298,7 +32313,7 @@ function fitFigs(body) {
    unless the lesson's data pool is too small — then repeats are spread out, never back to back. */
 const GAME_N = 8, GAME_MIN = 8; // v108 (ผู้ใช้ขอ): อย่างน้อย 8 ข้อทุกด่าน
 /* v209 (ผู้ใช้ขอ): ป.1 อย่างน้อย 10 ข้อทุกเกม */
-const gameMin = L => ((cityOf(L) || {}).grade === 1 ? 10 : GAME_MIN);
+const gameMin = L => { const g = (cityOf(L) || {}).grade; return g === 1 || g >= 7 ? 10 : GAME_MIN; }; /* ป.1 (v209) และ ม.ต้น (v222) อย่างน้อย 10 ข้อ */
 /* text of a mounted question with a space between every text node — option buttons used to run together ("5 ซม.ลูกบาศก์ปริซึม…"),
    so the same question with shuffled options looked new and was asked again (ผู้ใช้เจอโจทย์ซ้ำ) */
 const qText = d => { const w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT), a = []; let n; while ((n = w.nextNode())) { const t = n.nodeValue.trim(); if (t) a.push(t); } return a.join(' '); };
