@@ -4118,6 +4118,7 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .keypad.mi-kp{grid-template-columns:repeat(4,1fr)}
 .keypad.mi-kp .btn.sym{color:var(--ink,#2B2550);font-size:32px} /* v216 (ผู้ใช้ขอ): − / . สีดำเหมือนตัวเลข */
 .keypad.mi-kp .btn.ok2{grid-column:span 2;width:auto}
+.mi-round{padding:6px 18px;border-radius:999px;background:#E4F4FD;box-shadow:var(--e1);font-size:clamp(17px,2.1cqw,22px);color:var(--ink)}
 .mi-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,3cqw,36px);width:min(980px,96cqw);align-items:start}
 .mi-scol{display:flex;flex-direction:column;gap:8px;align-items:stretch;padding:12px;border-radius:var(--r-lg);background:var(--well);box-shadow:var(--inset)}
 .mi-shead{font-size:clamp(30px,4cqw,44px);font-weight:900;text-align:center;display:flex;justify-content:center}

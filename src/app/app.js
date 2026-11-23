@@ -753,7 +753,7 @@ function xplStep(vis, s) {
 /* ---------- v84: put the explanation notes BESIDE the picture on wide screens (ไม่ต้องเลื่อนลงไปอ่าน) ---------- */
 function sideNotes(body, force, tall) {
   if (body.clientWidth < 820 || body.querySelector('.sidelay')) return false;
-  const notes = [...body.querySelectorAll('.fnote')].filter(n => !n.closest('.qsim, .pwk, .pzs, .pzp-col, .lrn, .lrn-grid, .sidecol') && n.textContent.trim() && n.offsetParent !== null);
+  const notes = [...body.querySelectorAll('.fnote')].filter(n => !n.closest('.qsim, .pwk, .pzs, .pzp-col, .lrn, .lrn-grid, .sidecol, .no-side') && n.textContent.trim() && n.offsetParent !== null);
   if (!notes.length) return false;
   const host = notes[0].parentElement; if (!host || host === body || !notes.every(n => n.parentElement === host)) return false;
   const others = [...host.children].filter(c => !notes.includes(c) && c.offsetParent !== null); if (!others.length) return false;

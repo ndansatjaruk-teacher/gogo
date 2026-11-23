@@ -150,7 +150,7 @@ function miHopSim(list) {
   const run = () => { const [a, b] = list[i]; box.replaceChildren(h('div', { class: 'fbig', html: miX(`${miP(a)} + ${miP(b)} = ?`) }), miHopBoard(a, b, (c, el) => {
     out.innerHTML = `${miP(a)} + ${miP(b)} = <b>${miN(c)}</b>`; say(miSay(`${miP(a)} + ${miP(b)} = ${miN(c)}`), true);
     i++; if (i < list.length) setTimeout(() => { out.innerHTML = ''; run(); }, 1600); else teachDone(box); }), out); };
-  run(); return h('div', { class: 'colstack' }, h6wait(), box);
+  run(); return h('div', { class: 'colstack no-side' }, h6wait(), box); /* v221 no-side: กล่องถูกวาดใหม่ทุกรอบ ห้ามย้ายคำอธิบายไปด้านข้าง */
 }
 /* v220 (ผู้ใช้ขอ): บวกเครื่องหมายเหมือนกัน — สอนคู่บวกกับคู่ลบเทียบกัน ใช้หลักเดียวกัน 3 ขั้น */
 function miSameSim(a, b) {
@@ -167,7 +167,7 @@ function miSameSim(a, b) {
 }
 /* v220: ลองทำเอง — บวกจำนวนเต็มลบสองจำนวน เลือกคำตอบทีละขั้น */
 function miSameTry(list) {
-  const box = h('div', { class: 'colstack' }), wrap = h('div', { class: 'colstack' }, h6wait(), box); let i = 0;
+  const box = h('div', { class: 'colstack' }), wrap = h('div', { class: 'colstack no-side' }, h6wait(), box); let i = 0;
   const run = () => { const [a, b] = list[i], A = -a, B = -b, S = A + B, rows = h('div', { class: 'colstack fstory' }), ask = h('div', { class: 'cap' }), opts = h('div', { class: 'opts mi-tryopts' }), out = fNote(); let k = 0;
     const qs = [{ q: 'เครื่องหมายของสองจำนวนนี้เป็นอย่างไร', ok: 'เหมือนกัน', bad: ['ต่างกัน'], lab: '① ดูเครื่องหมาย', row: 'ลบทั้งคู่ → <b>เหมือนกัน</b>', hint: `${miN(a)} และ ${miN(b)} มีเครื่องหมายลบทั้งคู่` },
       { q: `บวกค่าสัมบูรณ์ |${miN(a)}| + |${miN(b)}| ได้เท่าไร`, ok: String(S), bad: [String(A - B), miN(-S)], lab: '② บวกค่าสัมบูรณ์', row: `${A} + ${B} = <b>${S}</b>`, hint: `|${miN(a)}| = ${A} และ |${miN(b)}| = ${B} แล้วนำมา<b>บวก</b>กัน` },
@@ -198,10 +198,10 @@ function miChipBoard(a, b, onDone, o = {}) {
 }
 function miChipSim(list) {
   const box = h('div', { class: 'colstack' }), out = fNote(); let i = 0;
-  const run = () => { const [a, b] = list[i]; box.replaceChildren(h('div', { class: 'fbig', html: miX(`${miP(a)} + ${miP(b)} = ?`) }), miChipBoard(a, b, r => {
+  const run = () => { const [a, b, lab] = list[i]; box.replaceChildren(lab ? h('div', { class: 'mi-round', html: lab }) : '', h('div', { class: 'fbig', html: miX(`${miP(a)} + ${miP(b)} = ?`) }), miChipBoard(a, b, r => {
     out.innerHTML = `${miP(a)} + ${miP(b)} = <b>${miN(r)}</b>`; say(miSay(`${miP(a)} + ${miP(b)} = ${miN(r)}`), true);
     i++; if (i < list.length) setTimeout(() => { out.innerHTML = ''; run(); }, 1800); else teachDone(box); }), out); };
-  run(); return h('div', { class: 'colstack' }, h6wait(), box);
+  run(); return h('div', { class: 'colstack no-side' }, h6wait(), box); /* v221 no-side: กล่องถูกวาดใหม่ทุกรอบ ห้ามย้ายคำอธิบายไปด้านข้าง */
 }
 /* a river trip: tap each move card, the boat moves on the number line */
 function miTripSim(start, moves, what = 'เรือ') {
@@ -226,7 +226,7 @@ function miFlipSim(list) {
       cap.innerHTML = `ลบด้วย ${miN(b)} = <b>บวกด้วยจำนวนตรงข้าม ${miN(-b)}</b>`; out.innerHTML = `${miP(a)} − ${miP(b)} = ${miP(a)} + ${miP(-b)} = <b>${miN(a - b)}</b>`; say(miSay(out.textContent), true);
       i++; if (i < list.length) setTimeout(() => { out.innerHTML = ''; run(); }, 2000); else teachDone(box); };
     box.replaceChildren(line, cap, out); };
-  run(); return h('div', { class: 'colstack' }, h6wait(), box);
+  run(); return h('div', { class: 'colstack no-side' }, h6wait(), box); /* v221 no-side: กล่องถูกวาดใหม่ทุกรอบ ห้ามย้ายคำอธิบายไปด้านข้าง */
 }
 /* the gap between two values = larger − smaller (tap two points) */
 function miGapSim(lo, hi, need = 2) {
@@ -279,7 +279,7 @@ function miSwapSim(list) {
       out.innerHTML = v1 === v2 ? `ผลเท่าเดิม ✓ — <b>การ${op === '+' ? 'บวก' : 'คูณ'}มีสมบัติการสลับที่</b>` : `ผลไม่เท่ากัน ✗ — <b>การ${op === '−' ? 'ลบ' : 'หาร'}ไม่มีสมบัติการสลับที่</b>`; say(miSay(out.textContent), true);
       i++; if (i < list.length) setTimeout(() => { out.innerHTML = ''; run(); }, 2200); else teachDone(box); };
     box.replaceChildren(l1, l2, btn, out); };
-  run(); return h('div', { class: 'colstack' }, h6wait(), box);
+  run(); return h('div', { class: 'colstack no-side' }, h6wait(), box); /* v221 no-side: กล่องถูกวาดใหม่ทุกรอบ ห้ามย้ายคำอธิบายไปด้านข้าง */
 }
 
 /* =========================================================
@@ -417,8 +417,9 @@ const LESSONS_M1C1 = [
   ], () => [...MI_SUMS.same.slice(0, 4).map(([a, b]) => Q.miHopQ({ a, b })), MIQ.x('(−14) + (−9)', 'เครื่องหมายเหมือนกัน: บวกค่าสัมบูรณ์ แล้วใส่เครื่องหมายเดิม'), MIQ.x('(−25) + (−38)', 'บวกค่าสัมบูรณ์ 25 + 38 แล้วใส่เครื่องหมายลบ'), MIQ.x('18 + 27'), MIQ.x('(−33) + (−19)', 'บวกค่าสัมบูรณ์แล้วใส่เครื่องหมายลบ'), MIQ.x('(−8) + (−6) + (−5)', 'บวกจำนวนลบทุกตัว ผลเป็นลบ'), Q.miSignQ({ expr: '(−210) + (−95)' }), MIQ.x('(−40) + (−65)', 'บวกค่าสัมบูรณ์แล้วใส่เครื่องหมายลบ'),
     Q.miSignQ({ expr: '(−17) + (−8)' }), MIQ.x('(−7) + (−7) + (−7)', 'บวกจำนวนลบไปเรื่อย ๆ ผลยิ่งน้อยลง'), MIQ.x('(−150) + (−250)', 'บวกค่าสัมบูรณ์แล้วใส่เครื่องหมายลบ')]),
   LM1(5, 'แก่งคู่ศูนย์', 'การบวกจำนวนเต็ม ตอนที่ 2', 'บวกต่างเครื่องหมาย', 'หาผลบวกของจำนวนเต็มบวกกับจำนวนเต็มลบ ด้วยคู่ศูนย์ (ชิป) และด้วยค่าสัมบูรณ์', [
-    T('<b>คู่ศูนย์</b>: ชิป <b>+</b> 1 อัน กับชิป <b>−</b> 1 อัน รวมกันได้ 0 — แตะจับคู่จนจับไม่ได้ ที่เหลือคือคำตอบ', 'คู่ศูนย์ ชิปบวกหนึ่งอันกับชิปลบหนึ่งอันรวมกันได้ศูนย์ แตะจับคู่ ที่เหลือคือคำตอบ', el => el.append(miChipSim([[5, -3], [-7, 4]]))),
-    T('ตัวอย่างทีละขั้น: 8 + (−13) โดยใช้ค่าสัมบูรณ์', 'ตัวอย่างทีละขั้น แปด บวก ลบสิบสาม', el => el.append(dcWalk('8 + (−13)', [['① เครื่องหมายต่างกัน', 'บวกกับลบ'], ['② ค่าสัมบูรณ์', '|8| = 8 · |−13| = 13'], ['③ มาก − น้อย', '13 − 8 = 5'], ['④ เครื่องหมายของตัวที่ค่าสัมบูรณ์มากกว่า', '−13 → ลบ']], '<b>8 + (−13) = −5</b>')))
+    T('<b>คู่ศูนย์</b>: ชิป <b>+</b> 1 อัน กับชิป <b>−</b> 1 อัน รวมกันได้ 0 — แตะจับคู่จนจับไม่ได้ ที่เหลือคือคำตอบ', 'คู่ศูนย์ ชิปบวกหนึ่งอันกับชิปลบหนึ่งอันรวมกันได้ศูนย์ แตะจับคู่ ที่เหลือคือคำตอบ', el => el.append(miChipSim([[-7, 4, 'แบบที่ 1 · <b>จำนวนลบอยู่ข้างหน้า</b>'], [5, -3, 'แบบที่ 2 · <b>จำนวนลบอยู่ตัวที่สอง</b>']]))),
+    T('ตัวอย่างทีละขั้น แบบที่ 1 (จำนวนลบอยู่ข้างหน้า): (−15) + 6 โดยใช้ค่าสัมบูรณ์', 'ตัวอย่างทีละขั้น แบบที่หนึ่ง จำนวนลบอยู่ข้างหน้า ลบสิบห้า บวก หก', el => el.append(dcWalk('(−15) + 6', [['① เครื่องหมายต่างกัน', 'ลบกับบวก'], ['② ค่าสัมบูรณ์', '|−15| = 15 · |6| = 6'], ['③ มาก − น้อย', '15 − 6 = 9'], ['④ เครื่องหมายของตัวที่ค่าสัมบูรณ์มากกว่า', '−15 → ลบ']], '<b>(−15) + 6 = −9</b>'))),
+    T('ตัวอย่างทีละขั้น แบบที่ 2 (จำนวนลบอยู่ตัวที่สอง): 8 + (−13) โดยใช้ค่าสัมบูรณ์', 'ตัวอย่างทีละขั้น แบบที่สอง จำนวนลบอยู่ตัวที่สอง แปด บวก ลบสิบสาม', el => el.append(dcWalk('8 + (−13)', [['① เครื่องหมายต่างกัน', 'บวกกับลบ'], ['② ค่าสัมบูรณ์', '|8| = 8 · |−13| = 13'], ['③ มาก − น้อย', '13 − 8 = 5'], ['④ เครื่องหมายของตัวที่ค่าสัมบูรณ์มากกว่า', '−13 → ลบ']], '<b>8 + (−13) = −5</b>')))
   ], () => [...MI_SUMS.mix.slice(2, 6).map(([a, b]) => Q.miChipQ({ a, b })), MIQ.x('(−24) + 9', 'ต่างเครื่องหมาย: เอาค่าสัมบูรณ์มากลบน้อย แล้วใช้เครื่องหมายของตัวที่ค่าสัมบูรณ์มากกว่า'), MIQ.x('31 + (−18)', 'มากลบน้อย 31 − 18 ใช้เครื่องหมายของ 31'),
     MIQ.x('(−47) + 47', 'จำนวนกับจำนวนตรงข้ามรวมกันได้ 0'), MIQ.x('(−56) + 29', '56 − 29 ใช้เครื่องหมายของ −56'), MIQ.x('120 + (−95)', '120 − 95 ใช้เครื่องหมายของ 120'), MIQ.x('(−73) + 50', '73 − 50 ใช้เครื่องหมายของ −73'), Q.miChipQ({ a: -1, b: 7 }), Q.miSignQ({ expr: '(−63) + 58' }), Q.miSignQ({ expr: '44 + (−39)' })]),
   LM1(6, 'ปากคลองบวก', 'การบวกจำนวนเต็ม ตอนที่ 3', 'บวกหลายจำนวน', 'หาผลบวกของจำนวนเต็มหลายจำนวน และแก้โจทย์ปัญหาการบวกจำนวนเต็ม', [
