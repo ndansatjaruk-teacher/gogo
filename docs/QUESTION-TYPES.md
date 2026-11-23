@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-399 types
+400 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -376,6 +376,7 @@
 | `Q.tTable` | `{ k1, u1, k2, u2, a, b, c }` | [`grades/p5/p5r.js:129`](../src/grades/p5/p5r.js#L129) |
 | `Q.unitCount` | `{ item, unit, vis = 'len', max }` | [`engine/questions.js:1289`](../src/engine/questions.js#L1289) |
 | `Q.unitPick` | `{ name, e, m }` | [`engine/questions.js:1319`](../src/engine/questions.js#L1319) |
+| `Q.unk1` | `s` | [`app/lessons.js:1977`](../src/app/lessons.js#L1977) |
 | `Q.unknown20` | `{ t }` | [`engine/questions.js:881`](../src/engine/questions.js#L881) |
 | `Q.v3Conv` | `{ from, to }` | [`grades/p3/p3v.js:93`](../src/grades/p3/p3v.js#L93) |
 | `Q.v3Read` | `{ cap, ml, col = 'water', name, kind = 'jug' }` | [`grades/p3/p3v.js:78`](../src/grades/p3/p3v.js#L78) |

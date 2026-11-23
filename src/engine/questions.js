@@ -1337,11 +1337,11 @@ Object.assign(Q, {
     const big = Math.max(a, b), sm = Math.min(a, b), steps = [];
     if (sm < 10) { const t = Math.floor(big / 10) * 10, u = big % 10;
       steps.push({ label: 'ขั้นที่ 1', toks: [u, '+', sm, '=', '?'], ans: u + sm, hint: `บวกหลักหน่วย ${u} + ${sm}`, say: 'ขั้นที่สอง นำหลักสิบมาบวก' });
-      steps.push({ label: 'ขั้นที่ 2', toks: [t, '+', u + sm, '=', '?'], ans: a + b, hint: `${t} + ${u + sm}` }); }
+      steps.push({ label: 'ขั้นที่ 2', toks: [t, '+', '@0', '=', '?'], ans: a + b, hint: `${t} + ${u + sm}` }); }
     else { const ta = Math.floor(a / 10) * 10, tb = Math.floor(b / 10) * 10, ua = a % 10, ub = b % 10;
       steps.push({ label: 'ขั้นที่ 1', toks: [ta, '+', tb, '=', '?'], ans: ta + tb, hint: `${ta / 10} สิบ + ${tb / 10} สิบ`, say: 'ขั้นที่สอง บวกหลักหน่วย' });
       steps.push({ label: 'ขั้นที่ 2', toks: [ua, '+', ub, '=', '?'], ans: ua + ub, hint: `${ua} + ${ub}`, say: 'ขั้นที่สาม รวมผลบวก' });
-      steps.push({ label: 'ขั้นที่ 3', toks: [ta + tb, '+', ua + ub, '=', '?'], ans: a + b, hint: `${ta + tb} + ${ua + ub}` }); }
+      steps.push({ label: 'ขั้นที่ 3', toks: ['@0', '+', '@1', '=', '?'], ans: a + b, hint: `${ta + tb} + ${ua + ub}` }); }
     return { prompt: `หาผลบวก <span class="hl">${a} + ${b}</span> ทีละขั้น`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} ทีละขั้น`, mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'rowstack cmpblk' }, tensOnes(a, { sm: true }), h('b', { class: 'num cmpsign' }, '+'), tensOnes(b, { sm: true }))), multiStep(ctx, steps)); } };
   },
   /* practice: vertical addition, ones column then tens column */
@@ -1365,22 +1365,22 @@ Object.assign(Q, {
 Object.assign(Q, {
   sub100({ a, b, blocks = false }) {
     const borrow = a % 10 < b % 10;
-    return { prompt: `หาผลลบ <span class="hl">${a} − ${b}</span>`, say: `${thaiWords(a)} ลบ ${thaiWords(b)} เท่ากับเท่าไร`,
-      mount(bd, ctx) { const e = eqRow([a, '−', b, '=', '?']); bd.append(h('div', { class: 'colstack' }, blocks ? blocksTU(Math.floor(a / 10), a % 10, { sm: true }) : null, e),
+    return { prompt: blocks ? `หาผลลบ <span class="hl">${a} − ${b}</span> <small>(ใช้บล็อกช่วยได้)</small>` : `หาผลลบ <span class="hl">${a} − ${b}</span>`, say: `${thaiWords(a)} ลบ ${thaiWords(b)} เท่ากับเท่าไร`, __tier: blocks ? 1 : 2, __atoms: [`s13 ${a}-${b}`], /* v202: ตอบเลย (ยากสุด) ไว้ท้าย · ตัวเลขชุดเดียวกันไม่ซ้ำในเกม */
+      mount(bd, ctx) { const e = eqRow([a, '−', b, '=', '?']); bd.append(h('div', { class: 'colstack' }, blocks ? blockLab(a) : null, e),
         answerBox(ctx, a - b, { hint: borrow ? 'หน่วยไม่พอลบ ให้กระจาย 1 สิบ เป็น 10 หน่วยก่อน' : 'หลักหน่วยลบหลักหน่วย หลักสิบลบหลักสิบ' })); ctx.onRight = () => e.fill(a - b); } };
   },
   /* practice: step by step */
   subSteps({ a, b }) {
     const ta = Math.floor(a / 10) * 10, ua = a % 10, tb = Math.floor(b / 10) * 10, ub = b % 10, steps = [];
     if (ua >= ub) {
-      if (b < 10) steps.push({ label: 'ขั้นที่ 1', toks: [ua, '−', ub, '=', '?'], ans: ua - ub, hint: `ลบหลักหน่วย ${ua} − ${ub}`, say: 'ขั้นที่สอง รวมกับสิบ' }, { label: 'ขั้นที่ 2', toks: [ta, '+', ua - ub, '=', '?'], ans: a - b, hint: `${ta} + ${ua - ub}` });
-      else steps.push({ label: 'ขั้นที่ 1', toks: [ta, '−', tb, '=', '?'], ans: ta - tb, hint: `${ta / 10} สิบ − ${tb / 10} สิบ`, say: 'ขั้นที่สอง ลบหลักหน่วย' }, { label: 'ขั้นที่ 2', toks: [ua, '−', ub, '=', '?'], ans: ua - ub, hint: `${ua} − ${ub}`, say: 'ขั้นที่สาม รวมผล' }, { label: 'ขั้นที่ 3', toks: [ta - tb, '+', ua - ub, '=', '?'], ans: a - b, hint: `${ta - tb} + ${ua - ub}` });
+      if (b < 10) steps.push({ label: 'ขั้นที่ 1', toks: [ua, '−', ub, '=', '?'], ans: ua - ub, hint: `ลบหลักหน่วย ${ua} − ${ub}`, say: 'ขั้นที่สอง รวมกับสิบ' }, { label: 'ขั้นที่ 2', toks: [ta, '+', '@0', '=', '?'], ans: a - b, hint: `${ta} + ${ua - ub}` });
+      else steps.push({ label: 'ขั้นที่ 1', toks: [ta, '−', tb, '=', '?'], ans: ta - tb, hint: `${ta / 10} สิบ − ${tb / 10} สิบ`, say: 'ขั้นที่สอง ลบหลักหน่วย' }, { label: 'ขั้นที่ 2', toks: [ua, '−', ub, '=', '?'], ans: ua - ub, hint: `${ua} − ${ub}`, say: 'ขั้นที่สาม รวมผล' }, { label: 'ขั้นที่ 3', toks: ['@0', '+', '@1', '=', '?'], ans: a - b, hint: `${ta - tb} + ${ua - ub}` });
     } else { // กระจาย 1 สิบ
-      steps.push({ label: 'ขั้นที่ 1 กระจาย', toks: [a, '=', ta - 10, '+', '?'], ans: ua + 10, hint: `กระจาย 1 สิบ: ${ua} + 10`, say: 'ขั้นที่สอง ลบหน่วย' }, { label: 'ขั้นที่ 2', toks: [ua + 10, '−', ub, '=', '?'], ans: ua + 10 - ub, hint: `${ua + 10} − ${ub}`, say: b < 10 ? 'ขั้นที่สาม รวมผล' : 'ขั้นที่สาม ลบสิบ' });
-      if (b < 10) steps.push({ label: 'ขั้นที่ 3', toks: [ta - 10, '+', ua + 10 - ub, '=', '?'], ans: a - b, hint: `${ta - 10} + ${ua + 10 - ub}` });
-      else steps.push({ label: 'ขั้นที่ 3', toks: [ta - 10, '−', tb, '=', '?'], ans: ta - 10 - tb, hint: `${ta - 10} − ${tb}`, say: 'ขั้นที่สี่ รวมผล' }, { label: 'ขั้นที่ 4', toks: [ta - 10 - tb, '+', ua + 10 - ub, '=', '?'], ans: a - b, hint: `${ta - 10 - tb} + ${ua + 10 - ub}` });
+      steps.push({ label: 'ขั้นที่ 1 กระจาย', toks: [a, '=', ta - 10, '+', '?'], ans: ua + 10, hint: `กระจาย 1 สิบ: ${ua} + 10`, say: 'ขั้นที่สอง ลบหน่วย' }, { label: 'ขั้นที่ 2', toks: ['@0', '−', ub, '=', '?'], ans: ua + 10 - ub, hint: `${ua + 10} − ${ub}`, say: b < 10 ? 'ขั้นที่สาม รวมผล' : 'ขั้นที่สาม ลบสิบ' });
+      if (b < 10) steps.push({ label: 'ขั้นที่ 3', toks: [ta - 10, '+', '@1', '=', '?'], ans: a - b, hint: `${ta - 10} + ${ua + 10 - ub}` });
+      else steps.push({ label: 'ขั้นที่ 3', toks: [ta - 10, '−', tb, '=', '?'], ans: ta - 10 - tb, hint: `${ta - 10} − ${tb}`, say: 'ขั้นที่สี่ รวมผล' }, { label: 'ขั้นที่ 4', toks: ['@2', '+', '@1', '=', '?'], ans: a - b, hint: `${ta - 10 - tb} + ${ua + 10 - ub}` });
     }
-    return { prompt: `หาผลลบ <span class="hl">${a} − ${b}</span> ทีละขั้น`, say: `หาผลลบ ${thaiWords(a)} ลบ ${thaiWords(b)} ทีละขั้น`, mount(bd, ctx) { bd.append(blocksTU(Math.floor(a / 10), a % 10, { sm: true }), multiStep(ctx, steps)); } };
+    return { prompt: `หาผลลบ <span class="hl">${a} − ${b}</span> ทีละขั้น`, say: `หาผลลบ ${thaiWords(a)} ลบ ${thaiWords(b)} ทีละขั้น`, __tier: 0, __atoms: [`s13 ${a}-${b}`], mount(bd, ctx) { bd.append(blockLab(a), multiStep(ctx, steps)); } }; /* v202: ขั้นช่วยคิดมาก่อน · บล็อกกดกระจาย/เอาออกได้ */
   },
   /* practice: vertical subtraction */
   vertSub({ a, b }) {
@@ -1396,9 +1396,9 @@ Object.assign(Q, {
   },
   /* practice: fact family (addition ↔ subtraction) */
   factFam({ a, b, k = rnd(0, 2) }) {
-    const c = a + b, forms = [[c, '−', a, '=', '?', b], [c, '−', b, '=', '?', a], ['?', '−', a, '=', b, c]], f = forms[k], toks = f.slice(0, 5);
-    return { prompt: `รู้ว่า <span class="hl">${a} + ${b} = ${c}</span> เติมคำตอบ`, say: `รู้ว่า ${thaiWords(a)} บวก ${thaiWords(b)} เท่ากับ ${thaiWords(c)} เติมคำตอบ`,
-      mount(bd, ctx) { const e = eqRow(toks); bd.append(h('div', { class: 'colstack' }, barModel({ parts: [a, b], labels: ['', ''] }), eqRow([a, '+', b, '=', c], { sm: true }), e), answerBox(ctx, f[5], { hint: 'การบวกและการลบเป็นครอบครัวเดียวกัน: ส่วนรวม − ส่วนหนึ่ง = อีกส่วน' })); ctx.onRight = () => e.fill(f[5]); } };
+    const c = a + b, __atoms = [`ff ${a}+${b}`], forms = [[c, '−', a, '=', '?', b], [c, '−', b, '=', '?', a], ['?', '−', a, '=', b, c]], f = forms[k], toks = f.slice(0, 5);
+    return { __atoms, prompt: `รู้ว่า <span class="hl">${a} + ${b} = ${c}</span> เติมคำตอบ`, say: `รู้ว่า ${thaiWords(a)} บวก ${thaiWords(b)} เท่ากับ ${thaiWords(c)} เติมคำตอบ`,
+      mount(bd, ctx) { const e = eqRow(toks); bd.append(h('div', { class: 'colstack' }, partWhole(c, a, b, { w: 'clamp(170px,19cqw,220px)', q: ['b', 'a', 'whole'][k] }) /* v202: วงกลมส่วนรวม–ส่วนย่อย แทนแท่ง · จำนวนที่ถามเป็น ? */, eqRow([a, '+', b, '=', c], { sm: true }), e), answerBox(ctx, f[5], { hint: 'การบวกและการลบเป็นครอบครัวเดียวกัน: ส่วนรวม − ส่วนหนึ่ง = อีกส่วน' })); ctx.onRight = () => e.fill(f[5]); } };
   },
   /* practice: unknown */
   findX({ toks }) { // toks like ['?', '−', 13, '=', 54]

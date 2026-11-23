@@ -904,7 +904,7 @@ function varyS20(o) { if (!o || typeof o.a !== 'number') return o; for (let g = 
 /* rough difficulty of a question: bigger numbers, more numbers, decimals/fractions, longer text → harder (ผู้ใช้ขอ: ง่าย → ยาก) */
 function qDiff(q) { if (q.__diff != null) return q.__diff; qSig(q); const t = String(q.__txt || q.prompt || '').replace(/<[^>]+>/g, ' '), nums = t.match(/\d[\d,]*(?:\.\d+)?/g) || [];
   const big = nums.reduce((m, x) => Math.max(m, +x.replace(/,/g, '')), 0), dec = nums.filter(x => /\./.test(x)).length, ops = (t.match(/[×÷]/g) || []).length;
-  return (q.__diff = 4 * Math.log10(big + 1) + Math.min(nums.length, 12) * .8 + dec * 2 + ops * 1.2 + Math.min(t.length, 400) / 60); }
+  return (q.__diff = (q.__tier || 0) * 100 /* v202: a lesson can order its kinds (ขั้นช่วยคิด → บล็อก → ตอบเลย) */ + 4 * Math.log10(big + 1) + Math.min(nums.length, 12) * .8 + dec * 2 + ops * 1.2 + Math.min(t.length, 400) / 60); }
 /* v108 (ผู้ใช้ขอ): every topic of the lesson gets about 2–3 questions, at least 8 per game —
    kind of a question = its own __sig tag (first word) or its prompt pattern; N = clamp(2.5 × kinds, 8, 15) unless the lesson sets gameN */
 const qKind0 = q => { if (q.__kind) return q.__kind; if (q.__sig) return (q.__kind = String(q.__sig).split(' ')[0]); // no tag → the question's own code (same constructor = same kind)

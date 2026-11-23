@@ -3968,3 +3968,30 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .boss-result:has(.bigstars) .boss-end{width:clamp(110px,12cqw,140px)} /* v192: หน้าชนะ (มีดาว) ให้ปุ่มอยู่ในจอ */
 /* v192 · เรื่องเล่าสอบปลายภาค: ป้ายบทใต้บอสแต่ละตัว */
 .st-mlab{position:absolute;left:50%;top:100%;transform:translateX(-50%);white-space:nowrap;font-size:clamp(.7rem,1.4cqw,.9rem);font-weight:800;color:#1E1447;background:#FFD45C;border-radius:999px;padding:1px 8px;margin-top:2px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+
+/* v202 blockLab — tap blocks to take away, button to regroup one ten */
+.blab{display:flex;flex-direction:column;align-items:center;gap:8px}
+.blab-area{display:flex;align-items:flex-end;gap:22px;min-height:150px;padding:10px 14px;border-radius:16px;background:var(--surface-2);box-shadow:inset 0 0 0 2px var(--hair)}
+.blab-col{display:flex;flex-direction:column;align-items:center;gap:4px}.blab-col small{font:700 13px var(--font);color:var(--ink-3)}
+.blab-g{display:flex;gap:4px;align-items:flex-end}
+.blab-g.rod{max-width:250px;flex-wrap:wrap}
+.blab-g.cube{display:grid;grid-template-columns:repeat(5,auto);gap:4px}
+.blab-p{position:relative;padding:3px;border:0;border-radius:8px;background:transparent;cursor:pointer;touch-action:manipulation;transition:transform var(--t1) var(--ease),opacity var(--t2)}
+.blab-p:active{transform:scale(.92)}
+.blab-p.rod svg{display:block;width:17px;height:126px}
+.blab-p.cube svg{display:block;width:21px;height:21px}
+.blab-p.gold svg rect{fill:url(#g-yellow)}
+.blab-p.gone{opacity:.3}
+.blab-p.gone::after{content:'';position:absolute;left:-3px;right:-3px;top:50%;height:3px;background:var(--coral-2);transform:rotate(-38deg);border-radius:2px}
+.blab-p.rod.gone::after{transform:rotate(-70deg)}
+.blab-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.blab-read{font:700 17px var(--font);color:var(--ink-2)}.blab-read b{font:800 21px var(--font-num);color:var(--ink)}
+.blab-tip{font:600 13px var(--font);color:var(--ink-3);text-align:center}
+
+/* v202 part–whole steps (ป.1 บทที่ 13 ด่าน 7–9) */
+.pw .c.pwhl{box-shadow:0 0 0 4px var(--gold),var(--e1)}
+.pw .c.pwdim{opacity:.28}
+.pw .c{transition:opacity var(--t2),box-shadow var(--t2)}
+.unk-eq{font-size:clamp(34px,5cqw,52px)}
+.unk-eq b.unk-hl{background:var(--gold-soft);border-radius:10px;box-shadow:0 0 0 3px var(--gold)}
+.unk-st{font:600 16px/1.35 var(--font);color:var(--ink-2);max-width:380px;display:block}

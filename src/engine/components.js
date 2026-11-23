@@ -1006,6 +1006,32 @@ function blocksTU(t, u, o = {}) {
   if (u) w.append(h('div', { class: 'bg cube' + (u >= 10 ? ' over' : '') + (o.hiU ? ' hi' : '') }, h('div', { class: 'bi' }, [...Array(u)].map((_, i) => h('span', { class: 'b' + (u >= 10 && i < 10 && !o.sub ? ' ten' : '') + (i >= u - xU ? ' gone' : ''), html: CUBE_SVG }))), o.labels ? h('div', { class: 'cap' }, `${u} หน่วย`) : null));
   return w;
 }
+/* v202 (ผู้ใช้ขอ: บล็อกในเมืองลบร้อยต้องกดยืมได้ กดลบออกได้) — blocks the child works with:
+   · แตะแท่งสิบ / ลูกบาศก์ = เอาออก (ขีดฆ่า) · แตะอีกครั้ง = ใส่คืน
+   · ปุ่ม “กระจาย 1 สิบ” = แท่งสิบ 1 แท่งแตกเป็น 10 หน่วย (หน่วยที่ได้จากการกระจายเป็นสีทอง) · “ย้อน” = ย้อนทีละครั้ง
+   o.read: แสดงว่าเหลือกี่สิบกี่หน่วย (หน้าเรียนเท่านั้น — ในเกมห้ามบอกคำตอบ) · o.onChange(st) · el.state() → { t, u, gone: {t, u}, broke } */
+function blockLab(a, o = {}) {
+  const S = { rods: range(1, Math.floor(a / 10)).map(() => ({ x: 0 })), cubes: range(1, a % 10).map(() => ({ x: 0, g: 0 })), broke: 0, hist: [] };
+  const area = h('div', { class: 'blab-area' }), read = o.read ? h('div', { class: 'blab-read' }) : null;
+  const left = () => ({ t: S.rods.filter(r => !r.x).length, u: S.cubes.filter(c => !c.x).length });
+  const st = () => { const L = left(); return { t: L.t, u: L.u, left: L.t * 10 + L.u, goneT: S.rods.filter(r => r.x).length, goneU: S.cubes.filter(c => c.x).length, broke: S.broke }; };
+  const paint = () => { area.innerHTML = '';
+    const R = h('div', { class: 'blab-g rod' }, ...S.rods.map((r, i) => h('button', { class: 'blab-p rod' + (r.x ? ' gone' : ''), 'aria-label': 'แท่งสิบ', html: ROD_SVG, onclick: e => { e.stopPropagation(); r.x ^= 1; S.hist.push(['x', 'r', i]); sfx.pop(r.x ? 2 : 5); done(); } })));
+    const C = h('div', { class: 'blab-g cube' }, ...S.cubes.map((c, i) => h('button', { class: 'blab-p cube' + (c.x ? ' gone' : '') + (c.g ? ' gold' : ''), 'aria-label': 'ลูกบาศก์หน่วย', html: CUBE_SVG, onclick: e => { e.stopPropagation(); c.x ^= 1; S.hist.push(['x', 'c', i]); sfx.pop(c.x ? 3 : 6); done(); } })));
+    area.append(S.rods.length ? h('div', { class: 'blab-col' }, R, h('small', null, 'สิบ')) : '', S.cubes.length ? h('div', { class: 'blab-col' }, C, h('small', null, 'หน่วย')) : '');
+    if (read) { const L = left(); read.innerHTML = `เหลือ <b>${L.t}</b> สิบ <b>${L.u}</b> หน่วย`; }
+    brk.disabled = !S.rods.some(r => !r.x); undo.disabled = !S.hist.length; };
+  const done = () => { paint(); o.onChange && o.onChange(st()); };
+  const brk = h('button', { class: 'btn sm info ia blab-brk', onclick: e => { e.stopPropagation(); let i = -1; for (let k = S.rods.length - 1; k >= 0; k--) if (!S.rods[k].x) { i = k; break; } if (i < 0) return;
+    const r = S.rods.splice(i, 1)[0]; S.cubes.push(...range(1, 10).map(() => ({ x: 0, g: 1 }))); S.broke++; S.hist.push(['b', r, i]); sfx.pop(4); say('กระจายหนึ่งสิบ เป็นสิบหน่วย', true); done();
+    area.querySelectorAll('.blab-p.cube.gold').forEach((n, k) => n.animate([{ transform: 'translateY(-14px) scale(.4)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 320, delay: k * 25, fill: 'backwards', easing: 'cubic-bezier(.3,1.5,.5,1)' })); } }, icon('right'), 'กระจาย 1 สิบ → 10 หน่วย');
+  const undo = h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); const h0 = S.hist.pop(); if (!h0) return;
+    if (h0[0] === 'x') { const arr = h0[1] === 'r' ? S.rods : S.cubes; if (arr[h0[2]]) arr[h0[2]].x ^= 1; }
+    else { S.cubes.splice(S.cubes.length - 10, 10); S.rods.splice(h0[2], 0, h0[1]); S.broke--; }
+    sfx.tap(); done(); } }, icon('undo'), 'ย้อน');
+  const w = h('div', { class: 'blab ia' }, area, h('div', { class: 'blab-bar' }, brk, undo), read, h('div', { class: 'blab-tip' }, o.tip || 'แตะบล็อกเพื่อเอาออก · หน่วยไม่พอ กด “กระจาย 1 สิบ”'));
+  w.addEventListener('click', e => e.stopPropagation()); w.state = st; paint(); return w;
+}
 /* vertical addition layout: show = { ones, tens, carry } · q = 'ones' | 'tens' marks the asked cell */
 function vertLayout(a, b, o = {}) {
   const d = n => [Math.floor(n / 10) % 10 || (n >= 10 ? 0 : ''), n % 10], s = a + b, carry = (a % 10 + b % 10) >= 10, show = o.show || {};
@@ -1022,10 +1048,13 @@ function vertLayout(a, b, o = {}) {
 }
 /* several equation steps answered one after another with one answer box */
 function multiStep(ctx, steps, o = {}) {
-  const rows = steps.map((st, i) => { const e = eqRow(st.toks, { sm: true }); const r = h('div', { class: 'ms-row' + (i ? ' wait' : ' on') }, st.label ? h('span', { class: 'ms-lab' }, st.label) : null, e); r.e = e; return r; });
+  /* v202 (ผู้ใช้เจอ: ขั้นที่ 2 โชว์คำตอบของขั้นที่ 1): a token '@k' = the answer of step k — shown as □ until that step is solved */
+  const refs = [];
+  const rows = steps.map((st, i) => { const e = eqRow(st.toks, { sm: true }); [...e.children].forEach((c, j) => { const t = st.toks[j]; if (typeof t === 'string' && /^@\d+$/.test(t)) { c.textContent = '□'; c.classList.add('ms-ref'); refs.push([+t.slice(1), c]); } });
+    const r = h('div', { class: 'ms-row' + (i ? ' wait' : ' on') }, st.label ? h('span', { class: 'ms-lab' }, st.label) : null, e); r.e = e; return r; });
   const box = h('div', { class: 'ms-box' }); let k = 0;
   const next = () => { box.innerHTML = ''; const st = steps[k];
-    const sub = k < steps.length - 1 ? { check: (ok, hint) => { if (ok) { rows[k].e.fill(st.ans); rows[k].classList.remove('on'); rows[k].classList.add('done'); sfx.pop(k + 3); k++; rows[k].classList.remove('wait'); rows[k].classList.add('on'); ctx.say && ctx.say(steps[k].say || 'ถูกต้อง ทำขั้นต่อไป'); next(); } else ctx.check(false, hint); } } : ctx;
+    const sub = k < steps.length - 1 ? { check: (ok, hint) => { if (ok) { refs.forEach(([j, c]) => { if (j === k) { c.textContent = String(st.ans); c.classList.add('filled'); } }); rows[k].e.fill(st.ans); rows[k].classList.remove('on'); rows[k].classList.add('done'); sfx.pop(k + 3); k++; rows[k].classList.remove('wait'); rows[k].classList.add('on'); ctx.say && ctx.say(steps[k].say || 'ถูกต้อง ทำขั้นต่อไป'); next(); } else ctx.check(false, hint); } } : ctx;
     box.append(answerBox(sub, st.ans, { hint: st.hint })); };
   next(); ctx.onRight = () => { rows[k].e.fill(steps[k].ans); rows[k].classList.add('done'); };
   return h('div', { class: 'rowstack ms' }, h('div', { class: 'colstack ms-rows' }, ...rows), box);

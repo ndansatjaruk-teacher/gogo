@@ -1910,15 +1910,20 @@ const WS13_FAM = [[56, 23], [32, 39], [47, 8], [26, 15], [46, 34], [33, 59]];
 const WS13_X1 = [['?', '−', 13, '=', 54], [49, '+', '?', '=', 88], ['?', '+', 46, '=', 71], [84, '−', '?', '=', 75], [11, '+', '?', '=', 74], ['?', '−', 28, '=', 30], [50, '−', '?', '=', 33], ['?', '+', 36, '=', 72], ['?', '−', 39, '=', 29], ['?', '+', 38, '=', 43]];
 const WS13_X2 = [[58, '+', '?', '=', 68], [60, '−', '?', '=', 34], ['?', '+', 25, '=', 50], [77, '+', '?', '=', 94], ['?', '−', 26, '=', 4], [61, '+', '?', '=', 90], ['?', '+', 28, '=', 51], ['?', '−', 57, '=', 29], ['?', '−', 44, '=', 18]];
 /* take away with rods and cubes; regroup one ten into ten ones when the ones are not enough */
-function subBlocksSim(a, b) {
-  let t = Math.floor(a / 10), u = a % 10; const tb = Math.floor(b / 10), ub = b % 10, vis = h('div', { class: 'rowstack cmpblk' }), eq = eqRow([a, '−', b, '=', '?']), note = h('div', { class: 'cap tm-note' }, `มี ${t} สิบ ${u} หน่วย ต้องเอาออก ${tb ? tb + ' สิบ ' : ''}${ub} หน่วย`);
-  const draw = o => { vis.innerHTML = ''; vis.append(blocksTU(t, u, { labels: true, sub: true, ...o })); }; draw({});
-  let st = u < ub ? 0 : 1;
-  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation();
-    if (st === 0) { t--; u += 10; draw({}); vis.animate([{ transform: 'scale(.95)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.3,1.5,.5,1)' }); note.innerHTML = `หน่วยไม่พอ → <b>กระจาย 1 สิบ เป็น 10 หน่วย</b> ได้ ${t} สิบ ${u} หน่วย`; btn.lastChild.textContent = `เอาออก ${b}`; sfx.pop(4); say('หน่วยไม่พอ กระจายหนึ่งสิบ เป็นสิบหน่วย', true); st = 1; return; }
-    if (st === 1) { draw({ xT: tb, xU: ub }); note.innerHTML = `เอาออก ${tb ? tb + ' สิบ ' : ''}${ub} หน่วย`; btn.lastChild.textContent = 'ดูที่เหลือ'; sfx.pop(2); st = 2; return; }
-    t -= tb; u -= ub; draw({}); eq.fill(a - b); note.innerHTML = `เหลือ ${t} สิบ ${u} หน่วย = <b>${a - b}</b>`; btn.remove(); sfx.ok(); say(`${thaiWords(a)} ลบ ${thaiWords(b)} เท่ากับ ${thaiWords(a - b)}`, true); } }, icon('right'), h('span', null, st === 0 ? 'กระจาย 1 สิบ' : `เอาออก ${b}`));
-  return h('div', { class: 'colstack' }, vis, eq, note, btn);
+function subBlocksSim(a, b) { /* v202 (ผู้ใช้ขอ): เด็กกดเอาออก และกดกระจายเอง — ไม่ใช่กดปุ่มดูอย่างเดียว */
+  const tb = Math.floor(b / 10), ub = b % 10, borrow = a % 10 < ub, eq = eqRow([a, '−', b, '=', '?']);
+  const note = h('div', { class: 'cap tm-note', html: `ต้องเอาออก ${tb ? `<b>${tb} สิบ</b> ` : ''}<b>${ub} หน่วย</b>` + (borrow ? ` — หน่วยมีไม่พอ กด <b>กระจาย 1 สิบ</b> ก่อน` : '') });
+  let fin = false; const finish = () => { if (fin) return; fin = true; eq.fill(a - b); note.innerHTML = `เหลือ ${Math.floor((a - b) / 10)} สิบ ${(a - b) % 10} หน่วย = <b>${a - b}</b>`; note.classList.add('fres'); help.dataset.done = 1; help.remove(); sfx.ok(); say(`${thaiWords(a)} ลบ ${thaiWords(b)} เท่ากับ ${thaiWords(a - b)}`, true); };
+  const lab = blockLab(a, { read: true, onChange: st => { if (st.left === a - b && st.goneT * 10 + st.goneU === b) finish(); else if (st.goneU > ub && !fin) note.innerHTML = `เอาออกเกินแล้ว ต้องเอาออก ${ub} หน่วย — แตะอีกครั้งเพื่อใส่คืน`; } });
+  /* stuck? “ดูวิธีทำ” does it slowly on the same blocks */
+  const help = h('button', { class: 'btn info ia', onclick: async e => { e.stopPropagation(); help.disabled = true; const st = lab.state(); if (st.goneT || st.goneU || st.broke) { lab.replaceWith(lab2()); }
+    const L = () => host.querySelector('.blab'), tap = sel => { const el = [...L().querySelectorAll(sel)].pop(); el && el.click(); };
+    if (borrow) { L().querySelector('.blab-brk').click(); await sleep(700); }
+    for (let k = 0; k < tb; k++) { const el = [...L().querySelectorAll('.blab-p.rod:not(.gone)')].pop(); el && el.click(); await sleep(260); }
+    for (let k = 0; k < ub; k++) { const el = [...L().querySelectorAll('.blab-p.cube:not(.gone)')].pop(); el && el.click(); await sleep(200); } } }, icon('eye'), 'ดูวิธีทำ');
+  const lab2 = () => blockLab(a, { read: true, onChange: st => { if (st.left === a - b && st.goneT * 10 + st.goneU === b) finish(); } });
+  const host = h('div', null, lab);
+  return h('div', { class: 'colstack' }, host, eq, note, help);
 }
 function subSplitSim(a, b) {
   const ta = a - a % 10, ua = a % 10, tb = b - b % 10, ub = b % 10, rows = [];
@@ -1928,6 +1933,7 @@ function subSplitSim(a, b) {
   const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const [lab, toks] = rows[k]; const r = h('div', { class: 'ms-row done' }, h('span', { class: 'ms-lab' }, `ขั้นที่ ${k + 1} ${lab}`), eqRow(toks, { sm: true })); r.style.animation = 'popIn .35s var(--spring)'; list.append(r); sfx.pop(k); k++; if (k >= rows.length) { btn.remove(); say(`${thaiWords(a)} ลบ ${thaiWords(b)} เท่ากับ ${thaiWords(a - b)}`, true); } } }, icon('right'), 'ทีละขั้น');
   return h('div', { class: 'colstack' }, eqRow([a, '−', b, '=', '?']), list, btn);
 }
+const stepsSim = (a, b) => h('div', { class: 'rowstack' }, blockLab(a, { tip: 'ใช้บล็อกช่วยคิดได้: แตะเพื่อเอาออก · กดกระจาย 1 สิบ' }), subSplitSim(a, b)); /* v202 */
 function vertSubSim(a, b) {
   const borrow = a % 10 < b % 10, lay = h('div'), note = h('div', { class: 'cap vnote' }, 'ตั้งหลักให้ตรงกัน แล้วลบหลักหน่วยก่อน'); let st = 0;
   const draw = show => { lay.innerHTML = ''; lay.append(vertSubLayout(a, b, { show })); }; draw({});
@@ -1936,6 +1942,46 @@ function vertSubSim(a, b) {
     else { draw({ ones: true, tens: true, borrow }); note.innerHTML = `② หลักสิบ ${Math.floor(a / 10) - (borrow ? 1 : 0)} − ${Math.floor(b / 10)} = <b>${Math.floor((a - b) / 10)}</b> · ตอบ <b>${a - b}</b>`; btn.remove(); sfx.ok(); say(`ตอบ ${thaiWords(a - b)}`, true); } } }, icon('right'), h('span', null, 'ลบหลักหน่วย'));
   return h('div', { class: 'rowstack' }, h('div', { class: 'colstack' }, lay, btn), h('div', { class: 'colstack' }, blocksTU(Math.floor(a / 10), a % 10, { sm: true }), note));
 }
+/* v202 (ผู้ใช้ขอ: ด่าน 7–9 อธิบายไม่เข้าใจ) — ส่วนรวม/ส่วนย่อยแบบวงกลมที่เด็กเรียนในบทที่ 1 (partWhole) ทีละขั้น
+   famSim2: ① รวมกัน a + b = c ② สลับที่ b + a = c ③ เอาส่วนย่อย a ออก → c − a = b ④ เอา b ออก → c − b = a */
+function famSim2(a, b) {
+  const c = a + b, pw = partWhole(c, a, b, { w: 'clamp(230px,26cqw,300px)' }), C = k => pw.querySelector('.c.' + k), list = h('div', { class: 'colstack ms-rows' });
+  const mark = (on, off) => { ['whole', 'a', 'b'].forEach(k => { C(k).classList.toggle('pwhl', on.includes(k)); C(k).classList.toggle('pwdim', off.includes(k)); }); };
+  const steps = [[`ส่วนย่อยรวมกันเป็นส่วนรวม`, [a, '+', b, '=', c], ['a', 'b'], []], [`สลับที่ส่วนย่อย ได้ส่วนรวมเท่าเดิม`, [b, '+', a, '=', c], ['a', 'b'], []],
+    [`เอาส่วนย่อย ${a} ออกจากส่วนรวม เหลืออีกส่วน`, [c, '−', a, '=', b], ['whole', 'b'], ['a']], [`เอาส่วนย่อย ${b} ออก เหลือ ${a}`, [c, '−', b, '=', a], ['whole', 'a'], ['b']]];
+  let k = 0; const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const [t, toks, on, off] = steps[k]; mark(on, off);
+    const r = h('div', { class: 'ms-row done' }, h('span', { class: 'ms-lab' }, t), eqRow(toks, { sm: true })); r.style.animation = 'popIn .35s var(--spring)'; list.append(r); sfx.pop(k); say(t, true); k++;
+    if (k >= steps.length) { btn.remove(); list.append(h('div', { class: 'pm-why', html: 'จากประโยคการบวก 1 ประโยค เขียนการลบได้ 2 ประโยค: <b>ส่วนรวม − ส่วนย่อยหนึ่ง = ส่วนย่อยอีกส่วน</b>' })); } else btn.lastChild.textContent = 'ขั้นต่อไป'; } }, icon('right'), h('span', null, 'ทีละขั้น'));
+  return h('div', { class: 'rowstack' }, pw, h('div', { class: 'colstack' }, list, btn));
+}
+/* unkSim('25 + □ = 60'): ① หาส่วนรวม ② ส่วนย่อย ③ □ อยู่ตรงไหน → บวกหรือลบ ④ คำนวณ แล้วตรวจคำตอบ */
+const pwOf = s => { const [x, op, y, , z] = s.split(' '); return op === '+' ? { W: z, A: x, B: y, op } : { W: x, A: y, B: z, op }; };
+function unkSim(s) {
+  const [x, op, y, , z] = s.split(' '), P = pwOf(s), U = v => v === '□', wholeU = U(P.W), known = U(P.A) ? P.B : P.A;
+  const ans = wholeU ? +P.A + +P.B : +P.W - +known, expr = wholeU ? [+P.A, '+', +P.B, '=', '?'] : [+P.W, '−', +known, '=', '?'];
+  const big = h('div', { class: 'fbig unk-eq', html: s.split(' ').map(t => U(t) ? '<b class="fsign unk-box">□</b>' : /^\d+$/.test(t) ? `<b class="num">${t}</b>` : `<b class="fop">${t}</b>`).join(' ') });
+  const pw = partWhole('', '', '', { w: 'clamp(210px,24cqw,270px)' }), C = k => pw.querySelector('.c.' + k), list = h('div', { class: 'colstack ms-rows' });
+  const put = (k, v) => { C(k).textContent = U(v) ? '?' : v; C(k).classList.toggle('q', U(v)); C(k).animate([{ transform: 'translate(-50%,-50%) scale(.6)' }, { transform: 'translate(-50%,-50%)' }], { duration: 300, easing: 'cubic-bezier(.3,1.5,.5,1)' }); };
+  let ex = null; const wIdx = op === '+' ? 4 : 0, hl = i => big.querySelectorAll('b').forEach((b, j) => b.classList.toggle('unk-hl', i.includes(j)));
+  const steps = [
+    [op === '+' ? `① ผลบวก <b>${U(z) ? '□' : z}</b> คือ<b>ส่วนรวม</b>` : `① ตัวตั้ง <b>${U(x) ? '□' : x}</b> คือ<b>ส่วนรวม</b>`, () => { hl([wIdx]); put('whole', P.W); }],
+    [`② อีกสองจำนวนเป็น<b>ส่วนย่อย</b>`, () => { hl(op === '+' ? [0, 2] : [2, 4]); put('a', P.A); put('b', P.B); }],
+    [wholeU ? `③ □ เป็นส่วนรวม → <b>นำส่วนย่อยมาบวกกัน</b>` : `③ □ เป็นส่วนย่อย → <b>ส่วนรวม − ส่วนย่อยที่รู้</b>`, () => { hl([]); ex = eqRow(expr, { sm: true }); list.append(ex); }],
+    [`④ ได้ □ = <b>${ans}</b> ตรวจ: ${s.replace('□', `<b>${ans}</b>`)} ✓`, () => { ex && ex.fill(ans); const q = pw.querySelector('.c.q'); if (q) { q.textContent = ans; q.classList.remove('q'); q.classList.add('filled'); } big.querySelector('.unk-box').textContent = ans; big.querySelector('.unk-box').classList.add('p4fill'); }]];
+  let k = 0; const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const [t, f] = steps[k]; list.append(h('div', { class: 'ms-row done unk-st', html: t })); f(); sfx.pop(k); say(t.replace(/<[^>]+>/g, ''), true); k++;
+    if (k >= steps.length) btn.remove(); else btn.lastChild.textContent = 'ขั้นต่อไป'; } }, icon('right'), h('span', null, 'ทีละขั้น'));
+  return h('div', { class: 'colstack' }, big, h('div', { class: 'rowstack' }, pw, h('div', { class: 'colstack' }, list, btn)));
+}
+/* game: □ with the part–whole picture beside it → ① choose how to find □ ② work it out on the column board (tap to borrow) */
+Object.assign(Q, {
+  unk1(s) { const S = p4uSolve(s), right = p4ex2(S.expr), opts = b3opts(S.expr).map(p4ex2), P = pwOf(s), U = v => v === '□';
+    const q = U(P.W) ? 'whole' : U(P.A) ? 'a' : 'b', wholeU = q === 'whole';
+    return { prompt: 'หาค่าของ □ — ดูส่วนรวม ส่วนย่อย แล้วเลือกวิธีหา', say: 'หาค่าของตัวไม่ทราบค่า ดูส่วนรวม ส่วนย่อย แล้วเลือกวิธีหา', __sig: 'u1 ' + s, mount(bd, ctx) {
+      const pw = partWhole(U(P.W) ? 0 : P.W, U(P.A) ? 0 : P.A, U(P.B) ? 0 : P.B, { q, w: 'clamp(170px,19cqw,220px)' });
+      const big = h('div', { class: 'fbig unk-eq', html: s.split(' ').map(t => U(t) ? '<b class="fsign">□</b>' : /^\d+$/.test(t) ? `<b class="num">${t}</b>` : `<b class="fop">${t}</b>`).join(' ') });
+      bd.append(h('div', { class: 't6-q p4-q p2q p2st f3-st b3uq' }, h('div', { class: 'p4-fig colstack' }, big, pw),
+        tkTwoStep(ctx, '① □ หาได้จากข้อใด', shuffle(opts), right, wholeU ? '□ อยู่ที่ส่วนรวม → นำส่วนย่อยมาบวกกัน' : '□ อยู่ที่ส่วนย่อย → ส่วนรวม − ส่วนย่อยที่รู้', () => b3colStep(S.expr, ctx), `<b>□ = ${right}</b> ✓ · ② ตั้ง${S.expr.includes('+') ? 'บวก' : 'ลบ'}หาค่า □`))); } }; }
+});
 function famSim(a, b) {
   const c = a + b, rows = [[a, '+', b, '=', c], [b, '+', a, '=', c], [c, '−', a, '=', b], [c, '−', b, '=', a]], list = h('div', { class: 'colstack ms-rows' }); let k = 0;
   const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const r = eqRow(rows[k], { sm: true }); r.style.animation = 'popIn .35s var(--spring)'; list.append(r); sfx.pop(k); k++; if (k >= 4) { btn.remove(); say('ครอบครัวเดียวกัน บวกกลับเป็นลบได้', true); } } }, icon('plus'), 'สร้างประโยคในครอบครัว');
@@ -1946,66 +1992,68 @@ const LESSONS_CH13 = [
   { id: 311, title: 'การลบจำนวนสองหลักกับหนึ่งหลักที่ไม่มีการกระจาย', short: 'สองหลัก − หนึ่งหลัก', tone: 'sky',
     goal: 'หาผลลบของจำนวนสองหลักกับจำนวนหนึ่งหลักที่ไม่มีการกระจาย',
     teach: [
-      { t: 'ยินดีต้อนรับสู่ <b>เมืองลบร้อย</b>! 47 − 3: เอาออกเฉพาะ<b>หน่วย</b> สิบยังเท่าเดิม — กดเอาออก', s: 'ยินดีต้อนรับสู่เมืองลบร้อย สี่สิบเจ็ดลบสาม เอาออกเฉพาะหน่วย สิบยังเท่าเดิม', v: el => el.append(subBlocksSim(47, 3)) },
-      { t: 'คิดทีละขั้น: ลบหน่วยก่อน แล้วรวมกับสิบ', s: 'คิดทีละขั้น ลบหน่วยก่อน แล้วรวมกับสิบ', v: el => el.append(subSplitSim(86, 4)) }
+      { t: 'ยินดีต้อนรับสู่ <b>เมืองลบร้อย</b>! คิด <b>86 − 4</b> ทีละขั้น: <b>ลบหน่วยก่อน</b> แล้วรวมกับสิบ — กด “ทีละขั้น”', s: 'ยินดีต้อนรับสู่เมืองลบร้อย คิดแปดสิบหกลบสี่ทีละขั้น ลบหน่วยก่อน แล้วรวมกับสิบ', v: el => el.append(stepsSim(86, 4)) },
+      { t: '<b>ลองเอาออกเอง</b>: 47 − 3 — แตะลูกบาศก์ <b>3 ลูก</b> เพื่อเอาออก สิบยังเท่าเดิม', s: 'ลองเอาออกเอง สี่สิบเจ็ดลบสาม แตะลูกบาศก์สามลูกเพื่อเอาออก', v: el => el.append(subBlocksSim(47, 3)) }
     ],
-    game: () => { const p = pk(WS13_1, 7); return [Q.sub100({ a: p[0][0], b: p[0][1], blocks: true }), Q.subSteps({ a: p[1][0], b: p[1][1] }), Q.subSteps({ a: p[2][0], b: p[2][1] }), ...p.slice(3).map(([a, b]) => Q.sub100({ a, b }))]; } },
+    game: () => { const p = pk(WS13_1, 7); return [...p.slice(0, 3).map(([a, b]) => Q.subSteps({ a, b })), ...p.slice(3, 5).map(([a, b]) => Q.sub100({ a, b, blocks: true })), ...p.slice(5).map(([a, b]) => Q.sub100({ a, b }))]; } /* v202: ทีละขั้น → บล็อก → ตอบเลย */ },
   { id: 312, title: 'การลบจำนวนสองหลักกับสองหลักที่ไม่มีการกระจาย', short: 'สองหลัก − สองหลัก', tone: 'coral',
     goal: 'หาผลลบของจำนวนสองหลักกับจำนวนสองหลักที่ไม่มีการกระจาย โดยลบสิบกับสิบ หน่วยกับหน่วย',
     teach: [
-      { t: '87 − 43: เอาออก<b>4 สิบ</b> และ<b>3 หน่วย</b>', s: 'แปดสิบเจ็ดลบสี่สิบสาม เอาออกสี่สิบ และสามหน่วย', v: el => el.append(subBlocksSim(87, 43)) },
-      { t: 'คิดทีละขั้น: สิบลบสิบ หน่วยลบหน่วย แล้วรวมกัน', s: 'คิดทีละขั้น สิบลบสิบ หน่วยลบหน่วย แล้วรวมกัน', v: el => el.append(subSplitSim(79, 52)) }
+      { t: 'คิด <b>79 − 52</b> ทีละขั้น: <b>สิบลบสิบ</b> หน่วยลบหน่วย แล้วรวมกัน — กด “ทีละขั้น”', s: 'คิดเจ็ดสิบเก้าลบห้าสิบสองทีละขั้น สิบลบสิบ หน่วยลบหน่วย แล้วรวมกัน', v: el => el.append(stepsSim(79, 52)) },
+      { t: '<b>ลองเอาออกเอง</b>: 87 − 43 — แตะแท่งสิบ <b>4 แท่ง</b> และลูกบาศก์ <b>3 ลูก</b>', s: 'ลองเอาออกเอง แปดสิบเจ็ดลบสี่สิบสาม แตะแท่งสิบสี่แท่ง และลูกบาศก์สามลูก', v: el => el.append(subBlocksSim(87, 43)) }
     ],
-    game: () => { const p = pk(WS13_2, 7); return [Q.sub100({ a: p[0][0], b: p[0][1], blocks: true }), Q.subSteps({ a: p[1][0], b: p[1][1] }), Q.subSteps({ a: p[2][0], b: p[2][1] }), ...p.slice(3).map(([a, b]) => Q.sub100({ a, b }))]; } },
+    game: () => { const p = pk(WS13_2, 7); return [...p.slice(0, 3).map(([a, b]) => Q.subSteps({ a, b })), ...p.slice(3, 5).map(([a, b]) => Q.sub100({ a, b, blocks: true })), ...p.slice(5).map(([a, b]) => Q.sub100({ a, b }))]; } /* v202: ทีละขั้น → บล็อก → ตอบเลย */ },
   { id: 313, title: 'การลบจำนวนสองหลักกับหนึ่งหลักมีการกระจาย', short: 'ลบมีการกระจาย', tone: 'mint',
     goal: 'หาผลลบที่หน่วยของตัวตั้งน้อยกว่าตัวลบ โดยกระจาย 1 สิบ เป็น 10 หน่วย',
     teach: [
-      { t: '52 − 7: 2 หน่วยเอาออก 7 ไม่ได้ → <b>กระจาย 1 สิบ เป็น 10 หน่วย</b> แล้วค่อยเอาออก', s: 'ห้าสิบสองลบเจ็ด สองหน่วยเอาออกเจ็ดไม่ได้ กระจายหนึ่งสิบเป็นสิบหน่วย แล้วค่อยเอาออก', v: el => el.append(subBlocksSim(52, 7)) },
-      { t: 'คิดทีละขั้น: 63 = 50 + 13 → 13 − 5 = 8 → 50 + 8 = 58', s: 'คิดทีละขั้น หกสิบสาม เท่ากับ ห้าสิบบวกสิบสาม', v: el => el.append(subSplitSim(63, 5)) }
+      { t: 'คิด <b>63 − 5</b> ทีละขั้น: 3 หน่วยลบ 5 ไม่ได้ → <b>กระจาย 1 สิบ</b>: 63 = 50 + 13 → 13 − 5 → รวมกับ 50', s: 'คิดหกสิบสามลบห้าทีละขั้น สามหน่วยลบห้าไม่ได้ กระจายหนึ่งสิบ หกสิบสามเท่ากับห้าสิบบวกสิบสาม', v: el => el.append(stepsSim(63, 5)) },
+      { t: '<b>ลองเอง</b>: 52 − 7 — 2 หน่วยไม่พอ กด <b>กระจาย 1 สิบ</b> ก่อน แล้วแตะเอาออก 7 หน่วย', s: 'ลองเอง ห้าสิบสองลบเจ็ด สองหน่วยไม่พอ กดกระจายหนึ่งสิบก่อน แล้วแตะเอาออกเจ็ดหน่วย', v: el => el.append(subBlocksSim(52, 7)) }
     ],
-    game: () => { const p = pk(WS13_B1, 7); return [Q.sub100({ a: p[0][0], b: p[0][1], blocks: true }), Q.subSteps({ a: p[1][0], b: p[1][1] }), Q.subSteps({ a: p[2][0], b: p[2][1] }), ...p.slice(3).map(([a, b]) => Q.sub100({ a, b }))]; } },
+    game: () => { const p = pk(WS13_B1, 7); return [...p.slice(0, 3).map(([a, b]) => Q.subSteps({ a, b })), ...p.slice(3, 5).map(([a, b]) => Q.sub100({ a, b, blocks: true })), ...p.slice(5).map(([a, b]) => Q.sub100({ a, b }))]; } /* v202: ทีละขั้น → บล็อก → ตอบเลย */ },
   { id: 314, title: 'การลบจำนวนสองหลักกับสองหลักมีการกระจาย', short: 'สองหลักมีการกระจาย', tone: 'orange',
     goal: 'หาผลลบของจำนวนสองหลักกับสองหลักที่มีการกระจาย',
     teach: [
-      { t: '62 − 27: กระจาย 1 สิบก่อน แล้วเอาออก 2 สิบ 7 หน่วย', s: 'หกสิบสองลบยี่สิบเจ็ด กระจายหนึ่งสิบก่อน แล้วเอาออกสองสิบ เจ็ดหน่วย', v: el => el.append(subBlocksSim(62, 27)) },
-      { t: 'คิดทีละขั้น: กระจาย → ลบหน่วย → ลบสิบ → รวม', s: 'คิดทีละขั้น กระจาย ลบหน่วย ลบสิบ รวม', v: el => el.append(subSplitSim(71, 36)) }
+      { t: 'คิด <b>71 − 36</b> ทีละขั้น: <b>กระจาย</b> → ลบหน่วย → ลบสิบ → รวม — กด “ทีละขั้น”', s: 'คิดเจ็ดสิบเอ็ดลบสามสิบหกทีละขั้น กระจาย ลบหน่วย ลบสิบ รวม', v: el => el.append(stepsSim(71, 36)) },
+      { t: '<b>ลองเอง</b>: 62 − 27 — กด <b>กระจาย 1 สิบ</b> แล้วเอาออก 2 สิบ 7 หน่วย', s: 'ลองเอง หกสิบสองลบยี่สิบเจ็ด กดกระจายหนึ่งสิบ แล้วเอาออกสองสิบ เจ็ดหน่วย', v: el => el.append(subBlocksSim(62, 27)) }
     ],
-    game: () => { const p = pk(WS13_B2, 7); return [Q.sub100({ a: p[0][0], b: p[0][1], blocks: true }), Q.subSteps({ a: p[1][0], b: p[1][1] }), Q.subSteps({ a: p[2][0], b: p[2][1] }), ...p.slice(3).map(([a, b]) => Q.sub100({ a, b }))]; } },
+    game: () => { const p = pk(WS13_B2, 7); return [...p.slice(0, 3).map(([a, b]) => Q.subSteps({ a, b })), ...p.slice(3, 5).map(([a, b]) => Q.sub100({ a, b, blocks: true })), ...p.slice(5).map(([a, b]) => Q.sub100({ a, b }))]; } /* v202: ทีละขั้น → บล็อก → ตอบเลย */ },
   { id: 315, title: 'การหาผลลบโดยการตั้งลบไม่มีการกระจาย', short: 'ตั้งลบไม่มีกระจาย', tone: 'lilac',
     goal: 'หาผลลบโดยการตั้งลบ หลักตรงกัน ลบหลักหน่วยก่อน แล้วลบหลักสิบ',
     teach: [
-      { t: '<b>ตั้งลบ</b>: หลักหน่วยตรงหลักหน่วย หลักสิบตรงหลักสิบ แล้ว<b>ลบหลักหน่วยก่อน</b>', s: 'ตั้งลบ หลักหน่วยตรงหลักหน่วย หลักสิบตรงหลักสิบ แล้วลบหลักหน่วยก่อน', v: el => el.append(vertSubSim(58, 23)) },
-      { t: 'ตัวลบหนึ่งหลักต้องอยู่ใน<b>หลักหน่วย</b>', s: 'ตัวลบหนึ่งหลักต้องอยู่ในหลักหน่วย', v: el => el.append(vertSubSim(39, 6)) }
+      { t: '<b>ตั้งลบ</b>: หลักหน่วยตรงหลักหน่วย หลักสิบตรงหลักสิบ แล้ว<b>ลบหลักหน่วยก่อน</b>', s: 'ตั้งลบ หลักหน่วยตรงหลักหน่วย หลักสิบตรงหลักสิบ แล้วลบหลักหน่วยก่อน', v: el => el.append(colWalk([58, 23], '−')) },
+      { t: 'ตัวลบหนึ่งหลักต้องอยู่ใน<b>หลักหน่วย</b>', s: 'ตัวลบหนึ่งหลักต้องอยู่ในหลักหน่วย', v: el => el.append(colWalk([39, 6], '−')) }
     ],
-    game: () => pk(WS13_V, 6).map(([a, b]) => Q.vertSub({ a, b })) },
+    game: () => pk(WS13_V, 8).map(([a, b]) => Q.colW({ nums: [a, b], op: '−', plain: true, prompt: `หาผลลบ <b class="num">${a} − ${b}</b> โดยการตั้งลบ`, say: `หาผลลบ ${thaiWords(a)} ลบ ${thaiWords(b)} โดยการตั้งลบ` })) /* v202: กระดานตั้งลบแบบเดียวกับชั้นอื่น */ },
   { id: 316, title: 'การหาผลลบโดยการตั้งลบมีการกระจาย', short: 'ตั้งลบมีกระจาย', tone: 'yellow',
     goal: 'หาผลลบโดยการตั้งลบที่มีการกระจาย: ขีดฆ่าหลักสิบ ลดลง 1 และหลักหน่วยเพิ่มขึ้น 10',
     teach: [
-      { t: 'หลักหน่วยไม่พอลบ: <b>ขีดฆ่าหลักสิบ เขียนลดลง 1</b> และหลักหน่วยเพิ่ม 10', s: 'หลักหน่วยไม่พอลบ ขีดฆ่าหลักสิบ เขียนลดลงหนึ่ง และหลักหน่วยเพิ่มสิบ', v: el => el.append(vertSubSim(52, 17)) },
-      { t: 'ตัวตั้งลงท้ายด้วย 0 ก็กระจายได้: 80 − 34', s: 'ตัวตั้งลงท้ายด้วยศูนย์ก็กระจายได้ แปดสิบลบสามสิบสี่', v: el => el.append(vertSubSim(80, 34)) }
+      { t: 'หลักหน่วยไม่พอลบ: <b>กระจาย 1 สิบ</b> — ขีดฆ่าหลักสิบ เขียนลดลง 1 และหลักหน่วยเพิ่ม 10 · ในเกม <b>แตะตัวเลขหลักสิบด้านบน</b> เพื่อกระจายเอง', s: 'หลักหน่วยไม่พอลบ กระจายหนึ่งสิบ ขีดฆ่าหลักสิบ เขียนลดลงหนึ่ง และหลักหน่วยเพิ่มสิบ ในเกมแตะตัวเลขหลักสิบด้านบนเพื่อกระจายเอง', v: el => el.append(colWalk([52, 17], '−')) },
+      { t: 'ตัวตั้งลงท้ายด้วย 0 ก็กระจายได้: 80 − 34', s: 'ตัวตั้งลงท้ายด้วยศูนย์ก็กระจายได้ แปดสิบลบสามสิบสี่', v: el => el.append(colWalk([80, 34], '−')) }
     ],
-    game: () => [...pk(WS13_B1, 2), ...pk(WS13_B2, 3), ...pk(WS13_MIX, 2)].map(([a, b]) => Q.vertSub({ a, b })) },
+    game: () => [...pk(WS13_B1, 3), ...pk(WS13_B2, 3), ...pk(WS13_MIX, 2)].map(([a, b]) => Q.colW({ nums: [a, b], op: '−', prompt: `หาผลลบ <b class="num">${a} − ${b}</b> โดยการตั้งลบ`, say: `หาผลลบ ${thaiWords(a)} ลบ ${thaiWords(b)} โดยการตั้งลบ` })) /* v202 (ผู้ใช้ขอ): ไม่กระจายให้ — เด็กแตะหลักสิบด้านบนเพื่อกระจายเอง */ },
   { id: 317, title: 'ความสัมพันธ์ของการบวกและการลบ', short: 'บวกกับลบสัมพันธ์กัน', tone: 'sky',
     goal: 'ใช้ความสัมพันธ์ของการบวกและการลบ เขียนประโยคการลบจากประโยคการบวก',
     teach: [
-      { t: 'ส่วนย่อย 2 ส่วนรวมกันเป็นส่วนรวม: จาก <b>45 + 28 = 73</b> ได้ <b>73 − 45 = 28</b> และ <b>73 − 28 = 45</b>', s: 'จาก สี่สิบห้าบวกยี่สิบแปดเท่ากับเจ็ดสิบสาม ได้ เจ็ดสิบสามลบสี่สิบห้าเท่ากับยี่สิบแปด', v: el => el.append(famSim(45, 28)) },
-      { t: 'ตัวอย่างที่ 2 (ไม่มีทด): จาก <b>30 + 25 = 55</b> เขียนการลบได้ 2 ประโยค — กดดูทีละขั้น', s: 'ตัวอย่างที่สอง จากสามสิบบวกยี่สิบห้าเท่ากับห้าสิบห้า เขียนการลบได้สองประโยค', v: el => el.append(famSim(30, 25)) }
+      { t: 'ส่วนย่อย 2 ส่วน <b>รวมกัน</b>เป็นส่วนรวม — ถ้า<b>เอาส่วนย่อยหนึ่งออก</b> ก็เหลืออีกส่วน: 30 + 25 = 55 — กด “ทีละขั้น”', s: 'ส่วนย่อยสองส่วนรวมกันเป็นส่วนรวม ถ้าเอาส่วนย่อยหนึ่งออก ก็เหลืออีกส่วน กดทีละขั้น', v: el => el.append(famSim2(30, 25)) },
+      { t: 'ตัวอย่างที่ 2 (มีทด): จาก <b>45 + 28 = 73</b> เขียนการลบได้ 2 ประโยค', s: 'ตัวอย่างที่สอง จากสี่สิบห้าบวกยี่สิบแปดเท่ากับเจ็ดสิบสาม เขียนการลบได้สองประโยค', v: el => el.append(famSim2(45, 28)) }
     ],
     game: () => [...pk(WS13_FAM, 4).map(([a, b]) => Q.factFam({ a, b })), Q.factFam({ a: rnd(21, 49), b: rnd(11, 39) }), Q.factFam({ a: rnd(21, 49), b: rnd(11, 39) })] },
   { id: 318, title: 'การหาค่าของตัวไม่ทราบค่า (1)', short: 'ตัวไม่ทราบค่า (1)', tone: 'coral',
     goal: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ',
     teach: [
-      { t: '<b>? − 12 = 30</b>: เอาออก 12 แล้วเหลือ 30 → เดิมมี 30 + 12 = <b>42</b>', s: 'ช่องว่างลบสิบสองเท่ากับสามสิบ เดิมมีสามสิบบวกสิบสองเท่ากับสี่สิบสอง', v: el => el.append(barModel({ whole: 42, parts: [30, 12], labels: ['เหลือ', 'เอาออก'], q: 'whole' })) },
-      { t: '<b>25 + ? = 60</b>: ส่วนรวม 60 รู้ส่วนหนึ่ง 25 → อีกส่วน 60 − 25 = <b>35</b>', s: 'ยี่สิบห้าบวกช่องว่างเท่ากับหกสิบ อีกส่วน หกสิบลบยี่สิบห้าเท่ากับสามสิบห้า', v: el => el.append(barModel({ whole: 60, parts: [25, 35], labels: ['', ''], q: 1 })) }
+      { t: '<b>□</b> คือจำนวนที่ยังไม่รู้ — หาว่า<b>ส่วนรวม</b>คือจำนวนไหนก่อน: 25 + □ = 60', s: 'ช่องสี่เหลี่ยม คือจำนวนที่ยังไม่รู้ หาว่าส่วนรวมคือจำนวนไหนก่อน ยี่สิบห้าบวกช่องว่างเท่ากับหกสิบ', v: el => el.append(unkSim('25 + □ = 60')) },
+      { t: 'ตัวอย่างที่ 2: □ − 12 = 30 — ในประโยคการลบ <b>ตัวตั้งคือส่วนรวม</b>', s: 'ตัวอย่างที่สอง ช่องว่างลบสิบสองเท่ากับสามสิบ ในประโยคการลบ ตัวตั้งคือส่วนรวม', v: el => el.append(unkSim('□ − 12 = 30')) },
+      { t: 'ตัวอย่างที่ 3: 50 − □ = 33 — □ เป็นส่วนย่อย', s: 'ตัวอย่างที่สาม ห้าสิบลบช่องว่างเท่ากับสามสิบสาม ช่องว่างเป็นส่วนย่อย', v: el => el.append(unkSim('50 − □ = 33')) }
     ],
-    game: () => pk(WS13_X1, 8).map(toks => Q.b3Unk(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ },
+    game: () => pk(WS13_X1, 8).map(toks => Q.unk1(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ },
   { id: 319, title: 'การหาค่าของตัวไม่ทราบค่า (2)', short: 'ตัวไม่ทราบค่า (2)', tone: 'mint',
     goal: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์ที่มีการทดหรือการกระจาย',
     teach: [
-      { t: '<b>70 − ? = 26</b>: เอาออกไปเท่าไรจึงเหลือ 26 → 70 − 26 = <b>44</b>', s: 'เจ็ดสิบลบช่องว่างเท่ากับยี่สิบหก เจ็ดสิบลบยี่สิบหกเท่ากับสี่สิบสี่', v: el => el.append(barModel({ whole: 70, parts: [44, 26], labels: ['เอาออก', 'เหลือ'], q: 0 })) },
-      { t: '<b>? + 18 = 53</b>: ส่วนรวม 53 รู้ส่วนหนึ่ง 18 → อีกส่วน 53 − 18 = <b>35</b> (กระจาย 1 สิบ)', s: 'ช่องว่างบวกสิบแปดเท่ากับห้าสิบสาม ห้าสิบสามลบสิบแปดเท่ากับสามสิบห้า', v: el => el.append(h('div', { class: 'colstack' }, barModel({ whole: 53, parts: [35, 18], labels: ['', ''], q: 0 }), vertSubSim(53, 18))) }
+      { t: 'ทำเหมือนด่านที่แล้ว แต่ต้อง<b>ทด</b>หรือ<b>กระจาย</b>: □ + 18 = 53', s: 'ทำเหมือนด่านที่แล้ว แต่ต้องทดหรือกระจาย ช่องว่างบวกสิบแปดเท่ากับห้าสิบสาม', v: el => el.append(unkSim('□ + 18 = 53')) },
+      { t: 'ตัวอย่างที่ 2: 70 − □ = 26 — 0 ลบ 6 ไม่ได้ ต้องกระจาย 1 สิบ', s: 'ตัวอย่างที่สอง เจ็ดสิบลบช่องว่างเท่ากับยี่สิบหก', v: el => el.append(unkSim('70 − □ = 26')) },
+      { t: 'ตั้งลบ 53 − 18 แบบทีละขั้น (กระจาย 1 สิบ)', s: 'ตั้งลบห้าสิบสามลบสิบแปด แบบทีละขั้น', v: el => el.append(colWalk([53, 18], '−')) }
     ],
-    game: () => pk(WS13_X2, 8).map(toks => Q.b3Unk(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ }
+    game: () => pk(WS13_X2, 8).map(toks => Q.unk1(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ }
 ];
 const EXAM_CH13 = [
   { q: '59 − 5 = ☐', opts: ['54', '64', '9'], a: 0 },
