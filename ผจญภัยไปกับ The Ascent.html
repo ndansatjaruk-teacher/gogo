@@ -4129,6 +4129,38 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 <body><div id="app"></div>
 <script>'use strict';
 /* =========================================================
+   ZOOMFIX (v218): make getBoundingClientRect match the mouse on every browser.
+   The game scales screens with CSS `zoom` (#stage, fitBody, colstack …).
+   New Chrome/Edge (≥128) report rects in real screen px — same space as
+   event.clientX/Y. Safari (Mac) and older Chrome use the old "legacy zoom":
+   rects come back divided by the element's zoom, so every tap/drag that does
+   (clientX − rect.left) / rect.width landed in the wrong place on a computer
+   (iPad zoom ≈ 1, so it looked fine there).
+   We measure once at start-up and, only on legacy engines, scale the rect back.
+   ========================================================= */
+/* product of CSS zoom from el up to <html> (each element's own zoom value) */
+function zfChain(el) { let z = 1; for (let e = el; e && e.nodeType === 1; e = e.parentElement) { const v = parseFloat(getComputedStyle(e).zoom); if (v > 0 && v !== 1) z *= v; } return z; }
+const ZF = (() => {
+  const fx = { pos: false, size: false, ctm: false };
+  try {
+    const host = document.createElement('div'); host.style.cssText = 'position:fixed;left:100px;top:100px;width:10px;height:10px;visibility:hidden;pointer-events:none';
+    const z = document.createElement('div'); z.style.cssText = 'zoom:2;margin-left:50px;width:100px;height:50px';
+    z.innerHTML = '<svg viewBox="0 0 100 50" width="100" height="50" style="display:block"></svg>'; host.append(z); document.documentElement.append(host);
+    const r = z.getBoundingClientRect(), m = z.firstChild.getScreenCTM && z.firstChild.getScreenCTM(); host.remove();
+    /* real screen: left = 100 + 50·2 = 200, width = 100·2 = 200, svg scale = 2 */
+    fx.pos = Math.abs(r.left - 100) < 3 && Math.abs(r.left - 200) > 3; fx.size = Math.abs(r.width - 100) < 3; fx.ctm = !!m && Math.abs(m.a - 1) < .05;
+  } catch (_) { }
+  if (fx.pos || fx.size) { const g = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = function () { const r = g.call(this), k = zfChain(this); if (k === 1) return r; const p = fx.pos ? k : 1, s = fx.size ? k : 1; return new DOMRect(r.x * p, r.y * p, r.width * s, r.height * s); }; }
+  if (fx.ctm && window.SVGGraphicsElement) { const g = SVGGraphicsElement.prototype.getScreenCTM;
+    SVGGraphicsElement.prototype.getScreenCTM = function () { const m = g.call(this), k = m ? zfChain(this) : 1; if (!m || k === 1) return m; return new DOMMatrix([m.a * k, m.b * k, m.c * k, m.d * k, m.e * k, m.f * k]); }; }
+  return fx;
+})();
+/* screen px per CSS px inside el — use to turn a mouse distance (clientX change) into style px */
+const zfScale = el => { const w = el.offsetWidth; return w ? (el.getBoundingClientRect().width / w || 1) : zfChain(el); };
+
+'use strict';
+/* =========================================================
    CORE: utilities, storage, sound, speech
    ========================================================= */
 const $ = (s, r = document) => r.querySelector(s);
@@ -28885,8 +28917,8 @@ function traceDemo(v, obj) {
 function shapeCanvas() {
   const board = h('div', { class: 'scanvas ia' }); let sel = null, z = 1;
   const add = (v, p) => { const el = shapeEl(v, { p, cls: 'piece' }); el.dataset.rot = 0; el.style.left = 35 + Math.random() * 20 + '%'; el.style.top = 25 + Math.random() * 30 + '%'; board.append(el); select(el); sfx.pop(board.children.length);
-    el.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); select(el); el.style.zIndex = ++z; const r = board.getBoundingClientRect(), sx = e.clientX, sy = e.clientY, l0 = el.offsetLeft, t0 = el.offsetTop; el.setPointerCapture(e.pointerId);
-      const mv = ev => { el.style.left = Math.max(-20, Math.min(r.width - 20, l0 + ev.clientX - sx)) + 'px'; el.style.top = Math.max(-20, Math.min(r.height - 20, t0 + ev.clientY - sy)) + 'px'; };
+    el.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); select(el); el.style.zIndex = ++z; const k = zfScale(board), r = { width: board.offsetWidth, height: board.offsetHeight }, sx = e.clientX, sy = e.clientY, l0 = el.offsetLeft, t0 = el.offsetTop; el.setPointerCapture(e.pointerId);
+      const mv = ev => { el.style.left = Math.max(-20, Math.min(r.width - 20, l0 + (ev.clientX - sx) / k)) + 'px'; el.style.top = Math.max(-20, Math.min(r.height - 20, t0 + (ev.clientY - sy) / k)) + 'px'; };
       const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); }; el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); }); };
   const select = el => { board.querySelectorAll('.piece').forEach(p => p.classList.remove('sel')); sel = el; el && el.classList.add('sel'); };
   board.addEventListener('pointerdown', e => { if (e.target === board) select(null); });
