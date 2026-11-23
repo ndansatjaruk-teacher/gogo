@@ -535,21 +535,26 @@ function lessonTop(L, phase) {
    or a sim calls teachDone(el). Free-exploration examples need a couple of taps. */
 const teachDone = el => el && el.dispatchEvent(new CustomEvent('teachdone', { bubbles: true }));
 const SEQ_BTN = b => b.matches('button.btn') && /\b(info|accent|primary)\b/.test(b.className) && !b.classList.contains('icon') && !b.classList.contains('sm') && !b.closest('.fstep,.keypad,.palette,.fnav,.restart');
+const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb'; /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
 const ONCE_RE = /เพิ่มอีก|ขีดเพิ่ม|ใส่ลูกแก้ว|เพิ่มไม้|หมุน|ไล่ลง|หาสูงที่สุด|ดูวิธีวาด|ลองวาด/;
 function teachGate(vis, onDone) {
   let done = false, taps = 0; const seq = new Set([...vis.querySelectorAll('button')].filter(SEQ_BTN));
   const fin = b => !b.isConnected || /ใหม่/.test(b.textContent) || b.dataset.done || (b.dataset.clicked && (b.disabled || ONCE_RE.test(b.textContent)));
   const interactive = vis.querySelector('.ia, button, canvas, .tappable, [draggable]');
   const finish = () => { if (done) return; done = true; mo.disconnect(); onDone(); };
+  /* v205 (ผู้ใช้ขอ: ทุกบทเรียน กดให้ครบก่อนจึงไปต่อ) — things the child taps to explore (each child in a line, each shelf cell, each figure…) must ALL be tapped */
+  const exp = () => [...vis.querySelectorAll(EXP_SEL)].filter(e => e.onclick && e.offsetParent !== null && !e.closest('.opts, .keypad'));
+  const expOK = () => { const x = exp(); return !x.length || x.length > 16 || x.every(e => e.dataset.tapped); };
   const check = () => { if (done) return; vis.querySelectorAll('button').forEach(b => { if (SEQ_BTN(b) && !seq.has(b) && b.offsetParent !== null) seq.add(b); });
-    if (seq.size) { if ([...seq].every(fin)) finish(); }
+    if (seq.size) { if ([...seq].every(fin) && expOK()) finish(); }
+    else if (exp().length && exp().length <= 16) { if (expOK()) finish(); }
     else if (taps >= 2) finish(); };
   const mo = new MutationObserver(() => requestAnimationFrame(check)); mo.observe(vis, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'disabled'] });
-  vis.addEventListener('click', e => { if (e.target.closest('.restart')) return; const sb = e.target.closest('button'); if (sb && seq.has(sb)) sb.dataset.clicked = 1; if (e.target.closest('.ia, button, canvas, .tappable, .sc-it, .hc, .rp, .lu-kid, .sh-cell')) { taps++; requestAnimationFrame(check); } }, true);
+  vis.addEventListener('click', e => { if (e.target.closest('.restart')) return; const xe = e.target.closest(EXP_SEL); if (xe) xe.dataset.tapped = 1; const sb = e.target.closest('button'); if (sb && seq.has(sb)) sb.dataset.clicked = 1; if (e.target.closest('.ia, button, canvas, .tappable, .sc-it, .hc, .rp, .lu-kid, .sh-cell')) { taps++; requestAnimationFrame(check); } }, true);
   vis.addEventListener('pointerdown', e => { if (e.target.closest('canvas, .piece, .drag, .lb-knob')) { taps++; requestAnimationFrame(check); } }, true);
   vis.addEventListener('teachdone', finish);
   if (!interactive) requestAnimationFrame(() => requestAnimationFrame(() => { if (vis.querySelector('.stg-next')) check(); else finish(); })); else requestAnimationFrame(check); // explanation steps the child opens one by one (v98)
-  return { isDone: () => done, next: () => [...seq].find(b => b.isConnected && b.offsetParent !== null && !b.disabled && !fin(b)) };
+  return { isDone: () => done, next: () => [...seq].find(b => b.isConnected && b.offsetParent !== null && !b.disabled && !fin(b)) || exp().find(e => !e.dataset.tapped), left: () => exp().filter(e => !e.dataset.tapped).length };
 }
 /* a sim with a “new numbers” button (.nxp): the clone page clicks it c times before it is shown, then the button is removed */
 const quietly = fn => { const m = SET.mute; SET.mute = true; try { return fn(); } finally { SET.mute = m; } };
@@ -573,7 +578,7 @@ function teachPractice(L) {
   const guide = (L.teach.find(s => s.rows && s.rows.length > 1) || {}).rows;
   /* practice = the easiest questions of the lesson, with round numbers where the story allows (ผู้ใช้ขอ) */
   const pickQ = () => { let K = []; try { K = bossKeys(L); } catch (_) { } const pool = [];
-    for (let t = 0; t < 4; t++) { let qs = []; __EASY = true; try { qs = L.game(); } catch (_) { qs = []; } finally { __EASY = false; } qs.forEach(q => { if (q && q.mount && !bossLike(q, K) && !L.__prac.has(qSig(q)) && !pool.some(p => qSig(p) === qSig(q))) pool.push(q); }); }
+    for (let t = 0; t < 4; t++) { let qs = []; __EASY = true; try { qs = L.game(); } catch (_) { qs = []; } finally { __EASY = false; } qs.forEach(q => { if (q && q.mount && !bossLike(q, K) && !teachDup(L, q) && !L.__prac.has(qSig(q)) && !pool.some(p => qSig(p) === qSig(q))) pool.push(q); }); }
     pool.sort((a, b) => qDiff(a) - qDiff(b)); return pool[0] || null; };
   /* ONE practice question before the game (ผู้ใช้ขอ: เหลือข้อเดียว; เดิม 2 ข้อ) */
   [1].forEach(n => L.teach.push({ t: `<b>ลองทำเอง 1 ข้อ</b> — อ่านโจทย์ แล้วตอบ`, s: `ลองทำเองหนึ่งข้อ อ่านโจทย์แล้วตอบ`, prac: n,
@@ -644,7 +649,7 @@ function startTeach(li, at = 0, seen = false) {
     }
   }
   const blocked = () => { if (!gate || gate.isDone()) return false;
-    sfx.no(); const nb = gate.next(); bub.set('ลองทำตัวอย่างให้ครบก่อนนะ' + (nb ? ` — กดปุ่ม “${nb.textContent.trim()}”` : ' — ลองแตะหรือปรับในภาพดู'), 'bad', 'think'); say('ลองทำตัวอย่างให้ครบก่อนนะ', true);
+    sfx.no(); const nb = gate.next(), nl = gate.left ? gate.left() : 0; bub.set('ลองทำตัวอย่างให้ครบก่อนนะ' + (nb && nb.matches && nb.matches(EXP_SEL) ? ` — แตะให้ครบทุกอัน (เหลืออีก ${nl})` : nb ? ` — กดปุ่ม “${nb.textContent.trim()}”` : ' — ลองแตะหรือปรับในภาพดู'), 'bad', 'think'); say('ลองทำตัวอย่างให้ครบก่อนนะ', true);
     const k0 = i; setTimeout(() => { if (k0 === i && i < L.teach.length && bub.isConnected) bub.set(L.teach[i].t, null, 'think'); }, 2800);
     if (nb) { nb.classList.remove('nudge'); void nb.offsetWidth; nb.classList.add('nudge'); nb.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     next.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 280 });
@@ -915,6 +920,27 @@ function qBalance(list, N, extra = []) { if (list.length <= N && !extra.length) 
     let at = -1; for (let i = pick.length - 1; i >= 0; i--) if (pick[i].__kind === top) { at = i; break; } const ri = rest.findIndex(q => q.__kind === low);
     pick[at] = rest[ri]; rest.splice(ri, 1); cnt[top]--; cnt[low] = (cnt[low] || 0) + 1; }
   return pick; }
+/* v205 (ผู้ใช้ขอ): a question already shown as an example on the lesson's teaching pages is not asked again in the game —
+   unless something in it is different. Each teaching page is rendered once off-screen (sound and timers off) and its text kept;
+   a game question is the same example when ① its question text (with numbers) appears word for word on a page, or
+   ② its numbers appear in the same order on one page together with the same operation sign (the same sum / the same story numbers). */
+const TNORM = t => String(t || '').replace(/<[^>]+>/g, ' ').replace(/[\s.,?!:;()“”"'·…—–\-]/g, '').replace(/□/g, '?');
+const TNUMS = t => (String(t || '').replace(/<[^>]+>/g, ' ').match(/\d[\d,]*(?:\.\d+)?/g) || []).map(x => x.replace(/,/g, ''));
+const TOPS = t => new Set((String(t || '').replace(/<[^>]+>/g, ' ').match(/[+−×÷]/g) || []));
+function teachKeys(L) {
+  if (L.__tk) return L.__tk; const out = [], W = window, keep = { say: W.say, st: W.setTimeout, si: W.setInterval, raf: W.requestAnimationFrame }, fx = {};
+  Object.keys(sfx).forEach(k => { if (typeof sfx[k] === 'function') { fx[k] = sfx[k]; sfx[k] = () => {}; } }); W.say = () => {}; W.setTimeout = () => 0; W.setInterval = () => 0; W.requestAnimationFrame = () => 0;
+  try { (L.teach || []).forEach(s => { if (!s || s.prac || typeof s.v !== 'function') return; let tx = `${s.t || ''} ${s.s || ''}`; if (/qPlay|qSim|prac/.test(String(s.v))) { out.push({ norm: TNORM(tx), nums: TNUMS(tx), ops: TOPS(tx) }); return; } /* a ‘try it’ question page is not rendered here (its widgets wait for layout) */
+      try { const d = document.createElement('div'); s.v(d); d.querySelectorAll('.keypad, button.btn.sm, .restart').forEach(n => n.remove()); tx += ' ' + qText(d); } catch (_) { }
+      out.push({ norm: TNORM(tx), nums: TNUMS(tx), ops: TOPS(tx) }); }); }
+  finally { Object.assign(W, { say: keep.say, setTimeout: keep.st, setInterval: keep.si, requestAnimationFrame: keep.raf }); Object.assign(sfx, fx); }
+  return (L.__tk = out); }
+function teachDup(L, q) {
+  if (!L.teach || !L.teach.length || q.__tdup != null) return !!q.__tdup; const K = teachKeys(L); if (!K.length) return (q.__tdup = false);
+  const core = `${q.prompt || ''} ${q.story || q.text || ''}`.replace(/π\s*[=≈]\s*(22\/7|3\.14)/g, 'π') /* ค่าคงที่ไม่ใช่ตัวเลขของโจทย์ */, cn = TNORM(core), nums = TNUMS(core).filter(x => x !== '0'), ops = TOPS(core);
+  const seq = (a, b) => { for (let i = 0; i + b.length <= a.length; i++) if (b.every((x, j) => a[i + j] === x)) return true; return false; };
+  const hit = K.some(k => (/\d/.test(cn) && cn.length >= 12 && k.norm.includes(cn)) || (nums.length >= 2 && seq(k.nums, nums) && (!ops.size || [...ops].every(o => k.ops.has(o))) && (ops.size || nums.length >= 3 || nums.some(x => +x >= 10))));
+  return (q.__tdup = hit); }
 function gameSet(L, N0) {
   const K = L.bonus ? [] : bossKeys(L), out = [], seen = new Set(), spare = [], boss = [];
   const first = ixBundle(L.game()); first.forEach(qKind0);
@@ -923,7 +949,7 @@ function gameSet(L, N0) {
   /* the same wording with only another picture reads as the same question (ผู้ใช้เจอข้อซ้ำ) — one per game, a second only when the pool is short */
   const look = {}, lk = q => { qSig(q); const p = String(q.story || q.prompt || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); return p + '|' + (String(q.__txt || '').match(/\d+(?:[.,]\d+)*/g) || []).join(','); };
   const atomSeen = new Set(), atomHit = q => qAtoms(q).some(a => atomSeen.has(a) || (L.__prac && L.__prac.has(a))), regA = q => qAtoms(q).forEach(a => atomSeen.add(a)); // v130: ข้อย่อยถูก/ผิดไม่ซ้ำในเกม
-  const dupSeen = new Set(), dupOf = q => (qSig(q), q.__dup || q.__sig), isDup = q => dupSeen.has(dupOf(q)) || !!(L.__prac && L.__prac.has(dupOf(q))) || atomHit(q);
+  const dupSeen = new Set(), dupOf = q => (qSig(q), q.__dup || q.__sig), isDup = q => dupSeen.has(dupOf(q)) || !!(L.__prac && L.__prac.has(dupOf(q))) || atomHit(q) || teachDup(L, q);
   const add = q => { const k = qSig(q); if (isDup(q)) return false; dupSeen.add(dupOf(q)); regA(q); seen.add(k); out.push(q); const l = lk(q); look[l] = (look[l] || 0) + 1; if (q.__base) base[q.__base] = (base[q.__base] || 0) + 1; };
   const take = q => { qKind0(q); if (out.length >= NC) return; if (bossLike(q, K)) { boss.push(q); return; } const k = qSig(q); if (isDup(q)) return; if (seen.has(k) || (L.__prac && L.__prac.has(k)) || (q.__base && (base[q.__base] || 0) >= (q.__baseCap || 2)) || look[lk(q)]) spare.push(q); else add(q); };
   first.forEach(take); if (L.bonus) return out.length ? out : ixBundle(L.game());
