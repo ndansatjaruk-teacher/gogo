@@ -147,7 +147,7 @@ a{color:var(--sky-2)}
 .objs{display:flex;flex-wrap:wrap;gap:var(--og,10px);justify-content:center;align-items:center;max-width:100%}
 .obj{width:var(--os,clamp(48px,7cqw,84px));height:var(--os,clamp(48px,7cqw,84px));position:relative;display:inline-block;flex:none;transition:transform var(--t1) var(--ease),opacity var(--t2)}
 .obj.pop{animation:popIn var(--t3) var(--spring) both}
-@keyframes popIn{from{transform:scale(.2);opacity:0}to{transform:none;opacity:1}}
+@keyframes popIn{from{scale:.2;opacity:0}to{scale:1;opacity:1}} /* v207 (ผู้ใช้เจอ: วงกลมส่วนย่อยเลื่อนหลุดตำแหน่ง) — ใช้ scale แยก ไม่ทับ transform:translate(-50%,-50%) ที่ใช้จัดกึ่งกลาง */
 .obj.tappable{cursor:pointer}
 @media (hover:hover){.obj.tappable:hover{transform:translateY(-3px)}}
 .obj.counted{opacity:.55}
