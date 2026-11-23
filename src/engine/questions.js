@@ -899,6 +899,63 @@ Object.assign(Q, {
       mount(bd, ctx) { const nl = numberLine(Math.max(0, b - 1), Math.min(20, a + 1), { hi: [b], hi2: range(b + 1, a), compact: true }), e = eqRow([a, '−', b, '=', '?'], { sm: true });
         bd.append(h('div', { class: 'colstack' }, nl, e), answerBox(ctx, a - b, { hint: `นับ ${b + 1}, ${b + 2}, … จนถึง ${a} แล้วนับว่ากี่ครั้ง` })); ctx.onRight = () => e.fill(a - b); } };
   },
+  /* v210 (ผู้ใช้ขอ: เกมต้องใช้ความรู้ตามจุดประสงค์ของด่าน) — ข้อแบบใหม่ของเมืองบวกลบยี่สิบ */
+  /* ทำให้ครบสิบ ①: แบ่งตัวเล็กออกมากี่ตัวไปเติมตัวใหญ่ให้ครบ 10 แล้วหาผลบวก */
+  tenSplit({ a, b }) {
+    const big = Math.max(a, b), small = Math.min(a, b), need = 10 - big, rest = small - need, q = `ทำ <span class="hl">${a} + ${b}</span> ให้ครบสิบ: ต้องแบ่ง ${small} ออกมาเท่าไรไปเติม ${big}?`;
+    return { prompt: q, say: `${WORD[a]} บวก ${WORD[b]} ทำให้ครบสิบ ต้องแบ่ง ${WORD[small]} ออกมาเท่าไร ไปเติม ${WORD[big]}`, __sig: `t10s ${a}+${b}`,
+      mount(bd, ctx) { const w = 'clamp(140px,17vw,200px)', fr = h('div', { class: 'tf2' }, tenFrame(big, { w }), tenFrame(small, { w, color: () => 'b' })), e = eqRow([a, '+', b, '=', '?'], { sm: true }), slot = h('div', { class: 'colstack' });
+        const opts = [need, rest, 10 - small, need + 1].filter((v, i, A) => v > 0 && v <= small && A.indexOf(v) === i).slice(0, 3);
+        const step2 = () => { sfx.pop(4); fr.replaceChildren(tenFrame(10, { w, color: i => i < big ? '' : 'b' }), tenFrame(rest, { w, color: () => 'b' })); slot.replaceChildren(h('div', { class: 'p4steplab', html: `ครบสิบแล้ว: <b>10 + ${rest} = ☐</b>` }), answerBox(ctx, a + b, { hint: `10 กับอีก ${rest}` })); };
+        slot.append(choices({ check: (ok, hn) => ok ? step2() : ctx.check(false, hn), say: ctx.say }, shuffle(opts).map(v => ({ value: v, label: String(v) })), need, { hint: `${big} ยังขาดอีกกี่ช่องจึงเต็มกรอบสิบ? นับช่องว่างในกรอบแรก` }));
+        ctx.onRight = () => e.fill(a + b); bd.append(h('div', { class: 'colstack' }, e, fr, slot)); } };
+  },
+  /* ทำให้ครบสิบ ②: a + b = 10 + ☐ */
+  tenEq({ a, b }) {
+    const big = Math.max(a, b), small = Math.min(a, b), need = 10 - big, rest = small - need;
+    return { prompt: `ทำให้ครบสิบ แล้วเติมจำนวนใน ☐`, say: `${WORD[a]} บวก ${WORD[b]} เท่ากับ สิบ บวก เท่าไร`, __sig: `t10e ${a}+${b}`,
+      mount(bd, ctx) { const w = 'clamp(140px,17vw,200px)', e = eqRow([a, '+', b, '=', 10, '+', '?']);
+        bd.append(h('div', { class: 'colstack' }, e, h('div', { class: 'tf2' }, tenFrame(big, { w }), tenFrame(small, { w, color: () => 'b' }))), answerBox(ctx, rest, { hint: `${big} ต้องการอีก ${need} จึงครบ 10 — ${small} ให้ไป ${need} แล้วเหลือเท่าไร` })); ctx.onRight = () => e.fill(rest); } };
+  },
+  /* นับต่อ: เลือกว่าเริ่มนับจากจำนวนใด แล้วนับต่อหาผลบวก */
+  countFrom({ a, b }) {
+    const big = Math.max(a, b), small = Math.min(a, b), q = `หา <span class="hl">${a} + ${b}</span> โดยการนับต่อ ควรเริ่มนับอย่างไร?`;
+    return { prompt: q, say: `${WORD[a]} บวก ${WORD[b]} โดยการนับต่อ ควรเริ่มนับอย่างไร`, __sig: `cfrom ${a}+${b}`,
+      mount(bd, ctx) { const e = eqRow([a, '+', b, '=', '?']), slot = h('div', { class: 'colstack' });
+        const step2 = () => { sfx.pop(4); const cnt = h('div', { class: 'conrow' }, h('span', { class: 'concard num' }, big));
+          for (let k = 1; k <= small; k++) { const c = h('button', { class: 'counter tap b ia', 'aria-label': 'นับต่อ' }); c.onclick = ev => { ev.stopPropagation(); if (c.dataset.c) return; const n = big + cnt.querySelectorAll('[data-c]').length + 1; c.dataset.c = n; c.textContent = n; c.classList.add('counted'); sfx.pop(n); say(WORD[n], true); }; cnt.append(c); }
+          slot.replaceChildren(cnt, answerBox(ctx, a + b, { hint: `แตะนับต่อจาก ${big} อีก ${small} ครั้ง` })); };
+        const O = [{ value: 'big', label: `เริ่มที่ ${big} แล้วนับต่ออีก ${small}` }, { value: 'small', label: `เริ่มที่ ${small} แล้วนับต่ออีก ${big}` }, { value: 'one', label: `นับ 1, 2, 3, … ใหม่ทั้งหมด` }];
+        slot.append(choices({ check: (ok, hn) => ok ? step2() : ctx.check(false, hn), say: ctx.say }, shuffle(O), 'big', { hint: 'เริ่มจากจำนวนที่มากกว่า แล้วนับต่อเท่าจำนวนที่น้อยกว่า จะนับน้อยครั้งที่สุด' }));
+        ctx.onRight = () => e.fill(a + b); bd.append(h('div', { class: 'colstack' }, e, slot)); } };
+  },
+  /* ลบโดยการนับต่อ: เลือกว่าจะนับจากไหนไปถึงไหน แล้วนับบนเส้นจำนวน */
+  subFrom({ a, b }) {
+    const q = `หา <span class="hl">${a} − ${b}</span> โดยการนับต่อ ควรนับอย่างไร?`;
+    return { prompt: q, say: `${WORD[a]} ลบ ${WORD[b]} โดยการนับต่อ ควรนับอย่างไร`, __sig: `sfrom ${a}-${b}`,
+      mount(bd, ctx) { const e = eqRow([a, '−', b, '=', '?']), slot = h('div', { class: 'colstack' });
+        const step2 = () => { sfx.pop(4); slot.replaceChildren(numberLine(Math.max(0, b - 1), Math.min(20, a + 1), { hi: [b], hi2: range(b + 1, a), compact: true }), answerBox(ctx, a - b, { hint: `นับ ${b + 1}, ${b + 2}, … จนถึง ${a} ได้กี่ครั้ง` })); };
+        const O = [{ value: 'up', label: `นับต่อจาก ${b} ไปจนถึง ${a}` }, { value: 'add', label: `นับต่อจาก ${a} ไปอีก ${b}` }, { value: 'zero', label: `นับจาก 0 ไปจนถึง ${a}` }];
+        slot.append(choices({ check: (ok, hn) => ok ? step2() : ctx.check(false, hn), say: ctx.say }, shuffle(O), 'up', { hint: 'ลบโดยการนับต่อ: เริ่มที่ตัวลบ แล้วนับต่อไปจนถึงตัวตั้ง' }));
+        ctx.onRight = () => e.fill(a - b); bd.append(h('div', { class: 'colstack' }, e, slot)); } };
+  },
+  /* อ่านเส้นจำนวน: การกระโดดบนเส้นจำนวนนี้คือประโยคสัญลักษณ์ใด */
+  lineRead({ a, b, op = '+' }) {
+    const o = op === '+' ? '+' : '−', d = op === '+' ? 1 : -1, c = a + d * b, path = range(1, b).map(k => a + d * k);
+    return { prompt: `เริ่มที่ ${a} (จุดสีส้ม) แล้วกระโดดไปทาง${op === '+' ? 'ขวา' : 'ซ้าย'}ทีละ 1 ช่องตามจุดสีฟ้า เขียนเป็นประโยคสัญลักษณ์ได้อย่างไร?`, say: `เส้นจำนวนนี้ เขียนเป็นประโยคสัญลักษณ์ได้อย่างไร`, __sig: `lread ${a}${o}${b}`,
+      mount(bd, ctx) { const nl = numberLine(0, 20, { hi: [a], hi2: path });
+        const O = [[a, o, b, c], [a, o, b, c + d], [a, op === '+' ? '−' : '+', b, a - d * b], [a, o, b, c - d]].filter(x => x[3] >= 0 && x[3] <= 20); /* ผลผิดไป 1 (นับจุดเริ่มด้วย) · กลับทิศ */
+        const uniq = O.filter((x, i) => O.findIndex(y => y.join() === x.join()) === i).slice(0, 3);
+        bd.append(h('div', { class: 'colstack' }, nl, choices(ctx, shuffle(uniq).map(x => ({ value: x.join(), node: eqRow([x[0], x[1], x[2], '=', x[3]], { sm: true }) })), [a, o, b, c].join(), { hint: `นับจุดสีฟ้าว่ากระโดดกี่ครั้ง (ไม่นับจุดเริ่มสีส้ม) และไปหยุดที่จำนวนใด` }))); } };
+  },
+  /* ลบโดยการวาดรูป: ภาพที่ขีดทิ้งแล้ว เขียนเป็นประโยคสัญลักษณ์ใด */
+  drawSub({ a, b, item = anyItem() }) {
+    const c = a - b;
+    return { prompt: `วาดรูป ${a} ${item.c} แล้วขีดทิ้ง ${b} ${item.c} เขียนเป็นประโยคสัญลักษณ์ได้อย่างไร?`, say: `ภาพนี้ เขียนเป็นประโยคสัญลักษณ์ได้อย่างไร`, __sig: `dsub ${a}-${b}`,
+      mount(bd, ctx) { const O = [[a, '−', b, c], [a, '+', b, a + b], [a, '−', b, pick([c + 1, Math.max(0, c - 1)])], [a, '−', b, c + 2]]; /* ผิดเครื่องหมาย · นับพลาด */
+        const uniq = O.filter((x, i) => O.findIndex(y => y.join() === x.join()) === i).slice(0, 3);
+        bd.append(h('div', { class: 'colstack' }, crossedRow(item.e, a, b), choices(ctx, shuffle(uniq).map(x => ({ value: x.join(), node: eqRow([x[0], x[1], x[2], '=', x[3]], { sm: true }) })), [a, '−', b, c].join(), { hint: `มีทั้งหมด ${a} ขีดทิ้งไป ${b} — นับตัวที่ยังไม่ถูกขีดทิ้ง` }))); } };
+  },
   /* practice: unknown in any slot */
   unknown20({ t }) {
     const [x, op, y, , z] = t, ans = x === '?' ? (op === '+' ? z - y : z + y) : y === '?' ? (op === '+' ? z - x : x - z) : z;

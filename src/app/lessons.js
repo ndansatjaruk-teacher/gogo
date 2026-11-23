@@ -315,7 +315,7 @@ const LESSONS_CH2 = [
       { t: 'คู่ที่รวมกันได้ 10 — จำไว้ใช้บ่อย ๆ นะ', v: el => { const w = h('div', { class: 'tens-list' }); for (let a = 0; a <= 10; a++) w.append(eqRow([a, '+', 10 - a, '=', 10], { sm: true })); el.append(w); } },
       { t: '<b>7 + ? = 10</b> นับช่องที่ยังว่างในกรอบสิบ', s: 'เจ็ดบวกอะไรได้สิบ นับช่องที่ยังว่าง', v: el => el.append(tenFrame(7, { w: 'clamp(240px,32vw,340px)' }), revealBtn(eqRow([7, '+', '?', '=', 10]), 3)) }
     ],
-    game: () => [Q.makeTen({ a: rnd(1, 9) }), Q.findTens(), Q.addFact((a => ({ a, b: 10 - a, frame: true }))(rnd(1, 9))), Q.makeTen({ a: rnd(2, 8) }), Q.matchSums(), Q.findTens(), Q.makeTen({ a: rnd(0, 10) })]
+    game: () => [Q.makeTen({ a: rnd(1, 9) }), Q.findTens(), Q.makeTen({ a: rnd(1, 9) }), Q.makeTen({ a: rnd(2, 8) }), Q.matchSums(), Q.findTens(), Q.makeTen({ a: rnd(0, 10) })]
   },
   {
     id: 24, no: 4, title: 'ความสัมพันธ์ของจำนวนแบบส่วนย่อย – ส่วนรวม กับการบวก', short: 'ส่วนย่อย-ส่วนรวม กับการบวก', tone: 'coral',
@@ -337,7 +337,7 @@ const LESSONS_CH2 = [
       { t: '<b>สลับที่</b>ตัวตั้งกับตัวบวก <span class="hl">ผลบวกเท่าเดิม</span>: 2 + 5 = 5 + 2', v: el => el.append(eqRow([2, '+', 5, '=', 5, '+', 2])) },
       { t: 'เคล็ดลับ: เริ่มจาก<b>จำนวนที่มาก</b>แล้วนับต่อ 1 + 8 → เริ่มที่ 8 นับต่อ 9', v: el => el.append(eqRow([1, '+', 8, '=', 8, '+', 1], { sm: true }), countOn(8, 1)) }
     ],
-    game: () => [Q.swap({ a: rnd(1, 4), b: rnd(5, 6) }), Q.sameSum({ a: rnd(1, 4), b: rnd(2, 5) }), Q.swap({ a: rnd(2, 5), b: rnd(1, 4) }), Q.addFact({ a: 1, b: rnd(6, 9) }), Q.sameSum({ a: rnd(3, 6), b: rnd(1, 3) }), Q.matchSums(), Q.swap({ a: rnd(0, 3), b: rnd(4, 7) })]
+    game: () => [Q.swap({ a: rnd(1, 4), b: rnd(5, 6) }), Q.sameSum({ a: rnd(1, 4), b: rnd(2, 5) }), Q.swap({ a: rnd(2, 5), b: rnd(1, 4) }), Q.swap({ a: 1, b: rnd(6, 9) }), Q.sameSum({ a: rnd(3, 6), b: rnd(1, 3) }), Q.matchSums(), Q.swap({ a: rnd(0, 3), b: rnd(4, 7) })]
   },
   {
     id: 26, no: 6, title: 'สถานการณ์การบวก', short: 'สถานการณ์การบวก', tone: 'coral',
@@ -453,7 +453,7 @@ const LESSONS_CH3 = [
       { t: 'พูดได้ว่า จำนวนหมู<span class="hl">มากกว่า</span>จำนวนแมว 3 ตัว และ จำนวนแมว<span class="hl2">น้อยกว่า</span>จำนวนหมู 3 ตัว', v: el => el.append(eqRow([8, '−', 5, '=', 3])) },
       { t: '<b>ลองจับคู่เอง</b> ปลา 6 ตัว กับ ปู 4 ตัว ต่างกันกี่ตัว?', s: 'ลองจับคู่เอง ปลาหกตัว กับปูสี่ตัว ต่างกันกี่ตัว', v: el => { const out = h('div', { style: { visibility: 'hidden' } }, eqRow([6, '−', 4, '=', 2])); el.append(h('div', { class: 'colstack' }, pairRows('fish', 6, 'crab', 4, { interactive: true, onDone: () => { out.style.visibility = ''; sfx.ok(); say('ปลามากกว่าปู สองตัว', true); } }), out)); } }
     ],
-    game: () => [Q.compareDiff({ a: rnd(6, 8), b: rnd(2, 4) }), Q.compareDiff({ a: rnd(2, 4), b: rnd(5, 7) }), Q.compareDiff({ a: rnd(5, 9), b: rnd(3, 5) }), Q.compareWord({ a: rnd(3, 6), b: rnd(6, 9), show: 'group' }), Q.compareDiff({ a: rnd(3, 5), b: rnd(6, 8) }), Q.subFact({ a: rnd(5, 9), b: rnd(1, 4) })]
+    game: () => [Q.compareDiff({ a: rnd(6, 8), b: rnd(2, 4) }), Q.compareDiff({ a: rnd(2, 4), b: rnd(5, 7) }), Q.compareDiff({ a: rnd(5, 9), b: rnd(3, 5) }), Q.compareWord({ a: rnd(3, 6), b: rnd(6, 9), show: 'group' }), Q.compareDiff({ a: rnd(3, 5), b: rnd(6, 8) }), Q.compareWord({ a: rnd(6, 9), b: rnd(2, 5), show: 'group' })]
   },
   {
     id: 33, title: 'การลบโดยใช้ความสัมพันธ์ของการบวกและการลบ', short: 'บวกกับลบสัมพันธ์กัน', tone: 'sky',
@@ -463,7 +463,7 @@ const LESSONS_CH3 = [
       { t: 'รู้ว่า <span class="hl">3 + 4 = 7</span> ก็รู้ว่า <span class="hl2">7 − 4 = 3</span> และ <span class="hl2">7 − 3 = 4</span>', v: el => el.append(h('div', { class: 'colstack' }, eqRow([3, '+', 4, '=', 7]), eqRow([7, '−', 4, '=', 3]), eqRow([7, '−', 3, '=', 4]))) },
       { t: 'ลองใช้: 9 − 6 = ? คิดว่า <b>6 บวกอะไรได้ 9</b>', v: el => el.append(eqRow([6, '+', '?', '=', 9], { sm: true }), revealBtn(eqRow([9, '−', 6, '=', '?']), 3)) }
     ],
-    game: () => [Q.family({ a: rnd(1, 5), b: rnd(2, 5) }), Q.family({ a: rnd(2, 6), b: rnd(1, 4) }), Q.subFact({ a: rnd(6, 10), b: rnd(2, 5) }), Q.family({ a: rnd(1, 4), b: rnd(3, 6) }), Q.matchDiffs(), Q.family({ a: rnd(3, 5), b: rnd(3, 5) })]
+    game: () => [Q.family({ a: rnd(1, 5), b: rnd(2, 5) }), Q.family({ a: rnd(2, 6), b: rnd(1, 4) }), Q.family({ a: rnd(2, 5), b: rnd(2, 5) }), Q.family({ a: rnd(1, 4), b: rnd(3, 6) }), Q.matchDiffs(), Q.family({ a: rnd(3, 5), b: rnd(3, 5) })]
   },
   {
     id: 34, title: 'ความสัมพันธ์ของจำนวนแบบส่วนย่อย – ส่วนรวมกับการลบ', short: 'ส่วนย่อย-ส่วนรวม กับการลบ', tone: 'sky',
@@ -750,7 +750,7 @@ const WS5_4 = [[5, 8], [8, 9], [5, 9], [6, 5], [4, 7], [6, 7], [9, 6], [8, 8]];
 const WS5_V = [[11, 3], [14, 1], [9, 4], [19, 1], [6, 13], [4, 12], [8, 8], [11, 5], [5, 15], [5, 12], [16, 3], [9, 7], [10, 5], [7, 7], [14, 6], [8, 11], [13, 2], [7, 12]];
 const WS5_H = [[13, 4], [11, 1], [4, 9], [7, 7], [14, 4], [19, 0], [15, 5], [5, 6], [7, 8], [9, 9], [15, 2], [8, 11], [14, 6], [12, 1], [17, 2], [14, 5], [13, 3], [2, 9], [5, 12], [8, 12], [5, 14], [12, 8], [3, 16], [2, 10], [18, 0], [13, 7], [10, 5], [1, 15], [0, 14], [12, 2], [16, 1], [6, 7], [6, 6], [9, 4], [11, 9], [1, 10], [9, 7], [6, 12], [14, 3], [15, 4], [6, 11], [7, 13], [1, 12], [4, 14], [10, 3], [10, 2], [1, 16], [1, 17], [15, 3], [5, 11], [10, 8], [3, 15], [9, 10], [13, 0], [12, 7], [4, 16], [2, 18], [18, 1], [1, 18], [16, 3]];
 const WS5_3 = [[1, 4, 8], [4, 5, 5], [14, 3, 2], [6, 8, 3], [3, 6, 5], [12, 4, 4], [2, 5, 6], [5, 1, 8], [1, 12, 4], [6, 3, 3], [10, 3, 2], [11, 5, 4], [1, 7, 9], [8, 1, 10], [2, 5, 12], [15, 1, 2], [9, 7, 3], [7, 6, 5]];
-const WS5_11 = [[12, 6], [11, 2], [15, 4], [14, 7], [13, 5], [17, 8], [19, 6], [16, 9]], WS5_12 = [[18, 9], [15, 8], [16, 6], [11, 4]];
+const WS5_11 = [[12, 6], [11, 2], [15, 4], [14, 7], [13, 5], [17, 8], [19, 6], [16, 9]], WS5_12 = [[18, 9], [15, 8], [16, 6], [11, 4], /* v210 */ [13, 9], [17, 8], [14, 6], [12, 5], [16, 9], [19, 12], [20, 13], [15, 7]];
 const WS5_SV = [[14, 5], [16, 3], [19, 9], [11, 5], [17, 14], [20, 6], [12, 12], [16, 4], [13, 7], [18, 8], [15, 8], [11, 3], [16, 13], [20, 5], [18, 4], [19, 11], [16, 12], [13, 5]];
 const WS5_SH = [[11, 2], [15, 14], [15, 10], [19, 7], [15, 8], [20, 12], [14, 3], [15, 4], [16, 11], [17, 13], [19, 12], [14, 4], [13, 4], [11, 3], [16, 2], [12, 0], [18, 14], [15, 12], [20, 17], [15, 3], [15, 11], [20, 8], [19, 15], [20, 10], [13, 2], [12, 7], [18, 16], [19, 18], [18, 1], [17, 2], [17, 17], [16, 3], [19, 6], [20, 7], [13, 5], [16, 5], [14, 14], [13, 3], [17, 15], [16, 15], [19, 16], [20, 1], [16, 10], [20, 11], [16, 13], [18, 15], [19, 17], [14, 10], [11, 9], [11, 6], [18, 6], [19, 9], [15, 7], [12, 12], [17, 4], [19, 14], [13, 9]];
 const WS5_S3 = [[15, 4, 3], [20, 9, 2], [13, 4, 5], [18, 1, 6], [17, 2, 8], [11, 3, 5], [20, 9, 5], [18, 9, 3], [20, 7, 6], [12, 2, 2], [13, 4, 6], [17, 2, 6]];
@@ -782,7 +782,7 @@ const LESSONS_CH5 = [
       { t: '<b>บวกจำนวนเดียวกัน</b> เช่น 6 + 6 = 12 ลองกด + − เปลี่ยนจำนวนดู', s: 'บวกจำนวนเดียวกัน ลองกดบวกลบเปลี่ยนจำนวนดู', v: el => el.append(doublesDemo(6)) },
       { t: '<b>บวกสามจำนวน</b> ทำทีละขั้น: บวกสองจำนวนแรกก่อน แล้วนับต่ออีกจำนวน', s: 'บวกสามจำนวน ทำทีละขั้น', v: el => el.append(threeDemo([4, 5, 5])) }
     ],
-    game: () => { const p = shuffle(WS5_1), t3 = shuffle(WS5_3); return [Q.countOnAdd({ a: p[0][0], b: p[0][1] }), Q.countOnAdd({ a: p[1][0], b: p[1][1] }), Q.doubles({ n: pick([6, 7, 8, 9]) }), Q.addFact({ a: p[2][0], b: p[2][1] }), Q.three({ nums: t3[0] }), Q.addFact({ a: p[3][0], b: p[3][1], pen: true }), Q.three({ nums: t3[1] })]; } },
+    game: () => { const p = shuffle(WS5_1), t3 = shuffle(WS5_3); return [Q.countOnAdd({ a: p[0][0], b: p[0][1] }), Q.countOnAdd({ a: p[1][0], b: p[1][1] }), Q.doubles({ n: pick([6, 7, 8, 9]) }), ...p.filter(x => x[0] !== x[1]).slice(4, 6).map(([a, b]) => Q.countFrom({ a, b })), Q.three({ nums: t3[0] }), Q.three({ nums: t3[1] })]; } } /* v210: ทุกข้อใช้การนับต่อ (เดิมมีหาผลบวกเฉย ๆ) */,
   { id: 212, title: 'การหาผลบวกโดยใช้เส้นจำนวน', short: 'บวก: เส้นจำนวน', tone: 'sky',
     goal: 'หาผลบวกที่ไม่เกิน 20 โดยใช้เส้นจำนวน และหาผลบวกทั้งแบบแนวนอนและแนวตั้ง',
     teach: [
@@ -791,21 +791,21 @@ const LESSONS_CH5 = [
       { t: '<b>แนวตั้ง</b>: เขียนหลักหน่วยตรงหลักหน่วย หลักสิบตรงหลักสิบ แล้วบวกหลักหน่วยก่อน', s: 'แนวตั้ง เขียนหลักให้ตรงกัน แล้วบวกหลักหน่วยก่อน', v: el => el.append(vertSteps(14, 5)) },
       { t: '<b>แนวนอน</b> เขียนต่อกันเป็นแถว: 13 + 4 = 17 ได้คำตอบเท่ากับแนวตั้ง', v: el => el.append(eqRow([13, '+', 4, '=', 17]), vertical(13, 4, 17)) }
     ],
-    game: () => { const l = shuffle(WS5_2), v = shuffle(WS5_V), hz = shuffle(WS5_H); return [Q.lineCalc({ a: l[0][0], b: l[0][1] }), Q.lineCalc({ a: l[1][0], b: l[1][1] }), Q.addFact({ a: v[0][0], b: v[0][1], vert: true }), Q.lineCalc({ a: l[2][0], b: l[2][1] }), Q.addFact({ a: hz[0][0], b: hz[0][1] }), Q.addFact({ a: v[1][0], b: v[1][1], vert: true, pen: true }), Q.addFact({ a: hz[1][0], b: hz[1][1] })]; } },
+    game: () => { const l = shuffle(WS5_2), v = shuffle(WS5_V), hz = shuffle(WS5_H); return [Q.lineCalc({ a: l[0][0], b: l[0][1] }), Q.lineCalc({ a: l[1][0], b: l[1][1] }), Q.addFact({ a: v[0][0], b: v[0][1], vert: true }), Q.lineCalc({ a: l[2][0], b: l[2][1] }), Q.lineRead({ a: hz[0][0], b: hz[0][1] }), Q.addFact({ a: v[1][0], b: v[1][1], vert: true, pen: true }), Q.lineRead({ a: hz[1][0], b: hz[1][1] })]; } } /* v210: แนวนอนใช้เส้นจำนวน */,
   { id: 213, title: 'การหาผลบวกโดยการทำให้ครบสิบ', short: 'บวก: ทำให้ครบสิบ', tone: 'mint',
     goal: 'หาผลบวกที่มากกว่า 10 โดยแบ่งจำนวนหนึ่งไปเติมอีกจำนวนให้ครบสิบ',
     teach: [
       { t: '5 + 8: เติม 8 ให้ครบ 10 ต้องการอีก <b>2</b> จึงแบ่ง 5 เป็น 2 กับ 3 — กดดูทีละขั้น', s: 'ห้า บวก แปด เติมแปดให้ครบสิบ ต้องการอีกสอง กดดูทีละขั้น', v: el => el.append(makeTenSim(5, 8)) },
       { t: 'ลองอีกข้อ: 9 + 6', v: el => el.append(makeTenSim(9, 6)) }
     ],
-    game: () => { const p = shuffle(WS5_4); return [Q.makeTen20({ a: p[0][0], b: p[0][1], ask: 'rest' }), Q.makeTen20({ a: p[1][0], b: p[1][1] }), Q.makeTen20({ a: p[2][0], b: p[2][1], ask: 'rest' }), Q.makeTen20({ a: p[3][0], b: p[3][1] }), Q.addFact({ a: p[4][0], b: p[4][1] }), Q.makeTen20({ a: p[5][0], b: p[5][1] })]; } },
+    game: () => { const p = shuffle(WS5_4); return [Q.tenSplit({ a: p[0][0], b: p[0][1] }), Q.makeTen20({ a: p[1][0], b: p[1][1] }), Q.tenEq({ a: p[2][0], b: p[2][1] }), Q.makeTen20({ a: p[3][0], b: p[3][1] }), Q.tenSplit({ a: p[4][0], b: p[4][1] }), Q.tenEq({ a: p[5][0], b: p[5][1] })]; } } /* v210 (ผู้ใช้ขอ): ทุกข้อต้องทำให้ครบสิบ — เดิมมีหาผลบวกเฉย ๆ */,
   { id: 214, title: 'การหาผลลบโดยใช้การวาดรูป', short: 'ลบ: วาดรูป', tone: 'coral',
     goal: 'หาผลลบของจำนวนที่ตัวตั้งไม่เกิน 20 โดยใช้รูปภาพ แล้วเขียนประโยคสัญลักษณ์',
     teach: [
       { t: 'มีลูกบอล 12 ลูก <b>แตะเอาออก 9 ลูก</b> เหลือกี่ลูก?', s: 'มีลูกบอลสิบสองลูก แตะเอาออกเก้าลูก เหลือกี่ลูก', v: el => el.append(popDemo('ball', 12, 9)) },
       { t: 'ลองอีกข้อ: 14 เอาออก 6', v: el => el.append(popDemo('balloon', 14, 6)) }
     ],
-    game: () => [Q.takeAway({ a: 12, b: 9 }), Q.takeAway({ a: 14, b: 6 }), Q.takeAway({ a: 13, b: 4 }), Q.subFact({ a: rnd(12, 18), b: rnd(3, 8) }), Q.takeAway({ a: rnd(15, 18), b: rnd(5, 9) }), Q.subFact({ a: rnd(12, 18), b: rnd(3, 8), pen: true })] },
+    game: () => [Q.takeAway({ a: 12, b: 9 }), Q.takeAway({ a: 14, b: 6 }), Q.drawSub({ a: rnd(11, 15), b: rnd(3, 7) }), Q.takeAway({ a: 13, b: 4 }), Q.drawSub({ a: rnd(14, 18), b: rnd(5, 9) }), Q.takeAway({ a: rnd(15, 18), b: rnd(5, 9) })] /* v210: ทุกข้อใช้รูป (เดิมมีหาผลลบเฉย ๆ) */ },
   { id: 215, title: 'การหาผลลบโดยใช้เส้นจำนวน', short: 'ลบ: เส้นจำนวน', tone: 'lilac',
     goal: 'หาผลลบของจำนวนที่ตัวตั้งไม่เกิน 20 โดยใช้เส้นจำนวน รวมถึงการลบสามจำนวน',
     teach: [
@@ -813,7 +813,7 @@ const LESSONS_CH5 = [
       { t: 'ลองอีกข้อ: 15 − 4', v: el => el.append(countBack(15, 4)) },
       { t: '<b>ลบสามจำนวน</b> ทำทีละขั้นจากซ้ายไปขวา', s: 'ลบสามจำนวน ทำทีละขั้นจากซ้ายไปขวา', v: el => el.append(threeDemo([15, 4, 3], '−')) }
     ],
-    game: () => { const l = shuffle(WS5_11), t3 = shuffle(WS5_S3); return [Q.lineCalc({ a: l[0][0], b: l[0][1], op: '−' }), Q.lineCalc({ a: l[1][0], b: l[1][1], op: '−' }), Q.lineCalc({ a: l[2][0], b: l[2][1], op: '−' }), Q.three({ nums: t3[0], op: '−' }), Q.lineCalc({ a: l[3][0], b: l[3][1], op: '−' }), Q.three({ nums: t3[1], op: '−' }), Q.lineCalc({ a: l[4][0], b: l[4][1], op: '−' }), Q.lineCalc({ a: l[5][0], b: l[5][1], op: '−' })]; } } /* v169: ≥8 ข้อ */,
+    game: () => { const l = shuffle(WS5_11), t3 = shuffle(WS5_S3); return [Q.lineCalc({ a: l[0][0], b: l[0][1], op: '−' }), Q.lineCalc({ a: l[1][0], b: l[1][1], op: '−' }), Q.lineCalc({ a: l[2][0], b: l[2][1], op: '−' }), Q.three({ nums: t3[0], op: '−' }), Q.lineCalc({ a: l[3][0], b: l[3][1], op: '−' }), Q.three({ nums: t3[1], op: '−' }), Q.lineRead({ a: l[4][0], b: l[4][1], op: '−' }), Q.lineRead({ a: l[5][0], b: l[5][1], op: '−' })]; } } /* v169: ≥8 ข้อ · v210: อ่านเส้นจำนวน */,
   { id: 216, title: 'การหาผลลบโดยใช้การนับต่อ', short: 'ลบ: นับต่อ', tone: 'sky',
     goal: 'หาผลลบโดยนับต่อจากตัวลบไปจนถึงตัวตั้ง และหาผลลบทั้งแบบแนวนอนและแนวตั้ง',
     teach: [
@@ -822,7 +822,7 @@ const LESSONS_CH5 = [
       { t: '<b>ลบแนวตั้ง</b>: ตั้งหลักให้ตรงกัน แล้วลบหลักหน่วยก่อน', s: 'ลบแนวตั้ง ตั้งหลักให้ตรงกัน แล้วลบหลักหน่วยก่อน', v: el => el.append(vertSteps(16, 3, '−')) },
       { t: '<b>แนวนอน</b>: 19 − 7 = 12 ได้คำตอบเท่ากับแนวตั้ง', v: el => el.append(eqRow([19, '−', 7, '=', 12]), vertical(19, 7, 12, '−')) }
     ],
-    game: () => { const c = shuffle(WS5_12), v = shuffle(WS5_SV), hz = shuffle(WS5_SH); return [Q.subCountOn({ a: c[0][0], b: c[0][1] }), Q.subCountOn({ a: c[1][0], b: c[1][1] }), Q.subFact({ a: v[0][0], b: v[0][1], vert: true }), Q.subCountOn({ a: c[2][0], b: c[2][1] }), Q.subFact({ a: hz[0][0], b: hz[0][1] }), Q.subFact({ a: v[1][0], b: v[1][1], vert: true, pen: true }), Q.subFact({ a: hz[1][0], b: hz[1][1] })]; } },
+    game: () => { const c = shuffle(WS5_12), v = shuffle(WS5_SV), hz = shuffle(WS5_SH); return [Q.subCountOn({ a: c[0][0], b: c[0][1] }), Q.subCountOn({ a: c[1][0], b: c[1][1] }), Q.subFact({ a: v[0][0], b: v[0][1], vert: true }), Q.subCountOn({ a: c[2][0], b: c[2][1] }), Q.subFrom({ a: c[3][0], b: c[3][1] }), Q.subFact({ a: v[1][0], b: v[1][1], vert: true, pen: true }), Q.subFrom({ a: c[4][0], b: c[4][1] }), Q.subCountOn({ a: c[5][0], b: c[5][1] })]; } } /* v210: แนวนอนใช้การนับต่อ */,
   { id: 217, title: 'การหาค่าของตัวไม่ทราบค่า', short: 'ตัวไม่ทราบค่า', tone: 'yellow',
     goal: 'หาผลบวกและผลลบ และหาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์การบวกและการลบ',
     teach: [
@@ -2238,7 +2238,7 @@ const WS14_GEN = {
     () => { const [a, b] = ws14S(pick([true, false])); return ST(`มีไข่ไก่ ${a} ฟอง ไข่แตกไปบางฟอง เหลือ ${b} ฟอง ไข่แตกไปกี่ฟอง`, a, b, '-', 'ฟอง'); } /* v201: บทนี้ = หาส่วนที่ขาด/หายไป */])(),
   p4: () => pick([() => { const [a, b] = ws14S(pick([true, false])); return ST(`ดอกไม้สีแดงและสีขาวมีทั้งหมด ${a} ดอก เป็นสีขาว ${b} ดอก เป็นสีแดงกี่ดอก`, a, b, '-', 'ดอก'); },
     () => { const [a, b] = ws14S(pick([true, false])); return ST(`นักเรียนชายและหญิงมีทั้งหมด ${a} คน เป็นนักเรียนชาย ${b} คน เป็นนักเรียนหญิงกี่คน`, a, b, '-', 'คน'); },
-    () => { const [a, b] = ws14N(); return ST(`ในบ่อมีปลาทั้งหมด ${a} ตัว เป็นปลาทอง ${b} ตัว ที่เหลือเป็นปลาคาร์ป มีปลาคาร์ปกี่ตัว`, a, b, '-', 'ตัว'); } /* v201: บทนี้ = รู้ส่วนรวม หาอีกส่วน */])(),
+    () => { const [a, b] = ws14S(false); /* v210: เดิม ws14N ให้ส่วนย่อย ≥ ส่วนรวมได้ (41 กับ 41) */ return ST(`ในบ่อมีปลาทั้งหมด ${a} ตัว เป็นปลาทอง ${b} ตัว ที่เหลือเป็นปลาคาร์ป มีปลาคาร์ปกี่ตัว`, a, b, '-', 'ตัว'); } /* v201: บทนี้ = รู้ส่วนรวม หาอีกส่วน */])(),
 };
 const SQ14 = k => [...SQ(WS14P[k]), ...range(0, 4).map(() => Q.story100(WS14_GEN[k]()))];
 const LESSONS_CH14 = [
