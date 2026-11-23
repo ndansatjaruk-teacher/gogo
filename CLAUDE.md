@@ -1,6 +1,6 @@
 # Notes for AI coding agents
 
-Thai primary-school maths game (ป.1–ป.6) built into ONE HTML file from `src/`. Read README.md, CONTRIBUTING.md (rules every lesson must follow) and docs/ADDING-A-LESSON.md before changing lessons.
+Thai primary-school maths game (ป.1–ป.6) built into ONE HTML file from `src/`. Read README.md, CONTRIBUTING.md (rules every lesson must follow) and docs/ADDING-A-LESSON.md before changing lessons. Building a whole new grade: docs/ADDING-A-GRADE.md (what to ask the user first, what to build, checks).
 
 - Edit only `src/`. Never edit or commit `ผจญภัยไปกับ The Ascent.html` — GitHub Actions rebuilds it after merge.
 - All `src/**/*.js` files share one global scope, joined in `src/order.txt` order. New files must be added there; top-level names must be unique (use the file's prefix).
