@@ -535,7 +535,9 @@ function lessonTop(L, phase) {
    or a sim calls teachDone(el). Free-exploration examples need a couple of taps. */
 const teachDone = el => el && el.dispatchEvent(new CustomEvent('teachdone', { bubbles: true }));
 const SEQ_BTN = b => b.matches('button.btn') && /\b(info|accent|primary)\b/.test(b.className) && !b.classList.contains('icon') && !b.classList.contains('sm') && !b.closest('.fstep,.keypad,.palette,.fnav,.restart');
-const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb, .objcard, .solidbtn, .flipcard, .g2cell'; /* v206 (ผู้ใช้เจอ: แตะ 2 อันก็ไปต่อได้) — การ์ดสิ่งของ รูปทรง การ์ดพลิก การ์ดของ */ /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
+/* v211 (ผู้ใช้ขอ: หน้าที่ให้แตะ ต้องแตะครบทุกอัน — ทุกชั้น): แถวแผนภูมิรูปภาพ การ์ดสูตรคูณ/การ์ดเดือน ของบนเครื่องชั่ง แถวตาราง รูปทรงในฉาก เลขโดด ฯลฯ — EXP_SEL2 นับแม้ไม่ได้ใช้ onclick */
+const EXP_SEL2 = '.pc-row.tapr, .mtcard, .tkmc, .tray-it, .tapscene .sc-it, .scene.room .sc-it, .k7-cards:not(.s9-netpick) .k7-card, .p4c .p4d, .g2fl, .s9o-card, .w2cvc, .pzhs, .p4seg button';
+const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb, .objcard, .solidbtn, .flipcard, .g2cell, tr, ' + EXP_SEL2; /* v206 (ผู้ใช้เจอ: แตะ 2 อันก็ไปต่อได้) — การ์ดสิ่งของ รูปทรง การ์ดพลิก การ์ดของ */ /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
 const ONCE_RE = /เพิ่มอีก|ขีดเพิ่ม|ใส่ลูกแก้ว|เพิ่มไม้|หมุน|ไล่ลง|หาสูงที่สุด|ดูวิธีวาด|ลองวาด/;
 function teachGate(vis, onDone) {
   let done = false, taps = 0; const seq = new Set([...vis.querySelectorAll('button')].filter(SEQ_BTN));
@@ -543,20 +545,22 @@ function teachGate(vis, onDone) {
   const interactive = vis.querySelector('.ia, button, canvas, .tappable, [draggable]');
   const finish = () => { if (done) return; done = true; mo.disconnect(); onDone(); };
   /* v205 (ผู้ใช้ขอ: ทุกบทเรียน กดให้ครบก่อนจึงไปต่อ) — things the child taps to explore (each child in a line, each shelf cell, each figure…) must ALL be tapped */
-  const exp = () => [...vis.querySelectorAll(EXP_SEL)].filter(e => e.onclick && e.offsetParent !== null && !e.closest('.opts, .keypad'));
+  const hit = new Set(), hk = (e, k) => k + '|' + (e.textContent || '').replace(/\s+/g, '').slice(0, 30), isT = (e, k) => !!e.dataset.tapped || hit.has(hk(e, k)); /* v211: ภาพที่วาดใหม่หลังแตะ (ตาราง) จำด้วยตำแหน่ง+ข้อความ */
+  const vis_ = e => e.offsetParent !== null || (e instanceof SVGElement && e.getBoundingClientRect().width > 0);
+  const exp = () => [...vis.querySelectorAll(EXP_SEL)].filter(e => (e.onclick || e.matches(EXP_SEL2)) && vis_(e) && !e.closest('.opts, .keypad, .prac, .qsim'));
   /* v208: รูปที่แตะนับได้ (นับปลา ฯลฯ) ต้องนับให้ครบทุกตัว — เดิมแตะ 2 ครั้งก็ผ่าน */
   const cnt = () => [...vis.querySelectorAll('.obj.cnt')].filter(e => e.offsetParent !== null && !e.closest('.opts, .keypad, .qsim, .prac'));
-  const expOK = () => { const x = exp(), c = cnt(); return (!x.length || x.length > 16 || x.every(e => e.dataset.tapped)) && (!c.length || c.length > 16 || c.every(e => e.dataset.c)); };
+  const expOK = () => { const x = exp(), c = cnt(); return (!x.length || x.length > 16 || x.every(isT)) && (!c.length || c.length > 16 || c.every(e => e.dataset.c)); };
   const check = () => { if (done) return; vis.querySelectorAll('button').forEach(b => { if (SEQ_BTN(b) && !seq.has(b) && b.offsetParent !== null) seq.add(b); });
     if (seq.size) { if ([...seq].every(fin) && expOK()) finish(); }
     else if ((exp().length && exp().length <= 16) || (cnt().length && cnt().length <= 16)) { if (expOK()) finish(); }
     else if (taps >= 2) finish(); };
   const mo = new MutationObserver(() => requestAnimationFrame(check)); mo.observe(vis, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'disabled'] });
-  vis.addEventListener('click', e => { if (e.target.closest('.restart')) return; const xe = e.target.closest(EXP_SEL); if (xe) xe.dataset.tapped = 1; const sb = e.target.closest('button'); if (sb && seq.has(sb)) sb.dataset.clicked = 1; if (e.target.closest('.ia, button, canvas, .tappable, .sc-it, .hc, .rp, .lu-kid, .sh-cell')) { taps++; requestAnimationFrame(check); } }, true);
+  vis.addEventListener('click', e => { if (e.target.closest('.restart')) return; const xe = e.target.closest(EXP_SEL); if (xe) { const k = exp().indexOf(xe); if (k >= 0) hit.add(hk(xe, k)); xe.dataset.tapped = 1; } /* v211: จำตำแหน่งด้วย — บางภาพวาดใหม่ทั้งตารางหลังแตะ */ const sb = e.target.closest('button'); if (sb && seq.has(sb)) sb.dataset.clicked = 1; if (e.target.closest('.ia, button, canvas, .tappable, .sc-it, .hc, .rp, .lu-kid, .sh-cell')) { taps++; requestAnimationFrame(check); } }, true);
   vis.addEventListener('pointerdown', e => { if (e.target.closest('canvas, .piece, .drag, .lb-knob')) { taps++; requestAnimationFrame(check); } }, true);
   vis.addEventListener('teachdone', finish);
   if (!interactive) requestAnimationFrame(() => requestAnimationFrame(() => { if (vis.querySelector('.stg-next')) check(); else finish(); })); else requestAnimationFrame(check); // explanation steps the child opens one by one (v98)
-  return { isDone: () => done, next: () => [...seq].find(b => b.isConnected && b.offsetParent !== null && !b.disabled && !fin(b)) || exp().find(e => !e.dataset.tapped) || (cnt().length <= 16 ? cnt().find(e => !e.dataset.c) : null), left: () => exp().filter(e => !e.dataset.tapped).length || (cnt().length <= 16 ? cnt().filter(e => !e.dataset.c).length : 0) };
+  return { isDone: () => done, next: () => [...seq].find(b => b.isConnected && b.offsetParent !== null && !b.disabled && !fin(b)) || exp().find((e, k) => !isT(e, k)) || (cnt().length <= 16 ? cnt().find(e => !e.dataset.c) : null), left: () => exp().filter((e, k) => !isT(e, k)).length || (cnt().length <= 16 ? cnt().filter(e => !e.dataset.c).length : 0) };
 }
 /* a sim with a “new numbers” button (.nxp): the clone page clicks it c times before it is shown, then the button is removed */
 const quietly = fn => { const m = SET.mute; SET.mute = true; try { return fn(); } finally { SET.mute = m; } };
