@@ -27021,6 +27021,8 @@ MEGA_SET['ภ.ง'] = { grade: 6, bosses: P6T2_STORY.bosses };
    ========================================================= */
 const miN = n => (n < 0 ? '−' + (-n).toLocaleString('en-US') : n.toLocaleString('en-US'));
 const miP = n => (n < 0 ? `(${miN(n)})` : miN(n));
+/* v217 (ผู้ใช้ขอ: ให้มีสีสัน): จำนวนลบสีแดง จำนวนบวกสีฟ้า ศูนย์สีเข้ม — สีเดียวกับเส้นจำนวน */
+const miC = n => `<span class="num" style="color:${n < 0 ? '#E5505E' : n > 0 ? '#2F86C2' : '#2B2550'}">${miN(n)}</span>`;
 /* speech: read signs and operators the Thai way */
 const miSay = t => String(t).replace(/<[^>]+>/g, ' ').replace(/\|([^|]+)\|/g, ' ค่าสัมบูรณ์ของ $1 ').replace(/[()[\]]/g, ' ').replace(/−/g, ' ลบ ').replace(/×/g, ' คูณ ').replace(/÷/g, ' หาร ').replace(/\+/g, ' บวก ')
   .replace(/=/g, ' เท่ากับ ').replace(/[☐□]/g, ' ช่องว่าง ').replace(/°C/g, ' องศาเซลเซียส').replace(/</g, ' น้อยกว่า ').replace(/>/g, ' มากกว่า ').replace(/\s+/g, ' ').trim();
@@ -27130,6 +27132,14 @@ function miCmpSim() {
       out.innerHTML = `${miN(lo)} อยู่ทาง<b>ซ้าย</b>ของ ${miN(hi)} → <b>${miN(lo)} &lt; ${miN(hi)}</b>`; say(`${miSay(miN(lo))} น้อยกว่า ${miSay(miN(hi))}`, true);
       if (done >= 3 && neg2) teachDone(el); else if (done >= 3) out.innerHTML += '<div class="cap">ลองเทียบจำนวนลบ 2 จำนวนดูบ้าง</div>'; } else out.textContent = 'แตะอีก 1 จำนวน'; } });
   return h('div', { class: 'colstack' }, h6wait(), h('div', { class: 'cap' }, 'แตะ 2 จำนวนบนเส้นจำนวน แล้วดูว่าจำนวนใดมากกว่า (ลอง 3 ครั้ง — มีคู่จำนวนลบด้วย)'), el, out);
+}
+/* ordering on the river path: tap the cards from least to greatest (v217) */
+function miOrderSim(nums) {
+  const sorted = [...nums].sort((x, y) => x - y), sh = nums.slice(), out = fNote();
+  const board = cvnBoard({ cards: sh.map(miC), horiz: true, fits: (k, i) => sh[k] === sorted[i],
+    onDone: ok => { if (!ok) { out.innerHTML = 'ยังไม่ใช่ — หาจำนวนที่<b>น้อยที่สุด</b>ที่ยังเหลือ (จำนวนลบที่ตัวเลขมากกว่ามีค่าน้อยกว่า)'; return; }
+      out.innerHTML = `จำนวนลบก่อน → ศูนย์ → จำนวนบวก<br><b>${sorted.map(miC).join(' , ')}</b>`; say(miSay('เรียงได้ ' + sorted.map(miN).join(' ')), true); teachDone(board); } });
+  return h('div', { class: 'colstack' }, h6wait(), h('div', { class: 'dir' }, 'น้อย', h('span', { class: 'ar' }), 'มาก'), board, out);
 }
 /* opposite and absolute value: drag the point, its mirror and its distance from 0 follow */
 function miOppSim() {
@@ -27262,6 +27272,7 @@ function miSwapSim(list) {
 /* =========================================================
    GAME QUESTION TYPES (Q.mi…)
    ========================================================= */
+const miOptC = (ctx, nums, right, hint) => { const ch = choices(ctx, shuffle(nums.map(n => ({ value: String(n), label: miC(n) }))), String(right), { hint }); ch.querySelectorAll('.opt').forEach(o => o.classList.add('txt')); return ch; };
 const miOpt = (ctx, opts, right, hint) => { const ch = choices(ctx, shuffle(opts.map(o => ({ value: String(o), label: `<span class="num">${o}</span>` }))), String(right), { hint }); ch.querySelectorAll('.opt').forEach(o => o.classList.add('txt')); return ch; };
 Object.assign(Q, {
   /* what kind of number is n */
@@ -27290,22 +27301,22 @@ Object.assign(Q, {
   miCmp({ a, b, la, lb }) {
     const r = a > b ? '>' : a < b ? '<' : '=', blank = h('span', { class: 'blank' }, '?');
     return { prompt: 'เลือกเครื่องหมาย &gt; &lt; หรือ = เติมในช่องว่าง', say: miSay(`${la || miN(a)} กับ ${lb || miN(b)} เลือกเครื่องหมาย`), __sig: `micmp ${la || a} ${lb || b}`,
-      mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'sentence num' }, h('span', { class: 'lab', html: la || miN(a) }), blank, h('span', { class: 'lab', html: lb || miN(b) })), wordChoices(ctx, r, blank, 'บนเส้นจำนวน จำนวนที่อยู่ทางขวามีค่ามากกว่า · จำนวนลบที่ตัวเลขมากกว่ากลับมีค่าน้อยกว่า', ['>', '<', '=']))); } };
+      mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'sentence num' }, h('span', { class: 'lab', html: la || miC(a) }), blank, h('span', { class: 'lab', html: lb || miC(b) })), wordChoices(ctx, r, blank, 'บนเส้นจำนวน จำนวนที่อยู่ทางขวามีค่ามากกว่า · จำนวนลบที่ตัวเลขมากกว่ากลับมีค่าน้อยกว่า', ['>', '<', '=']))); } };
   },
   /* the greatest / least in a set */
   miExt({ nums, max = true, ctx: what }) {
     const r = max ? Math.max(...nums) : Math.min(...nums), q = what || `จำนวนใด${max ? 'มากที่สุด' : 'น้อยที่สุด'}`;
     return { prompt: q, say: miSay(q), __sig: 'mix ' + nums.join(',') + max,
-      mount(bd, ctx) { bd.append(miOpt(ctx, nums.map(miN), miN(r), max ? 'จำนวนที่อยู่ทางขวาสุดบนเส้นจำนวนมากที่สุด' : 'จำนวนที่อยู่ทางซ้ายสุดบนเส้นจำนวนน้อยที่สุด')); } };
+      mount(bd, ctx) { bd.append(miOptC(ctx, nums, r, max ? 'จำนวนที่อยู่ทางขวาสุดบนเส้นจำนวนมากที่สุด' : 'จำนวนที่อยู่ทางซ้ายสุดบนเส้นจำนวนน้อยที่สุด')); } };
   },
-  /* the right ordering */
+  /* ordering: tap the cards in order (the same board as ป.1 — v217 ผู้ใช้ขอ: ให้เด็กกดเรียงเอง) */
   miOrder({ nums, asc = true }) {
-    const s = [...nums].sort((x, y) => asc ? x - y : y - x), byAbs = [...nums].sort((x, y) => asc ? Math.abs(x) - Math.abs(y) : Math.abs(y) - Math.abs(x)), rev = [...s].reverse();
-    const negFlip = [...nums].sort((x, y) => { const k = v => (v < 0 ? -v - 1000 : v); return asc ? k(x) - k(y) : k(y) - k(x); });
-    const fmt = a => a.map(miN).join(' , '), opts = [...new Set([fmt(s), fmt(byAbs), fmt(rev), fmt(negFlip)])].slice(0, 3);
-    if (opts.length < 3) opts.push(fmt(shuffle(nums)));
-    return { prompt: `เรียงลำดับจาก${asc ? 'น้อยไปมาก' : 'มากไปน้อย'} ข้อใดถูกต้อง`, say: `เรียงลำดับจาก${asc ? 'น้อยไปมาก' : 'มากไปน้อย'} ข้อใดถูกต้อง`, __sig: 'mio ' + nums.join(',') + asc,
-      mount(bd, ctx) { bd.append(h('div', { class: 'fbig num', style: { fontSize: 'clamp(24px,3cqw,34px)' } }, nums.map(miN).join(' ,  ')), miOpt(ctx, [...new Set(opts)], fmt(s), 'จำนวนลบที่ตัวเลขมาก (เช่น −9) มีค่าน้อยกว่าจำนวนลบที่ตัวเลขน้อย (เช่น −2)')); } };
+    const sorted = [...nums].sort((x, y) => asc ? x - y : y - x);
+    return { prompt: `เรียงลำดับจาก<span class="hl">${asc ? 'น้อยไปมาก' : 'มากไปน้อย'}</span> <small>(แตะการ์ดตามลำดับ)</small>`, say: `เรียงลำดับจาก${asc ? 'น้อยไปมาก' : 'มากไปน้อย'} แตะการ์ดตามลำดับ`, __sig: 'mio ' + nums.join(',') + asc,
+      mount(bd, ctx) { const sh = shuffle(nums.slice()), board = cvnBoard({ cards: sh.map(miC), horiz: true, fits: (k, i) => sh[k] === sorted[i],
+          onDone: ok => ok ? ctx.check(true) : ctx.check(false, asc ? 'หาจำนวนที่น้อยที่สุดที่ยังเหลือก่อน — จำนวนลบที่ตัวเลขมาก (เช่น −9) มีค่าน้อยกว่า −2' : 'หาจำนวนที่มากที่สุดที่ยังเหลือก่อน — จำนวนบวกมากกว่าจำนวนลบเสมอ') });
+        ctx.onRight = () => board.reveal();
+        bd.append(h('div', { class: 'colstack' }, h('div', { class: 'dir' }, asc ? 'น้อย' : 'มาก', h('span', { class: 'ar' }), asc ? 'มาก' : 'น้อย'), board)); } };
   },
   /* opposite / absolute value */
   miOpp({ n }) { return { prompt: `จำนวนตรงข้ามของ <b class="num">${miN(n)}</b> คือจำนวนใด`, say: miSay(`จำนวนตรงข้ามของ ${miN(n)} คือจำนวนใด`), __sig: 'miopp ' + n,
@@ -27372,7 +27383,7 @@ const LESSONS_M1C1 = [
   LM1(2, 'คุ้งน้ำเทียบค่า', 'จำนวนเต็ม ตอนที่ 2', 'เทียบ/เรียงลำดับ', 'เปรียบเทียบและเรียงลำดับจำนวนเต็มโดยใช้เส้นจำนวน และใช้เครื่องหมาย > < =', [
     T('<b>แตะ</b> 2 จำนวนบนเส้นจำนวน — จำนวนที่อยู่<b>ทางขวา</b>มีค่า<b>มากกว่า</b>เสมอ', 'แตะสองจำนวนบนเส้นจำนวน จำนวนที่อยู่ทางขวามีค่ามากกว่าเสมอ', el => el.append(miCmpSim())),
     T('ตัวอย่างทีละขั้น: −8 กับ −3 จำนวนใดมากกว่า', 'ตัวอย่างทีละขั้น ลบแปด กับ ลบสาม จำนวนใดมากกว่า', el => el.append(dcWalk('−8  ?  −3', [['① ดูบนเส้นจำนวน', '−8 อยู่ทางซ้ายของ −3'], ['② ทางซ้ายมีค่าน้อยกว่า', 'แม้ 8 มากกว่า 3 แต่ −8 อยู่ไกลจาก 0 ไปทางลบมากกว่า'], ['③ สรุป', '−8 < −3 หรือ −3 > −8']], '<b>−8 &lt; −3</b>'))),
-    T('ตัวอย่างทีละขั้น: เรียง 4, −7, 0, −2, 9 จากน้อยไปมาก', 'ตัวอย่างทีละขั้น เรียงจากน้อยไปมาก', el => el.append(dcWalk('4 , −7 , 0 , −2 , 9', [['① จำนวนลบก่อน', '−7 < −2 (−7 อยู่ซ้ายกว่า)'], ['② ต่อด้วยศูนย์', '0'], ['③ จำนวนบวก', '4 < 9']], '<b>−7 , −2 , 0 , 4 , 9</b>')))
+    T('<b>ลองเรียงเอง</b>: 4, −7, 0, −2, 9 จากน้อยไปมาก — แตะการ์ดตามลำดับ', 'ลองเรียงเอง จากน้อยไปมาก แตะการ์ดตามลำดับ', el => el.append(miOrderSim([4, -7, 0, -2, 9])))
   ], () => [Q.miCmp({ a: -6, b: 2 }), Q.miCmp({ a: -4, b: -9 }), Q.miCmp({ a: 0, b: -5 }), Q.miCmp({ a: -12, b: -12 }), Q.miCmp({ a: -15, b: -11 }), Q.miCmp({ a: 7, b: -20 }),
     Q.miExt({ nums: [-3, 5, -8, 0] }), Q.miExt({ nums: [-14, -2, -9, -21], max: false }), Q.miExt({ nums: [-1, -10, -6, -4] }),
     Q.miOrder({ nums: [3, -5, 0, -1, 6] }), Q.miOrder({ nums: [-13, 5, -2, 9, -6], asc: false }), Q.miOrder({ nums: [-2, -9, 5, -6] }),
