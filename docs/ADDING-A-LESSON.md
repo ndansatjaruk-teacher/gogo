@@ -74,3 +74,4 @@ Object.assign(Q, {
 4. ลงทะเบียนเมืองใน `CITIES` ของ [`src/app/lessons.js`](../src/app/lessons.js) (ลำดับใน `CITIES` = ลำดับการเล่น) พร้อม `theme` ตามโลกของชั้นนั้น
 5. `python3 tools/build.py --check` → `python3 tests/smoke.py --grade 5` → เปิด `dist/index.html` เล่นจริงบนจอขนาดไอแพด
 6. เพิ่มหัวข้อสั้น ๆ ใน [ARCHITECTURE.md](ARCHITECTURE.md) และรัน `python3 tools/catalog.py` ถ้าเพิ่มชนิดคำถาม
+- ข้อ "ลองทำเอง 1 ข้อ" ก่อนเกม: ระบบเลือกข้อที่ง่ายที่สุดจาก `game()` เอง · ถ้าอยากกำหนดเอง ให้ใส่ `L.pracQ = () => Q.xxx(...)` (v223)

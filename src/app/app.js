@@ -604,7 +604,8 @@ function teachPractice(L) {
   if (L.__pracDone || L.boss || L.bonus || !L.game || !L.teach) return; L.__pracDone = 1; L.__prac = L.__prac || new Set();
   const guide = (L.teach.find(s => s.rows && s.rows.length > 1) || {}).rows;
   /* practice = the easiest questions of the lesson, with round numbers where the story allows (ผู้ใช้ขอ) */
-  const pickQ = () => { let K = []; try { K = bossKeys(L); } catch (_) { } const pool = [];
+  const pickQ = () => { if (L.pracQ) { try { const q = L.pracQ(); if (q) return q; } catch (_) { } } /* v223: บทเรียนกำหนดข้อลองทำเองเองได้ (ผู้ใช้ขอ: ม.1 ด่าน 8 ข้อแบบปกติก่อน) */
+    let K = []; try { K = bossKeys(L); } catch (_) { } const pool = [];
     for (let t = 0; t < 4; t++) { let qs = []; __EASY = true; try { qs = L.game(); } catch (_) { qs = []; } finally { __EASY = false; } qs.forEach(q => { if (q && q.mount && !bossLike(q, K) && !teachDup(L, q) && !L.__prac.has(qSig(q)) && !pool.some(p => qSig(p) === qSig(q))) pool.push(q); }); }
     pool.sort((a, b) => qDiff(a) - qDiff(b)); return pool[0] || null; };
   /* ONE practice question before the game (ผู้ใช้ขอ: เหลือข้อเดียว; เดิม 2 ข้อ) */

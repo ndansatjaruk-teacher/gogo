@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-427 types
+428 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -204,19 +204,20 @@
 | `Q.matchSums` | `{ n = 3 } = {}` | [`engine/questions.js:333`](../src/engine/questions.js#L333) |
 | `Q.meterJudge` | `{ e, name, more }` | [`engine/questions.js:1394`](../src/engine/questions.js#L1394) |
 | `Q.miCalc` | `{ expr, hint, fig, q, unit }` | [`grades/m1/m1i.js:347`](../src/grades/m1/m1i.js#L347) |
-| `Q.miChipQ` | `{ a, b }` | [`grades/m1/m1i.js:368`](../src/grades/m1/m1i.js#L368) |
+| `Q.miChipQ` | `{ a, b }` | [`grades/m1/m1i.js:376`](../src/grades/m1/m1i.js#L376) |
 | `Q.miCmp` | `{ a, b, la, lb }` | [`grades/m1/m1i.js:323`](../src/grades/m1/m1i.js#L323) |
 | `Q.miCtx` | `{ text, a }` | [`grades/m1/m1i.js:307`](../src/grades/m1/m1i.js#L307) |
 | `Q.miExt` | `{ nums, max = true, ctx: what }` | [`grades/m1/m1i.js:329`](../src/grades/m1/m1i.js#L329) |
+| `Q.miGapQ` | `{ a, b, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:368`](../src/grades/m1/m1i.js#L368) |
 | `Q.miHopQ` | `{ a, b }` | [`grades/m1/m1i.js:362`](../src/grades/m1/m1i.js#L362) |
 | `Q.miKind` | `{ n, lab }` | [`grades/m1/m1i.js:301`](../src/grades/m1/m1i.js#L301) |
-| `Q.miMiss` | `{ expr, a, hint }` | [`grades/m1/m1i.js:379`](../src/grades/m1/m1i.js#L379) |
+| `Q.miMiss` | `{ expr, a, hint }` | [`grades/m1/m1i.js:387`](../src/grades/m1/m1i.js#L387) |
 | `Q.miOpp` | `{ n }` | [`grades/m1/m1i.js:344`](../src/grades/m1/m1i.js#L344) |
 | `Q.miOrder` | `{ nums, asc = true }` | [`grades/m1/m1i.js:335`](../src/grades/m1/m1i.js#L335) |
-| `Q.miPick` | `{ q, opts, right, hint }` | [`grades/m1/m1i.js:374`](../src/grades/m1/m1i.js#L374) |
+| `Q.miPick` | `{ q, opts, right, hint }` | [`grades/m1/m1i.js:382`](../src/grades/m1/m1i.js#L382) |
 | `Q.miPlace` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:317`](../src/grades/m1/m1i.js#L317) |
 | `Q.miRead` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:312`](../src/grades/m1/m1i.js#L312) |
-| `Q.miSignQ` | `{ expr }` | [`grades/m1/m1i.js:384`](../src/grades/m1/m1i.js#L384) |
+| `Q.miSignQ` | `{ expr }` | [`grades/m1/m1i.js:392`](../src/grades/m1/m1i.js#L392) |
 | `Q.miStory` | `{ text, expr, wrong, unit, hint }` | [`grades/m1/m1i.js:353`](../src/grades/m1/m1i.js#L353) |
 | `Q.mJudge` | `{ e, name, cm, ori }` | [`app/lessons.js:1804`](../src/app/lessons.js#L1804) |
 | `Q.mnCount` | `{ list }` | [`grades/p3/p3m.js:66`](../src/grades/p3/p3m.js#L66) |
