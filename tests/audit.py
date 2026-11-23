@@ -135,7 +135,7 @@ def main():
                     for e in errs: add(L, f'teach {i + 1}', 'error', e)
             if a.no_game: continue
             n = pg.evaluate(f"(window.__qs = null, window.__all = __gameSetOrig(LESSONS[{L['i']}]), __all.length)")
-            if n < (10 if L['grade'] == 1 else 8): add(L, 'game', 'count', f'{n} questions')
+            if n < (10 if L['grade'] == 1 or L['grade'] >= 7 else 8): add(L, 'game', 'count', f'{n} questions')
             for qi in range(n):
                 errs.clear(); stats['q'] += 1
                 try:
