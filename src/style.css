@@ -4048,3 +4048,8 @@ ul.bul b.hl{color:var(--mint-2);background:none}ul.bul b.hl2{color:var(--coral-2
 .qh-pop ul.bul{font-size:16px}
 .qh-target{animation:qhT .6s ease-in-out 3;outline:3px solid #FFD54F;outline-offset:3px;border-radius:12px}
 @keyframes qhT{50%{transform:scale(1.06)}}
+
+/* v212 แผนภูมิรูปภาพ: แตะรูปเพื่อนับ */
+.pc-cells.pc-tap .pc-ic:not(.off){cursor:pointer}
+.pc-ic{position:relative}
+.pc-ic i.pcb{position:absolute;right:-6px;top:-6px;min-width:20px;height:20px;padding:0 4px;border-radius:10px;background:#FF6F7D;color:#fff;font:800 12px/20px var(--font-num);text-align:center;font-style:normal;box-shadow:0 1px 3px rgba(0,0,0,.2);animation:popIn .3s var(--spring)}

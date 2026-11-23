@@ -26,7 +26,7 @@ function bubbleRow(html, opts = {}) {
 const QHELP_SEL = '.e4w-info, .qhelp';
 /* v208 (ผู้ใช้ขอ): ปุ่ม ? อยู่ในแถบคำพูดของไก่ (ไม่ทับปุ่มถัดไป) และบอกว่า “ตอนนี้ต้องทำอะไร” — หน้าเรียน: ขั้นนี้ต้องกด/แตะอะไร · เกม: วิธีตอบ + คำใบ้หลังตอบผิด */
 const QG = (sel, t) => [sel, t];
-const QGUIDE = [QG('.pairs.ia', 'แตะของ<b>แถวบน</b> 1 อัน แล้วแตะของ<b>แถวล่าง</b> 1 อัน ให้เป็นคู่ ทำจนครบ'), QG('.match', 'แตะรูป<b>ทางซ้าย</b> แล้วแตะคู่ของมัน<b>ทางขวา</b> (หรือลากเส้น) ให้ครบทุกคู่'),
+const QGUIDE = [QG('.pc-cells.pc-tap', 'แตะรูปในแผนภูมิทีละรูปเพื่อ<b>นับ</b>ได้ (แตะอีกครั้งเมื่อนับครบ = นับใหม่)'), QG('.pairs.ia', 'แตะของ<b>แถวบน</b> 1 อัน แล้วแตะของ<b>แถวล่าง</b> 1 อัน ให้เป็นคู่ ทำจนครบ'), QG('.match', 'แตะรูป<b>ทางซ้าย</b> แล้วแตะคู่ของมัน<b>ทางขวา</b> (หรือลากเส้น) ให้ครบทุกคู่'),
   QG('.slots.ar', 'แตะ<b>ชื่อ</b> แล้วแตะ<b>ช่อง</b>ที่จะวาง · แตะช่องที่วางแล้วเพื่อเอาออก'), QG('.slots', 'แตะการ์ดด้านล่างเพื่อวางลงช่องตามลำดับ · แตะช่องเพื่อเอาออก'),
   QG('.counters.ia', 'แตะ<b>ตัวนับ</b>เพื่อเปลี่ยนสี ให้ได้ตามโจทย์ แล้วกด <b>ตรวจคำตอบ</b>'), QG('.ms-box', 'ทำ<b>ทีละขั้น</b>: ตอบขั้นที่มีกรอบสีเหลืองก่อน แล้วขั้นต่อไปจะเปิดเอง'),
   QG('.blab', 'บล็อกช่วยคิดได้: <b>แตะบล็อก</b>เพื่อเอาออก/นับ · กดปุ่มใต้บล็อกเพื่อกระจาย/ทด'), QG('.rd-knob', '<b>ลากปุ่มกลม</b> (หรือแตะบนไม้บรรทัด) ให้ปลายอยู่ตรงตัวเลขที่โจทย์บอก แล้วกดตรวจคำตอบ'),
@@ -709,6 +709,11 @@ function pictoChart(data, opts = {}) {
     const lab = h('div', { class: 'pc-lab' }, d.label);
     const row = h('div', { class: 'pc-row', 'data-i': i }, ...(v ? [cells, lab] : [lab, cells]));
     if (opts.counts) row.append(h('b', { class: 'pc-n num' }, d.n));
+    /* v212 (ผู้ใช้ขอ: แผนภูมิกดนับได้): แตะรูปในแถว/คอลัมน์ = นับต่อ 1, 2, 3 … (แตะเมื่อนับครบแล้ว = เริ่มนับใหม่) — ยกเว้นแถวที่บทเรียนให้แตะทั้งแถว (.tapr) และแผนภูมิที่อยู่ในตัวเลือก */
+    if (opts.tap !== false && !opts.slots) { cells.classList.add('pc-tap'); cells.addEventListener('click', ev => { const ic = ev.target.closest('.pc-ic'); if (!ic || ic.classList.contains('off') || row.classList.contains('tapr') || w.closest('.opt, .opts')) return;
+      ev.stopPropagation(); const all = [...cells.querySelectorAll('.pc-ic:not(.off)')]; let c = cells.querySelectorAll('.pc-ic i.pcb').length;
+      if (c >= all.length) { cells.querySelectorAll('i.pcb').forEach(b => b.remove()); c = 0; } const tgt = all.find(x => !x.querySelector('i.pcb'));
+      c++; tgt.append(h('i', { class: 'pcb' }, c)); sfx.pop(c); say(WORD[c] || String(c), true); }); }
     grid.append(row);
   });
   w.append(grid);
