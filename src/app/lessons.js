@@ -1021,15 +1021,15 @@ function balanceLab(pool) {
   const cyc = side => h('button', { class: 'btn ia', onclick: e => { e.stopPropagation(); if (side) ri = (ri + 1) % pool.length; else li = (li + 1) % pool.length; const rel = draw(); sfx.pop(li + ri); say(`${pool[li].name} ${rel} ${pool[ri].name}`, true); } }, icon('replay'), side ? 'เปลี่ยนของข้างขวา' : 'เปลี่ยนของข้างซ้าย');
   draw(); return h('div', { class: 'colstack' }, bal, sent, h('div', { class: 'rowstack' }, cyc(0), cyc(1)));
 }
-/* spring scale lab: tap things to put them on / take them off the plate */
+/* spring scale lab: tap a thing to weigh it — v213 (ผู้ใช้ขอ): ชั่งได้ทีละอย่าง แตะของอื่น = ยกของเดิมออกแล้ววางของใหม่ · น้ำหนักบนการ์ดขึ้นหลังชั่งแล้ว (ให้อ่านจากเข็มก่อน) */
 function scaleLab(pool, unit = 'kg') {
-  const on = new Set(), u = unit === 'kd' ? 'ขีด' : 'กิโลกรัม';
+  let cur = -1; const u = unit === 'kd' ? 'ขีด' : 'กิโลกรัม';
   const sc = springScale({ v: 0, unit, list: [], col: 'mint' }), read = h('div', { class: 'bignum sm' }, `0`), cap = h('div', { class: 'cap', style: { fontSize: '20px' } }, u);
-  const tray = h('div', { class: 'tray' }, ...pool.map((it, i) => { const b = h('button', { class: 'tray-it ia' }, art(it.e), h('b', null, it.name), h('small', { class: 'num' }, `${it.w} ${u}`));
-    b.onclick = e => { e.stopPropagation(); on.has(i) ? on.delete(i) : on.add(i); b.classList.toggle('on', on.has(i)); const v = [...on].reduce((s, k) => s + pool[k].w, 0);
-      if (v >= (unit === 'kd' ? 40 : 8)) { on.delete(i); b.classList.remove('on'); sfx.no(); say('หนักเกินที่เครื่องชั่งอ่านได้', true); return; }
-      sc.setItems([...on].map(k => pool[k].e)); sc.setValue(v); read.textContent = v; sfx.pop(v); say(unit === 'kd' ? `${WORD[v] || v} ขีด` : `${WORD[v]} กิโลกรัม`, true); }; return b; }));
-  return h('div', { class: 'colstack' }, h('div', { class: 'rowstack' }, sc, h('div', { class: 'colstack', style: { gap: '2px' } }, read, cap)), tray, h('div', { class: 'cap' }, 'แตะของเพื่อวางบนเครื่องชั่ง แตะอีกครั้งเพื่อยกออก'));
+  const btns = pool.map((it, i) => { const w = h('small', { class: 'num', style: { visibility: 'hidden' } }, `${it.w} ${u}`), b = h('button', { class: 'tray-it ia' }, art(it.e), h('b', null, it.name), w);
+    b.onclick = e => { e.stopPropagation(); cur = cur === i ? -1 : i; btns.forEach((x, k) => x.classList.toggle('on', k === cur));
+      const v = cur < 0 ? 0 : pool[cur].w; sc.setItems(cur < 0 ? [] : [pool[cur].e]); sc.setValue(v); read.textContent = v; sfx.pop(v);
+      if (cur >= 0) { setTimeout(() => { w.style.visibility = ''; }, 700); say(`${it.name} หนัก ${unit === 'kd' ? `${WORD[v] || v} ขีด` : `${WORD[v] || v} กิโลกรัม`}`, true); } }; return b; });
+  return h('div', { class: 'colstack' }, h('div', { class: 'rowstack' }, sc, h('div', { class: 'colstack', style: { gap: '2px' } }, read, cap)), h('div', { class: 'tray' }, ...btns), h('div', { class: 'cap' }, 'แตะของเพื่อชั่งทีละอย่าง — แตะของอื่นเพื่อเปลี่ยน แตะของเดิมเพื่อยกออก'));
 }
 function compareScales(a, b, va, vb, unit = 'kg') {
   const u = unit === 'kd' ? 'ขีด' : 'กิโลกรัม', rel = va > vb ? 'หนักกว่า' : va < vb ? 'เบากว่า' : 'หนักเท่ากับ';
