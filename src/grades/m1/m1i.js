@@ -275,7 +275,7 @@ function miSignTable() {
   return h('div', { class: 'colstack no-side' }, h6wait(), h('div', { class: 'cap' }, 'แตะทุกช่องเพื่อเปิดดู'), grid, out);
 }
 function miCards(list) {
-  return h('div', { class: 'mi-cards' }, ...list.map(([f, b]) => { const c = h('button', { class: 'mi-card fc' }, h('span', { class: 'f', html: f }), h('span', { class: 'b', html: `<i class="fc-q">${f}</i>${b}` })); /* v226 (ผู้ใช้ขอ): ด้านหลังยังมีข้อความด้านหน้า จะได้จำได้ว่าพูดถึงอะไร */
+  return h('div', { class: 'mi-cards' }, ...list.map(([f, b, q]) => { const c = h('button', { class: 'mi-card fc' }, h('span', { class: 'f', html: f }), h('span', { class: 'b', html: `<i class="fc-q">${q ?? f}</i>${b}` })); /* q = หัวข้อด้านหลัง (ถ้าด้านหน้ามีรูป) */ /* v226 (ผู้ใช้ขอ): ด้านหลังยังมีข้อความด้านหน้า จะได้จำได้ว่าพูดถึงอะไร */
     c.onclick = e => { e.stopPropagation(); c.classList.toggle('flip'); sfx.pop(2); if (c.classList.contains('flip')) say(miSay(c.querySelector('.b').textContent), true); }; return c; }));
 }
 /* sharing: tap each chip to deal it to the next group */

@@ -2951,7 +2951,9 @@ const CITIES = [
     theme: { mountain: true, hills: ['#C9D6E6', '#BCCADC', '#D6E1EE'], far: '#E6EEF7', edge: ['snowpine', 'cairn', 'snowpine', 'sumflag'], small: ['edelweiss', 'goat', 'cairn', 'snowpine', 'edelweiss', 'goat'] } },
   /* v214 (ผู้ใช้ขอ): ม.1 โลกแม่น้ำ — เส้นทางด่านเป็นแม่น้ำ สองฝั่งเป็นแผ่นดิน */
   { id: 90, grade: 7, name: 'แม่น้ำจำนวนเต็ม', chapter: 'บทที่ 1 จำนวนเต็ม', lessons: LESSONS_M1C1,
-    theme: { river: true, hills: ['#C6E6A8', '#B7DE96', '#D3ECBB'], far: '#E2F2D2', edge: ['stilthouse', 'tree', 'ricebarn', 'pine'], small: ['reeds', 'paddy', 'flowers', 'reeds', 'bush', 'paddy'] } }
+    theme: { river: true, hills: ['#C6E6A8', '#B7DE96', '#D3ECBB'], far: '#E2F2D2', edge: ['stilthouse', 'tree', 'ricebarn', 'pine'], small: ['reeds', 'paddy', 'flowers', 'reeds', 'bush', 'paddy'] } },
+  { id: 91, grade: 7, name: 'ลำน้ำเรขา', chapter: 'บทที่ 2 การสร้างทางเรขาคณิต', lessons: LESSONS_M1C2,
+    theme: { river: true, hills: ['#BFE3C9', '#ADD9B8', '#CFEBD7'], far: '#DDF0E3', edge: ['pier', 'tree', 'stilthouse', 'pine'], small: ['lotus', 'reeds', 'flowers', 'kayak', 'bush', 'reeds'] } }
 ];
 CITIES.forEach(c => { c.grade = c.grade || 1; });
 const GRADES = [{ id: 1, name: 'ป.1', world: 'เมืองตัวเลข' }, { id: 2, name: 'ป.2', world: 'ชายหาด', cls: 'beach' }, { id: 3, name: 'ป.3', world: 'ป่าดิบชื้น', cls: 'jungle' }, { id: 4, name: 'ป.4', world: 'ทะเลทราย', cls: 'desert' }, { id: 5, name: 'ป.5', world: 'ถ้ำ', cls: 'cave' }, { id: 6, name: 'ป.6', world: 'ภูเขา', cls: 'mountain' }, { id: 7, name: 'ม.1', world: 'แม่น้ำ', cls: 'river' }];

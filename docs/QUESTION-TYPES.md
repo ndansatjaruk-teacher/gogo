@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-429 types
+434 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -203,6 +203,11 @@
 | `Q.matchFrames` | `{ nums }` | [`engine/questions.js:827`](../src/engine/questions.js#L827) |
 | `Q.matchSums` | `{ n = 3 } = {}` | [`engine/questions.js:333`](../src/engine/questions.js#L333) |
 | `Q.meterJudge` | `{ e, name, more }` | [`engine/questions.js:1394`](../src/engine/questions.js#L1394) |
+| `Q.mgBuild` | `T, q` | [`grades/m1/m1g.js:372`](../src/grades/m1/m1g.js#L372) |
+| `Q.mgFigs` | `{ q, figs, right, hint, sig }` | [`grades/m1/m1g.js:382`](../src/grades/m1/m1g.js#L382) |
+| `Q.mgMeasure` | `{ deg, rot` | [`grades/m1/m1g.js:375`](../src/grades/m1/m1g.js#L375) |
+| `Q.mgNum` | `{ q, fig, a, unit, hint, sig }` | [`grades/m1/m1g.js:385`](../src/grades/m1/m1g.js#L385) |
+| `Q.mgPick` | `{ q, fig, opts, right, hint, sig }` | [`grades/m1/m1g.js:379`](../src/grades/m1/m1g.js#L379) |
 | `Q.miAvg` | `{ text, nums, unit }` | [`grades/m1/m1i.js:376`](../src/grades/m1/m1i.js#L376) |
 | `Q.miCalc` | `{ expr, hint, fig, q, unit }` | [`grades/m1/m1i.js:355`](../src/grades/m1/m1i.js#L355) |
 | `Q.miChipQ` | `{ a, b }` | [`grades/m1/m1i.js:398`](../src/grades/m1/m1i.js#L398) |

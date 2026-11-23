@@ -68,6 +68,7 @@
 | `src/grades/p4/p4r.js` | 132 KB | prefix r4 · ผู้ใช้ขอ "ให้เกมสนุก เพิ่มเกมใหม่ ๆ" → mini-games that are played, not just answered: |
 | `src/grades/p4/p4g.js` | 55 KB | prefix g4 · reuses the P5 chart kit (p5c: chartSVG/dataChart/chartBuilder/gTable/simReadBar/simBuild/gWalk · Q |
 | `src/grades/m1/m1i.js` | 40 KB | ม.1 บทที่ 1 จำนวนเต็ม (โลกแม่น้ำ · เมือง 90 · ด่าน 2001–2015 · บอส 2019) — ชุดเครื่องมือจำนวนเต็ม (แป้นมีเครื่องหมายลบ เส้นจำนวน ชิปคู่ศูนย์) |
+| `src/grades/m1/m1g.js` | 60 KB | (v227) ม.1 บทที่ 2 การสร้างทางเรขาคณิต: กระดานสร้างรูป `mgBoard` (สันตรง วงเวียน ครึ่งวงกลม จุด · ตัวอย่างเคลื่อนไหวทีละขั้น · ดูเฉลย · ตรวจ) · รูปนิ่ง `mgFig` · งานสร้าง `mgT.*` · ข้อ `Q.mgBuild/mgMeasure/mgPick/mgFigs/mgNum` · ด่าน 2101–2109 + บอส 2119 |
 | `src/app/lessons.js` | 477 KB | ด่าน ป.1 + ทะเบียนเมืองทั้งหมด (CITIES, GRADES, LESSONS) |
 | `src/app/learn.js` | 50 KB | หน้า “รู้จักก่อน” |
 | `src/app/wpic.js` | 9 KB | รูปประกอบตัวอย่างทีละขั้น |

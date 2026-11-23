@@ -4188,3 +4188,48 @@ body[data-world=river] .exam-card .xopt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A
 body[data-world=river] .opt.right,body[data-world=river] .qbody .opts .opt.right{--c:#CFF0DC;--c2:#5FC08A;color:var(--ink);outline:3px solid #3FB56E;outline-offset:-3px} /* v226: ตอบถูกยังเห็นชัด (สีเขียว) แต่ตัวหนังสือดำ */
 body[data-world=river] .exam-card .xopt.right{--c:var(--mint-soft);--c2:#A9E2C8}body[data-world=river] .exam-card .xopt.wrong{--c:var(--coral-soft);--c2:#F5C7CC}
 body[data-world=river] .qbody .opt .mi-x{flex-wrap:nowrap;white-space:nowrap}
+/* ===== v227 ม.1 บทที่ 2 การสร้างทางเรขาคณิต (m1g.js) ===== */
+.mg-paper{background:#FFFFFF;box-shadow:var(--e1),inset 0 0 0 2px #E8E2D3}
+.cns-svg .mg-arc{stroke:#6F5FD0;stroke-width:2;fill:none}
+.cns-svg .mg-arc.cns-live{stroke:#E5487A;stroke-dasharray:5 4}
+.mgb .cns-side{min-width:0}
+.mgb .mg-head{font-size:clamp(15px,1.8cqw,19px);line-height:1.45}
+.mgb.demo .cnsf-tools{display:flex;flex-direction:column;gap:6px}
+.mg-cnt{color:var(--ink-2);font-weight:700}
+.mg-steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px;font-size:clamp(14px,1.6cqw,17px);line-height:1.45;color:var(--ink-2)}
+.mg-steps li.now{color:var(--ink);font-weight:600}
+.mg-steps li{animation:lbIn .3s both}
+.mg-next{min-height:48px;justify-content:center}
+.mg-chk{justify-content:flex-start}
+.mg-fig{display:block;width:100%;height:auto;overflow:visible}
+.mg-fn{font:800 17px var(--font);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.mg-fl{font:800 15px var(--font-num);fill:#C25B00;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.mg-figbox{display:flex;justify-content:center;width:min(520px,90cqw)}
+.mg-figbox.mg-big{width:min(560px,92cqw);min-height:200px;align-items:center}
+.mg-figbox .mg-fig{margin:auto}
+.mg-qrow{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3cqw,40px);width:100%;flex-wrap:wrap}
+.mg-qrow > .mg-figbox{width:min(440px,52cqw)}
+.mg-qrow > .mgb.mg-meas{width:min(620px,60cqw);grid-template-columns:1fr}
+.mg-qrow > .mgb.mg-meas .cns-side{display:none}
+.mg-figopts .opt{padding:8px 10px;min-width:0;flex:1 1 30%;flex-direction:column}
+.mg-figopts .opt .mg-fig{max-width:220px!important}
+.mg-cap{font-size:14px;color:var(--ink-2)}
+.mg-sym{position:relative;display:inline-block;padding-top:.38em;line-height:1;font-weight:800}
+.mg-sym::before{content:'';position:absolute;left:.02em;right:.02em;top:.12em;border-top:2px solid currentColor}
+.mg-sym.ray::after,.mg-sym.line::after{content:'';position:absolute;right:-.12em;top:-.03em;border:.16em solid transparent;border-left:.26em solid currentColor;border-right:0}
+.mg-sym.line{padding-left:.1em;padding-right:.1em}
+.mg-sym.line::before{left:.05em;right:.05em}
+.mg-sym.line > i{display:none}
+.mg-sym.line{background:linear-gradient(currentColor,currentColor) no-repeat}
+.mg-sym.line{background-size:0 0}
+.mg-cards .mi-card.fc{height:clamp(130px,15cqw,160px)}
+.mg-cards .mi-card.fc .f .mg-fig{max-width:150px!important;max-height:72px;margin-bottom:4px}
+.mg-cards .mi-card.fc .b small{display:block;font-size:.8em;color:var(--ink-2);margin-top:4px;line-height:1.3}
+.mg-cards5 .mi-card.fc{width:clamp(150px,18cqw,200px)}
+.mg-sets{flex-wrap:wrap;justify-content:center;gap:10px}
+.mg-set.on{box-shadow:inset 0 0 0 3px #7E6ED6}
+.mg-sum{width:min(560px,92cqw);height:auto;touch-action:none;cursor:pointer;display:block}
+.mg-sym.line .mg-la{position:absolute;left:-.12em;top:-.03em;border:.16em solid transparent;border-right:.26em solid currentColor;border-left:0}
+.mgb .mg-head b:first-child{display:inline;font-size:1em;color:inherit}
+.mg-figopts .opt{min-height:clamp(150px,18cqw,200px);justify-content:center}
+.mg-figopts .opt .mg-fig{width:clamp(170px,22cqw,250px);max-width:none!important}
