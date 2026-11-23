@@ -96,6 +96,7 @@ function lifeLayer(w, W, H, where = 'bg') {
     o += lfFly(LF.eagle, bg ? 260 : 90, W, bg ? 36 : 30, 10, bg ? 1.3 : .8) + lfFly(LF.bird('#4A4A5A'), bg ? 180 : 60, W, 44, 25, .9, 1);
     if (bg) o += jgWalk(LF.goat, 905, W, 60, 12, 1.4);
   }
+  if (w === 'river') o += rvLife(W, H, bg, R); /* ม.1 (engine/river.js) */
   /* ---- the MIDDLE band: things crossing between the top and the bottom ---- */
   const y0 = bg ? 360 : H * .28, y1 = bg ? 720 : H * .72, my = i => R(i, y0, y1), sm = bg ? 1 : .7;
   const crossers = { // [art, duration, scale, reverse, bob?]
@@ -104,11 +105,12 @@ function lifeLayer(w, W, H, where = 'bg') {
     jungle: [[JG.hornbill, 36, 1.1, 1], [JG.dragonfly, 20, 1.2], [JG.bfly('#FFB534'), 26, 1.3, 1], [JG.bfly('#5BB5F0'), 30, 1.2], [LF.bird('#2F6B2A'), 34, .9, 1]],
     cave: [[`<g transform="scale(1.3)">${LF.bat}</g>`, 18, 1, 1], [`<g transform="scale(1.1)">${LF.bat}</g>`, 24, 1], [LF.spore('#8FE3F4'), 40, 1.2], [LF.spore('#C9A6FF'), 48, 1.2, 1], [LF.spore('#FFE9A6'), 36, 1]],
     desert: [[LF.eagle, 40, .9, 1], [LF.devil, 26, 1.6], [LF.bird('#8C6A3E'), 32, .9], [LF.devil, 34, 1.2, 1], [LF.cloud(.5), 100, 1]],
+    river: [[JG.dragonfly, 22, 1.3], [LF.bird('#2F7FB3'), 34, .9, 1], [JG.bfly('#FFB534'), 28, 1.2], [LF.cloud(.7), 85, 1.2, 1], [LF.bird('#5A527A'), 40, .8]],
     mountain: [[LF.eagle, 34, 1.1], [LF.cloud(.85), 70, 1.3, 1], [LF.bird('#4A4A5A'), 30, .9, 1], [LF.cloud(.7), 95, 1], [LF.hotair('#FFC23D'), 80, 1]]
   }[w] || [];
   crossers.forEach(([art, dur, k, rev], i) => { o += lfFly(art, my(i + 11), W, bg ? dur : dur * .8, R(i + 21, 0, dur), k * sm, rev); });
   /* a few sparkles / glows that live mid-screen at the edges (bg) or between rows (map) */
-  const tw = { city: '#FFE27A', beach: '#fff', jungle: '#FFF7A8', cave: '#C9A6FF', desert: '#FFF3B0', mountain: '#fff' }[w];
+  const tw = { city: '#FFE27A', beach: '#fff', jungle: '#FFF7A8', cave: '#C9A6FF', desert: '#FFF3B0', mountain: '#fff', river: '#fff' }[w];
   if (tw) for (let i = 0; i < (bg ? 10 : 6); i++) o += lfTw(LF.star4(tw, bg ? 7 : 5), bg ? (i % 2 ? R(i + 31, 20, 260) : R(i + 31, 1340, 1580)) : R(i + 31, 20, W - 20), my(i + 41), R(i, 2.4, 4.4), R(i + 3, 0, 4));
   return o ? `<g class="lf-layer">${o}</g>` : '';
 }

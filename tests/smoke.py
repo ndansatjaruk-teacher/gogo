@@ -64,7 +64,7 @@ def main():
             lessons = [L for L in lessons if L['id'] in a.lesson]
         nq = npg = 0
         for k, L in enumerate(lessons):
-            tag = f"ป.{L['grade']} #{L['id']} {L['title'][:40]}"
+            tag = f"{'ป.%d' % L['grade'] if L['grade'] <= 6 else 'ม.%d' % (L['grade'] - 6)} #{L['id']} {L['title'][:40]}"
             for i in range(L['pages']):
                 errs.clear()
                 try:

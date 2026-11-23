@@ -11,7 +11,7 @@ let backHandler = null;
 (function initBack() { try { history.replaceState({ nl: 1 }, ''); history.pushState({ nl: 2 }, ''); } catch (_) {}
   addEventListener('popstate', () => { try { history.pushState({ nl: 2 }, ''); } catch (_) {} if ($('.modal-bg')) { $('.modal-bg').remove(); return; } if (backHandler) backHandler(); }); })();
 /* world backdrop: every screen (map, lesson, game, boss) sits in the world of its grade */
-const WORLD_OF = c => c ? (c.theme && c.theme.desert ? 'desert' : c.theme && c.theme.mountain ? 'mountain' : c.theme && c.theme.cave ? 'cave' : c.theme && c.theme.jungle ? 'jungle' : c.theme && c.theme.beach ? 'beach' : 'city') : 'city';
+const WORLD_OF = c => c ? (c.theme && c.theme.river ? 'river' : c.theme && c.theme.desert ? 'desert' : c.theme && c.theme.mountain ? 'mountain' : c.theme && c.theme.cave ? 'cave' : c.theme && c.theme.jungle ? 'jungle' : c.theme && c.theme.beach ? 'beach' : 'city') : 'city';
 function setWorld(w) {
   if (document.body.dataset.world === w) return; document.body.dataset.world = w;
   let el = document.getElementById('world'); if (!el) { el = h('div', { id: 'world', 'aria-hidden': 'true' }); document.body.prepend(el); }
@@ -19,6 +19,7 @@ function setWorld(w) {
 }
 function worldSVG(w) {
   const sv = (b, vb = '0 0 1600 1000') => `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice">${b}${lifeLayer(w, 1600, 1000, 'bg')}</svg>`;
+  if (w === 'river') return sv(rvWorldBG()); /* ม.1 (engine/river.js) */
   if (w === 'desert') { let b = `<defs><radialGradient id="wd-sun"><stop offset="0" stop-color="#FFF3B0"/><stop offset=".6" stop-color="#FFD45C"/><stop offset="1" stop-color="#FFB347" stop-opacity="0"/></radialGradient></defs>`;
     b += `<circle cx="1300" cy="170" r="200" fill="url(#wd-sun)" opacity=".7"/><circle cx="1300" cy="170" r="70" fill="#FFE27A"/>`;
     const dune = (y, a, c, op) => `<path d="M0 1000 V${y} Q${200 + a} ${y - 70} 420 ${y - 10} T860 ${y - 20} T1260 ${y - 6} T1600 ${y - 30} V1000 Z" fill="${c}" opacity="${op}"/>`;
@@ -199,13 +200,13 @@ function showMap(cityId) {
     zoomBtn(), h('button', { class: 'ibtn', 'aria-label': 'ตั้งค่า', onclick: showSettings }, icon('gear')));
   const wrap = h('div', { class: 'mapwrap' }); stage.append(head, h('div', { class: 'citywrap' }, gradeTabs, tabs), wrap, h('div', { class: 'discl' }, 'เกมฝึกคณิตที่จัดทำขึ้นเอง · ไม่ใช่สื่อทางการของ สสวท.')); SAVE['lastCity' + city.grade] = city.id;
   requestAnimationFrame(() => { const on = tabs.querySelector('.ctab.on'); if (on && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft = on.offsetLeft - (tabs.clientWidth - on.offsetWidth) / 2; });
-  stage.classList.toggle('beach', !!city.theme.beach); stage.classList.toggle('jungle', !!city.theme.jungle); stage.classList.toggle('cave', !!city.theme.cave); stage.classList.toggle('mountain', !!city.theme.mountain); stage.classList.toggle('desert', !!city.theme.desert);
+  stage.classList.toggle('beach', !!city.theme.beach); stage.classList.toggle('jungle', !!city.theme.jungle); stage.classList.toggle('cave', !!city.theme.cave); stage.classList.toggle('mountain', !!city.theme.mountain); stage.classList.toggle('desert', !!city.theme.desert); stage.classList.toggle('river', !!city.theme.river);
   const W = Math.min(1040, stage.clientWidth) - 32;
   const MTN = !!city.theme.mountain; // mountain: climb from the bottom terrace up to the summit
   /* ป.6 mountains: the boss stands right on the summit (ผู้ใช้ขอ: ด่านบอสอยู่บนยอดเขาพอดี) — the other levels climb the terraces */
   const SUMMIT = MTN && n > 1 && items[n - 1].L.boss, nR = SUMMIT ? n - 1 : n;
   const perRow = W < 560 ? 2 : W < 860 ? 3 : 4, rows = Math.ceil(nR / perRow), ROWH = W < 560 ? 200 : 190;
-  const padX = W < 560 ? 70 : W >= 860 ? 140 : 104, top0 = MTN ? (SUMMIT ? 330 : 250) : city.theme.beach || city.theme.jungle || city.theme.cave || city.theme.desert ? 150 : 120;
+  const padX = W < 560 ? 70 : W >= 860 ? 140 : 104, top0 = MTN ? (SUMMIT ? 330 : 250) : city.theme.beach || city.theme.jungle || city.theme.cave || city.theme.desert || city.theme.river ? 150 : 120;
   const H = MTN ? top0 + (rows - 1) * ROWH + 150 : rows * ROWH + 170 + (city.theme.jungle ? 110 : 0), rowY = r => top0 + (MTN ? rows - 1 - r : r) * ROWH, dY = MTN ? -1 : 1;
   const pts = items.map((x, k) => { if (SUMMIT && k === n - 1) return [W / 2, Math.max(40, rowY(rows - 1) - 210) + 40]; const r = Math.floor(k / perRow), c0 = k % perRow, c = r % 2 ? perRow - 1 - c0 : c0; return [padX + (perRow > 1 ? c / (perRow - 1) : .5) * (W - padX * 2), rowY(r)]; });
   const way = []; const idxOf = [];
@@ -311,8 +312,26 @@ function showMap(cityId) {
     const clouds = [[.18, 130], [.62, 60], [.4, 200]].map(([f, y], i) => `<g class="mcloud" style="animation-delay:${-i * 7}s" fill="#fff" opacity=".9"><ellipse cx="${W * f}" cy="${y}" rx="46" ry="15"/><ellipse cx="${W * f + 24}" cy="${y - 10}" rx="28" ry="16"/></g>`).join('');
     hills = t; var mtnTop = clouds;
   }
-  const road = desert ? { shadow: '#6B3F14', edge: '#B97A3A', surf: '#F4D49A', dots: true } : mountain ? { shadow: '#3B2A1A', edge: '#A98A66', surf: '#E8D2AC', dots: true } : cave ? { shadow: '#000', edge: '#5B4F78', surf: '#8D80A8', seam: '#6E6290', dots: true } : beach ? { shadow: '#5A3D1A', edge: '#B98654', surf: '#E2B57F', seam: '#C69361', dots: false } : jungle ? { shadow: '#2E4A1F', edge: '#B08455', surf: '#DDB985', dots: true } : { shadow: '#2B2550', edge: '#E6D3AC', surf: '#F8ECD2', dots: true };
-  const roadSvg = beach ? `
+  const river = !!th.river;
+  if (river) { /* v214 ม.1: แผ่นดิน (ทุ่ง นาข้าว เนิน) — เส้นทางด่านเป็นแม่น้ำที่ไหลผ่าน */
+    let t = `<rect x="0" y="0" width="${W}" height="${H - 20}" rx="22" fill="url(#rvLandG)"/>`;
+    for (let r = 0; r < rows; r++) { const y = top0 + r * ROWH, left = r % 2 === 0;
+      t += `<ellipse cx="${left ? W * .14 : W * .86}" cy="${y + ROWH * .5}" rx="${W * .3}" ry="${ROWH * .46}" fill="${th.hills[r % 3]}" opacity=".8"/>`;
+      const px = left ? W * .58 : W * .1, py = y + ROWH * .3, pw = W * .3;
+      t += `<g opacity=".55"><path d="M${px} ${py} h${pw} l-18 44 h-${pw} z" fill="#A6D77E"/>${[0, 1, 2].map(k => `<path d="M${px - k * 6} ${py + 12 + k * 12} h${pw}" stroke="#7FB85A" stroke-width="2"/>`).join('')}</g>`; }
+    hills = t;
+  }
+  const road = river ? { shadow: '#1E5A7A', edge: '#E3CF98', surf: '#6EC3EC' } : desert ? { shadow: '#6B3F14', edge: '#B97A3A', surf: '#F4D49A', dots: true } : mountain ? { shadow: '#3B2A1A', edge: '#A98A66', surf: '#E8D2AC', dots: true } : cave ? { shadow: '#000', edge: '#5B4F78', surf: '#8D80A8', seam: '#6E6290', dots: true } : beach ? { shadow: '#5A3D1A', edge: '#B98654', surf: '#E2B57F', seam: '#C69361', dots: false } : jungle ? { shadow: '#2E4A1F', edge: '#B08455', surf: '#DDB985', dots: true } : { shadow: '#2B2550', edge: '#E6D3AC', surf: '#F8ECD2', dots: true };
+  const roadSvg = river ? `
+    <path d="${dAll}" fill="none" stroke="${road.shadow}" stroke-opacity=".14" stroke-width="66" stroke-linecap="round" transform="translate(0 6)" filter="url(#roadBlur)"/>
+    <path d="${dAll}" fill="none" stroke="#C9B47C" stroke-width="64" stroke-linecap="round"/>
+    <path d="${dAll}" fill="none" stroke="${road.edge}" stroke-width="58" stroke-linecap="round"/>
+    <path d="${dAll}" fill="none" stroke="#3E97CF" stroke-width="46" stroke-linecap="round"/>
+    <path d="${dAll}" fill="none" stroke="url(#rvWaterG)" stroke-width="40" stroke-linecap="round"/>
+    ${dDone ? `<path d="${dDone}" fill="none" stroke="#A8E6F8" stroke-width="22" stroke-linecap="round" opacity=".75"/>` : ''}
+    <path class="rv-flow" d="${dAll}" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="18 34" opacity=".75" transform="translate(0 -8)"/>
+    <path class="rv-flow f2" d="${dAll}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="10 46" opacity=".55" transform="translate(0 9)"/>
+    ${dDone ? `<path d="${dDone}" fill="none" stroke="#F5B52E" stroke-width="5" stroke-linecap="round" stroke-dasharray="0 24"/>` : ''}` : beach ? `
     <g clip-path="url(#landClip)">
       <path d="${dAll}" fill="none" stroke="${road.shadow}" stroke-opacity=".12" stroke-width="46" transform="translate(0 7)" filter="url(#roadBlur)"/>
       <path d="${dAll}" fill="none" stroke="${road.edge}" stroke-width="42"/>
@@ -342,10 +361,11 @@ function showMap(cityId) {
       <radialGradient id="caveGlow1"><stop offset="0" stop-color="#C9A6FF" stop-opacity=".5"/><stop offset="1" stop-color="#C9A6FF" stop-opacity="0"/></radialGradient>
       <linearGradient id="sandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FCE7BE"/><stop offset=".55" stop-color="#F6D7A0"/><stop offset="1" stop-color="#EFC783" stop-opacity=".9"/></linearGradient>
       <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FD0F5"/><stop offset=".6" stop-color="#D6ECFB"/><stop offset="1" stop-color="#EAF5FC"/></linearGradient>${mountain ? terDefs : ''}
+      <linearGradient id="rvLandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9EFC2"/><stop offset=".6" stop-color="#C8E7AA"/><stop offset="1" stop-color="#B9DE98"/></linearGradient><linearGradient id="rvWaterG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8BD5F2"/><stop offset="1" stop-color="#5BB5E6"/></linearGradient>
       <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5DB8E8"/><stop offset=".55" stop-color="#8FD0F0"/><stop offset="1" stop-color="#C4EAF7"/></linearGradient>
       ${beach ? `<clipPath id="seaClip"><path d="${seaD}"/></clipPath><clipPath id="landClip"><path d="${landD}"/></clipPath>` : ''}</defs>
     ${hills}
-    ${lifeLayer(beach ? 'beach' : jungle ? 'jungle' : cave ? 'cave' : desert ? 'desert' : mountain ? 'mountain' : 'city', W, H, 'map')}
+    ${lifeLayer(river ? 'river' : beach ? 'beach' : jungle ? 'jungle' : cave ? 'cave' : desert ? 'desert' : mountain ? 'mountain' : 'city', W, H, 'map')}
     ${roadSvg}
     ${jungle ? canopy : ''}
     ${cave ? caveTop : ''}
@@ -355,19 +375,20 @@ function showMap(cityId) {
   const deco = (k, x, y, sz, sway) => map.append(h('div', { class: 'scenery' + (sway ? ' sway' : ''), style: { left: x + 'px', top: y + 'px', '--sz': sz + 'px' }, html: sceneryHTML(k) }));
   const inSea = (x, y) => beach && y < shoreAt(x) - 6;
   for (let k = 0; k < n - 1; k++) { const a = pts[k], b = pts[k + 1]; if (a[1] !== b[1]) continue; const x = (a[0] + b[0]) / 2, y = a[1] - 34;
+    if (river) { const wk = RV_WATER[k % RV_WATER.length]; deco(wk, x, y + 52, wk === 'kayak' || wk === 'croc' ? 50 : 40, false); deco(th.small[k % th.small.length], x, y - 14, 44, false); continue; }
     if (inSea(x, y)) deco(['fishjump', 'lifebuoy', 'boat'][k % 3], x, y + (k % 3 === 2 ? 4 : 10), k % 3 === 2 ? 56 : 44, false); else deco(th.small[k % th.small.length], x, y, (k % 3 === 2 ? 52 : 40) + (jungle || cave || mountain || desert ? 12 : 0), false); }
   if (padX >= 120) for (let r = 0; r < rows; r++) {
     const turnRight = r % 2 === 0, y = rowY(r) + dY * ROWH * .52, x = turnRight ? 34 : W - 34;
     if (r === rows - 1 && nR % perRow) continue;
     if (inSea(x, y)) { deco(r % 2 ? 'boat' : 'fishjump', x, y, 58, false); continue; }
-    const k = th.edge[r % 4] === 'boat' ? 'umbrella' : th.edge[r % 4]; deco(k, x, y, k === 'house' || k === 'shop' ? 62 : k === 'jtree' ? 84 : k === 'bigtree' ? 128 : 66, !['house', 'shop', 'umbrella', 'tent', 'cairn', 'pyramid', 'dunerock', 'oasis'].includes(k));
-    deco(beach ? (r % 2 ? 'starfish' : 'shell') : jungle ? (r % 2 ? 'mushroom' : 'heliconia') : cave ? (r % 2 ? 'glowshroom' : 'rocks') : mountain ? (r % 2 ? 'edelweiss' : 'rock') : desert ? (r % 2 ? 'tumble' : 'dunerock') : (r % 2 ? 'flowers' : 'bush'), x + (turnRight ? 30 : -30), y + 16, beach ? 30 : 40, false);
+    const k = th.edge[r % 4] === 'boat' ? 'umbrella' : th.edge[r % 4]; deco(k, x, y, k === 'house' || k === 'shop' ? 62 : k === 'jtree' ? 84 : k === 'bigtree' ? 128 : 66, !['house', 'shop', 'umbrella', 'tent', 'cairn', 'pyramid', 'dunerock', 'oasis', 'stilthouse', 'ricebarn', 'pier'].includes(k));
+    deco(river ? (r % 2 ? 'reeds' : 'flowers') : beach ? (r % 2 ? 'starfish' : 'shell') : jungle ? (r % 2 ? 'mushroom' : 'heliconia') : cave ? (r % 2 ? 'glowshroom' : 'rocks') : mountain ? (r % 2 ? 'edelweiss' : 'rock') : desert ? (r % 2 ? 'tumble' : 'dunerock') : (r % 2 ? 'flowers' : 'bush'), x + (turnRight ? 30 : -30), y + 16, beach ? 30 : 40, false);
   }
   const newly = [];
   items.forEach(({ L, i }, k) => {
     const st = SAVE.stars[L.id] || 0, open = unlocked(i);
     const state = !open ? 'locked' : k === curK ? 'current' : st ? 'done' : 'available';
-    const node = levelToken(L, i, state); if (k < waterN) node.classList.add('in-water');
+    const node = levelToken(L, i, state); if (k < waterN || river) node.classList.add('in-water');
     node.style.left = pts[k][0] + 'px'; node.style.top = pts[k][1] + 'px';
     if (open && !SAVE.seen.includes(L.id)) { node.classList.add('unlocking'); newly.push(L.id); setTimeout(() => burst(node), 350); }
     node.onclick = () => { if (!open) { sfx.no(); node.querySelector('.token').animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 300 }); say(L.boss ? 'ผ่านทุกด่านในเมืองก่อน แล้วค่อยมาสู้บอสนะ' : 'ผ่านด่านก่อนหน้าก่อนนะ', true); return; } sfx.tap(); showIntro(i); };
@@ -536,7 +557,7 @@ function lessonTop(L, phase) {
 const teachDone = el => el && el.dispatchEvent(new CustomEvent('teachdone', { bubbles: true }));
 const SEQ_BTN = b => b.matches('button.btn') && /\b(info|accent|primary)\b/.test(b.className) && !b.classList.contains('icon') && !b.classList.contains('sm') && !b.closest('.fstep,.keypad,.palette,.fnav,.restart');
 /* v211 (ผู้ใช้ขอ: หน้าที่ให้แตะ ต้องแตะครบทุกอัน — ทุกชั้น): แถวแผนภูมิรูปภาพ การ์ดสูตรคูณ/การ์ดเดือน ของบนเครื่องชั่ง แถวตาราง รูปทรงในฉาก เลขโดด ฯลฯ — EXP_SEL2 นับแม้ไม่ได้ใช้ onclick */
-const EXP_SEL2 = '.pc-row.tapr, .mtcard, .tkmc, .tray-it, .tapscene .sc-it, .scene.room .sc-it, .k7-cards:not(.s9-netpick) .k7-card, .p4c .p4d, .g2fl, .s9o-card, .w2cvc, .pzhs, .p4seg button';
+const EXP_SEL2 = '.mi-card.fc, .pc-row.tapr, .mtcard, .tkmc, .tray-it, .tapscene .sc-it, .scene.room .sc-it, .k7-cards:not(.s9-netpick) .k7-card, .p4c .p4d, .g2fl, .s9o-card, .w2cvc, .pzhs, .p4seg button';
 const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb, .objcard, .solidbtn, .flipcard, .g2cell, tr, ' + EXP_SEL2; /* v206 (ผู้ใช้เจอ: แตะ 2 อันก็ไปต่อได้) — การ์ดสิ่งของ รูปทรง การ์ดพลิก การ์ดของ */ /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
 const ONCE_RE = /เพิ่มอีก|ขีดเพิ่ม|ใส่ลูกแก้ว|เพิ่มไม้|หมุน|ไล่ลง|หาสูงที่สุด|ดูวิธีวาด|ลองวาด/;
 function teachGate(vis, onDone) {

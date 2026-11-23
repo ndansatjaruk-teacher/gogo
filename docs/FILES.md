@@ -9,6 +9,7 @@
 | `src/engine/art.js` | 107 KB | ภาพวาด SVG ตัวละคร สิ่งของ ฉาก |
 | `src/engine/jungle.js` | 7 KB | ป่าดิบชื้น (ป.3) — rainforest pieces: giant buttress trees, vines, a river, walking / flying animals, insects |
 | `src/engine/life.js` | 15 KB | LIFE LAYER — things that move in every world's background and on every map |
+| `src/engine/river.js` | 12 KB | โลกแม่น้ำ (ม.1): scenery ริมน้ำ ฉากหลัง สิ่งเคลื่อนไหว บอสจระเข้ |
 | `src/engine/ink.js` | 28 KB | กระดานเขียนด้วยนิ้ว/ปากกา |
 | `src/engine/components.js` | 101 KB | ส่วนประกอบหน้าจอที่ใช้ซ้ำ: แป้นตัวเลข กระดาน การ์ด ฯลฯ |
 | `src/engine/questions.js` | 165 KB | ชนิดคำถามพื้นฐาน Q.* ที่ทุกชั้นใช้ |
@@ -65,6 +66,7 @@
 | `src/grades/p4/p4a.js` | 102 KB | prefix a4 · angles in degrees, counter-clockwise from → (screen y goes down, so a4P flips sin) |
 | `src/grades/p4/p4r.js` | 132 KB | prefix r4 · ผู้ใช้ขอ "ให้เกมสนุก เพิ่มเกมใหม่ ๆ" → mini-games that are played, not just answered: |
 | `src/grades/p4/p4g.js` | 55 KB | prefix g4 · reuses the P5 chart kit (p5c: chartSVG/dataChart/chartBuilder/gTable/simReadBar/simBuild/gWalk · Q |
+| `src/grades/m1/m1i.js` | 40 KB | ม.1 บทที่ 1 จำนวนเต็ม (โลกแม่น้ำ · เมือง 90 · ด่าน 2001–2015 · บอส 2019) — ชุดเครื่องมือจำนวนเต็ม (แป้นมีเครื่องหมายลบ เส้นจำนวน ชิปคู่ศูนย์) |
 | `src/app/lessons.js` | 477 KB | ด่าน ป.1 + ทะเบียนเมืองทั้งหมด (CITIES, GRADES, LESSONS) |
 | `src/app/learn.js` | 50 KB | หน้า “รู้จักก่อน” |
 | `src/app/wpic.js` | 9 KB | รูปประกอบตัวอย่างทีละขั้น |

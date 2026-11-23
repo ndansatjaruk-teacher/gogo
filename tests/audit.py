@@ -160,7 +160,7 @@ def main():
     print(f"{len(lessons)} lessons · {stats['pages']} teach pages · {stats['q']} questions "
           f"({stats['answered']} answered by the bot, {stats['manual']} need hands-on widgets) · {time.time() - t0:.0f}s")
     print('findings:', kinds or 'none')
-    for f in out: print(f"  ✗ ป.{f['grade']} #{f['id']} {f['where']} [{f['kind']}] {f['detail']}")
+    for f in out: print(f"  ✗ {'ป.%d' % f['grade'] if f['grade'] <= 6 else 'ม.%d' % (f['grade'] - 6)} #{f['id']} {f['where']} [{f['kind']}] {f['detail']}")
     if a.json: pathlib.Path(a.json).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding='utf-8')
     sys.exit(1 if any(f['kind'] in ('error', 'answer') for f in out) else 0)
 

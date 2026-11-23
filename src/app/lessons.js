@@ -2948,10 +2948,13 @@ const CITIES = [
   { id: 84, grade: 6, term: 2, name: 'ยอดเขาสอบปลายภาค 2', chapter: 'สอบปลายภาคเรียนที่ 2 · บทที่ 6–10', lessons: LESSONS_P6T2, story: P6T2_STORY,
     theme: { mountain: true, hills: ['#9FD47A', '#86B862', '#B7CF8A'], far: '#C3D3EC', edge: ['cairn', 'snowpine', 'tent', 'goat'], small: ['edelweiss', 'rock', 'snowpine', 'goat', 'cairn', 'pine'] } },
   { id: 71, grade: 6, term: 2, name: 'ยอดเขาจอมเยติ', chapter: 'ด่านสุดท้าย ป.6 · บอสใหญ่รวมร่าง', lessons: LESSONS_MEGA6, final: true, secret: true,
-    theme: { mountain: true, hills: ['#C9D6E6', '#BCCADC', '#D6E1EE'], far: '#E6EEF7', edge: ['snowpine', 'cairn', 'snowpine', 'sumflag'], small: ['edelweiss', 'goat', 'cairn', 'snowpine', 'edelweiss', 'goat'] } }
+    theme: { mountain: true, hills: ['#C9D6E6', '#BCCADC', '#D6E1EE'], far: '#E6EEF7', edge: ['snowpine', 'cairn', 'snowpine', 'sumflag'], small: ['edelweiss', 'goat', 'cairn', 'snowpine', 'edelweiss', 'goat'] } },
+  /* v214 (ผู้ใช้ขอ): ม.1 โลกแม่น้ำ — เส้นทางด่านเป็นแม่น้ำ สองฝั่งเป็นแผ่นดิน */
+  { id: 90, grade: 7, name: 'แม่น้ำจำนวนเต็ม', chapter: 'บทที่ 1 จำนวนเต็ม', lessons: LESSONS_M1C1,
+    theme: { river: true, hills: ['#C6E6A8', '#B7DE96', '#D3ECBB'], far: '#E2F2D2', edge: ['stilthouse', 'tree', 'ricebarn', 'pine'], small: ['reeds', 'paddy', 'flowers', 'reeds', 'bush', 'paddy'] } }
 ];
 CITIES.forEach(c => { c.grade = c.grade || 1; });
-const GRADES = [{ id: 1, name: 'ป.1', world: 'เมืองตัวเลข' }, { id: 2, name: 'ป.2', world: 'ชายหาด', cls: 'beach' }, { id: 3, name: 'ป.3', world: 'ป่าดิบชื้น', cls: 'jungle' }, { id: 4, name: 'ป.4', world: 'ทะเลทราย', cls: 'desert' }, { id: 5, name: 'ป.5', world: 'ถ้ำ', cls: 'cave' }, { id: 6, name: 'ป.6', world: 'ภูเขา', cls: 'mountain' }];
+const GRADES = [{ id: 1, name: 'ป.1', world: 'เมืองตัวเลข' }, { id: 2, name: 'ป.2', world: 'ชายหาด', cls: 'beach' }, { id: 3, name: 'ป.3', world: 'ป่าดิบชื้น', cls: 'jungle' }, { id: 4, name: 'ป.4', world: 'ทะเลทราย', cls: 'desert' }, { id: 5, name: 'ป.5', world: 'ถ้ำ', cls: 'cave' }, { id: 6, name: 'ป.6', world: 'ภูเขา', cls: 'mountain' }, { id: 7, name: 'ม.1', world: 'แม่น้ำ', cls: 'river' }];
 CITIES.forEach(c => c.lessons.forEach((L, k) => { L.city = c.id; if (L.no == null) L.no = L.boss || L.bonus ? null : k + 1; }));
 const LESSONS = CITIES.flatMap(c => c.lessons);
 /* v186 (ผู้ใช้ขอ): ชนะบอสต้องตอบถูกอย่างน้อย 80% ทุกด่านบอส (บอสท้ายบทและบอสใหญ่) — เกณฑ์คิดจากจำนวนข้อจริงของข้อสอบรอบนั้น */

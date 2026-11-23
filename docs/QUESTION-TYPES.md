@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-412 types
+427 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -203,6 +203,21 @@
 | `Q.matchFrames` | `{ nums }` | [`engine/questions.js:827`](../src/engine/questions.js#L827) |
 | `Q.matchSums` | `{ n = 3 } = {}` | [`engine/questions.js:333`](../src/engine/questions.js#L333) |
 | `Q.meterJudge` | `{ e, name, more }` | [`engine/questions.js:1394`](../src/engine/questions.js#L1394) |
+| `Q.miCalc` | `{ expr, hint, fig, q, unit }` | [`grades/m1/m1i.js:286`](../src/grades/m1/m1i.js#L286) |
+| `Q.miChipQ` | `{ a, b }` | [`grades/m1/m1i.js:307`](../src/grades/m1/m1i.js#L307) |
+| `Q.miCmp` | `{ a, b, la, lb }` | [`grades/m1/m1i.js:262`](../src/grades/m1/m1i.js#L262) |
+| `Q.miCtx` | `{ text, a }` | [`grades/m1/m1i.js:246`](../src/grades/m1/m1i.js#L246) |
+| `Q.miExt` | `{ nums, max = true, ctx: what }` | [`grades/m1/m1i.js:268`](../src/grades/m1/m1i.js#L268) |
+| `Q.miHopQ` | `{ a, b }` | [`grades/m1/m1i.js:301`](../src/grades/m1/m1i.js#L301) |
+| `Q.miKind` | `{ n, lab }` | [`grades/m1/m1i.js:240`](../src/grades/m1/m1i.js#L240) |
+| `Q.miMiss` | `{ expr, a, hint }` | [`grades/m1/m1i.js:318`](../src/grades/m1/m1i.js#L318) |
+| `Q.miOpp` | `{ n }` | [`grades/m1/m1i.js:283`](../src/grades/m1/m1i.js#L283) |
+| `Q.miOrder` | `{ nums, asc = true }` | [`grades/m1/m1i.js:274`](../src/grades/m1/m1i.js#L274) |
+| `Q.miPick` | `{ q, opts, right, hint }` | [`grades/m1/m1i.js:313`](../src/grades/m1/m1i.js#L313) |
+| `Q.miPlace` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:256`](../src/grades/m1/m1i.js#L256) |
+| `Q.miRead` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:251`](../src/grades/m1/m1i.js#L251) |
+| `Q.miSignQ` | `{ expr }` | [`grades/m1/m1i.js:323`](../src/grades/m1/m1i.js#L323) |
+| `Q.miStory` | `{ text, expr, wrong, unit, hint }` | [`grades/m1/m1i.js:292`](../src/grades/m1/m1i.js#L292) |
 | `Q.mJudge` | `{ e, name, cm, ori }` | [`app/lessons.js:1804`](../src/app/lessons.js#L1804) |
 | `Q.mnCount` | `{ list }` | [`grades/p3/p3m.js:66`](../src/grades/p3/p3m.js#L66) |
 | `Q.mnExch` | `{ text, a, unit, fig }` | [`grades/p3/p3m.js:85`](../src/grades/p3/p3m.js#L85) |

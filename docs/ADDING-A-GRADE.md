@@ -1,5 +1,7 @@
 # วิธีสร้างระดับชั้นใหม่ (ให้เหมือนชั้นเดิม)
 
+ตัวอย่างจริงล่าสุด: **ม.1 โลกแม่น้ำ** (`engine/river.js` + `grades/m1/m1i.js`, ARCHITECTURE v214)
+
 อ่านคู่กับ [ADDING-A-LESSON.md](ADDING-A-LESSON.md) (โครงของหนึ่งด่าน) และ [CONTRIBUTING.md](../CONTRIBUTING.md) (กฎที่ทุกด่านต้องทำตาม)
 
 ## 1. ข้อมูลที่ต้องขอจากผู้ใช้ก่อนเริ่ม

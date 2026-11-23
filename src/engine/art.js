@@ -402,6 +402,7 @@ const sceneryHTML = k => `<svg viewBox="0 0 64 64" aria-hidden="true">${SCENERY[
 /* ---------- boss: original "ราชาปีศาจตัวเลข" rig, recoloured per city ---------- */
 function bossSVG(state = 'idle', pal = 'lilac', emblem = '?', kind = 'blob') {
   if (kind === 'mega') return megaBossSVG(state, emblem);
+  if (kind === 'croc') return rvCrocSVG(state, pal, emblem); /* ม.1 river world (engine/river.js) */
   const [l, b, d, line] = PAL[pal];
   const ink = '#2B2550';
   const openEyes = (brow) => `<ellipse cx="45" cy="56" rx="6" ry="7" fill="#fff"/><ellipse cx="75" cy="56" rx="6" ry="7" fill="#fff"/><circle cx="46" cy="57" r="3.6" fill="${ink}"/><circle cx="74" cy="57" r="3.6" fill="${ink}"/>${brow}`;
