@@ -13,25 +13,37 @@ const miEval = s => { const js = String(s).replace(/,/g, '').replace(/\|([^|]+)\
 const miX = s => `<span class="mi-x num">${String(s).replace(/([+×÷=])/g, ' <b class="mi-op">$1</b> ').replace(/ − /g, ' <b class="mi-op">−</b> ')}</span>`;
 const MI_NM = ['ภูผา', 'น้ำใส', 'ต้นกล้า', 'ใบเตย', 'ก้องภพ', 'ปลายฟ้า', 'ธารา', 'แพรวา', 'ภาคิน', 'ขวัญข้าว'];
 
-/* ---------- signed answer: a − key in front of the slot + the usual keypad ---------- */
+/* ---------- ม.ต้น answer keypad (v215, ผู้ใช้ขอ): แป้นมีปุ่ม − / . ในแป้นเลย (ไม่มีปุ่ม − หน้าช่องคำตอบ)
+   รับ จำนวนเต็ม (−12) · ทศนิยม (−0.75) · เศษส่วน (3/4, −5/8) — ตรวจด้วยค่าของจำนวน ---------- */
+const MI_FMT = /^−?\d+(\.\d+)?$|^−?\d+\/\d+$/;
+const miVal = t => { const neg = t[0] === '−', b = neg ? t.slice(1) : t, v = b.includes('/') ? (([n, d]) => +d ? +n / +d : NaN)(b.split('/')) : +b; return neg ? -v : v; };
+const miShow = t => t.replace(/^(−?)(\d+)/, (_, s, d) => s + (+d).toLocaleString('en-US'));
 function miAns(ctx, expected, o = {}) {
-  const want = +expected; let neg = false, dig = '';
+  const want = typeof expected === 'number' ? expected : miVal(String(expected).replace(/-/g, '−')), wantTxt = typeof expected === 'number' ? miN(expected) : String(expected).replace(/-/g, '−');
+  let val = '';
   const slot = h('div', { class: 'ans-slot num' }, '?'), msg = h('div', { class: 'pad-msg' });
-  const show = () => { slot.textContent = dig === '' ? (neg ? '−' : '?') : (neg && +dig !== 0 ? '−' : '') + (+dig).toLocaleString('en-US'); slot.classList.toggle('filled', dig !== ''); };
-  const sign = h('button', { class: 'btn mi-sign ia', 'aria-label': 'เครื่องหมายลบ', onclick: e => { e.stopPropagation(); sfx.tap(); neg = !neg; sign.classList.toggle('on', neg); show(); } }, '−');
-  const submit = () => { if (wrap.classList.contains('done')) return; if (dig === '') { msg.textContent = 'กดตัวเลขก่อนนะ'; return; }
-    const v = (neg ? -1 : 1) * +dig, ok = v === want; msg.textContent = '';
+  const show = () => { slot.textContent = val === '' ? '?' : miShow(val); slot.classList.toggle('filled', val !== ''); };
+  const put = k => { msg.textContent = '';
+    if (k === '−') { if (val === '') val = '−'; else if (val === '−') val = ''; else { msg.textContent = 'กด − ก่อนตัวเลข (จำนวนลบ)'; return; } }
+    else if (k === '.') { const part = val.split('/').pop(); if (!/\d$/.test(val) || part.includes('.')) { msg.textContent = 'ใส่ . หลังตัวเลข และใส่ได้ครั้งเดียว'; return; } val += '.'; }
+    else if (k === '/') { if (!/\d$/.test(val) || val.includes('/') || val.includes('.')) { msg.textContent = 'เศษส่วน: ใส่ตัวเศษ แล้วกด / แล้วใส่ตัวส่วน'; return; } val += '/'; }
+    else { if (val.replace(/\D/g, '').length >= 7) return; val += k; }
+    sfx.tap(); show(); };
+  const submit = () => { if (wrap.classList.contains('done')) return; if (val === '') { msg.textContent = 'กดตัวเลขก่อนนะ'; return; }
+    if (!MI_FMT.test(val)) { msg.textContent = 'ตัวเลขยังไม่ครบ (เช่น 3/4 หรือ 0.5)'; return; }
+    const v = miVal(val), ok = Math.abs(v - want) < 1e-9; msg.textContent = '';
     if (ok) wrap.classList.add('done');
-    const why = !ok && Math.abs(v) === Math.abs(want) && v !== 0 ? `ตัวเลขถูกแล้ว แต่<b>เครื่องหมาย</b>ยังไม่ถูก${o.hint ? ' — ' + o.hint : ''}` : o.hint;
-    ctx.check(ok, why); if (!ok && !wrap.classList.contains('revealed')) { dig = ''; neg = false; sign.classList.remove('on'); show(); } };
-  const kp = h('div', { class: 'keypad' });
-  [1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(d => kp.append(h('button', { class: 'btn', onclick: e => { e.stopPropagation(); sfx.tap(); dig = (dig + d).replace(/^0+(\d)/, '$1').slice(0, 5); show(); } }, d)));
-  kp.append(h('button', { class: 'btn', 'aria-label': 'ลบตัวเลข', onclick: e => { e.stopPropagation(); sfx.tap(); dig = dig.slice(0, -1); show(); } }, icon('left')),
-    h('button', { class: 'btn', onclick: e => { e.stopPropagation(); sfx.tap(); dig = (dig + '0').replace(/^0+(\d)/, '$1').slice(0, 5); show(); } }, '0'),
-    h('button', { class: 'btn primary', 'aria-label': 'ส่งคำตอบ', onclick: e => { e.stopPropagation(); submit(); } }, icon('check')));
-  const wrap = h('div', { class: 'ans ia mi-ans' }, h('div', { class: 'mi-ansrow' }, sign, slot, o.unit ? h('span', { class: 'cap mi-unit' }, o.unit) : null), kp, msg);
-  wrap.reveal = () => { neg = want < 0; dig = String(Math.abs(want)); sign.classList.toggle('on', neg); show(); wrap.classList.add('done', 'revealed'); };
-  wrap.ansText = miN(want);
+    const why = !ok && Math.abs(Math.abs(v) - Math.abs(want)) < 1e-9 && v !== 0 ? `ตัวเลขถูกแล้ว แต่<b>เครื่องหมาย</b>ยังไม่ถูก${o.hint ? ' — ' + o.hint : ''}` : o.hint;
+    ctx.check(ok, why); if (!ok && !wrap.classList.contains('revealed')) { val = ''; show(); } };
+  const key = (lab, k, cls = '') => h('button', { class: 'btn ' + cls, 'aria-label': k === '−' ? 'เครื่องหมายลบ' : k === '/' ? 'เศษส่วน' : k === '.' ? 'จุดทศนิยม' : String(lab), onclick: e => { e.stopPropagation(); put(k); } }, lab);
+  const kp = h('div', { class: 'keypad mi-kp' },
+    key(1, '1'), key(2, '2'), key(3, '3'), h('button', { class: 'btn', 'aria-label': 'ลบตัวเลข', onclick: e => { e.stopPropagation(); sfx.tap(); val = val.slice(0, -1); msg.textContent = ''; show(); } }, icon('left')),
+    key(4, '4'), key(5, '5'), key(6, '6'), key('−', '−', 'sym'),
+    key(7, '7'), key(8, '8'), key(9, '9'), key('/', '/', 'sym'),
+    key('.', '.', 'sym'), key(0, '0'), h('button', { class: 'btn primary ok2', 'aria-label': 'ส่งคำตอบ', onclick: e => { e.stopPropagation(); submit(); } }, icon('check')));
+  const wrap = h('div', { class: 'ans ia mi-ans' }, h('div', { class: 'mi-ansrow' }, slot, o.unit ? h('span', { class: 'cap mi-unit' }, o.unit) : null), kp, msg);
+  wrap.reveal = () => { val = wantTxt.replace(/,/g, ''); show(); wrap.classList.add('done', 'revealed'); };
+  wrap.ansText = wantTxt;
   return wrap;
 }
 
@@ -245,7 +257,7 @@ Object.assign(Q, {
   /* a situation written as an integer */
   miCtx({ text, a }) {
     return { prompt: `${text} — เขียนเป็นจำนวนเต็มได้อย่างไร`, say: miSay(`${text} เขียนเป็นจำนวนเต็มได้อย่างไร`), __sig: 'mic ' + text,
-      mount(bd, ctx) { bd.append(miAns(ctx, a, { hint: 'เพิ่มขึ้น เหนือ กำไร = บวก · ลดลง ใต้ ต่ำกว่า ขาดทุน = ลบ (กดปุ่ม − หน้าช่อง)' })); } };
+      mount(bd, ctx) { bd.append(miAns(ctx, a, { hint: 'เพิ่มขึ้น เหนือ กำไร = บวก · ลดลง ใต้ ต่ำกว่า ขาดทุน = ลบ (กด − ก่อนตัวเลข)' })); } };
   },
   /* read the point on the number line */
   miRead({ n, lo = -10, hi = 10 }) {

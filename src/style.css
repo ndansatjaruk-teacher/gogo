@@ -4072,8 +4072,6 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .mi-x .mi-op,.mi-op{color:var(--sky-2,#2F86C2);font-weight:900}
 .mi-pos{color:#2F86C2}.mi-neg{color:#E5505E}
 .mi-ans .mi-ansrow{display:flex;align-items:center;gap:10px}
-.mi-sign{width:56px;height:72px;font:900 36px var(--font-num);border-radius:var(--r-lg);color:var(--ink-2)}
-.mi-sign.on{background:var(--coral,#FF7B86);color:#fff;box-shadow:var(--e2)}
 .mi-unit{font-size:20px}
 .mi-nl{width:min(760px,92cqw);touch-action:none}
 .mi-nl svg{width:100%;height:auto;display:block;overflow:visible}
@@ -4115,3 +4113,8 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .mi-prow{display:flex;justify-content:space-between;gap:24px;min-width:260px;padding:6px 16px;border-radius:var(--r-md);background:var(--surface);box-shadow:var(--e1);font-size:clamp(18px,2.2cqw,24px)}
 .mi-prow b{color:var(--coral)}
 .mi-prow.on b{color:#2F86C2}.mi-prow.mk.on{box-shadow:var(--e1),0 0 0 3px #FFD45C}
+
+/* v215 ม.ต้น keypad: 1–9 0 . − / ‹ ✓ (4 columns) */
+.keypad.mi-kp{grid-template-columns:repeat(4,1fr)}
+.keypad.mi-kp .btn.sym{color:var(--sky-2,#2F86C2);font-size:32px}
+.keypad.mi-kp .btn.ok2{grid-column:span 2;width:auto}
