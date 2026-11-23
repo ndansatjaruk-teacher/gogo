@@ -1328,8 +1328,8 @@ Object.assign(Q, {
 Object.assign(Q, {
   /* practice: find the sum (blocks optional) */
   add100({ a, b, blocks = false }) {
-    return { prompt: `หาผลบวก <span class="hl">${a} + ${b}</span>`, say: `${thaiWords(a)} บวก ${thaiWords(b)} เท่ากับเท่าไร`,
-      mount(bd, ctx) { const e = eqRow([a, '+', b, '=', '?']); bd.append(h('div', { class: 'colstack' }, blocks ? h('div', { class: 'rowstack cmpblk' }, tensOnes(a, { sm: true }), h('b', { class: 'num cmpsign' }, '+'), tensOnes(b, { sm: true })) : null, e),
+    return { prompt: blocks ? `หาผลบวก <span class="hl">${a} + ${b}</span> <small>(ใช้บล็อกช่วยได้)</small>` : `หาผลบวก <span class="hl">${a} + ${b}</span>`, say: `${thaiWords(a)} บวก ${thaiWords(b)} เท่ากับเท่าไร`, __tier: blocks ? 1 : 2, __atoms: [`a12 ${a}+${b}`], /* v203: แบบเดียวกับเมืองลบร้อย */
+      mount(bd, ctx) { const e = eqRow([a, '+', b, '=', '?']); bd.append(h('div', { class: 'colstack' }, blocks ? addLab(a, b) : null, e),
         answerBox(ctx, a + b, { hint: (a % 10 + b % 10) >= 10 ? 'บวกหลักหน่วยก่อน ครบ 10 หน่วยทด 1 สิบไปหลักสิบ' : 'บวกหลักหน่วยกับหลักหน่วย หลักสิบกับหลักสิบ' })); ctx.onRight = () => e.fill(a + b); } };
   },
   /* practice: step by step (split into tens and ones) */
@@ -1342,7 +1342,7 @@ Object.assign(Q, {
       steps.push({ label: 'ขั้นที่ 1', toks: [ta, '+', tb, '=', '?'], ans: ta + tb, hint: `${ta / 10} สิบ + ${tb / 10} สิบ`, say: 'ขั้นที่สอง บวกหลักหน่วย' });
       steps.push({ label: 'ขั้นที่ 2', toks: [ua, '+', ub, '=', '?'], ans: ua + ub, hint: `${ua} + ${ub}`, say: 'ขั้นที่สาม รวมผลบวก' });
       steps.push({ label: 'ขั้นที่ 3', toks: ['@0', '+', '@1', '=', '?'], ans: a + b, hint: `${ta + tb} + ${ua + ub}` }); }
-    return { prompt: `หาผลบวก <span class="hl">${a} + ${b}</span> ทีละขั้น`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} ทีละขั้น`, mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'rowstack cmpblk' }, tensOnes(a, { sm: true }), h('b', { class: 'num cmpsign' }, '+'), tensOnes(b, { sm: true }))), multiStep(ctx, steps)); } };
+    return { prompt: `หาผลบวก <span class="hl">${a} + ${b}</span> ทีละขั้น`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} ทีละขั้น`, __tier: 0, __atoms: [`a12 ${a}+${b}`], mount(bd, ctx) { bd.append(addLab(a, b), multiStep(ctx, steps)); } };
   },
   /* practice: vertical addition, ones column then tens column */
   vertAdd({ a, b }) {

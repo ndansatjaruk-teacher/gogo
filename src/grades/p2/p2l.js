@@ -271,17 +271,17 @@ Object.assign(Q, {
     const q = `${task} ควรใช้เครื่องมือใดเหมาะสมที่สุด`;
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(choices(ctx, shuffle(opts).map(k => ({ value: k, label: p2toolLab(k) })), ok, { hint: 'ของสั้น ๆ ใช้ไม้บรรทัด · รอบตัวหรือรอบแขนใช้สายวัดตัว (โค้งได้) · ของยาวประมาณ 1 เมตรใช้ไม้เมตร · ระยะยาว ๆ ใช้สายวัดชนิดตลับ' })); bd.querySelector('.opts').classList.add('p2tools'); } };
   },
-  p2rulLen({ it }) {
+  p2rulLen({ it, max }) { /* v203: max (ป.1 ใช้ไม้บรรทัดสั้น) */
     const q = `${it.name}ยาวกี่เซนติเมตร`;
-    return { prompt: q + ' <small>(ลากเลื่อนบนไม้บรรทัดได้)</small>', say: q, mount(bd, ctx) { const el = simRulerDrag(it, { quiet: true }); el.querySelector('.h6-wait')?.remove(); el.querySelector('.cap').textContent = 'ลากเลื่อนได้ หรือคิดจาก ปลาย − จุดเริ่ม'; el.lastChild.remove();
+    return { prompt: q + ' <small>(ลากเลื่อนบนไม้บรรทัดได้)</small>', say: q, mount(bd, ctx) { const el = simRulerDrag(it, { quiet: true, max }); el.querySelector('.h6-wait')?.remove(); el.querySelector('.cap').textContent = 'ลากเลื่อนได้ หรือคิดจาก ปลาย − จุดเริ่ม'; el.lastChild.remove();
       bd.append(h('div', { class: 't6-q p4-q p2q' }, el, h('div', { class: 'rowstack' }, answerBox(ctx, String(it.b - it.a), { hint: `ปลายข้างหนึ่งอยู่ที่ ${it.a} อีกข้างอยู่ที่ ${it.b} → ${it.b} − ${it.a}` }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เซนติเมตร')))); } };
   },
-  p2rulCmp({ a, b }) {
+  p2rulCmp({ a, b, max }) {
     const d = Math.abs((a.b - a.a) - (b.b - b.a)), w = (a.b - a.a) > (b.b - b.a) ? 'ยาวกว่า' : 'สั้นกว่า', q = `${a.name} … ${b.name} อยู่กี่เซนติเมตร`;
     return { prompt: `เติมคำ แล้วหาว่าต่างกันกี่เซนติเมตร`, say: `${a.name} ยาวกว่าหรือสั้นกว่า ${b.name} อยู่กี่เซนติเมตร`, mount(bd, ctx) {
       const blank = h('span', { class: 'blank' }, '?'), step2 = h('div', { class: 'rowstack', style: { display: 'none' } }, answerBox(ctx, String(d), { hint: `${a.name}ยาว ${a.b - a.a} ซม. ${b.name}ยาว ${b.b - b.a} ซม. → ลบกัน` }), h('span', { class: 'cap', style: { fontSize: '20px' } }, 'เซนติเมตร'));
       const ch = wordChoices({ check: (ok, hn) => { if (ok) { ch.style.display = 'none'; step2.style.display = ''; sfx.pop(4); ctx.say(`ใช่แล้ว! ${a.name}${w}${b.name} อยู่กี่เซนติเมตร`); } else ctx.check(false, hn); } }, w, blank, 'หาความยาวของแต่ละอย่างก่อน (ปลาย − จุดเริ่ม)', ['ยาวกว่า', 'สั้นกว่า']);
-      bd.append(h('div', { class: 'colstack' }, h('div', { class: 'p2rwrap', html: p2rulerSVG([a, b], { names: true }) }), h('div', { class: 'sentence' }, h('span', { class: 'lab' }, a.name), blank, h('span', { class: 'lab' }, b.name), h('span', { class: 'lab' }, 'อยู่ ? เซนติเมตร')), ch, step2)); } };
+      bd.append(h('div', { class: 'colstack' }, h('div', { class: 'p2rwrap', html: p2rulerSVG([a, b], { names: true, max }) }), h('div', { class: 'sentence' }, h('span', { class: 'lab' }, a.name), blank, h('span', { class: 'lab' }, b.name), h('span', { class: 'lab' }, 'อยู่ ? เซนติเมตร')), ch, step2)); } };
   },
   /* height wall: ask 'h' (read) | 'diff' | 'word' */
   p2wall({ items, o, i, j, ask = 'h', words }) {

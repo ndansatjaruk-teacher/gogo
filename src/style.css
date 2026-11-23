@@ -1380,10 +1380,12 @@ button.solidbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #E7E0D1}
 .pm-ic .art{width:clamp(28px,3.6cqw,40px);height:clamp(28px,3.6cqw,40px);flex:0 1 auto;min-width:0}
 .pm-n b{font:800 20px var(--font-num);color:var(--ink)}.pm-n small{font:700 13px var(--font);color:var(--ink-3)}
 .pm-cap{font:700 14px/1.2 var(--font);color:var(--ink-2);text-align:center;overflow-wrap:anywhere}
-.pm-box.q{background:rgba(255,111,125,.06)!important;box-shadow:none;border:2.5px dashed var(--coral)}
-.pm-box.q .pm-ic{opacity:.33}
-.pm-box.x{background:#FFF1F1!important}
-.pm-box.x .pm-ic .art{position:relative;opacity:.55}
+.pm-box.q{background:#fff!important;box-shadow:none;border:3px solid var(--ink-2)}
+.pm-box.q .pm-ic{opacity:1} /* v203 (ผู้ใช้ขอ): ส่วนที่เหลือ/ส่วนที่ถาม ขอบเข้ม ของเข้ม */
+.pm-box.x{background:#FFFAFA!important;box-shadow:inset 0 0 0 2px rgba(43,37,80,.08)} /* ส่วนที่เอาออกไป จาง */
+.pm-box.x .pm-ic{opacity:.32}.pm-box.x .pm-n{opacity:.7}
+.pm-box.x .pm-ic .art{position:relative}
+.pm-box.x.q{border:2.5px dashed var(--coral)}
 .pm-box.x .pm-ic{background:linear-gradient(to top right,transparent calc(50% - 2px),var(--coral-2) calc(50% - 2px),var(--coral-2) calc(50% + 2px),transparent calc(50% + 2px));border-radius:6px}
 .pm-box.same{background:var(--sky-soft)!important;opacity:.75}
 .pm-box.more{background:var(--mint-soft)!important;box-shadow:inset 0 0 0 2.5px var(--mint)}
@@ -3995,3 +3997,30 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .unk-eq{font-size:clamp(34px,5cqw,52px)}
 .unk-eq b.unk-hl{background:var(--gold-soft);border-radius:10px;box-shadow:0 0 0 3px var(--gold)}
 .unk-st{font:600 16px/1.35 var(--font);color:var(--ink-2);max-width:380px;display:block}
+
+/* v203 bullet result notes (ป.1 เมืองไม้บรรทัด) */
+ul.bul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;text-align:left;font:600 clamp(16px,1.9cqw,21px)/1.4 var(--font);color:var(--ink)}
+ul.bul li{position:relative;padding-left:1.1em}
+ul.bul li::before{content:'';position:absolute;left:.15em;top:.6em;width:.42em;height:.42em;border-radius:50%;background:var(--gold)}
+ul.bul b.hl{color:var(--mint-2);background:none}ul.bul b.hl2{color:var(--coral-2)}
+
+/* v203 cmpFig / mFig */
+.cfig{width:min(100%,600px)}.cf-svg{width:100%;height:auto;display:block;overflow:visible}
+.cf-svg .cf-v{font:800 17px var(--font-num);fill:var(--ink)}.cf-svg .cf-n{font:700 15px var(--font);fill:var(--ink-2)}
+.cf-svg .cf-g{stroke:#F08AA3;stroke-width:2;stroke-dasharray:6 5}.cf-svg .cf-start{stroke:var(--sky);stroke-width:2.4}
+.cf-svg .cf-d{fill:rgba(255,111,125,.12);stroke:var(--coral);stroke-width:2;stroke-dasharray:5 4}
+.cf-svg .cf-floor{stroke:#B9A27A;stroke-width:2.4}
+.rd-knob{fill:#fff;stroke:var(--mint);stroke-width:4;cursor:ew-resize}
+.est-it.big svg{width:120px;height:120px}
+.p2rwrap.ia{touch-action:none}
+
+.m2{align-items:flex-start;gap:16px}.m2 .cfig{width:min(52cqw,540px)}
+.m2-grid{display:grid;grid-template-columns:repeat(2,auto);gap:8px}
+.m2-b{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:96px;padding:6px 8px!important;background:#fff!important;color:var(--ink)!important;box-shadow:inset 0 0 0 2px var(--hair),var(--e1)!important}
+.m2-b .art,.m2-b svg{width:46px;height:46px}.m2-b span{font:700 14px var(--font)}
+.m2-b.seen{box-shadow:inset 0 0 0 3px var(--mint),var(--e1)!important}
+.m2-out{min-height:110px}
+.m-units{gap:40px;align-items:flex-start}
+
+.blab-p.sb svg rect{fill:url(#l-mint)}.blab-p.cube.sb svg rect{fill:url(#g-orange)}.blab-p.sg svg rect{fill:url(#l-yellow)}
+.blab-p.ticked::after{content:'✓';position:absolute;right:-4px;top:-6px;width:16px;height:16px;border-radius:50%;background:var(--mint);color:#fff;font:900 11px/16px var(--font);text-align:center}

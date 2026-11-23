@@ -1650,7 +1650,7 @@ const WS11_KIDS = [{ e: 'kid1', h: 8, name: 'ครูเอ' }, { e: 'kid0', h:
 const WS11_BENPON = [{ e: 'kid5', h: 5, name: 'เบน' }, { e: 'kid6', h: 6, name: 'พล' }];
 const WS11_ANIMALS = [{ e: 'cat', h: 4, name: 'แมว' }, { e: 'dog', h: 3, name: 'สุนัข' }, { e: 'teddy', h: 4, name: 'หมี' }, { e: 'rabbit', h: 6, name: 'กระต่าย' }];
 const WS11_CLIP = [{ kind: 'crayonbox', len: 3, name: 'กล่องสีไม้' }, { kind: 'pencilcase', len: 4, name: 'กระเป๋าดินสอ' }, { kind: 'pencil', len: 7, col: 'pink', name: 'ดินสอ' }, { kind: 'brush', len: 6, name: 'พู่กัน' }];
-const WS11_TALL = [{ e: 'milk', h: 2, name: 'กล่องนม' }, { e: 'dog', h: 3, name: 'สุนัข' }, { e: 'tree', h: 8, name: 'ต้นส้ม' }, { e: 'girl', h: 7, name: 'ผู้หญิง' }];
+const WS11_TALL = [{ e: 'milk', h: 2, name: 'กล่องนม' }, { e: 'dog', h: 3, name: 'สุนัข' }, { e: 'tree', h: 8, name: 'ต้นส้ม' }, { e: 'kid2', h: 7, name: 'ผู้หญิง' }];
 const WS11_KITCHEN = [{ kind: 'pan', len: 6, name: 'กระทะ' }, { kind: 'spatula', len: 13, name: 'ตะหลิว' }, { kind: 'knife', len: 7, name: 'มีด' }, { kind: 'spoon', len: 7, name: 'ช้อน' }];
 const WS11_PENCILS = [{ kind: 'pencil', len: 5, col: 'orange', name: 'ดินสอสีส้ม' }, { kind: 'pencil', len: 7, col: 'green', name: 'ดินสอสีเขียว' }, { kind: 'pencil', len: 5, col: 'red', name: 'ดินสอสีแดง' }, { kind: 'pencil', len: 3, col: 'yellow', name: 'ดินสอสีเหลือง' }];
 const WS11_BOTTLES = [{ bottle: 1, col: 'orange', h: 7, name: 'ขวดสีส้ม' }, { bottle: 1, col: 'pink', h: 9, name: 'ขวดสีชมพู' }, { bottle: 1, col: 'green', h: 4, name: 'ขวดสีเขียว' }, { bottle: 1, col: 'sky', h: 5, name: 'ขวดสีฟ้า' }, { bottle: 1, col: 'yellow', h: 7, name: 'ขวดสีเหลือง' }];
@@ -1660,21 +1660,39 @@ const WS11_CUPS = [{ e: 'mug', h: 20, name: 'แก้วกาแฟ' }, { e: '
 const WS11_BLDG = [{ e: 'shopB', h: 14, name: 'ร้านค้า' }, { e: 'school', h: 19, name: 'โรงเรียน' }, { e: 'bank', h: 4, name: 'ธนาคาร' }, { e: 'postoffice', h: 10, name: 'ไปรษณีย์' }];
 const WS11_METER = [{ e: 'pencil', name: 'ดินสอ', cm: 18 }, { e: 'book', name: 'หนังสือ', cm: 28 }, { e: 'eraser', name: 'ยางลบ', cm: 5 }, { e: 'door', name: 'ประตู', cm: 200 }, { e: 'bed', name: 'เตียง', cm: 190 }, { e: 'car', name: 'รถยนต์', cm: 450 }, { e: 'teddy', name: 'ตุ๊กตาหมี', cm: 30 }, { e: 'boat', name: 'เรือ', cm: 600 }];
 const lenOf = (list, n) => list.find(x => x.name === n);
+/* v203 data: ด่าน 4 ไม้บรรทัด / กำแพงวัดความสูง / คาดคะเน · ด่าน 5 เมตร · ด่าน 7–8 โจทย์ */
+const CH11_RUL = [{ k: 'pencil', name: 'ดินสอ', a: 0, b: 7, col: 'mint' }, { k: 'straw', name: 'หลอด', a: 0, b: 5, col: 'orange' }, { k: 'crayonbox', name: 'กล่องสี', a: 0, b: 4 }, { k: 'brush', name: 'พู่กัน', a: 0, b: 9, col: 'yellow' }, { k: 'eraser', name: 'ยางลบ', a: 0, b: 3 }, { k: 'pen', name: 'ปากกา', a: 0, b: 10 }];
+const CH11_WALL = { items: [{ e: 'mug', name: 'แก้วกาแฟ', cm: 12 }, { e: 'can', name: 'กระป๋อง', cm: 9 }, { e: 'glassOJ', name: 'แก้วน้ำส้ม', cm: 15 }, { e: 'carton', name: 'กล่องนม', cm: 7 }], o: { max: 20, tick: 1, step: 5 } };
+const CH11_GUESS = [{ e: 'pencil', name: 'ดินสอ', cm: 18, opts: [2, 18, 90] }, { e: 'eraser', name: 'ยางลบ', cm: 5, opts: [5, 50, 100] }, { e: 'book', name: 'หนังสือ', cm: 28, opts: [3, 28, 200] }];
+const M_LIST = () => Object.entries({ eraser: 'ยางลบ', pencil: 'ดินสอ', teddy: 'ตุ๊กตาหมี', door: 'ประตู', bed: 'เตียง', car: 'รถยนต์', boat: 'เรือ', chair: 'เก้าอี้' }).map(([e, name]) => ({ e, name, cm: M_ITEMS[e][1], ori: M_ITEMS[e][0] }));
+const M_UNIT = () => [{ e: 'eraser', name: 'ความยาวของยางลบ', m: false }, { e: 'pencil', name: 'ความยาวของดินสอ', m: false }, { e: 'book', name: 'ความยาวของหนังสือ', m: false }, { e: 'school', name: 'ความสูงของโรงเรียน', m: true }, { e: 'boat', name: 'ความยาวของเรือ', m: true }, { e: 'tree', name: 'ความสูงของต้นไม้ใหญ่', m: true }, { e: 'car', name: 'ความยาวของรถยนต์', m: true }].map(x => ({ ...x, cm: M_ITEMS[x.e][1], ori: M_ITEMS[x.e][0] }));
+const WS11_ST1 = () => [ST('โอ๊ตมีเชือกยาว 4 เมตร ซื้อมาต่ออีก 5 เมตร รวมแล้วเชือกยาวกี่เมตร', 4, 5, '+', 'เมตร'), ST('เสาธงสูง 5 เมตร อาคารสูงกว่าเสาธง 4 เมตร อาคารสูงกี่เมตร', 5, 4, '+', 'เมตร', ['เสาธง', 'อาคาร']),
+  ST('ริบบิ้นยาว 15 เซนติเมตร ครูตัดไปใช้ 9 เซนติเมตร ริบบิ้นเหลือยาวกี่เซนติเมตร', 15, 9, '-', 'เซนติเมตร'), ST('ริบบิ้นยาว 15 เมตร ใช้ผูกของขวัญไป 6 เมตร เหลือริบบิ้นกี่เมตร', 15, 6, '-', 'เมตร'),
+  ST('เชือกสีแดงยาว 8 เซนติเมตร เชือกสีฟ้ายาว 7 เซนติเมตร นำมาต่อกันยาวกี่เซนติเมตร', 8, 7, '+', 'เซนติเมตร'), ST('ไม้บรรทัดยาว 20 เซนติเมตร ยางลบยาว 4 เซนติเมตร ไม้บรรทัดยาวกว่ายางลบกี่เซนติเมตร', 20, 4, '-', 'เซนติเมตร', ['ไม้บรรทัด', 'ยางลบ']),
+  ST('ต้นมะม่วงสูง 9 เมตร ต้นมะละกอเตี้ยกว่าต้นมะม่วง 4 เมตร ต้นมะละกอสูงกี่เมตร', 9, 4, '-', 'เมตร', ['ต้นมะม่วง', 'ต้นมะละกอ']), ST('สายไฟยาว 12 เมตร ต่อเพิ่มอีก 6 เมตร สายไฟยาวกี่เมตร', 12, 6, '+', 'เมตร'),
+  ST('ดินสอยาว 12 เซนติเมตร ปากกายาวกว่าดินสอ 3 เซนติเมตร ปากกายาวกี่เซนติเมตร', 12, 3, '+', 'เซนติเมตร', ['ดินสอ', 'ปากกา'])];
+const WS11_ST2 = () => [ST('ยายจะตัดผ้าให้ได้ 17 เมตร ตอนนี้ตัดได้ 10 เมตร ต้องตัดเพิ่มอีกกี่เมตรจึงครบ', 17, 10, '-', 'เมตร'), ST('น้ำผึ้งใช้ไหมพรมไป 4 เซนติเมตร เหลือ 11 เซนติเมตร เดิมมีไหมพรมยาวกี่เซนติเมตร', 4, 11, '+', 'เซนติเมตร'),
+  ST('ต้นสนสูง 11 เมตร เสาไฟสูง 4 เมตร ต้นสนสูงกว่าเสาไฟกี่เมตร', 11, 4, '-', 'เมตร', ['ต้นสน', 'เสาไฟ']), ST('เชือกสีแดงยาว 17 เซนติเมตร เชือกสีฟ้ายาว 9 เซนติเมตร เชือกสีแดงยาวกว่าเชือกสีฟ้ากี่เซนติเมตร', 17, 9, '-', 'เซนติเมตร', ['สีแดง', 'สีฟ้า']),
+  ST('ต้นไม้สูง 8 เมตร ปีนี้สูงขึ้นอีก 2 เมตร ต้นไม้สูงกี่เมตร', 8, 2, '+', 'เมตร'), ST('ต้องการริบบิ้น 20 เซนติเมตร มีแล้ว 12 เซนติเมตร ต้องหาเพิ่มอีกกี่เซนติเมตร', 20, 12, '-', 'เซนติเมตร'),
+  ST('ตัดเชือกไปใช้ 7 เมตร เหลือ 8 เมตร เดิมเชือกยาวกี่เมตร', 7, 8, '+', 'เมตร'), ST('ต้นมะพร้าวสูง 15 เมตร บ้านสูง 6 เมตร บ้านเตี้ยกว่าต้นมะพร้าวกี่เมตร', 15, 6, '-', 'เมตร', ['ต้นมะพร้าว', 'บ้าน']),
+  ST('ทางเดินยาว 19 เมตร เดินไปแล้ว 12 เมตร ต้องเดินอีกกี่เมตรจึงสุดทาง', 19, 12, '-', 'เมตร')];
+/* v203 (ผู้ใช้ขอ): คำอธิบายผลเป็นข้อ ๆ เน้นคำสำคัญ */
+const bul = (...xs) => `<ul class="bul">${xs.filter(Boolean).map(x => `<li>${x}</li>`).join('')}</ul>`;
 /* put the two ends on the same start line */
 function alignSim(items) {
   const lb = lenBoard(items.map((it, i) => ({ ...it, start: [1.6, 0, .8, 2.2][i % 4] })), { max: Math.max(...items.map(x => x.len)) + 3 }), out = h('div', { class: 'word', style: { fontSize: 'clamp(16px,2vw,22px)', minHeight: '1.6em' } }, 'สิ่งใดยาวกว่า? ปลายยังไม่ตรงกัน ดูยากนะ');
   lb.classList.add('align'); lb.append(h('i', { class: 'lb-start' }));
   const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); btn.remove(); lb.querySelectorAll('.lb-obj').forEach(o => o.style.marginLeft = '0px'); sfx.page();
-    setTimeout(() => { const L = Math.max(...items.map(x => x.len)), i = items.findIndex(x => x.len === L); lb.querySelectorAll('.lb-row')[i].classList.add('win'); out.innerHTML = `จัดปลายให้เริ่มที่เส้นเดียวกันแล้ว <b>${items[i].name}ยาวที่สุด</b>`; sfx.ok(); say(out.textContent, true); }, 700); } }, icon('right'), 'จัดปลายให้ตรงกัน');
+    setTimeout(() => { const L = Math.max(...items.map(x => x.len)), i = items.findIndex(x => x.len === L); lb.querySelectorAll('.lb-row')[i].classList.add('win'); out.innerHTML = bul('จัดปลายให้<b>เริ่มที่เส้นเดียวกัน</b>แล้ว', `<b class="hl">${items[i].name}</b> ยาวที่สุด`); sfx.ok(); say(out.textContent, true); }, 700); } }, icon('right'), 'จัดปลายให้ตรงกัน');
   return h('div', { class: 'colstack' }, lb, btn, out);
 }
 /* tap two figures to compare their height */
 function tallTap(items, o = {}) {
   const hb = heightBoard(items, { unit: o.unit || 'none', guides: o.guides }), out = h('div', { class: 'word', style: { fontSize: 'clamp(16px,2vw,22px)', minHeight: '1.6em' } }, 'แตะ 2 คนเพื่อเปรียบเทียบความสูง'); let pick = [];
   hb.classList.add('ia'); hb.querySelectorAll('.hb-col').forEach(c => { c.style.cursor = 'pointer'; c.onclick = e => { e.stopPropagation(); const i = +c.dataset.i; pick = [...pick.filter(x => x !== i), i].slice(-2); hb.querySelectorAll('.hb-col').forEach(x => x.classList.toggle('on', pick.includes(+x.dataset.i))); sfx.pop(pick.length);
-    if (pick.length === 2) { const [a, b] = pick.map(k => items[k]); out.innerHTML = a.h === b.h ? `${a.name}สูง<b>เท่ากับ</b>${b.name}` : `${a.name}<b>${a.h > b.h ? 'สูงกว่า' : 'เตี้ยกว่า'}</b>${b.name}`; say(out.textContent, true); } }; });
+    if (pick.length === 2) { const [a, b] = pick.map(k => items[k]); out.innerHTML = a.h === b.h ? bul(`${a.name} สูง<b class="hl">เท่ากับ</b> ${b.name}`) : bul(`${a.name} <b class="hl">${a.h > b.h ? 'สูงกว่า' : 'เตี้ยกว่า'}</b> ${b.name}`, `${b.name} <b class="hl2">${a.h > b.h ? 'เตี้ยกว่า' : 'สูงกว่า'}</b> ${a.name}`); say(out.textContent, true); } }; });
   const ext = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const mx = Math.max(...items.map(x => x.h)), mn = Math.min(...items.map(x => x.h)); hb.querySelectorAll('.hb-col').forEach(c => { const v = items[+c.dataset.i].h; c.classList.toggle('top', v === mx); c.classList.toggle('low', v === mn); });
-    out.innerHTML = `สูงที่สุด: <b>${items.filter(x => x.h === mx).map(x => x.name).join(', ')}</b> · เตี้ยที่สุด: <b>${items.filter(x => x.h === mn).map(x => x.name).join(', ')}</b>`; sfx.ok(); say(out.textContent, true); } }, icon('sparkle'), 'หาสูงที่สุด เตี้ยที่สุด');
+    out.innerHTML = bul(`<b class="hl">สูงที่สุด</b>: ${items.filter(x => x.h === mx).map(x => x.name).join(', ')}${o.unit && o.unit !== 'none' ? ` (${mx} หน่วย)` : ''}`, `<b class="hl2">เตี้ยที่สุด</b>: ${items.filter(x => x.h === mn).map(x => x.name).join(', ')}${o.unit && o.unit !== 'none' ? ` (${mn} หน่วย)` : ''}`); sfx.ok(); say(out.textContent, true); } }, icon('sparkle'), 'หาสูงที่สุด เตี้ยที่สุด');
   return h('div', { class: 'colstack' }, hb, ext, out);
 }
 /* lay paper clips one by one under an object */
@@ -1706,6 +1724,74 @@ function meterSim() {
   const pal = h('div', { class: 'palette ia' }, ...WS11_METER.map(it => { const b = h('button', { class: 'palb' }, art(it.e)); b.onclick = e => { e.stopPropagation(); bars.querySelector('.item')?.remove(); bars.append(bar(it.cm, 'item', it.name)); const more = it.cm > 100; out.innerHTML = `${it.name}<b>${more ? 'ยาวกว่า' : 'สั้นกว่า'} 1 เมตร</b>`; sfx.pop(more ? 6 : 2); say(out.textContent, true); }; return b; }));
   return h('div', { class: 'colstack' }, bars, pal, out);
 }
+/* ---------- v203 (ผู้ใช้ขอ) เมืองไม้บรรทัด: รูปของจริง ตรงสเกล มีเส้นประ ---------- */
+const CH11_COL = ['coral', 'sky', 'mint', 'orange', 'lilac', 'yellow'];
+const artSvg = (e, x, y, w, hh, al = 'xMidYMax meet') => { const T = artTight(e); return `<svg x="${x}" y="${y}" width="${w}" height="${hh}" viewBox="${T.vb}" preserveAspectRatio="${al}">${T.raw}</svg>`; };
+/* two (or more) things with their numbers, drawn to scale: lengths as bars under big pictures, heights as pictures standing on the floor.
+   A dashed line at the shorter end and a coral box over the extra part show “ยาวกว่ากัน / สูงกว่ากัน อยู่เท่าไร” (no number on it) */
+function cmpFig(items, o = {}) {
+  const U = o.unit === 'm' ? 'ม.' : 'ซม.', V = items.map(x => x.len ?? x.h), mx = Math.max(...V), mn = Math.min(...V);
+  if (items[0].h != null) { const W = 520, H = 330, base = H - 40, k = 230 / mx, cw = W / (items.length + .4); let s = '';
+    items.forEach((it, i) => { const cx = cw * (i + .7), hp = it.h * k, T = artTight(it.e), [, , vw, vh] = T.vb.split(' ').map(Number), wp = Math.min(cw * .85, hp * vw / vh);
+      s += `<svg x="${cx - wp / 2}" y="${base - hp}" width="${wp}" height="${hp}" viewBox="${T.vb}" preserveAspectRatio="xMidYMax meet">${T.raw}</svg>`
+        + `<text x="${cx}" y="${base - hp - 10}" text-anchor="middle" class="cf-v">${it.h} ${U}</text><text x="${cx}" y="${base + 26}" text-anchor="middle" class="cf-n">${it.name}</text>`; });
+    if (items.length === 2 && mx !== mn) { const i = V.indexOf(mx), cx = cw * (i + .7); s += `<line x1="${cw * .25}" x2="${W - 10}" y1="${base - mn * k}" y2="${base - mn * k}" class="cf-g"/><rect x="${cx + 44}" y="${base - mx * k}" width="12" height="${(mx - mn) * k}" rx="3" class="cf-d"/>`; }
+    return h('div', { class: 'cfig', html: `<svg viewBox="0 0 ${W} ${H}" class="cf-svg">${s}<line x1="6" x2="${W - 6}" y1="${base}" y2="${base}" class="cf-floor"/></svg>` }); }
+  const W = 560, x0 = 120, L = W - x0 - 70, k = L / mx, rowH = 86, H = items.length * rowH + 16; let s = '';
+  items.forEach((it, i) => { const y = 10 + i * rowH, bw = it.len * k, col = PAL[CH11_COL[i % 6]];
+    s += artSvg(it.e, 6, y, 66, 58, 'xMidYMid meet') + `<text x="39" y="${y + 74}" text-anchor="middle" class="cf-n">${it.name}</text>`
+      + `<rect x="${x0}" y="${y + 18}" width="${bw}" height="26" rx="6" fill="${col[1]}" stroke="${col[3]}" stroke-width="1.6"/>`;
+    if (mx <= 25) for (let v = 1; v < it.len; v++) s += `<line x1="${x0 + v * k}" x2="${x0 + v * k}" y1="${y + 20}" y2="${y + 42}" stroke="${col[3]}" stroke-width="1" opacity=".55"/>`;
+    s += `<text x="${x0 + bw + 8}" y="${y + 37}" class="cf-v">${it.len} ${U}</text>`; });
+  if (items.length === 2 && mx !== mn) { const i = V.indexOf(mx), y = 10 + i * rowH; s += `<line x1="${x0 + mn * k}" x2="${x0 + mn * k}" y1="4" y2="${H - 6}" class="cf-g"/><rect x="${x0 + mn * k}" y="${y + 14}" width="${(mx - mn) * k}" height="34" rx="6" class="cf-d"/>`; }
+  s += `<line x1="${x0}" x2="${x0}" y1="4" y2="${H - 6}" class="cf-start"/>`;
+  return h('div', { class: 'cfig', html: `<svg viewBox="0 0 ${W} ${H}" class="cf-svg">${s}</svg>` });
+}
+/* a thing next to the 1-metre stick, both to the same scale (o: 'h' standing · 'w' lying) */
+const M_ITEMS = { eraser: ['w', 5], pencil: ['w', 18], book: ['w', 28], teddy: ['h', 30], chair: ['h', 80], door: ['h', 200], bed: ['w', 190], car: ['w', 450], boat: ['w', 600], school: ['h', 1500], tree: ['h', 500] };
+function mFig(e, cm, ori) { const W = 600, H = 300, base = H - 34, sx = 70, k = Math.min(2, 220 / Math.max(100, ori === 'h' ? cm : 0), 430 / Math.max(1, ori === 'w' ? cm : 0)), mh = 100 * k;
+  let s = `<rect x="${sx - 13}" y="${base - mh}" width="26" height="${mh}" rx="3" fill="#FFE07A" stroke="#C99A1E" stroke-width="1.6"/>`;
+  for (let v = 10; v < 100; v += 10) s += `<line x1="${sx - 13}" x2="${sx + (v % 50 ? 0 : 13)}" y1="${base - v * k}" y2="${base - v * k}" stroke="#8B6A3E" stroke-width="${v % 50 ? 1 : 1.8}"/>`;
+  s += `<text x="${sx}" y="${base - mh - 10}" text-anchor="middle" class="cf-v">1 เมตร</text>`;
+  if (!e) return `<svg viewBox="0 0 ${W} ${H}" class="cf-svg mfig"><line x1="10" x2="${W - 10}" y1="${base}" y2="${base}" class="cf-floor"/>${s}</svg>`;
+  const T = artTight(e), [, , vw, vh] = T.vb.split(' ').map(Number), ix = sx + 60;
+  if (ori === 'h') { const hp = cm * k, wp = Math.min(W - ix - 10, hp * vw / vh); s += `<svg x="${ix}" y="${base - hp}" width="${wp}" height="${hp}" viewBox="${T.vb}" preserveAspectRatio="xMinYMax meet">${T.raw}</svg><line x1="${sx + 13}" x2="${ix + wp}" y1="${base - mh}" y2="${base - mh}" class="cf-g"/>`; }
+  else { const wp = Math.max(18, cm * k), hp = Math.min(base - 20, wp * vh / vw); s += `<svg x="${ix}" y="${base - hp}" width="${wp}" height="${hp}" viewBox="${T.vb}" preserveAspectRatio="xMinYMax meet">${T.raw}</svg><line x1="${ix + mh}" x2="${ix + mh}" y1="${base - mh - 6}" y2="${base + 6}" class="cf-g"/><text x="${ix + mh}" y="${base + 24}" text-anchor="middle" class="cf-n">1 เมตร</text>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" class="cf-svg mfig"><line x1="10" x2="${W - 10}" y1="${base}" y2="${base}" class="cf-floor"/>${s}</svg>`; }
+const mFigEl = (e, cm, ori) => h('div', { class: 'cfig', html: mFig(e, cm, ori) });
+Object.assign(Q, {
+  /* v203: ลากปลายหลอดบนไม้บรรทัด (กราฟิกเดียวกับ ป.2: ตัวเลขตรงขีด เส้นประลงมาที่ไม้บรรทัด) */
+  rulDraw({ len, k = 'straw', col = 'mint', name = 'หลอด', max = 12 }) {
+    const q = `ลากปุ่มกลมที่ปลาย ให้${name}ยาว <span class="hl">${len} เซนติเมตร</span>`;
+    return { prompt: q, say: `ลากปลายให้${name}ยาว ${WORD[len]} เซนติเมตร`, __sig: `rd ${len}`, mount(bd, ctx) { let cur = 2; const G = p2rg([{}], { max }), wrap = h('div', { class: 'p2rwrap ia' }), read = h('b', { class: 'num ss-read' });
+      const draw = () => { wrap.innerHTML = p2rulerSVG([{ k, a: 0, b: cur, col, name }], { max }); const svg = wrap.firstChild; const kn = document.createElementNS(SVGNS, 'circle'); kn.setAttribute('cx', G.X(cur)); kn.setAttribute('cy', G.top + 15); kn.setAttribute('r', 13); kn.setAttribute('class', 'rd-knob'); svg.append(kn); read.textContent = `${cur} เซนติเมตร`; };
+      const at = e => { const svg = wrap.firstChild, v = Math.max(1, Math.min(max, Math.round((p2svgPt(svg, e).x - G.x0) / G.u))); if (v !== cur) { cur = v; draw(); sfx.tap(); } };
+      wrap.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { wrap.setPointerCapture(e.pointerId); } catch (_) {} at(e); const mv = ev => at(ev), up = () => { wrap.removeEventListener('pointermove', mv); wrap.removeEventListener('pointerup', up); }; wrap.addEventListener('pointermove', mv); wrap.addEventListener('pointerup', up); });
+      wrap.addEventListener('click', e => e.stopPropagation()); draw();
+      bd.append(h('div', { class: 'colstack' }, wrap, h('div', { class: 'cap' }, 'ลากปุ่มกลม (หรือแตะบนไม้บรรทัด) — ดูเส้นประที่ปลาย'), read, checkButton('ตรวจคำตอบ', () => ctx.check(cur === len, cur > len ? `ยาวเกินไป — ลดลงอีก ${cur - len} ช่อง` : `ยังสั้นไป — ลากไปทางขวาอีก ${len - cur} ช่อง`)))); } };
+  },
+  /* v203: คาดคะเน — ของจริงยาวประมาณเท่าไร */
+  lenGuess({ e, name, cm, opts }) { const q = `${name}ยาวประมาณเท่าไร?`;
+    return { prompt: q, say: q, __sig: `lg ${name}`, mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'est-it big' }, art(e), h('b', null, name)), choices(ctx, opts.map(v => ({ value: v, label: `${v} เซนติเมตร` })), cm, { hint: 'นึกถึงไม้บรรทัด 1 อันยาวประมาณ 30 เซนติเมตร · นิ้วมือกว้างประมาณ 1 เซนติเมตร' }))); } };
+  }
+});
+/* v203 ด่าน 5: tap every thing (each is a step button) — it appears beside the metre stick at true scale */
+function meterSim2() {
+  const L = ['eraser', 'pencil', 'teddy', 'chair', 'door', 'bed'].map(e => M_LIST().find(x => x.e === e)), fig = h('div', { class: 'cfig' }), out = h('div', { class: 'm2-out' }, h('div', { html: bul('แตะของ<b>ทุกอย่าง</b>ทีละอย่าง แล้วดูว่ายาวกว่าหรือสั้นกว่า <b>1 เมตร</b>') }));
+  fig.innerHTML = mFig(null, 0, 'w');
+  const btns = L.map(it => { const b = h('button', { class: 'btn info m2-b' }, art(it.e), h('span', null, it.name)); b.onclick = e => { e.stopPropagation(); fig.innerHTML = mFig(it.e, it.cm, it.ori); b.dataset.done = 1; b.classList.add('seen'); const more = it.cm > 100;
+    out.innerHTML = bul(`<b>${it.name}</b> ${it.ori === 'h' ? 'สูง' : 'ยาว'}ประมาณ ${it.cm >= 100 ? `<b>${it.cm / 100 % 1 ? (it.cm / 100).toFixed(1) : it.cm / 100} เมตร</b>` : `<b>${it.cm} เซนติเมตร</b>`}`, `<b class="${more ? 'hl2' : 'hl'}">${more ? 'ยาวกว่า' : 'สั้นกว่า'} 1 เมตร</b>${it.ori === 'h' && more ? ' (สูงกว่า)' : ''}`, `วัดเป็น <b>${more ? 'เมตร' : 'เซนติเมตร'}</b>`) + `<div class="cap">ดูแล้ว ${L.filter((_, i) => btns[i].dataset.done).length} จาก ${L.length}</div>`; sfx.pop(more ? 6 : 2); say(out.innerText.replace(/\n/g, ' '), true); }; return b; });
+  return h('div', { class: 'rowstack m2' }, h('div', { class: 'colstack' }, fig, out), h('div', { class: 'm2-grid' }, ...btns));
+}
+Object.assign(Q, {
+  mJudge({ e, name, cm, ori }) { const more = cm > 100, right = more ? 'ยาวกว่า 1 เมตร' : 'สั้นกว่า 1 เมตร', q = `${name}ยาวกว่าหรือสั้นกว่า 1 เมตร?`;
+    return { prompt: q, say: q, __sig: `mj ${e}`, mount(bd, ctx) { const col = h('div', { class: 'colstack' }); bd.append(ppSide(mFigEl(e, cm, ori), col)); bd.classList.add('p2wsd'); textOpts(col, ctx, ['ยาวกว่า 1 เมตร', 'สั้นกว่า 1 เมตร'], right, 'ดูรูป: ไม้เมตรสีเหลืองยาว 1 เมตร ของเลยเส้นประไปหรือยัง'); } }; },
+  mUnit({ e, name, cm, ori, m }) { const right = m ? 'เมตร' : 'เซนติเมตร', q = `ควรวัด${name}เป็นหน่วยใด?`;
+    return { prompt: q, say: q, __sig: `mu ${e}`, mount(bd, ctx) { const col = h('div', { class: 'colstack' }); bd.append(ppSide(mFigEl(e, cm, ori), col)); bd.classList.add('p2wsd'); textOpts(col, ctx, ['เซนติเมตร', 'เมตร'], right, 'ของชิ้นเล็ก สั้นกว่าไม้เมตร วัดเป็นเซนติเมตร · ของยาวมากกว่าไม้เมตรมาก ๆ วัดเป็นเมตร'); } }; },
+  /* ด่าน 6: big picture on the left (to scale, dashed line), answer on the right */
+  cmpDiff({ a, b, unit = 'cm' }) { const u = unit === 'm' ? 'เมตร' : 'เซนติเมตร', la = a.len ?? a.h, lb = b.len ?? b.h, w = la > lb ? (a.h != null ? 'สูงกว่า' : 'ยาวกว่า') : (a.h != null ? 'เตี้ยกว่า' : 'สั้นกว่า'), q = `${a.name}${w}${b.name}อยู่กี่${u}?`;
+    return { prompt: q, say: q, __sig: `cd ${a.name} ${b.name}`, mount(bd, ctx) { bd.append(ppSide(cmpFig([a, b], { unit }), ppAns(ctx, Math.abs(la - lb), `${Math.max(la, lb)} − ${Math.min(la, lb)}`, u))); bd.classList.add('p2wsd'); } }; }
+});
 const LESSONS_CH11 = [
   { id: 291, title: 'การเปรียบเทียบความยาวของสิ่งต่าง ๆ', short: 'เปรียบเทียบความยาว', tone: 'sky',
     goal: 'เปรียบเทียบความยาวและความสูงโดยตรง ใช้คำว่า ยาวกว่า สั้นกว่า สูงกว่า เตี้ยกว่า ยาวที่สุด สูงที่สุด',
@@ -1728,7 +1814,7 @@ const LESSONS_CH11 = [
   { id: 293, title: 'การเปรียบเทียบความยาวโดยใช้หน่วยที่ไม่ใช่หน่วยมาตรฐาน', short: 'เปรียบเทียบด้วยหน่วย', tone: 'mint',
     goal: 'เปรียบเทียบความยาวและความสูงจากจำนวนหน่วยที่วัดได้ และบอกว่ายาวกว่าหรือสั้นกว่ากันอยู่กี่หน่วย',
     teach: [
-      { t: 'นับหน่วยของแต่ละสิ่ง: <b>จำนวนหน่วยมากกว่า = ยาวกว่า</b>', s: 'นับหน่วยของแต่ละสิ่ง จำนวนหน่วยมากกว่า ยาวกว่า', v: el => el.append(lenBoard(WS11_KITCHEN, { unit: 'cube', guides: true })) },
+      { t: 'นับหน่วยของแต่ละสิ่ง: <b>จำนวนหน่วยมากกว่า = ยาวกว่า</b>', s: 'นับหน่วยของแต่ละสิ่ง จำนวนหน่วยมากกว่า ยาวกว่า', v: el => el.append(h('div', { class: 'colstack' }, lenBoard(WS11_KITCHEN, { unit: 'cube', guides: true }), h('div', { html: bul('<b>ตะหลิว</b> 13 หน่วย → <b class="hl">ยาวที่สุด</b>', '<b>กระทะ</b> 6 หน่วย → <b class="hl2">สั้นที่สุด</b>', '<b>มีด</b> กับ <b>ช้อน</b> 7 หน่วยเท่ากัน → <b>ยาวเท่ากัน</b>') }))) },
       { t: 'ความสูงก็เหมือนกัน — แตะ 2 อย่างเพื่อเปรียบเทียบ', s: 'ความสูงก็เหมือนกัน แตะสองอย่างเพื่อเปรียบเทียบ', v: el => el.append(tallTap(WS11_TALL, { unit: 'cube', guides: true })) }
     ],
     game: () => [Q.unitCount({ item: WS11_TALL[0], unit: 'cube', vis: 'h', max: 9 }), Q.unitCount({ item: WS11_TALL[3], unit: 'cube', vis: 'h', max: 9 }), Q.lenExtreme({ items: reshuffle(WS11_TALL), ask: 'tall', vis: 'h', unit: 'cube' }), Q.lenExtreme({ items: reshuffle(WS11_KITCHEN), ask: 'long', unit: 'cube' }), Q.lenExtreme({ items: reshuffle(WS11_KITCHEN), ask: 'short', unit: 'cube' }),
@@ -1736,44 +1822,44 @@ const LESSONS_CH11 = [
       Q.unitCount({ item: WS11_TALL[1], unit: 'cube', vis: 'h', max: 9 }), Q.lenDiff({ a: WS11_TALL[2], b: WS11_TALL[3], unit: 'cube', vis: 'h' })] /* v134: ≥ 8 ข้อ */ },
   { id: 294, title: 'การวัดความยาวเป็นเซนติเมตร', short: 'วัดเป็นเซนติเมตร', tone: 'orange',
     goal: 'วัดความยาวและความสูงเป็นเซนติเมตรโดยใช้ไม้บรรทัด และคาดคะเนความยาว',
-    teach: [
-      { t: '<b>เซนติเมตร</b> เป็นหน่วยมาตรฐาน ใช้<b>ไม้บรรทัด</b>วัด — วางปลายดินสอที่ <b>0</b> แล้วอ่านตัวเลขที่ปลายอีกข้าง', s: 'เซนติเมตร เป็นหน่วยมาตรฐาน ใช้ไม้บรรทัดวัด วางปลายดินสอที่ศูนย์ แล้วอ่านตัวเลขที่ปลายอีกข้าง', v: el => el.append(rulerSim(5)) },
-      { t: 'วัดหลายอย่างพร้อมกัน: ทุกอย่างเริ่มที่ 0 อ่านตัวเลขที่ปลาย', s: 'วัดหลายอย่างพร้อมกัน ทุกอย่างเริ่มที่ศูนย์ อ่านตัวเลขที่ปลาย', v: el => el.append(lenBoard(WS11_PENCILS, { unit: 'cm', max: 7, guides: true })) },
-      { t: 'วัด<b>ความสูง</b>เป็นเซนติเมตร: ตั้งไม้บรรทัดข้าง ๆ แล้วอ่านที่ยอด', s: 'วัดความสูงเป็นเซนติเมตร ตั้งไม้บรรทัดข้าง ๆ แล้วอ่านที่ยอด', v: el => el.append(heightBoard(WS11_BOTTLES, { unit: 'cm', max: 10, guides: true })) }
+    teach: [ /* v203 (ผู้ใช้ขอ): ไม้บรรทัดแบบเดียวกับชั้นอื่น — ตัวเลขตรงขีด มีเส้นประจากปลายลงมาที่สเกล */
+      { t: '<b>เซนติเมตร</b> วัดด้วย<b>ไม้บรรทัด</b> — ลากดินสอไปวางตรงไหนก็ได้ แล้วดูเส้นประที่ปลายทั้งสองข้าง', s: 'เซนติเมตร วัดด้วยไม้บรรทัด ลากดินสอไปวางตรงไหนก็ได้ แล้วดูเส้นประที่ปลายทั้งสองข้าง', v: el => el.append(simRulerDrag({ k: 'pencil', name: 'ดินสอ', a: 0, b: 6, col: 'coral' }, { max: 12 })) },
+      { t: 'วัดหลายอย่างพร้อมกัน: <b>ทุกอย่างเริ่มที่ 0</b> แล้วอ่านเลขที่<b>เส้นประ</b>ตรงปลาย', s: 'วัดหลายอย่างพร้อมกัน ทุกอย่างเริ่มที่ศูนย์ แล้วอ่านเลขที่เส้นประตรงปลาย', v: el => el.append(h('div', { class: 'p2rwrap', html: p2rulerSVG(CH11_RUL.slice(0, 3), { names: true, max: 12 }) }), h('div', { html: bul(...CH11_RUL.slice(0, 3).map(x => `<b>${x.name}</b> ยาว <b class="hl">${x.b} เซนติเมตร</b>`)) })) },
+      { t: 'วัด<b>ความสูง</b>: เลื่อน<b>แถบสีแดง</b>ลงมาแตะยอดของแต่ละอย่าง แล้วอ่านตัวเลข', s: 'วัดความสูง เลื่อนแถบสีแดงลงมาแตะยอดของแต่ละอย่าง แล้วอ่านตัวเลข', v: el => el.append(simWall(CH11_WALL.items, { ...CH11_WALL.o, snap: 1 })) }
     ],
-    game: () => { const p = shuffle(WS11_PENCILS), s = shuffle(WS11_STRAWS), b = shuffle(WS11_BOTTLES);
-      return [Q.unitCount({ item: p[0], unit: 'cm', max: 7 }), Q.unitCount({ item: s[0], unit: 'cm', max: 7 }), Q.unitCount({ item: b[0], unit: 'cm', vis: 'h', max: 10 }), Q.unitCount({ item: b[1], unit: 'cm', vis: 'h', max: 10 }), Q.lenDiff({ a: WS11_STRAWS[1], b: WS11_STRAWS[2], vis: 'len' }), Q.lenDiff({ a: WS11_STRAWS[3], b: WS11_STRAWS[1], vis: 'len' }), Q.rulerSet({ len: rnd(3, 8) })]; } },
+    game: () => { const r = shuffle(CH11_RUL), g = shuffle(CH11_GUESS); return [...r.slice(0, 3).map(it => Q.p2rulLen({ it, max: 12 })), Q.p2rulCmp({ a: r[3], b: r[4], max: 12 }), Q.p2rulCmp({ a: r[0], b: r[5], max: 12 }),
+      p2wq(CH11_WALL, { i: rnd(0, 1) }), p2wq(CH11_WALL, { i: rnd(2, 3) }), Q.rulDraw({ len: rnd(3, 10) }), Q.lenGuess(g[0])]; } },
   { id: 295, title: 'การวัดความยาวเป็นเมตร', short: 'วัดเป็นเมตร', tone: 'lilac',
     goal: 'รู้จักหน่วยเมตร (1 เมตร = 100 เซนติเมตร) บอกได้ว่าสิ่งใดยาวกว่าหรือสั้นกว่า 1 เมตร และเลือกหน่วยที่เหมาะสม',
-    teach: [
-      { t: '<b>1 เมตร = 100 เซนติเมตร</b> ใช้วัดของที่ยาวมาก ๆ — แตะสิ่งของเพื่อเทียบกับไม้เมตร', s: 'หนึ่งเมตร เท่ากับ หนึ่งร้อยเซนติเมตร ใช้วัดของที่ยาวมาก ๆ แตะสิ่งของเพื่อเทียบกับไม้เมตร', v: el => el.append(meterSim()) },
-      { t: 'ของชิ้นเล็กวัดเป็น<b>เซนติเมตร</b> · ของยาวมาก ความสูงของตึก ระยะทาง วัดเป็น<b>เมตร</b>', s: 'ของชิ้นเล็กวัดเป็นเซนติเมตร ของยาวมาก ความสูงของตึก ระยะทาง วัดเป็นเมตร', v: el => el.append(h('div', { class: 'rowstack' }, ...[['eraser', 'ซม.'], ['pencil', 'ซม.'], ['door', 'ม.'], ['school', 'ม.']].map(([e, u]) => h('span', { class: 'est-it' }, art(e), h('b', null, u))))) }
+    teach: [ /* v203 (ผู้ใช้ขอ): เทียบของจริงกับไม้เมตรตามสเกล · ต้องแตะครบทุกอย่างจึงไปต่อได้ */
+      { t: '<b>1 เมตร = 100 เซนติเมตร</b> — <b>แตะของทุกอย่าง</b> เพื่อเทียบกับไม้เมตร (ขนาดตามจริง)', s: 'หนึ่งเมตร เท่ากับ หนึ่งร้อยเซนติเมตร แตะของทุกอย่าง เพื่อเทียบกับไม้เมตร', v: el => el.append(meterSim2()) },
+      { t: 'เลือกหน่วยให้เหมาะ', s: 'ของชิ้นเล็กวัดเป็นเซนติเมตร ของยาวมาก ความสูงของตึก ระยะทาง วัดเป็นเมตร', v: el => el.append(h('div', { class: 'rowstack m-units' }, h('div', { class: 'colstack' }, h('div', { class: 'rowstack' }, ...['eraser', 'pencil', 'book'].map(e => h('span', { class: 'est-it' }, art(e)))), h('div', { html: bul('ของ<b>ชิ้นเล็ก</b> สั้นกว่า 1 เมตร', 'วัดเป็น <b class="hl">เซนติเมตร</b>') })),
+        h('div', { class: 'colstack' }, h('div', { class: 'rowstack' }, ...['door', 'school', 'car'].map(e => h('span', { class: 'est-it' }, art(e)))), h('div', { html: bul('ของ<b>ยาวมาก</b> ตึก ระยะทาง', 'วัดเป็น <b class="hl2">เมตร</b>') })))) }
     ],
-    game: () => { const m = shuffle(WS11_METER); return [...m.slice(0, 4).map(it => Q.meterJudge({ e: it.e, name: it.name, more: it.cm > 100 })), Q.unitPick({ name: 'ความยาวของยางลบ', e: 'eraser', m: false }), Q.unitPick({ name: 'ความสูงของโรงเรียน', e: 'school', m: true }), Q.unitPick({ name: 'ความยาวของเรือ', e: 'boat', m: true })]; } },
+    game: () => { const m = shuffle(M_LIST()); return [...m.slice(0, 5).map(it => Q.mJudge(it)), ...shuffle(M_UNIT()).slice(0, 4).map(it => Q.mUnit(it))]; } },
   { id: 296, title: 'การเปรียบเทียบความยาวที่มีหน่วยเป็นเซนติเมตร เป็นเมตร', short: 'เปรียบเทียบ ซม. ม.', tone: 'yellow',
     goal: 'เปรียบเทียบความยาวที่มีหน่วยเดียวกัน (เซนติเมตร หรือ เมตร) และหาว่ายาวกว่าหรือสั้นกว่ากันอยู่เท่าไร',
-    teach: [
-      { t: 'เชือกยาว 18 ซม. ธงยาว 7 ซม. → เชือก<b>ยาวกว่า</b>ธง 18 − 7 = <b>11 เซนติเมตร</b>', s: 'เชือกยาวสิบแปดเซนติเมตร ธงยาวเจ็ดเซนติเมตร เชือกยาวกว่าธง สิบเอ็ดเซนติเมตร', v: el => el.append(h('div', { class: 'rowstack' }, ...WS11_CM.map(x => h('div', { class: 'lencard' }, art(x.e), h('b', null, x.name), h('span', { class: 'num' }, `${x.len} ซม.`))))) },
-      { t: 'ตึกสูงเป็น<b>เมตร</b>: โรงเรียนสูง 19 ม. ร้านค้าสูง 14 ม. → โรงเรียนสูงกว่า 5 เมตร', s: 'ตึกสูงเป็นเมตร โรงเรียนสูงสิบเก้าเมตร ร้านค้าสูงสิบสี่เมตร โรงเรียนสูงกว่าห้าเมตร', v: el => el.append(rankSim(WS11_BLDG.map(b => ({ name: b.name, n: b.h })), 'ม.')) }
+    teach: [ /* v203 (ผู้ใช้ขอ): มีรูป ตามสเกล และส่วนที่ยาวกว่ามีกรอบให้เห็น */
+      { t: 'เชือกยาว 18 ซม. ธงยาว 7 ซม. — เชือก<b>ยาวกว่า</b>ธงอยู่เท่าไร', s: 'เชือกยาวสิบแปดเซนติเมตร ธงยาวเจ็ดเซนติเมตร เชือกยาวกว่าธงอยู่เท่าไร', v: el => el.append(cmpFig([WS11_CM[0], WS11_CM[1]]), h('div', { html: bul('ดูส่วนที่<b>เกินเส้นประ</b> (กรอบสีชมพู)', 'ยาวกว่ากันอยู่ <b>18 − 7 = <span class="hl">11</span> เซนติเมตร</b>') })) },
+      { t: 'ตึกสูงเป็น<b>เมตร</b>: โรงเรียนสูง 19 ม. ร้านค้าสูง 14 ม.', s: 'ตึกสูงเป็นเมตร โรงเรียนสูงสิบเก้าเมตร ร้านค้าสูงสิบสี่เมตร', v: el => el.append(cmpFig([WS11_BLDG[1], WS11_BLDG[0]], { unit: 'm' }), h('div', { html: bul('โรงเรียน<b class="hl">สูงกว่า</b>ร้านค้า', '19 − 14 = <b>5 เมตร</b>') })) }
     ],
-    game: () => [Q.lenDiff({ a: WS11_CM[1], b: WS11_CM[2] }), Q.lenDiff({ a: WS11_CM[0], b: WS11_CM[1] }), Q.lenDiff({ a: WS11_CM[3], b: WS11_CM[0] }), Q.lenDiff({ a: WS11_CUPS[1], b: WS11_CUPS[3] }), Q.lenDiff({ a: WS11_CUPS[2], b: WS11_CUPS[0] }), Q.lenDiff({ a: WS11_BLDG[0], b: WS11_BLDG[2], unit: 'm' }), Q.lenDiff({ a: WS11_BLDG[3], b: WS11_BLDG[1], unit: 'm' })] },
+    game: () => [Q.cmpDiff({ a: WS11_CM[1], b: WS11_CM[2] }), Q.cmpDiff({ a: WS11_CM[0], b: WS11_CM[1] }), Q.cmpDiff({ a: WS11_CM[3], b: WS11_CM[0] }), Q.cmpDiff({ a: WS11_CM[2], b: WS11_CM[3] }), Q.cmpDiff({ a: WS11_CUPS[1], b: WS11_CUPS[3] }), Q.cmpDiff({ a: WS11_CUPS[2], b: WS11_CUPS[0] }), Q.cmpDiff({ a: WS11_BLDG[0], b: WS11_BLDG[2], unit: 'm' }), Q.cmpDiff({ a: WS11_BLDG[3], b: WS11_BLDG[1], unit: 'm' })] },
   { id: 297, title: 'โจทย์ปัญหาการบวก และโจทย์ปัญหาการลบ (1)', short: 'โจทย์ปัญหา (1)', tone: 'sky',
     goal: 'เขียนประโยคสัญลักษณ์และหาคำตอบของโจทย์ปัญหาการบวกและการลบเกี่ยวกับความยาว',
-    teach: [
-      { t: 'อ่านโจทย์ แล้วคิดว่า <b>เพิ่ม/รวม</b> ใช้การบวก · <b>ตัดออก/เหลือ</b> ใช้การลบ', s: 'อ่านโจทย์ แล้วคิดว่า เพิ่มหรือรวม ใช้การบวก ตัดออกหรือเหลือ ใช้การลบ', v: el => el.append(lenBoard([{ kind: 'ribbon', len: 3, col: 'coral', name: 'เดิม 3 ม.' }, { kind: 'ribbon', len: 8, col: 'sky', name: 'ซื้อเพิ่ม 8 ม.' }, { kind: 'ribbon', len: 11, col: 'mint', name: 'รวม 11 ม.' }], { max: 12 })) },
-      { t: 'ตัวอย่างที่ 2 (การลบ): <b>ตัดออก / เหลือ</b> ใช้การลบ — กดดูประโยคสัญลักษณ์', s: 'ตัวอย่างที่สอง ตัดออก หรือเหลือ ใช้การลบ', v: el => el.append(storySim(ST('ผ้ายาว 16 เมตร ตัดไปใช้ 7 เมตร เหลือผ้ากี่เมตร', 16, 7, '-', 'เมตร'))) }
+    teach: [ /* v203 (ผู้ใช้ขอ): แผนภาพรูปภาพแบบเมืองโจทย์ เลือกประโยคสัญลักษณ์ แล้วหาคำตอบ */
+      { t: '<b>ต่อกัน / รวมกัน</b> → ใช้การบวก — กด “เขียนประโยคสัญลักษณ์”', s: 'ต่อกัน หรือรวมกัน ใช้การบวก', v: el => el.append(storySim(ST('มีเชือกยาว 8 เมตร ซื้อมาต่ออีก 5 เมตร รวมแล้วเชือกยาวกี่เมตร', 8, 5, '+', 'เมตร'))) },
+      { t: '<b>ตัดไป / เหลือ</b> → ใช้การลบ', s: 'ตัดไป หรือเหลือ ใช้การลบ', v: el => el.append(storySim(ST('มีผ้ายาว 16 เมตร ตัดไปใช้ 7 เมตร เหลือผ้ากี่เมตร', 16, 7, '-', 'เมตร'))) },
+      { t: '<b>ยาวกว่า … อยู่</b> → นำความยาวที่รู้ มาบวกส่วนที่ยาวกว่า', s: 'ยาวกว่าอยู่ นำความยาวที่รู้ มาบวกส่วนที่ยาวกว่า', v: el => el.append(storySim(ST('ดินสอยาว 12 เซนติเมตร ปากกายาวกว่าดินสอ 3 เซนติเมตร ปากกายาวกี่เซนติเมตร', 12, 3, '+', 'เซนติเมตร', ['ดินสอ', 'ปากกา']))) }
     ],
-    game: () => [Q.story20({ text: 'โอ๊ตมีเชือกยาว 4 เมตร ซื้อมาต่ออีก 5 เมตร รวมแล้วเชือกยาวกี่เมตร', a: 4, b: 5, op: '+', unit: 'เมตร' }), Q.story20({ text: 'เสาธงสูง 5 เมตร อาคารสูงมากกว่าเสาธง 4 เมตร อาคารสูงกี่เมตร', a: 5, b: 4, op: '+', unit: 'เมตร' }), Q.story20({ text: 'ริบบิ้นยาว 15 เซนติเมตร ครูตัดไปใช้ 9 เซนติเมตร ริบบิ้นเหลือยาวกี่เซนติเมตร', a: 15, b: 9, op: '-', unit: 'เซนติเมตร' }),
-      Q.story20({ text: 'ดินสอยาว 12 เซนติเมตร ปากกายาวกว่าดินสอ 3 เซนติเมตร ปากกายาวกี่เซนติเมตร', a: 12, b: 3, op: '+', unit: 'เซนติเมตร' }), Q.story20({ text: 'ริบบิ้นยาว 15 เมตร ใช้ผูกของขวัญไป 6 เมตร เหลือริบบิ้นกี่เมตร', a: 15, b: 6, op: '-', unit: 'เมตร' })] },
+    game: () => SQ(WS11_ST1()) },
   { id: 298, title: 'โจทย์ปัญหาการบวก และโจทย์ปัญหาการลบ (2)', short: 'โจทย์ปัญหา (2)', tone: 'coral',
     goal: 'แก้โจทย์ปัญหาการบวกและการลบเกี่ยวกับความยาวที่ซับซ้อนขึ้น เช่น หาสิ่งที่ยังขาด หาค่าเดิม เปรียบเทียบ',
     teach: [
-      { t: '“ต้องตัดอีกกี่เมตรจึงจะครบ” และ “สูงกว่ากันกี่เมตร” ใช้<b>การลบ</b> · “เดิมมีเท่าไร” ให้นำส่วนที่ใช้ไปกับส่วนที่เหลือมา<b>บวก</b>กัน', s: 'ต้องตัดอีกกี่เมตรจึงจะครบ และสูงกว่ากันกี่เมตร ใช้การลบ เดิมมีเท่าไร ให้นำส่วนที่ใช้ไปกับส่วนที่เหลือมาบวกกัน', v: el => el.append(h('div', { class: 'colstack' }, eqRow([19, '−', 13, '=', 6], { sm: true }), h('div', { class: 'cap' }, 'ต้องการ 19 เมตร ตัดแล้ว 13 เมตร → ยังขาด 6 เมตร'), eqRow([6, '+', 14, '=', 20], { sm: true }), h('div', { class: 'cap' }, 'ใช้ไป 6 ซม. เหลือ 14 ซม. → เดิมมี 20 ซม.'))) },
-      { t: 'ตัวอย่าง “<b>ต้องหาเพิ่มอีกกี่</b>” → ต้องการ − มีแล้ว', s: 'ต้องหาเพิ่มอีกกี่ ใช้ต้องการลบมีแล้ว', v: el => el.append(storySim(ST('ต้องการเชือก 18 เมตร มีแล้ว 11 เมตร ต้องหาเชือกเพิ่มอีกกี่เมตร', 18, 11, '-', 'เมตร'))) },
-      { t: 'ตัวอย่าง “<b>เดิมมีเท่าไร</b>” → ใช้ไป + เหลือ', s: 'เดิมมีเท่าไร ใช้ไปบวกเหลือ', v: el => el.append(storySim(ST('ใช้ริบบิ้นไป 8 เซนติเมตร เหลือ 9 เซนติเมตร เดิมมีริบบิ้นกี่เซนติเมตร', 8, 9, '+', 'เซนติเมตร'))) }
+      { t: '<b>ต้องการ … มีแล้ว … ต้องหาเพิ่มอีกกี่</b> → ต้องการ − มีแล้ว', s: 'ต้องการ มีแล้ว ต้องหาเพิ่มอีกกี่ ใช้ต้องการลบมีแล้ว', v: el => el.append(storySim(ST('ต้องการเชือก 18 เมตร มีแล้ว 11 เมตร ต้องหาเชือกเพิ่มอีกกี่เมตร', 18, 11, '-', 'เมตร'))) },
+      { t: '<b>ใช้ไป … เหลือ … เดิมมีเท่าไร</b> → ใช้ไป + เหลือ', s: 'ใช้ไป เหลือ เดิมมีเท่าไร ใช้ไปบวกเหลือ', v: el => el.append(storySim(ST('ใช้ริบบิ้นไป 8 เซนติเมตร เหลือ 9 เซนติเมตร เดิมมีริบบิ้นกี่เซนติเมตร', 8, 9, '+', 'เซนติเมตร'))) },
+      { t: '<b>สูงกว่ากันกี่เมตร</b> → สูงมาก − สูงน้อย', s: 'สูงกว่ากันกี่เมตร ใช้สูงมากลบสูงน้อย', v: el => el.append(storySim(ST('ต้นสนสูง 11 เมตร เสาไฟสูง 4 เมตร ต้นสนสูงกว่าเสาไฟกี่เมตร', 11, 4, '-', 'เมตร', ['ต้นสน', 'เสาไฟ']))) }
     ],
-    game: () => [Q.story20({ text: 'ยายจะตัดผ้าให้ได้ 17 เมตร ตอนนี้ตัดได้ 10 เมตร ต้องตัดเพิ่มอีกกี่เมตรจึงครบ', a: 17, b: 10, op: '-', unit: 'เมตร' }), Q.story20({ text: 'น้ำผึ้งใช้ไหมพรมถักที่คั่นหนังสือไป 4 เซนติเมตร ยังเหลือไหมพรม 11 เซนติเมตร ตอนแรกไหมพรมยาวกี่เซนติเมตร', a: 4, b: 11, op: '+', unit: 'เซนติเมตร' }), Q.story20({ text: 'ต้นสนสูง 11 เมตร เสาไฟสูง 4 เมตร ต้นสนสูงกว่าเสาไฟกี่เมตร', a: 11, b: 4, op: '-', unit: 'เมตร' }),
-      Q.story20({ text: 'เชือกสีแดงยาว 17 เซนติเมตร เชือกสีฟ้ายาว 9 เซนติเมตร เชือกสีแดงยาวกว่าเชือกสีฟ้ากี่เซนติเมตร', a: 17, b: 9, op: '-', unit: 'เซนติเมตร' }), Q.story20({ text: 'ต้นไม้สูง 8 เมตร ปีนี้สูงขึ้นอีก 2 เมตร ต้นไม้สูงกี่เมตร', a: 8, b: 2, op: '+', unit: 'เมตร' })] }
+    game: () => SQ(WS11_ST2()) }
 ];
 const EXAM_CH11 = [
   { q: 'สิ่งใดยาวที่สุด', lenb: [WS11_PENCILS, 7], opts: ['ดินสอสีเขียว', 'ดินสอสีส้ม', 'ดินสอสีเหลือง'], a: 0 },
@@ -1811,17 +1897,14 @@ const WS12_MIX = [[34, 4], [43, 12], [27, 54], [36, 16], [78, 7], [35, 22], [62,
 const pair = (list, k = 1) => shuffle(list).slice(0, k);
 const T12 = [[35, 4], [65, 2], [22, 12], [48, 31], [77, 6], [87, 5], [35, 44], [3, 22], [37, 47], [47, 53]];
 /* two numbers as rods + cubes → push together → regroup ten ones into one ten */
-function addBlocksSim(a, b) {
-  const ta = Math.floor(a / 10), ua = a % 10, tb = Math.floor(b / 10), ub = b % 10, vis = h('div', { class: 'rowstack cmpblk' }), eq = eqRow([a, '+', b, '=', '?']), note = h('div', { class: 'cap tm-note' });
-  vis.append(h('div', { class: 'colstack' }, blocksTU(ta, ua, { labels: true }), h('b', { class: 'num' }, a)), h('b', { class: 'num cmpsign' }, '+'), h('div', { class: 'colstack' }, blocksTU(tb, ub, { labels: true }), h('b', { class: 'num' }, b)));
-  let st = 0;
-  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); st++;
-    if (st === 1) { vis.innerHTML = ''; vis.append(blocksTU(ta + tb, ua + ub, { labels: true })); vis.animate([{ transform: 'scale(.94)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.3,1.5,.5,1)' }); note.innerHTML = `สิบรวมกับสิบ: ${ta + tb} สิบ · หน่วยรวมกับหน่วย: ${ua + ub} หน่วย`; sfx.pop(3);
-      if (ua + ub >= 10) { btn.lastChild.textContent = 'รวม 10 หน่วยเป็น 1 สิบ (ทด)'; say(`หน่วยรวมกันได้ ${WORD[ua + ub]} หน่วย ครบสิบแล้ว`, true); return; } }
-    vis.innerHTML = ''; vis.append(blocksTU(Math.floor((a + b) / 10), (a + b) % 10, { labels: true })); if (st === 2) note.innerHTML = `10 หน่วยรวมเป็น <b>1 สิบ</b> ทดไปหลักสิบ → ${Math.floor((a + b) / 10)} สิบ ${(a + b) % 10} หน่วย`;
-    eq.fill(a + b); btn.remove(); sfx.ok(); say(`${thaiWords(a)} บวก ${thaiWords(b)} เท่ากับ ${thaiWords(a + b)}`, true); } }, icon('plus'), h('span', null, 'รวมกัน'));
-  return h('div', { class: 'colstack' }, vis, eq, note, btn);
+function addBlocksSim(a, b) { /* v203 (ผู้ใช้ขอ: แบบเมืองลบร้อย) เด็กนับเอง และกดทดเอง */
+  const carry = a % 10 + b % 10 >= 10, eq = eqRow([a, '+', b, '=', '?']), note = h('div', { class: 'cap tm-note', html: carry ? 'หน่วยรวมกัน<b>ครบ 10</b> → กด <b>รวม 10 หน่วย → 1 สิบ (ทด)</b> ก่อน แล้วนับสิบ นับหน่วย' : 'นับ<b>สิบ</b>รวมกับสิบ แล้วนับ<b>หน่วย</b>รวมกับหน่วย (แตะเพื่อติ๊กที่นับแล้ว)' });
+  const lab = addLab(a, b);
+  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const st = lab.state(); if (st.u >= 10) { note.innerHTML = `หน่วยมี <b>${st.u}</b> ครบ 10 แล้ว — กด <b>รวม 10 หน่วย → 1 สิบ</b> ก่อนนะ`; sfx.no(); return; }
+    eq.fill(a + b); note.innerHTML = bul(`ได้ <b>${st.t} สิบ</b> กับ <b>${st.u} หน่วย</b>`, carry ? '10 หน่วยรวมเป็น 1 สิบ = <b>การทด</b>' : '', `${a} + ${b} = <b class="hl">${a + b}</b>`); note.classList.add('fres'); btn.dataset.done = 1; btn.remove(); sfx.ok(); say(`${thaiWords(a)} บวก ${thaiWords(b)} เท่ากับ ${thaiWords(a + b)}`, true); } }, icon('check'), h('span', null, 'นับแล้ว ดูคำตอบ'));
+  return h('div', { class: 'colstack' }, lab, eq, note, btn);
 }
+const addStepsSim = (a, b) => h('div', { class: 'rowstack' }, addLab(a, b, { tip: 'ใช้บล็อกช่วยคิดได้' }), splitSim(a, b));
 /* step-by-step reveal of the split method */
 function splitSim(a, b) {
   const big = Math.max(a, b), sm = Math.min(a, b), rows = [];
@@ -1844,38 +1927,38 @@ const LESSONS_CH12 = [
   { id: 301, title: 'การบวกจำนวนสองหลักกับหนึ่งหลักที่ผลบวกไม่เกิน 100 ที่ไม่มีการทด', short: 'สองหลัก + หนึ่งหลัก', tone: 'sky',
     goal: 'หาผลบวกของจำนวนสองหลักกับจำนวนหนึ่งหลักที่ไม่มีการทด โดยบวกหลักหน่วยกับหลักหน่วย',
     teach: [
-      { t: 'ยินดีต้อนรับสู่ <b>เมืองบวกร้อย</b>! 35 + 4: นำ<b>หน่วยรวมกับหน่วย</b> สิบยังเท่าเดิม — กดรวมกัน', s: 'ยินดีต้อนรับสู่เมืองบวกร้อย สามสิบห้าบวกสี่ นำหน่วยรวมกับหน่วย สิบยังเท่าเดิม กดรวมกัน', v: el => el.append(addBlocksSim(35, 4)) },
-      { t: 'คิดทีละขั้น: แยก 65 เป็น 60 + 5 → บวกหน่วย 5 + 2 = 7 → รวม 60 + 7 = 67', s: 'คิดทีละขั้น แยกหกสิบห้า เป็นหกสิบบวกห้า บวกหน่วยห้าบวกสองเท่ากับเจ็ด รวมหกสิบบวกเจ็ดเท่ากับหกสิบเจ็ด', v: el => el.append(splitSim(65, 2)) }
+      { t: 'ยินดีต้อนรับสู่ <b>เมืองบวกร้อย</b>! คิด <b>65 + 2</b> ทีละขั้น: แยก 65 เป็น 60 + 5 → <b>บวกหน่วย</b> → รวมกับสิบ — กด “ทีละขั้น”', s: 'ยินดีต้อนรับสู่เมืองบวกร้อย คิดหกสิบห้าบวกสองทีละขั้น', v: el => el.append(addStepsSim(65, 2)) },
+      { t: '<b>ลองรวมเอง</b>: 35 + 4 — นับบล็อก <b>หน่วยรวมกับหน่วย</b> สิบยังเท่าเดิม', s: 'ลองรวมเอง สามสิบห้าบวกสี่ นับบล็อก หน่วยรวมกับหน่วย สิบยังเท่าเดิม', v: el => el.append(addBlocksSim(35, 4)) }
     ],
     game: () => { const p = shuffle(omit(WS12_A1, T12)), q = shuffle(omit(WS12_A1Q, T12)); return [Q.add100({ a: p[0][0], b: p[0][1], blocks: true }), Q.add100({ a: p[1][0], b: p[1][1], blocks: true }), Q.addSteps({ a: p[2][0], b: p[2][1] }), Q.addSteps({ a: p[3][0], b: p[3][1] }), ...q.slice(0, 3).map(([a, b]) => Q.add100({ a, b }))]; } },
   { id: 302, title: 'การบวกจำนวนสองหลักกับสองหลักที่ผลบวกไม่เกิน 100 ที่ไม่มีการทด', short: 'สองหลัก + สองหลัก', tone: 'coral',
     goal: 'หาผลบวกของจำนวนสองหลักกับจำนวนสองหลักที่ไม่มีการทด โดยบวกสิบกับสิบ และหน่วยกับหน่วย',
     teach: [
-      { t: '22 + 12: <b>สิบรวมกับสิบ</b> หน่วยรวมกับหน่วย — กดรวมกัน', s: 'ยี่สิบสองบวกสิบสอง สิบรวมกับสิบ หน่วยรวมกับหน่วย กดรวมกัน', v: el => el.append(addBlocksSim(22, 12)) },
-      { t: 'คิดทีละขั้น: 48 + 31 → 40 + 30 = 70 → 8 + 1 = 9 → 70 + 9 = 79', s: 'คิดทีละขั้น สี่สิบแปดบวกสามสิบเอ็ด', v: el => el.append(splitSim(48, 31)) }
+      { t: 'คิด <b>48 + 31</b> ทีละขั้น: <b>สิบบวกสิบ</b> หน่วยบวกหน่วย แล้วรวมกัน — กด “ทีละขั้น”', s: 'คิดสี่สิบแปดบวกสามสิบเอ็ดทีละขั้น', v: el => el.append(addStepsSim(48, 31)) },
+      { t: '<b>ลองรวมเอง</b>: 22 + 12 — นับ<b>สิบรวมกับสิบ</b> หน่วยรวมกับหน่วย', s: 'ลองรวมเอง ยี่สิบสองบวกสิบสอง', v: el => el.append(addBlocksSim(22, 12)) }
     ],
     game: () => { const p = shuffle(omit(WS12_A2, T12)), q = shuffle(omit(WS12_A2Q, T12)); return [Q.add100({ a: p[0][0], b: p[0][1], blocks: true }), Q.addSteps({ a: p[1][0], b: p[1][1] }), Q.addSteps({ a: p[2][0], b: p[2][1] }), Q.addSteps({ a: p[3][0], b: p[3][1] }), ...q.slice(0, 3).map(([a, b]) => Q.add100({ a, b }))]; } },
   { id: 303, title: 'การบวกจำนวนสองหลักกับหนึ่งหลักที่ผลบวกไม่เกิน 100 มีการทด', short: 'บวกมีการทด', tone: 'mint',
     goal: 'หาผลบวกที่หน่วยรวมกันได้ 10 หรือมากกว่า โดยรวม 10 หน่วยเป็น 1 สิบ (การทด)',
     teach: [
-      { t: '77 + 6: หน่วยรวมกันได้ 13 หน่วย <b>ครบ 10 หน่วยรวมเป็น 1 สิบ</b> เรียกว่า <b>การทด</b> — กดดูนะ', s: 'เจ็ดสิบเจ็ดบวกหก หน่วยรวมกันได้สิบสามหน่วย ครบสิบหน่วยรวมเป็นหนึ่งสิบ เรียกว่าการทด กดดูนะ', v: el => el.append(addBlocksSim(77, 6)) },
-      { t: 'คิดทีละขั้น: 87 + 5 → 7 + 5 = 12 → 80 + 12 = 92', s: 'คิดทีละขั้น แปดสิบเจ็ดบวกห้า เจ็ดบวกห้าเท่ากับสิบสอง แปดสิบบวกสิบสองเท่ากับเก้าสิบสอง', v: el => el.append(splitSim(87, 5)) }
+      { t: 'คิด <b>87 + 5</b> ทีละขั้น: 7 + 5 = 12 → 80 + 12 = 92 — กด “ทีละขั้น”', s: 'คิดแปดสิบเจ็ดบวกห้าทีละขั้น', v: el => el.append(addStepsSim(87, 5)) },
+      { t: '<b>ลองเอง</b>: 77 + 6 — หน่วยรวมกันได้ 13 <b>ครบ 10</b> กด <b>รวม 10 หน่วย → 1 สิบ</b> เรียกว่า <b>การทด</b>', s: 'ลองเอง เจ็ดสิบเจ็ดบวกหก หน่วยรวมกันได้สิบสาม ครบสิบ กดรวมสิบหน่วยเป็นหนึ่งสิบ เรียกว่าการทด', v: el => el.append(addBlocksSim(77, 6)) }
     ],
     game: () => { const p = shuffle(omit(WS12_C1, T12)), q = shuffle(WS12_VC.slice(0, 24)); return [Q.add100({ a: p[0][0], b: p[0][1], blocks: true }), Q.addSteps({ a: p[1][0], b: p[1][1] }), Q.addSteps({ a: p[2][0], b: p[2][1] }), Q.addSteps({ a: p[3][0], b: p[3][1] }), ...q.slice(0, 3).map(([a, b]) => Q.add100({ a, b }))]; } },
   { id: 304, title: 'การหาผลบวกโดยการตั้งบวกไม่มีการทด', short: 'ตั้งบวกไม่มีทด', tone: 'orange',
     goal: 'หาผลบวกโดยการตั้งบวก (หลักตรงกัน) บวกหลักหน่วยก่อน แล้วบวกหลักสิบ',
     teach: [
-      { t: '<b>ตั้งบวก</b>: เขียนให้หลักตรงกัน แล้ว<b>บวกหลักหน่วยก่อน</b> จากนั้นบวกหลักสิบ', s: 'ตั้งบวก เขียนให้หลักตรงกัน แล้วบวกหลักหน่วยก่อน จากนั้นบวกหลักสิบ', v: el => el.append(vertSim(35, 44)) },
-      { t: 'จำนวนหนึ่งหลักต้องอยู่ใน<b>หลักหน่วย</b> เสมอ: 3 + 22', s: 'จำนวนหนึ่งหลักต้องอยู่ในหลักหน่วยเสมอ', v: el => el.append(vertSim(3, 22)) }
+      { t: '<b>ตั้งบวก</b>: เขียนให้หลักตรงกัน แล้ว<b>บวกหลักหน่วยก่อน</b> จากนั้นบวกหลักสิบ', s: 'ตั้งบวก เขียนให้หลักตรงกัน แล้วบวกหลักหน่วยก่อน จากนั้นบวกหลักสิบ', v: el => el.append(colWalk([35, 44], '+')) },
+      { t: 'จำนวนหนึ่งหลักต้องอยู่ใน<b>หลักหน่วย</b> เสมอ: 3 + 22', s: 'จำนวนหนึ่งหลักต้องอยู่ในหลักหน่วยเสมอ', v: el => el.append(colWalk([3, 22], '+')) }
     ],
-    game: () => [...pair(omit(WS12_V, T12).slice(0, 15), 3).map(([a, b]) => Q.vertAdd({ a, b })), ...pair(omit(WS12_V, T12).slice(15), 3).map(([a, b]) => Q.vertAdd({ a, b }))] },
+    game: () => [...pair(omit(WS12_V, T12).slice(0, 15), 4).map(([a, b]) => Q.colW({ nums: [a, b], op: '+', plain: true, prompt: `หาผลบวก <b class="num">${a} + ${b}</b> โดยการตั้งบวก`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} โดยการตั้งบวก` })), ...pair(omit(WS12_V, T12).slice(15), 4).map(([a, b]) => Q.colW({ nums: [a, b], op: '+', plain: true, prompt: `หาผลบวก <b class="num">${a} + ${b}</b> โดยการตั้งบวก`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} โดยการตั้งบวก` }))] /* v203: กระดานตั้งบวกแบบชั้นอื่น */ },
   { id: 305, title: 'การหาผลบวกโดยการตั้งบวกที่มีการทด', short: 'ตั้งบวกมีทด', tone: 'lilac',
     goal: 'หาผลบวกโดยการตั้งบวกที่มีการทด: หลักหน่วยรวมได้ 10 ขึ้นไป ทด 1 ไปหลักสิบ',
     teach: [
-      { t: 'หลักหน่วยรวมได้ <b>10 ขึ้นไป</b>: เขียนหลักหน่วย แล้ว<b>ทด 1</b> ไว้บนหลักสิบ', s: 'หลักหน่วยรวมได้สิบขึ้นไป เขียนหลักหน่วย แล้วทดหนึ่งไว้บนหลักสิบ', v: el => el.append(vertSim(37, 47)) },
-      { t: 'อย่าลืมบวกตัวทดในหลักสิบด้วย: 47 + 53 = 100', s: 'อย่าลืมบวกตัวทดในหลักสิบด้วย สี่สิบเจ็ดบวกห้าสิบสาม เท่ากับหนึ่งร้อย', v: el => el.append(vertSim(47, 53)) }
+      { t: 'หลักหน่วยรวมได้ <b>10 ขึ้นไป</b>: เขียนหลักหน่วย แล้ว<b>ทด 1</b> ไว้บนหลักสิบ · ในเกม <b>แตะช่องเล็กเหนือหลักสิบ</b> เพื่อทดเอง', s: 'หลักหน่วยรวมได้สิบขึ้นไป เขียนหลักหน่วย แล้วทดหนึ่งไว้บนหลักสิบ ในเกมแตะช่องเล็กเหนือหลักสิบเพื่อทดเอง', v: el => el.append(colWalk([37, 47], '+')) },
+      { t: 'อย่าลืมบวกตัวทดในหลักสิบด้วย: 47 + 53 = 100', s: 'อย่าลืมบวกตัวทดในหลักสิบด้วย สี่สิบเจ็ดบวกห้าสิบสาม เท่ากับหนึ่งร้อย', v: el => el.append(colWalk([47, 53], '+')) }
     ],
-    game: () => [...pair(omit(WS12_VC, T12).slice(0, 24), 2).map(([a, b]) => Q.vertAdd({ a, b })), ...pair(omit(WS12_VC, T12).slice(24), 3).map(([a, b]) => Q.vertAdd({ a, b })), ...pair(omit(WS12_C2, T12), 1).map(([a, b]) => Q.vertAdd({ a, b })) /* v169: เดิม add100 ตอบอย่างเดียว ในบทตั้งบวก */, ...pair(omit(WS12_MIX, T12), 1).map(([a, b]) => Q.vertAdd({ a, b }))] }
+    game: () => [...pair(omit(WS12_VC, T12).slice(0, 24), 3).map(([a, b]) => Q.colW({ nums: [a, b], op: '+', prompt: `หาผลบวก <b class="num">${a} + ${b}</b> โดยการตั้งบวก`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} โดยการตั้งบวก` })), ...pair(omit(WS12_VC, T12).slice(24), 3).map(([a, b]) => Q.colW({ nums: [a, b], op: '+', prompt: `หาผลบวก <b class="num">${a} + ${b}</b> โดยการตั้งบวก`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} โดยการตั้งบวก` })), ...pair(omit(WS12_C2, T12), 1).map(([a, b]) => Q.colW({ nums: [a, b], op: '+', prompt: `หาผลบวก <b class="num">${a} + ${b}</b> โดยการตั้งบวก`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} โดยการตั้งบวก` })), ...pair(omit(WS12_MIX, T12), 1).map(([a, b]) => Q.colW({ nums: [a, b], op: '+', prompt: `หาผลบวก <b class="num">${a} + ${b}</b> โดยการตั้งบวก`, say: `หาผลบวก ${thaiWords(a)} บวก ${thaiWords(b)} โดยการตั้งบวก` }))] /* v203 (ผู้ใช้ขอ): ไม่ทดให้ — แตะช่องเล็กเหนือหลักสิบเพื่อทดเอง */ }
 ];
 const EXAM_CH12 = [
   { q: '35 + 4 = ☐', opts: ['39', '75', '31'], a: 0 },

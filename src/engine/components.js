@@ -33,9 +33,9 @@ function qHelp(body, q, isDone, o = {}) {
     has ? null : h('div', { class: 'qh-x', html: 'อ่านโจทย์ด้านบนอีกครั้ง หรือกดปุ่มลำโพงเพื่อฟังโจทย์<br>ลองทำดูก่อน — ถ้าตอบผิด ไก่น้อยจะบอกใบ้ให้' }));
   const btn = h('button', { class: 'qh-btn ia', 'aria-label': 'ขอคำแนะนำ', 'aria-expanded': 'false' }, '?'), ask = h('div', { class: 'qh-ask', 'aria-live': 'polite' }, 'มีอะไรถามมั้ย? กด ? ได้เลย');
   const wrap = h('div', { class: 'qh' + (o.teach ? ' qh-teach' : '') }, pop, ask, btn);
-  const close = () => { pop.hidden = true; btn.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); };
+  let auto = 0; const close = () => { clearTimeout(auto); pop.hidden = true; btn.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); };
   btn.onclick = e => { e.stopPropagation(); sfx.tap(); ask.classList.remove('on'); btn.classList.remove('wig');
-    if (!pop.hidden) { close(); return; } pop.hidden = false; btn.classList.add('on'); btn.setAttribute('aria-expanded', 'true'); say(pop.innerText.replace(/^คำแนะนำ\s*/, '').replace(/[✓→·]/g, ' '), true); };
+    if (!pop.hidden) { close(); return; } pop.hidden = false; btn.classList.add('on'); btn.setAttribute('aria-expanded', 'true'); clearTimeout(auto); auto = setTimeout(close, 3000); /* v203 (ผู้ใช้ขอ): คำแนะนำขึ้น 3 วินาทีแล้วหายไป */ say(pop.innerText.replace(/^คำแนะนำ\s*/, '').replace(/[✓→·]/g, ' '), true); };
   pop.addEventListener('click', e => { e.stopPropagation(); close(); });
   let sec = 0; const t = setInterval(() => { if (!wrap.isConnected) { clearInterval(t); return; } if (!body.isConnected || isDone()) { wrap.done(); return; }
     if (++sec % 30 || SET.askNudge === false || !pop.hidden) return; ask.classList.add('on'); btn.classList.add('wig'); setTimeout(() => { ask.classList.remove('on'); btn.classList.remove('wig'); }, 4500); }, 1000);
@@ -961,16 +961,17 @@ function longSVG(kind, L, col = 'yellow') {
     case 'crayonbox': s = box(1, 3, W - 2, 21, PAL.cookie[1], 3) + range(0, Math.max(2, Math.floor(W / 9)) - 1).map(i => `<rect x="${5 + i * 9}" y="6" width="6" height="15" rx="2" fill="${PAL[['red', 'orange', 'yellow', 'green', 'sky', 'lilac', 'pink'][i % 7]][1]}"/>`).join(''); break;
     case 'pencilcase': s = `<rect x="1" y="4" width="${W - 2}" height="19" rx="7" fill="url(#l-orange)" stroke="${PAL.orange[3]}" stroke-width="1.4"/><path d="M4 8 H${W - 6}" stroke="${PAL.red[2]}" stroke-width="2.4"/><rect x="${W - 9}" y="5" width="4" height="9" rx="2" fill="#B7AFCD"/>`; break;
     case 'brush': s = `<path d="M2 11 Q2 8 6 8 H${W * .7} V18 H6 Q2 18 2 15 Z" fill="url(#l-yellow)" stroke="${PAL.yellow[3]}" stroke-width="1.3"/><rect x="${W * .7}" y="9" width="${W * .1}" height="8" fill="#C9C4DA" stroke="#9790B0" stroke-width="1.2"/><path d="M${W * .8} 8 Q${W - 6} 6 ${W - 1} 13 Q${W - 6} 20 ${W * .8} 18 Z" fill="${PAL.cookie[2]}" stroke="${PAL.cookie[3]}" stroke-width="1.2"/>`; break;
-    case 'spatula': s = `<rect x="1" y="9" width="${W * .45}" height="9" rx="4.5" fill="#fff" stroke="#2B2550" stroke-width="1.4"/><path d="M${W * .45} 11 H${W * .7} V16 H${W * .45}" fill="#fff" stroke="#2B2550" stroke-width="1.4"/><path d="M${W * .7} 4 H${W - 6} Q${W - 1} 4 ${W - 1} 9 V18 Q${W - 1} 23 ${W - 6} 23 H${W * .7} Z" fill="#fff" stroke="#2B2550" stroke-width="1.4"/><path d="M${W * .74} 9 H${W - 6} M${W * .74} 13.5 H${W - 6} M${W * .74} 18 H${W - 6}" stroke="#2B2550" stroke-width="1.6" stroke-linecap="round"/>`; break;
-    case 'pan': s = `<rect x="1" y="5" width="${W * .3}" height="5" rx="2.5" fill="#fff" stroke="#2B2550" stroke-width="1.4"/><path d="M${W * .28} 4 H${W - 2} Q${W - 6} 22 ${(W * .28 + W) / 2} 22 Q${W * .32} 22 ${W * .28} 4 Z" fill="#fff" stroke="#2B2550" stroke-width="1.4"/>`; break;
-    case 'knife': s = `<rect x="1" y="5" width="${W * .22}" height="7" rx="3.5" fill="#fff" stroke="#2B2550" stroke-width="1.4"/><path d="M${W * .22} 3 H${W - 4} Q${W - 1} 3 ${W - 1} 6 V22 H${W * .26} Q${W * .22} 22 ${W * .22} 18 Z" fill="#fff" stroke="#2B2550" stroke-width="1.4"/>`; break;
-    case 'spoon': s = `<path d="M2 12 Q2 9 6 9.5 L${W * .7} 11 V15 L6 16.5 Q2 17 2 14 Z" fill="#fff" stroke="#2B2550" stroke-width="1.4"/><ellipse cx="${W * .7 + (W * .3) / 2}" cy="13" rx="${W * .15 - 1}" ry="8" fill="#fff" stroke="#2B2550" stroke-width="1.4"/>`; break;
+    /* v203 (ผู้ใช้ขอ): เครื่องครัวมีสีสัน — ด้ามไม้ ใบโลหะเงิน */
+    case 'spatula': s = `<rect x="1" y="9" width="${W * .45}" height="9" rx="4.5" fill="url(#l-cookie)" stroke="${PAL.cookie[3]}" stroke-width="1.3"/><circle cx="6" cy="13.5" r="1.6" fill="${PAL.cookie[3]}"/><path d="M${W * .45} 11.5 H${W * .7} V15.5 H${W * .45}" fill="#C9CFDB" stroke="#7D869C" stroke-width="1.2"/><path d="M${W * .7} 4 H${W - 6} Q${W - 1} 4 ${W - 1} 9 V18 Q${W - 1} 23 ${W - 6} 23 H${W * .7} Z" fill="#DDE3EE" stroke="#7D869C" stroke-width="1.3"/><path d="M${W * .74} 9 H${W - 6} M${W * .74} 13.5 H${W - 6} M${W * .74} 18 H${W - 6}" stroke="#8C95AB" stroke-width="1.6" stroke-linecap="round"/><path d="M${W * .72} 6 H${W - 8}" stroke="#fff" stroke-width="1.4" opacity=".8"/>`; break;
+    case 'pan': s = `<rect x="1" y="5" width="${W * .3}" height="6" rx="3" fill="url(#l-cookie)" stroke="${PAL.cookie[3]}" stroke-width="1.3"/><path d="M${W * .28} 4 H${W - 2} Q${W - 6} 22 ${(W * .28 + W) / 2} 22 Q${W * .32} 22 ${W * .28} 4 Z" fill="#4A4560" stroke="#2B2550" stroke-width="1.3"/><path d="M${W * .29} 4 H${W - 3}" stroke="#B9BFCC" stroke-width="2.6" stroke-linecap="round"/><path d="M${W * .4} 9 Q${W * .6} 14 ${W * .85} 9" stroke="#fff" stroke-width="1.4" fill="none" opacity=".35"/>`; break;
+    case 'knife': s = `<rect x="1" y="5" width="${W * .24}" height="8" rx="4" fill="url(#l-red)" stroke="${PAL.red[3]}" stroke-width="1.3"/><circle cx="${W * .07}" cy="9" r="1.3" fill="#fff"/><circle cx="${W * .16}" cy="9" r="1.3" fill="#fff"/><path d="M${W * .24} 3 H${W - 4} Q${W - 1} 3 ${W - 1} 6 V22 H${W * .28} Q${W * .24} 22 ${W * .24} 18 Z" fill="#DDE3EE" stroke="#7D869C" stroke-width="1.3"/><path d="M${W * .28} 6 H${W - 5}" stroke="#fff" stroke-width="1.6" opacity=".9"/>`; break;
+    case 'spoon': s = `<path d="M2 12 Q2 9 6 9.5 L${W * .7} 11 V15 L6 16.5 Q2 17 2 14 Z" fill="#DDE3EE" stroke="#7D869C" stroke-width="1.3"/><ellipse cx="${W * .7 + (W * .3) / 2}" cy="13" rx="${W * .15 - 1}" ry="8" fill="#DDE3EE" stroke="#7D869C" stroke-width="1.3"/><ellipse cx="${W * .7 + (W * .3) / 2 - 2}" cy="10.5" rx="${W * .08}" ry="2.6" fill="#fff" opacity=".85"/>`; break;
     case 'ribbon': s = box(1, 7, W - 2, 12, `url(#l-${col})`, 2); break;
     default: s = box(1, 6, W - 2, 14, `url(#l-${col})`, 6);
   }
   return `<svg viewBox="0 0 ${W} 26" preserveAspectRatio="none" class="longsvg" aria-hidden="true">${s}</svg>`;
 }
-const CLIP_SVG = `<svg viewBox="0 0 40 16" aria-hidden="true"><path d="M8 3 H32 Q38 3 38 8 Q38 13 32 13 H10 Q6 13 6 9.5 Q6 6.5 10 6.5 H30 Q33 6.5 33 8.5 Q33 10 30 10 H12" fill="none" stroke="#6B6488" stroke-width="2" stroke-linecap="round"/></svg>`;
+const CLIP_SVG = `<svg viewBox="0 0 40 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 2.5 H34 Q39 2.5 39 8 Q39 13.5 34 13.5 H5 Q1.5 13.5 1.5 9.6 Q1.5 6.2 5 6.2 H31 Q34.5 6.2 34.5 8.3 Q34.5 10.2 31 10.2 H8" fill="none" stroke="#6B6488" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`; /* v203 (ผู้ใช้ขอ): คลิปเต็มหน่วย วางติดกันไม่เว้นช่อง */
 /* horizontal length board: rows of objects starting at the same line, with a ruler or unit row */
 function lenBoard(items, o = {}) {
   const max = o.max || Math.max(...items.map(i => i.len)) + 1, w = h('div', { class: 'lenb' + (o.sm ? ' sm' : ''), style: { '--n': max } });
@@ -989,10 +990,16 @@ function ruler(max, o = {}) {
 function heightBoard(items, o = {}) {
   const max = o.max || Math.max(...items.map(i => i.h)) + 1, w = h('div', { class: 'hgtb u-' + (o.unit || 'box'), style: { '--n': max } });
   w.append(h('div', { class: 'hb-scale' }, ...range(1, max).map(k => h('span', { class: 'hb-u' }, o.unit === 'cm' ? h('b', null, k) : null)), o.unit === 'cm' ? h('b', { class: 'hb-0' }, 0) : null));
-  items.forEach((it, i) => { const fig = it.bottle ? h('span', { class: 'hb-fig bottle', style: { height: `calc(var(--u) * ${it.h})` }, html: bottleSVG(it.col) }) : h('span', { class: 'hb-fig', style: { height: `calc(var(--u) * ${it.h})` }, html: `<svg viewBox="${it.vb || '8 6 48 56'}" preserveAspectRatio="xMidYMax meet" aria-hidden="true">${ART[it.e] || SCENERY[it.e] || ''}</svg>` });
+  items.forEach((it, i) => { const T = artTight(it.e); const fig = it.bottle ? h('span', { class: 'hb-fig bottle', style: { height: `calc(var(--u) * ${it.h})` }, html: bottleSVG(it.col) }) : h('span', { class: 'hb-fig', style: { height: `calc(var(--u) * ${it.h})` }, html: `<svg viewBox="${it.vb || T.vb}" preserveAspectRatio="xMidYMax meet" aria-hidden="true">${T.raw}</svg>` }); /* v203 (ผู้ใช้ขอ): รูปเต็มสเกล ไม่มีเงา — ยอดตรงเส้นหน่วยพอดี */
     w.append(h('div', { class: 'hb-col', 'data-i': i }, fig, h('span', { class: 'hb-name' }, it.name))); if (o.guides) w.append(h('i', { class: 'hb-guide', style: { bottom: `calc(var(--u) * ${it.h} + var(--hb-base))` } })); });
   return w;
 }
+/* v203: an ART picture without its floor shadow, and the tight box around what is drawn (so a figure of height h units really is h units tall) */
+const ART_TIGHT = {}, SH_RE = /<ellipse [^>]*fill="#2B2550" opacity="\.1\d?"\/>/g;
+function artTight(key) { if (ART_TIGHT[key]) return ART_TIGHT[key]; const raw = String(ART[key] || (typeof SCENERY !== 'undefined' && SCENERY[key]) || '').replace(SH_RE, ''); let vb = '8 6 48 56';
+  try { const sv = document.createElementNS(SVGNS, 'svg'); sv.setAttribute('style', 'position:absolute;left:-9999px;top:0;width:64px;height:64px;visibility:hidden'); sv.innerHTML = raw; document.body.append(sv); const b = sv.getBBox(); sv.remove();
+    if (b.width > 1 && b.height > 1) vb = `${(b.x - .8).toFixed(2)} ${(b.y - .8).toFixed(2)} ${(b.width + 1.6).toFixed(2)} ${(b.height + 1.6).toFixed(2)}`; } catch (_) { }
+  return (ART_TIGHT[key] = { raw, vb }); }
 function bottleSVG(col) { const c = PAL[col]; return `<svg viewBox="0 0 30 100" preserveAspectRatio="none" aria-hidden="true"><rect x="10" y="0" width="10" height="8" rx="2" fill="${PAL.cookie[2]}"/><path d="M11 8 H19 V18 Q27 24 27 36 V94 Q27 99 22 99 H8 Q3 99 3 94 V36 Q3 24 11 18 Z" fill="${c[1]}" stroke="${c[3]}" stroke-width="1.4"/><path d="M7 40 V90" stroke="#fff" stroke-width="2.4" opacity=".55" stroke-linecap="round"/></svg>`; }
 
 /* =========================================================
@@ -1030,6 +1037,22 @@ function blockLab(a, o = {}) {
     else { S.cubes.splice(S.cubes.length - 10, 10); S.rods.splice(h0[2], 0, h0[1]); S.broke--; }
     sfx.tap(); done(); } }, icon('undo'), 'ย้อน');
   const w = h('div', { class: 'blab ia' }, area, h('div', { class: 'blab-bar' }, brk, undo), read, h('div', { class: 'blab-tip' }, o.tip || 'แตะบล็อกเพื่อเอาออก · หน่วยไม่พอ กด “กระจาย 1 สิบ”'));
+  w.addEventListener('click', e => e.stopPropagation()); w.state = st; paint(); return w;
+}
+/* v203 (ผู้ใช้ขอ: เมืองบวกร้อยแบบเดียวกับเมืองลบร้อย) — blocks of a and b together; the child taps to tick what was counted,
+   and presses “รวม 10 หน่วย → 1 สิบ (ทด)” when there are 10 ones or more. o.read: show the total (teaching pages only) */
+function addLab(a, b, o = {}) {
+  const S = { rods: [...range(1, Math.floor(a / 10)).map(() => ({ s: 'a' })), ...range(1, Math.floor(b / 10)).map(() => ({ s: 'b' }))], cubes: [...range(1, a % 10).map(() => ({ s: 'a' })), ...range(1, b % 10).map(() => ({ s: 'b' }))], hist: [] };
+  const area = h('div', { class: 'blab-area' }), read = o.read ? h('div', { class: 'blab-read' }) : null;
+  const st = () => ({ t: S.rods.length, u: S.cubes.length, sum: S.rods.length * 10 + S.cubes.length, carried: S.hist.filter(x => x[0] === 'c').length });
+  const piece = (p, kind) => h('button', { class: `blab-p ${kind} s${p.s}` + (p.k ? ' ticked' : ''), html: kind === 'rod' ? ROD_SVG : CUBE_SVG, onclick: e => { e.stopPropagation(); p.k = !p.k; sfx.tap(); paint(); } });
+  const paint = () => { area.innerHTML = '';
+    area.append(S.rods.length ? h('div', { class: 'blab-col' }, h('div', { class: 'blab-g rod' }, ...S.rods.map(p => piece(p, 'rod'))), h('small', null, 'สิบ')) : '', S.cubes.length ? h('div', { class: 'blab-col' }, h('div', { class: 'blab-g cube' }, ...S.cubes.map(p => piece(p, 'cube'))), h('small', null, 'หน่วย')) : '');
+    if (read) read.innerHTML = `รวม <b>${S.rods.length}</b> สิบ <b>${S.cubes.length}</b> หน่วย`; brk.disabled = S.cubes.length < 10; undo.disabled = !S.hist.length; o.onChange && o.onChange(st()); };
+  const brk = h('button', { class: 'btn sm info ia blab-brk', onclick: e => { e.stopPropagation(); if (S.cubes.length < 10) return; const ten = S.cubes.splice(0, 10); S.rods.push({ s: 'g' }); S.hist.push(['c', ten]); sfx.pop(4); say('ครบสิบหน่วย รวมเป็นหนึ่งสิบ ทดไปหลักสิบ', true); paint();
+    const r = [...area.querySelectorAll('.blab-p.rod')].pop(); r && r.animate([{ transform: 'translateY(18px) scale(.5)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 380, easing: 'cubic-bezier(.3,1.5,.5,1)' }); } }, icon('plus'), 'รวม 10 หน่วย → 1 สิบ (ทด)');
+  const undo = h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); const x = S.hist.pop(); if (!x) return; S.rods.pop(); S.cubes.unshift(...x[1]); sfx.tap(); paint(); } }, icon('undo'), 'ย้อน');
+  const w = h('div', { class: 'blab ia' }, area, h('div', { class: 'blab-bar' }, brk, undo), read, h('div', { class: 'blab-tip' }, o.tip || 'แตะบล็อกเพื่อนับ (ติ๊กไว้) · หน่วยครบ 10 กด “รวม 10 หน่วย”'));
   w.addEventListener('click', e => e.stopPropagation()); w.state = st; paint(); return w;
 }
 /* vertical addition layout: show = { ones, tens, carry } · q = 'ones' | 'tens' marks the asked cell */
