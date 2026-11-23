@@ -6,7 +6,7 @@
 const miN = n => (n < 0 ? '−' + (-n).toLocaleString('en-US') : n.toLocaleString('en-US'));
 const miP = n => (n < 0 ? `(${miN(n)})` : miN(n));
 /* v217 (ผู้ใช้ขอ: ให้มีสีสัน): จำนวนลบสีแดง จำนวนบวกสีฟ้า ศูนย์สีเข้ม — สีเดียวกับเส้นจำนวน */
-const miC = n => `<span class="num" style="color:${n < 0 ? '#E5505E' : n > 0 ? '#2F86C2' : '#2B2550'}">${miN(n)}</span>`;
+const miC = n => `<span class="num">${miN(n)}</span>`; /* v219 (ผู้ใช้ขอ): ตัวเลข ม.1 สีดำทั้งหมด */
 /* speech: read signs and operators the Thai way */
 const miSay = t => String(t).replace(/<[^>]+>/g, ' ').replace(/\|([^|]+)\|/g, ' ค่าสัมบูรณ์ของ $1 ').replace(/[()[\]]/g, ' ').replace(/−/g, ' ลบ ').replace(/×/g, ' คูณ ').replace(/÷/g, ' หาร ').replace(/\+/g, ' บวก ')
   .replace(/=/g, ' เท่ากับ ').replace(/[☐□]/g, ' ช่องว่าง ').replace(/°C/g, ' องศาเซลเซียส').replace(/</g, ' น้อยกว่า ').replace(/>/g, ' มากกว่า ').replace(/\s+/g, ' ').trim();
@@ -53,19 +53,19 @@ function miAns(ctx, expected, o = {}) {
 function miLine(lo, hi, o = {}) {
   const W = 760, pad = 30, H = o.h || 96, y0 = o.y || 54, n = hi - lo, st = (W - 2 * pad) / n, X = v => pad + (v - lo) * st, every = n > 24 ? 5 : n > 16 ? 2 : 1;
   let s = `<path d="M${pad - 22} ${y0} H${W - pad + 22}" stroke="#2B2550" stroke-width="2.6"/><path d="M${pad - 22} ${y0} l10 -6 v12 z M${W - pad + 22} ${y0} l-10 -6 v12 z" fill="#2B2550"/>`;
-  for (let v = lo; v <= hi; v++) { const x = X(v), big = v % every === 0, c = v < 0 ? '#E5505E' : v > 0 ? '#2F86C2' : '#2B2550';
+  for (let v = lo; v <= hi; v++) { const x = X(v), big = v % every === 0, c = '#2B2550';
     s += `<path d="M${x} ${y0 - (big ? 9 : 5)} V${y0 + (big ? 9 : 5)}" stroke="${c}" stroke-width="${v === 0 ? 3 : 2}"/>`;
-    if (big && !(o.hideLabels || []).includes(v)) s += `<text x="${x}" y="${y0 + 32}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="${v === 0 ? 900 : 800}" font-size="${n > 20 ? 15 : 18}" fill="${c}">${miN(v)}</text>`; }
+    if (big && !(o.hideLabels || []).includes(v)) s += `<text x="${x}" y="${y0 + 36}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="${v === 0 ? 900 : 800}" font-size="${n > 20 ? 20 : 23}" fill="${c}">${miN(v)}</text>`; }
   const el = h('div', { class: 'mi-nl qsig-skip' + (o.tap || o.drag ? ' ia' : '') + (o.drag ? ' drag' : ''), html: `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><g class="mi-hi"></g>${s}<g class="mi-lay"></g></svg>` });
   const svg = el.firstChild, lay = svg.querySelector('.mi-lay'), hiL = svg.querySelector('.mi-hi');
   Object.assign(el, { X, lo, hi, y0, lay,
     add: (str, back) => { (back ? hiL : lay).insertAdjacentHTML('beforeend', str); },
     clear: () => { lay.innerHTML = ''; hiL.innerHTML = ''; },
-    dot: (v, col = '#FF7B86', lab, cls = '') => lay.insertAdjacentHTML('beforeend', `<g class="mi-dot ${cls}"><circle cx="${X(v)}" cy="${y0}" r="10" fill="${col}" stroke="#fff" stroke-width="3"/>${lab ? `<text x="${X(v)}" y="${y0 - 18}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="18" fill="${col}">${lab}</text>` : ''}</g>`),
+    dot: (v, col = '#FF7B86', lab, cls = '') => lay.insertAdjacentHTML('beforeend', `<g class="mi-dot ${cls}"><circle cx="${X(v)}" cy="${y0}" r="10" fill="${col}" stroke="#fff" stroke-width="3"/>${lab ? `<text x="${X(v)}" y="${y0 - 18}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="22" fill="#2B2550">${lab}</text>` : ''}</g>`),
     arc: (a, b, col = '#F5A742', lab) => { const xa = X(a), xb = X(b), mx = (xa + xb) / 2, hgt = Math.min(46, 16 + Math.abs(xb - xa) * .25), d = xb > xa ? -1 : 1;
-      lay.insertAdjacentHTML('beforeend', `<g class="mi-arc"><path d="M${xa} ${y0 - 4} Q${mx} ${y0 - 4 - hgt * 2} ${xb} ${y0 - 4}" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/><path d="M${xb} ${y0 - 4} l${d * 9} -6 l${d * 2} 10 z" fill="${col}"/>${lab ? `<text x="${mx}" y="${y0 - 10 - hgt}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" font-size="15" fill="${col}">${lab}</text>` : ''}</g>`); },
+      lay.insertAdjacentHTML('beforeend', `<g class="mi-arc"><path d="M${xa} ${y0 - 4} Q${mx} ${y0 - 4 - hgt * 2} ${xb} ${y0 - 4}" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/><path d="M${xb} ${y0 - 4} l${d * 9} -6 l${d * 2} 10 z" fill="${col}"/>${lab ? `<text x="${mx}" y="${y0 - 10 - hgt}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" font-size="18" fill="#2B2550">${lab}</text>` : ''}</g>`); },
     span: (a, b, col = '#4FD1A1', lab) => { const xa = X(Math.min(a, b)), xb = X(Math.max(a, b)), yy = y0 + 44;
-      lay.insertAdjacentHTML('beforeend', `<g class="mi-span"><path d="M${xa} ${yy - 6} V${yy} H${xb} V${yy - 6}" fill="none" stroke="${col}" stroke-width="3"/>${lab ? `<text x="${(xa + xb) / 2}" y="${yy + 20}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="17" fill="${col}">${lab}</text>` : ''}</g>`); } });
+      lay.insertAdjacentHTML('beforeend', `<g class="mi-span"><path d="M${xa} ${yy - 6} V${yy} H${xb} V${yy - 6}" fill="none" stroke="${col}" stroke-width="3"/>${lab ? `<text x="${(xa + xb) / 2}" y="${yy + 20}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="19" fill="#2B2550">${lab}</text>` : ''}</g>`); } });
   const at = ev => { const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W; return Math.max(lo, Math.min(hi, Math.round((x - pad) / st + lo))); };
   if (o.tap) svg.addEventListener('click', ev => { ev.stopPropagation(); o.tap(at(ev), el); });
   if (o.drag) { let down = false; svg.addEventListener('pointerdown', ev => { down = true; svg.setPointerCapture && svg.setPointerCapture(ev.pointerId); o.drag(at(ev), el, true); });
@@ -85,7 +85,7 @@ function miSeaSim() {
   const H = 300, top = 20, lvl = 10, U = (H - 2 * top) / 20, Y = v => top + (lvl - v) * U; let v = 6; const seen = new Set();
   const out = fNote();
   const svgF = () => { let s = `<rect x="0" y="0" width="420" height="${Y(0)}" fill="#E4F4FD"/><rect x="0" y="${Y(0)}" width="420" height="${H - Y(0)}" fill="#7FCCEE"/><path d="M0 ${Y(0)} q30 -6 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#fff" stroke-width="3"/>`;
-    for (let k = -10; k <= 10; k++) { const y = Y(k); s += `<path d="M60 ${y} H${k % 5 === 0 ? 80 : 72}" stroke="#2B2550" stroke-width="${k === 0 ? 3 : 1.6}"/>`; if (k % 2 === 0) s += `<text x="52" y="${y + 5}" text-anchor="end" font-family="Nunito,sans-serif" font-weight="800" font-size="15" fill="${k < 0 ? '#C23C4B' : k > 0 ? '#2F6FA0' : '#2B2550'}">${miN(k)}</text>`; }
+    for (let k = -10; k <= 10; k++) { const y = Y(k); s += `<path d="M60 ${y} H${k % 5 === 0 ? 80 : 72}" stroke="#2B2550" stroke-width="${k === 0 ? 3 : 1.6}"/>`; if (k % 2 === 0) s += `<text x="52" y="${y + 5}" text-anchor="end" font-family="Nunito,sans-serif" font-weight="800" font-size="15" fill="#2B2550">${miN(k)}</text>`; }
     s += `<path d="M66 ${Y(10)} V${Y(-10)}" stroke="#2B2550" stroke-width="2"/><text x="400" y="${Y(0) - 8}" text-anchor="end" font-size="14" font-weight="700" fill="#1E5A7A">ระดับน้ำ = 0</text>`;
     const who = v >= 0 ? `<g transform="translate(232 ${Y(v) - 34}) scale(1.1)">${SCENERY.duck}</g>` : `<g transform="translate(240 ${Y(v) - 30}) scale(.9)">${ART.fish}</g>`;
     s += `<path d="M90 ${Y(v)} H250" stroke="#F5A742" stroke-width="2.4" stroke-dasharray="6 5"/><circle cx="66" cy="${Y(v)}" r="8" fill="#F5A742" stroke="#fff" stroke-width="2.5"/>${who}`;

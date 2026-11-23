@@ -4069,8 +4069,8 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 
 /* ===== ม.1 integer kit (grades/m1/m1i.js) ===== */
 .mi-x{display:inline-flex;align-items:center;flex-wrap:wrap;gap:.18em;font-weight:800}
-.mi-x .mi-op,.mi-op{color:var(--sky-2,#2F86C2);font-weight:900}
-.mi-pos{color:#2F86C2}.mi-neg{color:#E5505E}
+.mi-x .mi-op,.mi-op{color:var(--ink);font-weight:900}
+.mi-pos,.mi-neg{color:var(--ink)} /* v219: ตัวเลขสีดำทั้งหมด */
 .mi-ans .mi-ansrow{display:flex;align-items:center;gap:10px}
 .mi-unit{font-size:20px}
 .mi-nl{width:min(760px,92cqw);touch-action:none}
@@ -4101,20 +4101,38 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .mi-cards{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:min(860px,94cqw)}
 .mi-card.fc{position:relative;width:clamp(150px,18cqw,190px);height:clamp(96px,11cqw,116px);padding:0;perspective:600px;background:transparent;box-shadow:none}
 .mi-card.fc > span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:var(--r-md);backface-visibility:hidden;transition:transform .45s var(--ease);box-shadow:var(--e2);padding:6px;font-size:clamp(16px,2cqw,20px);line-height:1.3}
-.mi-card.fc .f{background:linear-gradient(180deg,#E4F4FD,#CFEAF8);font-weight:900;color:#1E5A7A}
+.mi-card.fc .f{background:linear-gradient(180deg,#E4F4FD,#CFEAF8);font-weight:900;color:var(--ink)}
 .mi-card.fc .b{background:#fff;transform:rotateY(180deg)}
 .mi-card.fc.flip .f{transform:rotateY(180deg)}.mi-card.fc.flip .b{transform:rotateY(360deg)}
 .mi-flip .mi-tok{padding:2px 10px;border-radius:12px;font-weight:900}
 .mi-flip button.mi-tok{background:var(--surface);box-shadow:var(--e1),0 0 0 3px #FFD45C;font-size:inherit}
-.mi-flip button.mi-tok.done{box-shadow:var(--e1),0 0 0 3px #4FD1A1;color:#2F86C2}
+.mi-flip button.mi-tok.done{box-shadow:var(--e1),0 0 0 3px #4FD1A1;color:var(--ink)}
 .mi-flip .mi-tok.q{color:var(--coral)}
 .mi-ghost{opacity:.35}
 .mi-pat{display:flex;flex-direction:column;gap:6px}
 .mi-prow{display:flex;justify-content:space-between;gap:24px;min-width:260px;padding:6px 16px;border-radius:var(--r-md);background:var(--surface);box-shadow:var(--e1);font-size:clamp(18px,2.2cqw,24px)}
 .mi-prow b{color:var(--coral)}
-.mi-prow.on b{color:#2F86C2}.mi-prow.mk.on{box-shadow:var(--e1),0 0 0 3px #FFD45C}
+.mi-prow.on b{color:var(--ink)}.mi-prow.mk.on{box-shadow:var(--e1),0 0 0 3px #FFD45C}
 
 /* v215 ม.ต้น keypad: 1–9 0 . − / ‹ ✓ (4 columns) */
 .keypad.mi-kp{grid-template-columns:repeat(4,1fr)}
 .keypad.mi-kp .btn.sym{color:var(--ink,#2B2550);font-size:32px} /* v216 (ผู้ใช้ขอ): − / . สีดำเหมือนตัวเลข */
 .keypad.mi-kp .btn.ok2{grid-column:span 2;width:auto}
+/* v219 (ผู้ใช้ขอ): ม.1 พื้นที่เหลือเยอะ — โจทย์ คำตอบ ปุ่มตัวเลข ตัวใหญ่ขึ้น · ตัวเลขสีดำ */
+body[data-world=river] .stage-card .tutor .speech{font-size:clamp(24px,2.8cqw,32px)}
+body[data-world=river] .qbody .fbig{font-size:clamp(40px,6cqw,68px)}
+body[data-world=river] .qbody .opt{font-size:clamp(24px,3cqw,36px);min-height:clamp(76px,9cqw,96px);padding:10px 26px;white-space:nowrap}
+body[data-world=river] .qbody .opt.txt{max-width:none;justify-content:center;text-align:center}
+body[data-world=river] .exam-card .xqt{font-size:clamp(26px,3cqw,34px)}
+body[data-world=river] .exam-card .xopts{gap:16px}
+body[data-world=river] .exam-card .xopt{min-height:clamp(80px,9cqw,104px)}
+body[data-world=river] .exam-card .xopt .xt{font-size:clamp(24px,3cqw,38px)}
+body[data-world=river] .qbody .storybox{font-size:clamp(20px,2.6cqw,28px)}
+body[data-world=river] .mi-ans .ans-slot{min-width:clamp(130px,15cqw,180px);height:clamp(100px,11cqw,124px);font-size:clamp(64px,7cqw,84px)}
+body[data-world=river] .mi-ans .ans-slot.filled{color:var(--ink)}
+body[data-world=river] .keypad.mi-kp{gap:12px}
+body[data-world=river] .keypad.mi-kp .btn{width:clamp(70px,8cqw,90px);min-height:clamp(62px,7cqw,76px);font-size:clamp(30px,3.4cqw,38px)}
+body[data-world=river] .keypad.mi-kp .btn.ok2{width:auto}
+body[data-world=river] .keypad.mi-kp .btn .ic{width:30px;height:30px}
+body[data-world=river] .qbody .mi-nl{width:min(900px,96cqw)}
+body[data-world=river] .qbody .opt .mi-x{flex-wrap:nowrap;white-space:nowrap}
