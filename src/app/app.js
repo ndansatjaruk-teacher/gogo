@@ -11,7 +11,7 @@ let backHandler = null;
 (function initBack() { try { history.replaceState({ nl: 1 }, ''); history.pushState({ nl: 2 }, ''); } catch (_) {}
   addEventListener('popstate', () => { try { history.pushState({ nl: 2 }, ''); } catch (_) {} if ($('.modal-bg')) { $('.modal-bg').remove(); return; } if (backHandler) backHandler(); }); })();
 /* world backdrop: every screen (map, lesson, game, boss) sits in the world of its grade */
-const WORLD_OF = c => c ? (c.theme && c.theme.river ? 'river' : c.theme && c.theme.desert ? 'desert' : c.theme && c.theme.mountain ? 'mountain' : c.theme && c.theme.cave ? 'cave' : c.theme && c.theme.jungle ? 'jungle' : c.theme && c.theme.beach ? 'beach' : 'city') : 'city';
+const WORLD_OF = c => c ? (c.theme && c.theme.meadow ? 'meadow' : c.theme && c.theme.river ? 'river' : c.theme && c.theme.desert ? 'desert' : c.theme && c.theme.mountain ? 'mountain' : c.theme && c.theme.cave ? 'cave' : c.theme && c.theme.jungle ? 'jungle' : c.theme && c.theme.beach ? 'beach' : 'city') : 'city';
 function setWorld(w) {
   if (document.body.dataset.world === w) return; document.body.dataset.world = w;
   let el = document.getElementById('world'); if (!el) { el = h('div', { id: 'world', 'aria-hidden': 'true' }); document.body.prepend(el); }
@@ -20,6 +20,7 @@ function setWorld(w) {
 function worldSVG(w) {
   const sv = (b, vb = '0 0 1600 1000') => `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice">${b}${lifeLayer(w, 1600, 1000, 'bg')}</svg>`;
   if (w === 'river') return sv(rvWorldBG()); /* ม.1 (engine/river.js) */
+  if (w === 'meadow') return sv(mdWorldBG()); /* ม.3 (engine/meadow.js) */
   if (w === 'desert') { let b = `<defs><radialGradient id="wd-sun"><stop offset="0" stop-color="#FFF3B0"/><stop offset=".6" stop-color="#FFD45C"/><stop offset="1" stop-color="#FFB347" stop-opacity="0"/></radialGradient></defs>`;
     b += `<circle cx="1300" cy="170" r="200" fill="url(#wd-sun)" opacity=".7"/><circle cx="1300" cy="170" r="70" fill="#FFE27A"/>`;
     const dune = (y, a, c, op) => `<path d="M0 1000 V${y} Q${200 + a} ${y - 70} 420 ${y - 10} T860 ${y - 20} T1260 ${y - 6} T1600 ${y - 30} V1000 Z" fill="${c}" opacity="${op}"/>`;
@@ -200,13 +201,13 @@ function showMap(cityId) {
     zoomBtn(), h('button', { class: 'ibtn', 'aria-label': 'ตั้งค่า', onclick: showSettings }, icon('gear')));
   const wrap = h('div', { class: 'mapwrap' }); stage.append(head, h('div', { class: 'citywrap' }, gradeTabs, tabs), wrap, h('div', { class: 'discl' }, 'เกมฝึกคณิตที่จัดทำขึ้นเอง · ไม่ใช่สื่อทางการของ สสวท.')); SAVE['lastCity' + city.grade] = city.id;
   requestAnimationFrame(() => { const on = tabs.querySelector('.ctab.on'); if (on && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft = on.offsetLeft - (tabs.clientWidth - on.offsetWidth) / 2; });
-  stage.classList.toggle('beach', !!city.theme.beach); stage.classList.toggle('jungle', !!city.theme.jungle); stage.classList.toggle('cave', !!city.theme.cave); stage.classList.toggle('mountain', !!city.theme.mountain); stage.classList.toggle('desert', !!city.theme.desert); stage.classList.toggle('river', !!city.theme.river);
+  stage.classList.toggle('beach', !!city.theme.beach); stage.classList.toggle('jungle', !!city.theme.jungle); stage.classList.toggle('cave', !!city.theme.cave); stage.classList.toggle('mountain', !!city.theme.mountain); stage.classList.toggle('desert', !!city.theme.desert); stage.classList.toggle('meadow', !!city.theme.meadow); stage.classList.toggle('river', !!city.theme.river);
   const W = Math.min(1040, stage.clientWidth) - 32;
   const MTN = !!city.theme.mountain; // mountain: climb from the bottom terrace up to the summit
   /* ป.6 mountains: the boss stands right on the summit (ผู้ใช้ขอ: ด่านบอสอยู่บนยอดเขาพอดี) — the other levels climb the terraces */
   const SUMMIT = MTN && n > 1 && items[n - 1].L.boss, nR = SUMMIT ? n - 1 : n;
   const perRow = W < 560 ? 2 : W < 860 ? 3 : 4, rows = Math.ceil(nR / perRow), ROWH = W < 560 ? 200 : 190;
-  const padX = W < 560 ? 70 : W >= 860 ? 140 : 104, top0 = MTN ? (SUMMIT ? 330 : 250) : city.theme.beach || city.theme.jungle || city.theme.cave || city.theme.desert || city.theme.river ? 150 : 120;
+  const padX = W < 560 ? 70 : W >= 860 ? 140 : 104, top0 = MTN ? (SUMMIT ? 330 : 250) : city.theme.beach || city.theme.jungle || city.theme.cave || city.theme.desert || city.theme.river || city.theme.meadow ? 150 : 120;
   const H = MTN ? top0 + (rows - 1) * ROWH + 150 : rows * ROWH + 170 + (city.theme.jungle ? 110 : 0), rowY = r => top0 + (MTN ? rows - 1 - r : r) * ROWH, dY = MTN ? -1 : 1;
   const pts = items.map((x, k) => { if (SUMMIT && k === n - 1) return [W / 2, Math.max(40, rowY(rows - 1) - 210) + 40]; const r = Math.floor(k / perRow), c0 = k % perRow, c = r % 2 ? perRow - 1 - c0 : c0; return [padX + (perRow > 1 ? c / (perRow - 1) : .5) * (W - padX * 2), rowY(r)]; });
   const way = []; const idxOf = [];
@@ -321,7 +322,15 @@ function showMap(cityId) {
       t += `<g opacity=".55"><path d="M${px} ${py} h${pw} l-18 44 h-${pw} z" fill="#A6D77E"/>${[0, 1, 2].map(k => `<path d="M${px - k * 6} ${py + 12 + k * 12} h${pw}" stroke="#7FB85A" stroke-width="2"/>`).join('')}</g>`; }
     hills = t;
   }
-  const road = river ? { shadow: '#1E5A7A', edge: '#E3CF98', surf: '#6EC3EC' } : desert ? { shadow: '#6B3F14', edge: '#B97A3A', surf: '#F4D49A', dots: true } : mountain ? { shadow: '#3B2A1A', edge: '#A98A66', surf: '#E8D2AC', dots: true } : cave ? { shadow: '#000', edge: '#5B4F78', surf: '#8D80A8', seam: '#6E6290', dots: true } : beach ? { shadow: '#5A3D1A', edge: '#B98654', surf: '#E2B57F', seam: '#C69361', dots: false } : jungle ? { shadow: '#2E4A1F', edge: '#B08455', surf: '#DDB985', dots: true } : { shadow: '#2B2550', edge: '#E6D3AC', surf: '#F8ECD2', dots: true };
+  const meadow = !!th.meadow;
+  if (meadow) { /* v228 ม.3: ทุ่งดอกไม้ — แถบดอกทิวลิปสลับสี เส้นทางด่านเป็นทางเดินในสวน */
+    let t = `<rect x="0" y="0" width="${W}" height="${H - 20}" rx="22" fill="url(#mdLandG)"/>`; const FC = ['#FF8A9A', '#FFC34D', '#C9A0FF', '#FFFFFF'];
+    for (let r = 0; r < rows; r++) { const y = top0 + r * ROWH + ROWH * .5, left = r % 2 === 0;
+      t += `<ellipse cx="${left ? W * .16 : W * .84}" cy="${y}" rx="${W * .3}" ry="${ROWH * .42}" fill="${th.hills[r % 3]}" opacity=".8"/>`;
+      for (let k = 0; k < 2; k++) { const yy = y + ROWH * .1 + k * 14, x0 = left ? W * .56 : W * .08, x1 = x0 + W * .3, c = FC[(r + k) % 4]; t += `<path d="M${x0} ${yy} Q${(x0 + x1) / 2} ${yy - 8} ${x1} ${yy}" stroke="${c}" stroke-width="9" stroke-linecap="round" fill="none" opacity=".75"/>`; for (let x = x0 + 6; x < x1; x += 18) t += `<circle cx="${x}" cy="${yy - 2 - Math.sin((x - x0) / (x1 - x0) * Math.PI) * 4}" r="3.4" fill="${c}" stroke="#fff" stroke-width="1"/>`; } }
+    hills = t;
+  }
+  const road = meadow ? { shadow: '#5A4020', edge: '#C9A06A', surf: '#F2DEB0', dots: true } : river ? { shadow: '#1E5A7A', edge: '#E3CF98', surf: '#6EC3EC' } : desert ? { shadow: '#6B3F14', edge: '#B97A3A', surf: '#F4D49A', dots: true } : mountain ? { shadow: '#3B2A1A', edge: '#A98A66', surf: '#E8D2AC', dots: true } : cave ? { shadow: '#000', edge: '#5B4F78', surf: '#8D80A8', seam: '#6E6290', dots: true } : beach ? { shadow: '#5A3D1A', edge: '#B98654', surf: '#E2B57F', seam: '#C69361', dots: false } : jungle ? { shadow: '#2E4A1F', edge: '#B08455', surf: '#DDB985', dots: true } : { shadow: '#2B2550', edge: '#E6D3AC', surf: '#F8ECD2', dots: true };
   const roadSvg = river ? `
     <path d="${dAll}" fill="none" stroke="${road.shadow}" stroke-opacity=".14" stroke-width="66" stroke-linecap="round" transform="translate(0 6)" filter="url(#roadBlur)"/>
     <path d="${dAll}" fill="none" stroke="#C9B47C" stroke-width="64" stroke-linecap="round"/>
@@ -349,7 +358,7 @@ function showMap(cityId) {
     <path d="${dAll}" fill="none" stroke="${road.shadow}" stroke-opacity=".12" stroke-width="46" stroke-linecap="round" transform="translate(0 7)" filter="url(#roadBlur)"/>
     <path d="${dAll}" fill="none" stroke="${road.edge}" stroke-width="42" stroke-linecap="round"/>
     <path d="${dAll}" fill="none" stroke="${road.surf}" stroke-width="34" stroke-linecap="round"/>
-    ${dDone ? `<path class="road-done" d="${dDone}" fill="none" stroke="${cave ? '#C9A85A' : jungle ? '#F0CF8E' : desert ? '#FFE08A' : '#FFE7A3'}" stroke-width="34" stroke-linecap="round"/>` : ''}
+    ${dDone ? `<path class="road-done" d="${dDone}" fill="none" stroke="${cave ? '#C9A85A' : jungle ? '#F0CF8E' : desert ? '#FFE08A' : meadow ? '#FFE9A8' : '#FFE7A3'}" stroke-width="34" stroke-linecap="round"/>` : ''}
      <path d="${dAll}" fill="none" stroke="${cave ? '#FFD45C' : jungle ? '#F3E2C2' : '#fff'}" stroke-opacity="${cave ? .55 : .85}" stroke-width="${jungle ? 10 : 6}" stroke-linecap="round" stroke-dasharray="0 24"/>
     ${dDone ? `<path d="${dDone}" fill="none" stroke="#F5B52E" stroke-width="6" stroke-linecap="round" stroke-dasharray="0 24"/>` : ''}`;
   const land = `<svg class="land" viewBox="0 0 ${W} ${H}" aria-hidden="true">
@@ -361,11 +370,11 @@ function showMap(cityId) {
       <radialGradient id="caveGlow1"><stop offset="0" stop-color="#C9A6FF" stop-opacity=".5"/><stop offset="1" stop-color="#C9A6FF" stop-opacity="0"/></radialGradient>
       <linearGradient id="sandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FCE7BE"/><stop offset=".55" stop-color="#F6D7A0"/><stop offset="1" stop-color="#EFC783" stop-opacity=".9"/></linearGradient>
       <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9FD0F5"/><stop offset=".6" stop-color="#D6ECFB"/><stop offset="1" stop-color="#EAF5FC"/></linearGradient>${mountain ? terDefs : ''}
-      <linearGradient id="rvLandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9EFC2"/><stop offset=".6" stop-color="#C8E7AA"/><stop offset="1" stop-color="#B9DE98"/></linearGradient><linearGradient id="rvWaterG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8BD5F2"/><stop offset="1" stop-color="#5BB5E6"/></linearGradient>
+      <linearGradient id="mdLandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3F3CC"/><stop offset=".6" stop-color="#CFEAB2"/><stop offset="1" stop-color="#BFE29C"/></linearGradient><linearGradient id="rvLandG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9EFC2"/><stop offset=".6" stop-color="#C8E7AA"/><stop offset="1" stop-color="#B9DE98"/></linearGradient><linearGradient id="rvWaterG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8BD5F2"/><stop offset="1" stop-color="#5BB5E6"/></linearGradient>
       <linearGradient id="seaG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5DB8E8"/><stop offset=".55" stop-color="#8FD0F0"/><stop offset="1" stop-color="#C4EAF7"/></linearGradient>
       ${beach ? `<clipPath id="seaClip"><path d="${seaD}"/></clipPath><clipPath id="landClip"><path d="${landD}"/></clipPath>` : ''}</defs>
     ${hills}
-    ${lifeLayer(river ? 'river' : beach ? 'beach' : jungle ? 'jungle' : cave ? 'cave' : desert ? 'desert' : mountain ? 'mountain' : 'city', W, H, 'map')}
+    ${lifeLayer(meadow ? 'meadow' : river ? 'river' : beach ? 'beach' : jungle ? 'jungle' : cave ? 'cave' : desert ? 'desert' : mountain ? 'mountain' : 'city', W, H, 'map')}
     ${roadSvg}
     ${jungle ? canopy : ''}
     ${cave ? caveTop : ''}
@@ -375,14 +384,15 @@ function showMap(cityId) {
   const deco = (k, x, y, sz, sway) => map.append(h('div', { class: 'scenery' + (sway ? ' sway' : ''), style: { left: x + 'px', top: y + 'px', '--sz': sz + 'px' }, html: sceneryHTML(k) }));
   const inSea = (x, y) => beach && y < shoreAt(x) - 6;
   for (let k = 0; k < n - 1; k++) { const a = pts[k], b = pts[k + 1]; if (a[1] !== b[1]) continue; const x = (a[0] + b[0]) / 2, y = a[1] - 34;
+    if (meadow) { const wk = MD_PATH[k % MD_PATH.length]; deco(wk, x, y + 50, wk === 'mdbee' ? 34 : 40, false); deco(th.small[k % th.small.length], x, y - 14, 46, false); continue; }
     if (river) { const wk = RV_WATER[k % RV_WATER.length]; deco(wk, x, y + 52, wk === 'kayak' || wk === 'croc' ? 50 : 40, false); deco(th.small[k % th.small.length], x, y - 14, 44, false); continue; }
     if (inSea(x, y)) deco(['fishjump', 'lifebuoy', 'boat'][k % 3], x, y + (k % 3 === 2 ? 4 : 10), k % 3 === 2 ? 56 : 44, false); else deco(th.small[k % th.small.length], x, y, (k % 3 === 2 ? 52 : 40) + (jungle || cave || mountain || desert ? 12 : 0), false); }
   if (padX >= 120) for (let r = 0; r < rows; r++) {
     const turnRight = r % 2 === 0, y = rowY(r) + dY * ROWH * .52, x = turnRight ? 34 : W - 34;
     if (r === rows - 1 && nR % perRow) continue;
     if (inSea(x, y)) { deco(r % 2 ? 'boat' : 'fishjump', x, y, 58, false); continue; }
-    const k = th.edge[r % 4] === 'boat' ? 'umbrella' : th.edge[r % 4]; deco(k, x, y, k === 'house' || k === 'shop' ? 62 : k === 'jtree' ? 84 : k === 'bigtree' ? 128 : 66, !['house', 'shop', 'umbrella', 'tent', 'cairn', 'pyramid', 'dunerock', 'oasis', 'stilthouse', 'ricebarn', 'pier'].includes(k));
-    deco(river ? (r % 2 ? 'reeds' : 'flowers') : beach ? (r % 2 ? 'starfish' : 'shell') : jungle ? (r % 2 ? 'mushroom' : 'heliconia') : cave ? (r % 2 ? 'glowshroom' : 'rocks') : mountain ? (r % 2 ? 'edelweiss' : 'rock') : desert ? (r % 2 ? 'tumble' : 'dunerock') : (r % 2 ? 'flowers' : 'bush'), x + (turnRight ? 30 : -30), y + 16, beach ? 30 : 40, false);
+    const k = th.edge[r % 4] === 'boat' ? 'umbrella' : th.edge[r % 4]; deco(k, x, y, k === 'house' || k === 'shop' ? 62 : k === 'jtree' ? 84 : k === 'bigtree' ? 128 : 66, !['house', 'shop', 'umbrella', 'tent', 'cairn', 'pyramid', 'dunerock', 'oasis', 'stilthouse', 'ricebarn', 'pier', 'windmill', 'beehive', 'fence', 'haybale'].includes(k));
+    deco(meadow ? (r % 2 ? 'daisy' : 'tulips') : river ? (r % 2 ? 'reeds' : 'flowers') : beach ? (r % 2 ? 'starfish' : 'shell') : jungle ? (r % 2 ? 'mushroom' : 'heliconia') : cave ? (r % 2 ? 'glowshroom' : 'rocks') : mountain ? (r % 2 ? 'edelweiss' : 'rock') : desert ? (r % 2 ? 'tumble' : 'dunerock') : (r % 2 ? 'flowers' : 'bush'), x + (turnRight ? 30 : -30), y + 16, beach ? 30 : 40, false);
   }
   const newly = [];
   items.forEach(({ L, i }, k) => {
