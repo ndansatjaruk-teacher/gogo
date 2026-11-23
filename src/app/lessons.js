@@ -1130,7 +1130,7 @@ const WS8_BALL = [{ name: 'หลิน', n: 10 }, { name: 'นุ้ย', n: 7 
 const WS8_SHELF = [['apple', 'mango', 'pomelo'], ['strawberry', 'mangosteen', 'watermelon'], ['durian', 'chompoo', 'pineapple'], ['banana', 'guava', 'grape']];
 const FRUIT_TH = { apple: 'แอปเปิล', mango: 'มะม่วง', pomelo: 'ส้มโอ', strawberry: 'สตรอว์เบอร์รี', mangosteen: 'มังคุด', watermelon: 'แตงโม', durian: 'ทุเรียน', chompoo: 'ชมพู่', pineapple: 'สับปะรด', banana: 'กล้วย', guava: 'ฝรั่ง', grape: 'องุ่น' };
 const WS8_BIKE = [{ name: 'บอล', e: 'kid1', pos: .74 }, { name: 'เบส', e: 'kid3', pos: .5 }, { name: 'ต้า', e: 'kid5', pos: .64 }, { name: 'เค', e: 'kid7', pos: .38 }, { name: 'ไกค์', e: 'kid9', pos: .84 }, { name: 'เกม', e: 'kid11', pos: .93 }];
-const WS8_DOLL = [{ name: 'ทีมสีฟ้า', n: 5 }, { name: 'ทีมสีเขียว', n: 2 }, { name: 'ทีมสีแดง', n: 6 }];
+const WS8_DOLL = [{ name: 'ทีมสีฟ้า', n: 5, col: '#4C9BF0' }, { name: 'ทีมสีเขียว', n: 2, col: '#2FBF8C' }, { name: 'ทีมสีแดง', n: 6, col: '#FF5A6A' }];
 const WS8_TARGET = [{ name: 'ทีมสีเขียว', col: '#2FBF8C', hits: [7, 8, 10] }, { name: 'ทีมสีน้ำเงิน', col: '#4C7BF0', hits: [6, 8, 9] }, { name: 'ทีมสีแดง', col: '#FF5A6A', hits: [9, 8, 7] }];
 /* tap a kid: neighbours get labelled */
 function lineTap(names) {
@@ -1157,7 +1157,7 @@ function raceSim(racers) {
   const btn = h('button', { class: 'btn primary ia', onclick: async e => { e.stopPropagation(); btn.disabled = true; sfx.page();
     order.forEach((r, k) => { const run = tr.runners[r.i]; run.style.transition = `left ${1.4 + k * .5}s cubic-bezier(.4,.1,.3,1)`; requestAnimationFrame(() => run.style.setProperty('--x', 1)); });
     for (let k = 0; k < order.length; k++) { await sleep(k ? 500 : 1400); const run = tr.runners[order[k].i]; run.append(h('i', { class: 'rc-badge m' + (k + 1) }, ORD(k + 1))); sfx.pop(k); say(`${order[k].name} ${ORD(k + 1)}`, true); }
-    out.textContent = order.map((r, k) => `${ORD(k + 1)} ${r.name}`).join(' · '); btn.remove(); } }, icon('play'), 'เริ่มแข่ง!');
+    out.innerHTML = bul(...order.map((r, k) => `<b>${ORD(k + 1)}</b> ${r.name}`)); btn.remove(); } }, icon('play'), 'เริ่มแข่ง!');
   return h('div', { class: 'colstack' }, tr, btn, out);
 }
 function busSim(names) {
@@ -1175,7 +1175,7 @@ function shelfTap(rows) {
 }
 /* amounts → press to sort into ranks (FLIP) */
 function rankSim(items, unit, pic) {
-  const box = h('div', { class: 'rankvis' }); const cols = items.map(it => { const c = h('div', { class: 'rk-col' }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`)); box.append(c); return c; });
+  const box = h('div', { class: 'rankvis' }); const cols = items.map(it => { const c = h('div', { class: 'rk-col' + (it.col ? ' tm' : ''), style: it.col ? { '--tc': it.col } : null }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`)); box.append(c); return c; });
   const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const first = cols.map(c => c.getBoundingClientRect().left);
     const order = items.map((it, i) => i).sort((a, b) => items[b].n - items[a].n); order.forEach(i => box.append(cols[i]));
     cols.forEach((c, i) => { const dx = first[i] - c.getBoundingClientRect().left; c.animate([{ transform: `translateX(${dx}px)` }, { transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.3,1.2,.4,1)' }); });
@@ -1197,6 +1197,18 @@ function targetSim(teams) {
     btn.remove(); sfx.win(); say('ทีมที่ได้คะแนนรวมมากที่สุดได้อันดับที่หนึ่ง', true); } }, icon('plus'), 'รวมคะแนนแต่ละทีม');
   return h('div', { class: 'colstack' }, h('div', { class: 'rowstack' }, h('span', { class: 'targetw', html: targetSVG(teams) }), h('div', { class: 'colstack', style: { gap: '4px', alignItems: 'flex-start' } }, ...teams.map(t => h('div', { class: 'tg-row' }, h('i', { style: { background: t.col } }), h('b', null, t.name))))), btn, sums);
 }
+/* v204 (ผู้ใช้ขอ: ด่าน 4 ตรงจุดประสงค์ — จัดอันดับจากคะแนนรวม) target + coloured team rows with their hits; the child adds them up */
+const teamFig = teams => h('div', { class: 'rowstack' }, h('span', { class: 'targetw', html: targetSVG(teams) }), h('div', { class: 'colstack', style: { gap: '6px', alignItems: 'stretch' } }, ...teams.map(t => h('div', { class: 'tm-row', style: { '--tc': t.col } }, h('i', { class: 'tm-dot' }), h('b', null, t.name), h('span', { class: 'num', style: { fontSize: '20px', fontWeight: 800 } }, t.hits.join(' , '))))));
+const tSum = t => t.hits.reduce((a, b) => a + b, 0);
+Object.assign(Q, {
+  teamSum({ teams, i }) { const t = teams[i], q = `${t.name}ยิงได้<span class="hl">คะแนนรวม</span>เท่าไร?`;
+    return { prompt: q, say: q.replace(/<[^>]+>/g, ''), __sig: `ts ${t.name} ${t.hits}`, mount(bd, ctx) { bd.append(ppSide(teamFig(teams), ppAns(ctx, tSum(t), `บวกคะแนนทีละนัด: ${t.hits.join(' + ')}`, 'คะแนน'))); bd.classList.add('p2wsd'); } }; },
+  teamRank({ teams, ask, k, who }) { const ord = [...teams].sort((a, b) => tSum(b) - tSum(a)), hint = 'รวมคะแนนของแต่ละทีมก่อน แล้วเรียงจากมากไปน้อย ทีมที่ได้มากที่สุดเป็นอันดับที่ 1';
+    if (ask === 'who') { const q = `ทีมใดได้<span class="hl">${ORD(k)}</span>? <small>(คะแนนรวมมากที่สุด = อันดับที่ 1)</small>`;
+      return { prompt: q, say: `ทีมใดได้${ORD(k)}`, __sig: `tr w${k} ${teams.map(tSum)}`, mount(bd, ctx) { const col = h('div', { class: 'colstack' }); bd.append(ppSide(teamFig(teams), col)); bd.classList.add('p2wsd'); nameChoices(col, ctx, teams.map(t => t.name), ord[k - 1].name, hint); } }; }
+    const q = `${who}ได้อันดับที่เท่าไร?`;
+    return { prompt: q, say: q, __sig: `tr r${who} ${teams.map(tSum)}`, mount(bd, ctx) { const col = h('div', { class: 'colstack' }); bd.append(ppSide(teamFig(teams), col)); bd.classList.add('p2wsd'); ordChoices(col, ctx, teams.length, ord.findIndex(t => t.name === who) + 1, hint); } }; }
+});
 const LESSONS_CH8 = [
   { id: 251, title: 'การบอกตำแหน่งของสิ่งต่าง ๆ', short: 'บอกตำแหน่ง', tone: 'sky',
     goal: 'บอกตำแหน่งของสิ่งต่าง ๆ โดยใช้คำว่า ข้างซ้าย ข้างขวา ตรงกลาง ระหว่าง ข้างหน้า ข้างหลัง',
@@ -1230,9 +1242,9 @@ const LESSONS_CH8 = [
       { t: 'แข่งวางตุ๊กตา: ทีมที่วางได้<b>มากที่สุด</b>เป็นผู้ชนะ ได้<b>อันดับที่ 1</b>', s: 'แข่งวางตุ๊กตา ทีมที่วางได้มากที่สุดเป็นผู้ชนะ ได้อันดับที่หนึ่ง', v: el => el.append(rankSim(WS8_DOLL, 'ตัว', 'teddy')) },
       { t: 'ยิงเป้า: <b>รวมคะแนน</b>ของแต่ละทีมก่อน แล้วจัดอันดับจากคะแนนรวม', s: 'ยิงเป้า รวมคะแนนของแต่ละทีมก่อน แล้วจัดอันดับจากคะแนนรวม', v: el => el.append(targetSim(WS8_TARGET)) }
     ],
-    game: () => { const T = mixVals(WS8_TARGET, 'hits'), tg = T.map(t => ({ name: t.name, n: t.hits.reduce((a, b) => a + b, 0) })), DL = mixVals(WS8_DOLL, 'n');
+    game: () => { const T = (() => { for (;;) { const t = WS8_TARGET.map(x => ({ ...x, hits: [rnd(6, 10), rnd(6, 9), rnd(6, 10)] })), S = t.map(tSum); if (new Set(S).size === 3 && !t.some((x, i) => String(x.hits) === String(WS8_TARGET[i].hits))) return t; } })() /* v204: คะแนนใหม่ทุกเกม (ไม่ซ้ำข้อสอบบอส) */, tg = T.map(t => ({ name: t.name, n: t.hits.reduce((a, b) => a + b, 0) })), DL = mixVals(WS8_DOLL, 'n');
       return [Q.rankAsk({ items: DL, unit: 'ตัว', ask: 'who', k: 1, pic: 'teddy' }), Q.rankAsk({ items: DL, unit: 'ตัว', ask: 'who', k: 2, pic: 'teddy' }), Q.rankAsk({ items: DL, unit: 'ตัว', ask: 'rank', who: pick(DL).name, pic: 'teddy' }),
-        Q.three({ nums: shuffle(T[0].hits) }), Q.rankAsk({ items: tg, unit: 'คะแนน', ask: 'who', k: 1 }), Q.rankAsk({ items: tg, unit: 'คะแนน', ask: 'rank', who: pick(tg).name })]; } }
+        Q.teamSum({ teams: T, i: 0 }), Q.teamSum({ teams: T, i: 2 }), Q.teamRank({ teams: T, ask: 'who', k: 1 }), Q.teamRank({ teams: T, ask: 'who', k: 3 }), Q.teamRank({ teams: T, ask: 'rank', who: T[1].name })]; } /* v204: รวมคะแนนจากเป้าเอง แล้วจัดอันดับ (เดิมบอกคะแนนรวมให้) */ }
 ];
 const EXAM_CH8 = [
   { q: 'ใครยืนอยู่ข้างขวาของแตงโม', line: WS8_LINE, opts: ['ณัฐ', 'สิงห์', 'ส้ม'], a: 0 },

@@ -1054,7 +1054,7 @@ Object.assign(Q, {
     const COL = ['ข้างซ้าย', 'ตรงกลาง', 'ข้างขวา'];
     if (ask === 'where') { const right = `ชั้นที่ ${r + 1} ${COL[c]}`, wrong = shuffle([[r, (c + 1) % 3], [(r + 1) % rows.length, c], [(r + rows.length - 1) % rows.length, (c + 2) % 3]]).slice(0, 2).map(([a, b]) => `ชั้นที่ ${a + 1} ${COL[b]}`);
       const q = `${names[rows[r][c]]}วางอยู่ชั้นใด ตำแหน่งใด?`;
-      return { prompt: q, say: q, mount(bd, ctx) { bd.append(shelf(rows)); bd.append(choices(ctx, shuffle([right, ...wrong]).map(x => ({ value: x, label: x })), right, { hint: 'ชั้นที่ 1 อยู่ล่างสุด นับขึ้นไป แล้วดูว่าอยู่ข้างซ้าย ตรงกลาง หรือข้างขวา' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('txt')); } }; }
+      return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'shq' }, art(rows[r][c]), h('b', null, names[rows[r][c]])), shelf(rows))); /* v204 (ผู้ใช้ขอ): ถามถึงผลไม้ใด ใส่รูปด้วย */ bd.append(choices(ctx, shuffle([right, ...wrong]).map(x => ({ value: x, label: x })), right, { hint: 'ชั้นที่ 1 อยู่ล่างสุด นับขึ้นไป แล้วดูว่าอยู่ข้างซ้าย ตรงกลาง หรือข้างขวา' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('txt')); } }; }
     const e = rows[r][c], q = `ชั้นที่ ${r + 1} ${COL[c]} วางผลไม้ใด?`, opts = shuffle([e, ...shuffle(rows.flat().filter(x => x !== e)).slice(0, 2)]);
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(shelf(rows)); bd.append(choices(ctx, opts.map(x => ({ value: x, node: h('span', { class: 'opt-art' }, art(x), h('b', null, names[x])) })), e, { hint: 'ชั้นที่ 1 อยู่ล่างสุด' })); } };
   },
@@ -1074,22 +1074,23 @@ Object.assign(Q, {
   /* practice: rank by amount */
   rankAsk({ items, unit, ask, k, who, pic }) {
     const order = [...items].sort((a, b) => b.n - a.n);
-    const vis = () => h('div', { class: 'rankvis' }, ...items.map(it => h('div', { class: 'rk-col' }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`))));
+    const vis = () => h('div', { class: 'rankvis' }, ...items.map(it => h('div', { class: 'rk-col' + (it.col ? ' tm' : ''), style: it.col ? { '--tc': it.col } : null }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`))));
     if (ask === 'who') { const q = `ใครได้<span class="hl">${ORD(k)}</span>? <small>(มากที่สุด = อันดับที่ 1)</small>`;
       return { prompt: q, say: `ใครได้${ORD(k)}`, mount(bd, ctx) { bd.append(vis()); nameChoices(bd, ctx, items.map(x => x.name), order[k - 1].name, 'เรียงจากมากไปน้อย คนที่ได้มากที่สุดเป็นอันดับที่ 1'); } }; }
     const q = `${who}ได้อันดับที่เท่าไร?`;
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(vis()); ordChoices(bd, ctx, items.length, order.findIndex(x => x.name === who) + 1, 'เรียงจากมากไปน้อย คนที่ได้มากที่สุดเป็นอันดับที่ 1'); } };
   },
   /* practice: place names into slots from clues */
-  arrange({ clues, answer, slotLabel }) {
-    return { prompt: 'อ่านข้อความ แล้วแตะชื่อวางลงช่องให้ถูกตำแหน่ง', say: 'อ่านข้อความ แล้ววางชื่อให้ถูกตำแหน่ง',
+  arrange({ clues, answer, slotLabel }) { /* v204 (ผู้ใช้ขอ): เลือกได้เองว่าจะวางใครไว้ช่องไหน — แตะชื่อ แล้วแตะช่อง (หรือแตะช่องก่อน) */
+    return { prompt: 'อ่านข้อความ แตะชื่อ แล้วแตะช่องที่จะวาง', say: 'อ่านข้อความ แตะชื่อ แล้วแตะช่องที่จะวาง',
       mount(bd, ctx) {
-        const slots = h('div', { class: 'slots ia lbl ar' }), cards = h('div', { class: 'cards ia lbl' }), placed = Array(answer.length).fill(null);
+        const slots = h('div', { class: 'slots ia lbl ar' }), cards = h('div', { class: 'cards ia lbl' }), placed = Array(answer.length).fill(null); let sel = null, pickSlot = -1;
         const S = answer.map((_, i) => { const s = h('div', { class: 'slot' }); s.dataset.lab = slotLabel ? slotLabel(i) : i + 1; slots.append(s); return s; });
-        const render = () => S.forEach((s, i) => { s.textContent = placed[i] ? placed[i].v : ''; s.classList.toggle('filled', !!placed[i]); });
-        S.forEach((s, i) => s.onclick = e => { e.stopPropagation(); if (!placed[i] || slots.dataset.done) return; placed[i].c.classList.remove('used'); placed[i] = null; render(); });
-        shuffle(answer).forEach(v => { const cd = h('button', { class: 'ncard' }, v); cd.onclick = e => { e.stopPropagation(); if (cd.classList.contains('used')) return; const k = placed.indexOf(null); if (k < 0) return; placed[k] = { v, c: cd }; cd.classList.add('used'); sfx.pop(k); render();
-          if (!placed.includes(null)) { const ok = placed.every((p, i) => p.v === answer[i]); if (ok) { slots.dataset.done = 1; ctx.check(true); } else { ctx.check(false, 'อ่านข้อความทีละประโยค เริ่มจากคนที่รู้ตำแหน่งแน่นอนก่อน'); setTimeout(() => { placed.forEach(p => p && p.c.classList.remove('used')); placed.fill(null); render(); }, 900); } } }; cards.append(cd); });
+        const render = () => { S.forEach((s, i) => { s.textContent = placed[i] ? placed[i].v : ''; s.classList.toggle('filled', !!placed[i]); s.classList.toggle('pick', i === pickSlot); }); C.forEach(c => { c.classList.toggle('used', placed.some(p => p && p.c === c)); c.classList.toggle('sel', c === sel); }); };
+        const put = (i, c) => { const old = placed.findIndex(p => p && p.c === c); if (old >= 0) placed[old] = null; placed[i] = { v: c.textContent, c }; sel = null; pickSlot = -1; sfx.pop(i); render();
+          if (!placed.includes(null)) { const ok = placed.every((p, k) => p.v === answer[k]); if (ok) { slots.dataset.done = 1; ctx.check(true); } else { ctx.check(false, 'อ่านข้อความทีละประโยค เริ่มจากคนที่รู้ตำแหน่งแน่นอนก่อน — แตะช่องเพื่อเอาชื่อออกแล้ววางใหม่'); } } };
+        S.forEach((s, i) => s.onclick = e => { e.stopPropagation(); if (slots.dataset.done) return; if (sel) { put(i, sel); return; } if (placed[i]) { placed[i] = null; sfx.tap(); render(); return; } pickSlot = pickSlot === i ? -1 : i; sfx.tap(); render(); });
+        const C = shuffle(answer).map(v => { const cd = h('button', { class: 'ncard' }, v); cd.onclick = e => { e.stopPropagation(); if (slots.dataset.done) return; if (pickSlot >= 0) { put(pickSlot, cd); return; } sel = sel === cd ? null : cd; sfx.tap(); render(); }; cards.append(cd); return cd; });
         bd.append(h('div', { class: 'colstack' }, h('div', { class: 'stmt clues' }, ...clues.map(c => h('div', null, c))), slots, cards)); } };
   }
 });

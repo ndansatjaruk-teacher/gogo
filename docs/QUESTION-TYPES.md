@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-405 types
+407 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -24,27 +24,27 @@
 | `Q.a4ReadR` | `{ nm, a }` | [`grades/p4/p4a.js:274`](../src/grades/p4/p4a.js#L274) |
 | `Q.a4Tap` | `{ kind, A }` | [`grades/p4/p4a.js:259`](../src/grades/p4/p4a.js#L259) |
 | `Q.abacusRead` | `{ n, ask = 'digit', rods }` | [`engine/questions.js:672`](../src/engine/questions.js#L672) |
-| `Q.add100` | `{ a, b, blocks = false }` | [`engine/questions.js:1330`](../src/engine/questions.js#L1330) |
+| `Q.add100` | `{ a, b, blocks = false }` | [`engine/questions.js:1331`](../src/engine/questions.js#L1331) |
 | `Q.addFact` | `{ a, b, frame = false, pen, vert = false }` | [`engine/questions.js:283`](../src/engine/questions.js#L283) |
-| `Q.addSteps` | `{ a, b }` | [`engine/questions.js:1336`](../src/engine/questions.js#L1336) |
+| `Q.addSteps` | `{ a, b }` | [`engine/questions.js:1337`](../src/engine/questions.js#L1337) |
 | `Q.arrange` | `{ clues, answer, slotLabel }` | [`engine/questions.js:1084`](../src/engine/questions.js#L1084) |
 | `Q.b3Story` | `{ text, expr, wrong = [], unit = '' }` | [`grades/p3/p3b.js:23`](../src/grades/p3/p3b.js#L23) |
 | `Q.b3Unk` | `st` | [`grades/p3/p3b.js:28`](../src/grades/p3/p3b.js#L28) |
 | `Q.balanceCmp` | `{ a, b, rel }` | [`engine/questions.js:977`](../src/engine/questions.js#L977) |
-| `Q.basketCount` | `{ e, name, n, unit = 'ผล' }` | [`engine/questions.js:1219`](../src/engine/questions.js#L1219) |
+| `Q.basketCount` | `{ e, name, n, unit = 'ผล' }` | [`engine/questions.js:1220`](../src/engine/questions.js#L1220) |
 | `Q.between` | `{ lo, hi }` | [`engine/questions.js:765`](../src/engine/questions.js#L765) |
 | `Q.blocksRead` | `{ n, ask = 'digit' }` | [`engine/questions.js:570`](../src/engine/questions.js#L570) |
 | `Q.buildChart` | `{ chart: c, from = 'mix' }` | [`engine/questions.js:951`](../src/engine/questions.js#L951) |
 | `Q.busAsk` | `{ names, k }` | [`engine/questions.js:1070`](../src/engine/questions.js#L1070) |
 | `Q.c8Pick` | `{ fig, q, opts, right, hint, keep }` | [`grades/p6/p6o.js:138`](../src/grades/p6/p6o.js#L138) |
 | `Q.chartAsk` | `{ chart: c, ask, a = 0, b = 1, k = 3 }` | [`engine/questions.js:915`](../src/engine/questions.js#L915) |
-| `Q.cmp2` | `{ a, b: bb, blocks = false }` | [`engine/questions.js:1241`](../src/engine/questions.js#L1241) |
-| `Q.cmpDiff` | `{ a, b, unit = 'cm' }` | [`app/lessons.js:1792`](../src/app/lessons.js#L1792) |
+| `Q.cmp2` | `{ a, b: bb, blocks = false }` | [`engine/questions.js:1242`](../src/engine/questions.js#L1242) |
+| `Q.cmpDiff` | `{ a, b, unit = 'cm' }` | [`app/lessons.js:1804`](../src/app/lessons.js#L1804) |
 | `Q.cnsQ` | `T, q` | [`grades/p5/p5q.js:571`](../src/grades/p5/p5q.js#L571) |
 | `Q.colW` | `{ nums, op, prompt, say, sig, plain, ...rest }` | [`engine/colw.js:91`](../src/engine/colw.js#L91) |
 | `Q.compare5` | `{ a, b: bb, ea, eb, eq = true }` | [`engine/questions.js:754`](../src/engine/questions.js#L754) |
 | `Q.compareSym` | `{ a, b: bb, blocks = false }` | [`engine/questions.js:621`](../src/engine/questions.js#L621) |
-| `Q.countKind` | `{ items, kind, mode = 'solid', art: isArt }` | [`engine/questions.js:1130`](../src/engine/questions.js#L1130) |
+| `Q.countKind` | `{ items, kind, mode = 'solid', art: isArt }` | [`engine/questions.js:1131`](../src/engine/questions.js#L1131) |
 | `Q.countOnAdd` | `{ a, b }` | [`engine/questions.js:836`](../src/engine/questions.js#L836) |
 | `Q.d3Long` | `{ D, k, guide }` | [`grades/p3/p3d.js:134`](../src/grades/p3/p3d.js#L134) |
 | `Q.d3Short` | `{ D, k, guide }` | [`grades/p3/p3d.js:136`](../src/grades/p3/p3d.js#L136) |
@@ -116,7 +116,7 @@
 | `Q.fillFrames` | `{ n }` | [`engine/questions.js:800`](../src/engine/questions.js#L800) |
 | `Q.findDiff` | `{ n = 2 } = {}` | [`engine/questions.js:511`](../src/engine/questions.js#L511) |
 | `Q.findTens` | | [`engine/questions.js:319`](../src/engine/questions.js#L319) |
-| `Q.findX` | `{ toks }` | [`engine/questions.js:1404`](../src/engine/questions.js#L1404) |
+| `Q.findX` | `{ toks }` | [`engine/questions.js:1405`](../src/engine/questions.js#L1405) |
 | `Q.fOf` | `{ f, n, e = 'coin', unit = '' }` | [`grades/p5/p5.js:201`](../src/grades/p5/p5.js#L201) |
 | `Q.fOrder` | `{ list, dir = 'asc' }` | [`grades/p5/p5.js:181`](../src/grades/p5/p5.js#L181) |
 | `Q.fPick` | `{ q, opts, right, hint }` | [`grades/p5/p5.js:177`](../src/grades/p5/p5.js#L177) |
@@ -156,7 +156,7 @@
 | `Q.hPrime` | `{ nums }` | [`grades/p6/p6h.js:333`](../src/grades/p6/p6h.js#L333) |
 | `Q.hStory` | `{ text, kind, ans, unit = '', ask, why }` | [`grades/p6/p6h.js:389`](../src/grades/p6/p6h.js#L389) |
 | `Q.hTF` | `{ text, ok, why }` | [`grades/p6/p6h.js:375`](../src/grades/p6/p6h.js#L375) |
-| `Q.hundredFill` | `{ cells, show, q }` | [`engine/questions.js:1263`](../src/engine/questions.js#L1263) |
+| `Q.hundredFill` | `{ cells, show, q }` | [`engine/questions.js:1264`](../src/engine/questions.js#L1264) |
 | `Q.isAddition` | | [`engine/questions.js:380`](../src/engine/questions.js#L380) |
 | `Q.isSubtraction` | | [`engine/questions.js:529`](../src/engine/questions.js#L529) |
 | `Q.ixGroup` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:45`](../src/engine/ix.js#L45) |
@@ -180,9 +180,9 @@
 | `Q.l3Read` | `{ it }` | [`grades/p3/p3l.js:63`](../src/grades/p3/p3l.js#L63) |
 | `Q.l3Set` | `{ it, mm }` | [`grades/p3/p3l.js:66`](../src/grades/p3/p3l.js#L66) |
 | `Q.lCls` | `{ k }` | [`grades/p5/p5g.js:187`](../src/grades/p5/p5g.js#L187) |
-| `Q.lenDiff` | `{ a, b, unit = 'cm', vis = 'none', word }` | [`engine/questions.js:1294`](../src/engine/questions.js#L1294) |
-| `Q.lenExtreme` | `{ items, ask, unit, vis = 'len', max }` | [`engine/questions.js:1276`](../src/engine/questions.js#L1276) |
-| `Q.lenGuess` | `{ e, name, cm, opts }` | [`app/lessons.js:1774`](../src/app/lessons.js#L1774) |
+| `Q.lenDiff` | `{ a, b, unit = 'cm', vis = 'none', word }` | [`engine/questions.js:1295`](../src/engine/questions.js#L1295) |
+| `Q.lenExtreme` | `{ items, ask, unit, vis = 'len', max }` | [`engine/questions.js:1277`](../src/engine/questions.js#L1277) |
+| `Q.lenGuess` | `{ e, name, cm, opts }` | [`app/lessons.js:1786`](../src/app/lessons.js#L1786) |
 | `Q.lFig` | `{ q, figs, right, hint }` | [`grades/p5/p5g.js:210`](../src/grades/p5/p5g.js#L210) |
 | `Q.lFind` | `{ k, v, j }` | [`grades/p5/p5g.js:193`](../src/grades/p5/p5g.js#L193) |
 | `Q.lineAsk` | `{ names, ask, of, of2 }` | [`engine/questions.js:1036`](../src/engine/questions.js#L1036) |
@@ -200,8 +200,8 @@
 | `Q.matchDiffs` | `{ k = 3 } = {}` | [`engine/questions.js:524`](../src/engine/questions.js#L524) |
 | `Q.matchFrames` | `{ nums }` | [`engine/questions.js:805`](../src/engine/questions.js#L805) |
 | `Q.matchSums` | `{ n = 3 } = {}` | [`engine/questions.js:333`](../src/engine/questions.js#L333) |
-| `Q.meterJudge` | `{ e, name, more }` | [`engine/questions.js:1314`](../src/engine/questions.js#L1314) |
-| `Q.mJudge` | `{ e, name, cm, ori }` | [`app/lessons.js:1787`](../src/app/lessons.js#L1787) |
+| `Q.meterJudge` | `{ e, name, more }` | [`engine/questions.js:1315`](../src/engine/questions.js#L1315) |
+| `Q.mJudge` | `{ e, name, cm, ori }` | [`app/lessons.js:1799`](../src/app/lessons.js#L1799) |
 | `Q.mnCount` | `{ list }` | [`grades/p3/p3m.js:66`](../src/grades/p3/p3m.js#L66) |
 | `Q.mnExch` | `{ text, a, unit, fig }` | [`grades/p3/p3m.js:85`](../src/grades/p3/p3m.js#L85) |
 | `Q.mnFromDot` | `{ s, e }` | [`grades/p3/p3m.js:82`](../src/grades/p3/p3m.js#L82) |
@@ -222,9 +222,9 @@
 | `Q.mtSwap` | `{ a, b }` | [`grades/p2/p2x.js:210`](../src/grades/p2/p2x.js#L210) |
 | `Q.mtTens` | `{ a, t }` | [`grades/p2/p2x.js:263`](../src/grades/p2/p2x.js#L263) |
 | `Q.mtUnk` | `{ a, b, pos }` | [`grades/p2/p2x.js:277`](../src/grades/p2/p2x.js#L277) |
-| `Q.mUnit` | `{ e, name, cm, ori, m }` | [`app/lessons.js:1789`](../src/app/lessons.js#L1789) |
+| `Q.mUnit` | `{ e, name, cm, ori, m }` | [`app/lessons.js:1801`](../src/app/lessons.js#L1801) |
 | `Q.numToWord` | `{ n, from = 'digit' }` | [`engine/questions.js:585`](../src/engine/questions.js#L585) |
-| `Q.objSolid` | `{ obj, kind, name }` | [`engine/questions.js:1136`](../src/engine/questions.js#L1136) |
+| `Q.objSolid` | `{ obj, kind, name }` | [`engine/questions.js:1137`](../src/engine/questions.js#L1137) |
 | `Q.p2build` | `{ cm }` | [`grades/p2/p2l.js:308`](../src/grades/p2/p2l.js#L308) |
 | `Q.p2cmpWord` | `{ a, b, words, pre = '', hint }` | [`grades/p2/p2l.js:320`](../src/grades/p2/p2l.js#L320) |
 | `Q.p2conv` | `{ cm, to }` | [`grades/p2/p2l.js:314`](../src/grades/p2/p2l.js#L314) |
@@ -248,12 +248,12 @@
 | `Q.p4UnkM` | `st` | [`grades/p4/p4m.js:282`](../src/grades/p4/p4m.js#L282) |
 | `Q.p6Fig` | `{ fig, q, opts, right, hint, say: sy }` | [`grades/p6/p6p.js:96`](../src/grades/p6/p6p.js#L96) |
 | `Q.p6Num` | `{ q, a, unit = '', hint }` | [`grades/p6/p6p.js:93`](../src/grades/p6/p6p.js#L93) |
-| `Q.patMake` | `{ unit, reps = 2, show = 1, palette }` | [`engine/questions.js:1188`](../src/engine/questions.js#L1188) |
-| `Q.patMissing` | `{ seq, blank }` | [`engine/questions.js:1182`](../src/engine/questions.js#L1182) |
-| `Q.patRule2` | `{ vals }` | [`engine/questions.js:1250`](../src/engine/questions.js#L1250) |
+| `Q.patMake` | `{ unit, reps = 2, show = 1, palette }` | [`engine/questions.js:1189`](../src/engine/questions.js#L1189) |
+| `Q.patMissing` | `{ seq, blank }` | [`engine/questions.js:1183`](../src/engine/questions.js#L1183) |
+| `Q.patRule2` | `{ vals }` | [`engine/questions.js:1251`](../src/engine/questions.js#L1251) |
 | `Q.pattern` | `{ start, step, len = 5, blank, hi = 1000 }` | [`engine/questions.js:640`](../src/engine/questions.js#L640) |
 | `Q.patternRule` | `{ start, step, len = 4, hi = 1000 }` | [`engine/questions.js:645`](../src/engine/questions.js#L645) |
-| `Q.patUnit` | `{ seq }` | [`engine/questions.js:1174`](../src/engine/questions.js#L1174) |
+| `Q.patUnit` | `{ seq }` | [`engine/questions.js:1175`](../src/engine/questions.js#L1175) |
 | `Q.pc3Count` | `{ S, c }` | [`grades/p3/p3c.js:51`](../src/grades/p3/p3c.js#L51) |
 | `Q.pc3Tally` | `{ n, what }` | [`grades/p3/p3c.js:54`](../src/grades/p3/p3c.js#L54) |
 | `Q.pc3TallyPick` | `{ n }` | [`grades/p3/p3c.js:56`](../src/grades/p3/p3c.js#L56) |
@@ -264,12 +264,12 @@
 | `Q.pConv` | `{ kind, v, d = 100 }` | [`grades/p5/p5p.js:66`](../src/grades/p5/p5p.js#L66) |
 | `Q.pFind` | `{ part, whole, text }` | [`grades/p5/p5p.js:88`](../src/grades/p5/p5p.js#L88) |
 | `Q.pGrid` | `{ n }` | [`grades/p5/p5p.js:76`](../src/grades/p5/p5p.js#L76) |
-| `Q.pickExpand2` | `{ n }` | [`engine/questions.js:1236`](../src/engine/questions.js#L1236) |
+| `Q.pickExpand2` | `{ n }` | [`engine/questions.js:1237`](../src/engine/questions.js#L1237) |
 | `Q.pickExpand20` | `{ n }` | [`engine/questions.js:815`](../src/engine/questions.js#L815) |
 | `Q.pickExpanded` | `{ n }` | [`engine/questions.js:614`](../src/engine/questions.js#L614) |
 | `Q.pickExpanded5` | `{ n }` | [`engine/questions.js:740`](../src/engine/questions.js#L740) |
 | `Q.pickStory` | `{ a, b, op, stories }` | [`engine/questions.js:900`](../src/engine/questions.js#L900) |
-| `Q.place2` | `{ n, pos }` | [`engine/questions.js:1224`](../src/engine/questions.js#L1224) |
+| `Q.place2` | `{ n, pos }` | [`engine/questions.js:1225`](../src/engine/questions.js#L1225) |
 | `Q.pOf` | `{ p, n, text, unit = '' }` | [`grades/p5/p5p.js:81`](../src/grades/p5/p5p.js#L81) |
 | `Q.ppBuild` | `{ D }` | [`grades/p2/p2c.js:70`](../src/grades/p2/p2c.js#L70) |
 | `Q.ppChoose` | `{ D, q, opts, right, hint }` | [`grades/p2/p2c.js:66`](../src/grades/p2/p2c.js#L66) |
@@ -295,9 +295,9 @@
 | `Q.rankAsk` | `{ items, unit, ask, k, who, pic }` | [`engine/questions.js:1075`](../src/engine/questions.js#L1075) |
 | `Q.readScale` | `{ a, v, unit = 'kg', col }` | [`engine/questions.js:996`](../src/engine/questions.js#L996) |
 | `Q.readWords` | `{ n, from = 'digit' }` | [`engine/questions.js:690`](../src/engine/questions.js#L690) |
-| `Q.robotCount` | `{ kind }` | [`engine/questions.js:1169`](../src/engine/questions.js#L1169) |
-| `Q.rulDraw` | `{ len, k = 'straw', col = 'mint', name = 'หลอด', max = 12 }` | [`app/lessons.js:1764`](../src/app/lessons.js#L1764) |
-| `Q.rulerSet` | `{ len, col = 'mint', kind = 'straw', max = 10 }` | [`engine/questions.js:1301`](../src/engine/questions.js#L1301) |
+| `Q.robotCount` | `{ kind }` | [`engine/questions.js:1170`](../src/engine/questions.js#L1170) |
+| `Q.rulDraw` | `{ len, k = 'straw', col = 'mint', name = 'หลอด', max = 12 }` | [`app/lessons.js:1776`](../src/app/lessons.js#L1776) |
+| `Q.rulerSet` | `{ len, col = 'mint', kind = 'straw', max = 10 }` | [`engine/questions.js:1302`](../src/engine/questions.js#L1302) |
 | `Q.s2build` | `{ text, nums, res }` | [`grades/p2/p2m.js:47`](../src/grades/p2/p2m.js#L47) |
 | `Q.s2two` | `{ expr }` | [`grades/p2/p2m.js:43`](../src/grades/p2/p2m.js#L43) |
 | `Q.s6Next` | `{ seq, hint }` | [`grades/p6/p6s.js:91`](../src/grades/p6/p6s.js#L91) |
@@ -307,24 +307,24 @@
 | `Q.sameSum` | `{ a, b }` | [`engine/questions.js:353`](../src/engine/questions.js#L353) |
 | `Q.scalesCmp` | `{ a, b, va, vb, unit = 'kg', diff = false }` | [`engine/questions.js:1009`](../src/engine/questions.js#L1009) |
 | `Q.scalesExtreme` | `{ items, unit = 'kg', which = 'max' }` | [`engine/questions.js:1019`](../src/engine/questions.js#L1019) |
-| `Q.seqBlank` | `{ vals, blank }` | [`engine/questions.js:1257`](../src/engine/questions.js#L1257) |
+| `Q.seqBlank` | `{ vals, blank }` | [`engine/questions.js:1258`](../src/engine/questions.js#L1258) |
 | `Q.seqFill` | `{ vals, blank, step }` | [`engine/questions.js:772`](../src/engine/questions.js#L772) |
 | `Q.seqRule` | `{ vals }` | [`engine/questions.js:777`](../src/engine/questions.js#L777) |
 | `Q.setScale` | `{ a, v, unit = 'kg' }` | [`engine/questions.js:1002`](../src/engine/questions.js#L1002) |
-| `Q.shapeClue` | `{ clue, kind }` | [`engine/questions.js:1152`](../src/engine/questions.js#L1152) |
-| `Q.shapeName` | `{ v, rot = 0 }` | [`engine/questions.js:1141`](../src/engine/questions.js#L1141) |
+| `Q.shapeClue` | `{ clue, kind }` | [`engine/questions.js:1153`](../src/engine/questions.js#L1153) |
+| `Q.shapeName` | `{ v, rot = 0 }` | [`engine/questions.js:1142`](../src/engine/questions.js#L1142) |
 | `Q.shelfAsk` | `{ rows, names, ask, r, c }` | [`engine/questions.js:1053`](../src/engine/questions.js#L1053) |
-| `Q.sidesCorners` | `{ v, ask = 'sides', rot = 0 }` | [`engine/questions.js:1146`](../src/engine/questions.js#L1146) |
-| `Q.solidName` | `{ v }` | [`engine/questions.js:1107`](../src/engine/questions.js#L1107) |
+| `Q.sidesCorners` | `{ v, ask = 'sides', rot = 0 }` | [`engine/questions.js:1147`](../src/engine/questions.js#L1147) |
+| `Q.solidName` | `{ v }` | [`engine/questions.js:1108`](../src/engine/questions.js#L1108) |
 | `Q.sortEvenOdd` | `{ k = 6 } = {}` | [`engine/questions.js:636`](../src/engine/questions.js#L636) |
 | `Q.story` | `{ text, a, b, unit, art: ar = 'apple', art2, ask, op = '+', pic = 'join' }` | [`engine/questions.js:358`](../src/engine/questions.js#L358) |
-| `Q.story100` | `{ text, a, b, op, unit, bar, lab }` | [`engine/questions.js:1417`](../src/engine/questions.js#L1417) |
+| `Q.story100` | `{ text, a, b, op, unit, bar, lab }` | [`engine/questions.js:1418`](../src/engine/questions.js#L1418) |
 | `Q.story20` | `{ text, a, b, op, unit }` | [`engine/questions.js:890`](../src/engine/questions.js#L890) |
-| `Q.storyFor` | `{ a, b, op, stories }` | [`engine/questions.js:1429`](../src/engine/questions.js#L1429) |
-| `Q.sub100` | `{ a, b, blocks = false }` | [`engine/questions.js:1366`](../src/engine/questions.js#L1366) |
+| `Q.storyFor` | `{ a, b, op, stories }` | [`engine/questions.js:1430`](../src/engine/questions.js#L1430) |
+| `Q.sub100` | `{ a, b, blocks = false }` | [`engine/questions.js:1367`](../src/engine/questions.js#L1367) |
 | `Q.subCountOn` | `{ a, b }` | [`engine/questions.js:875`](../src/engine/questions.js#L875) |
 | `Q.subFact` | `{ a, b, frame = false, vert = false, pen }` | [`engine/questions.js:424`](../src/engine/questions.js#L424) |
-| `Q.subSteps` | `{ a, b }` | [`engine/questions.js:1373`](../src/engine/questions.js#L1373) |
+| `Q.subSteps` | `{ a, b }` | [`engine/questions.js:1374`](../src/engine/questions.js#L1374) |
 | `Q.swap` | `{ a, b }` | [`engine/questions.js:347`](../src/engine/questions.js#L347) |
 | `Q.syCount` | `{ f }` | [`grades/p3/p3s.js:181`](../src/grades/p3/p3s.js#L181) |
 | `Q.syCut` | `{ c, rot = 0 }` | [`grades/p3/p3s.js:220`](../src/grades/p3/p3s.js#L220) |
@@ -354,13 +354,15 @@
 | `Q.t6Find` | `{ B, C, ask = 0, names = ['ก', 'ข', 'ค'] }` | [`grades/p6/p6t.js:251`](../src/grades/p6/p6t.js#L251) |
 | `Q.t6Num` | `{ fig, q, a, unit, hint }` | [`grades/p6/p6t.js:257`](../src/grades/p6/p6t.js#L257) |
 | `Q.t6Part` | `{ B, C, base, ask }` | [`grades/p6/p6t.js:242`](../src/grades/p6/p6t.js#L242) |
-| `Q.tallerWord` | `{ a, b }` | [`engine/questions.js:1283`](../src/engine/questions.js#L1283) |
+| `Q.tallerWord` | `{ a, b }` | [`engine/questions.js:1284`](../src/engine/questions.js#L1284) |
 | `Q.tallyMake` | `{ n, label }` | [`engine/questions.js:963`](../src/engine/questions.js#L963) |
 | `Q.tallyRead` | `{ n, label }` | [`engine/questions.js:959`](../src/engine/questions.js#L959) |
-| `Q.tapKind` | `{ items, kind, mode = 'solid' }` | [`engine/questions.js:1113`](../src/engine/questions.js#L1113) |
+| `Q.tapKind` | `{ items, kind, mode = 'solid' }` | [`engine/questions.js:1114`](../src/engine/questions.js#L1114) |
 | `Q.tCan` | `{ text, can, why }` | [`grades/p5/p5r.js:146`](../src/grades/p5/p5r.js#L146) |
 | `Q.tCheaper` | `{ item, unit, A, B, nA = 'ร้านขายดี', nB = 'ร้านสะดวกซื้อ' }` | [`grades/p5/p5r.js:153`](../src/grades/p5/p5r.js#L153) |
-| `Q.tensRead` | `{ n, ask = 'digit' }` | [`engine/questions.js:1211`](../src/engine/questions.js#L1211) |
+| `Q.teamRank` | `{ teams, ask, k, who }` | [`app/lessons.js:1206`](../src/app/lessons.js#L1206) |
+| `Q.teamSum` | `{ teams, i }` | [`app/lessons.js:1204`](../src/app/lessons.js#L1204) |
+| `Q.tensRead` | `{ n, ask = 'digit' }` | [`engine/questions.js:1212`](../src/engine/questions.js#L1212) |
 | `Q.tenSub` | `{ a, b }` | [`engine/questions.js:491`](../src/engine/questions.js#L491) |
 | `Q.three` | `{ nums, op = '+' }` | [`engine/questions.js:868`](../src/engine/questions.js#L868) |
 | `Q.tkCalQ` | `{ m, y, marks, q, a, opts, num, unit = '', hint }` | [`grades/p2/p2t.js:194`](../src/grades/p2/p2t.js#L194) |
@@ -374,22 +376,22 @@
 | `Q.tkTwoNames` | `{ k }` | [`grades/p2/p2t.js:207`](../src/grades/p2/p2t.js#L207) |
 | `Q.tMoreLess` | `{ r1, r2, v, unit, more }` | [`grades/p5/p5r.js:137`](../src/grades/p5/p5r.js#L137) |
 | `Q.toThai` | `{ n }` | [`engine/questions.js:697`](../src/engine/questions.js#L697) |
-| `Q.traceShape` | `{ v, obj, name }` | [`engine/questions.js:1156`](../src/engine/questions.js#L1156) |
-| `Q.traceWhat` | `{ obj, name, kind }` | [`engine/questions.js:1164`](../src/engine/questions.js#L1164) |
+| `Q.traceShape` | `{ v, obj, name }` | [`engine/questions.js:1157`](../src/engine/questions.js#L1157) |
+| `Q.traceWhat` | `{ obj, name, kind }` | [`engine/questions.js:1165`](../src/engine/questions.js#L1165) |
 | `Q.truth` | `{ text, ok, hint }` | [`engine/questions.js:703`](../src/engine/questions.js#L703) |
 | `Q.tSolve` | `{ text, a, b, c, unit, round, plain }` | [`grades/p5/p5r.js:116`](../src/grades/p5/p5r.js#L116) |
 | `Q.tTable` | `{ k1, u1, k2, u2, a, b, c }` | [`grades/p5/p5r.js:129`](../src/grades/p5/p5r.js#L129) |
-| `Q.unitCount` | `{ item, unit, vis = 'len', max }` | [`engine/questions.js:1289`](../src/engine/questions.js#L1289) |
-| `Q.unitPick` | `{ name, e, m }` | [`engine/questions.js:1319`](../src/engine/questions.js#L1319) |
-| `Q.unk1` | `s` | [`app/lessons.js:2060`](../src/app/lessons.js#L2060) |
+| `Q.unitCount` | `{ item, unit, vis = 'len', max }` | [`engine/questions.js:1290`](../src/engine/questions.js#L1290) |
+| `Q.unitPick` | `{ name, e, m }` | [`engine/questions.js:1320`](../src/engine/questions.js#L1320) |
+| `Q.unk1` | `s` | [`app/lessons.js:2072`](../src/app/lessons.js#L2072) |
 | `Q.unknown20` | `{ t }` | [`engine/questions.js:881`](../src/engine/questions.js#L881) |
 | `Q.v3Conv` | `{ from, to }` | [`grades/p3/p3v.js:93`](../src/grades/p3/p3v.js#L93) |
 | `Q.v3Read` | `{ cap, ml, col = 'water', name, kind = 'jug' }` | [`grades/p3/p3v.js:78`](../src/grades/p3/p3v.js#L78) |
 | `Q.v3Set` | `{ cap, ml, col = 'water', name }` | [`grades/p3/p3v.js:82`](../src/grades/p3/p3v.js#L82) |
 | `Q.v3Tool` | `{ name, ml }` | [`grades/p3/p3v.js:86`](../src/grades/p3/p3v.js#L86) |
 | `Q.v3Unit` | `{ text, right }` | [`grades/p3/p3v.js:89`](../src/grades/p3/p3v.js#L89) |
-| `Q.vertAdd` | `{ a, b }` | [`engine/questions.js:1348`](../src/engine/questions.js#L1348) |
-| `Q.vertSub` | `{ a, b }` | [`engine/questions.js:1386`](../src/engine/questions.js#L1386) |
+| `Q.vertAdd` | `{ a, b }` | [`engine/questions.js:1349`](../src/engine/questions.js#L1349) |
+| `Q.vertSub` | `{ a, b }` | [`engine/questions.js:1387`](../src/engine/questions.js#L1387) |
 | `Q.vFill` | `{ kind, cap, target, name, col }` | [`grades/p2/p2v.js:106`](../src/grades/p2/p2v.js#L106) |
 | `Q.vPour` | `{ src, srcName, n, cup, cupName, col, dry }` | [`grades/p2/p2v.js:95`](../src/grades/p2/p2v.js#L95) |
 | `Q.vRead` | `{ kind, cap, v, name, col }` | [`grades/p2/p2v.js:101`](../src/grades/p2/p2v.js#L101) |

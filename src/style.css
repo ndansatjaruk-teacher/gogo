@@ -1066,7 +1066,7 @@ a{color:var(--sky-2)}
 .lu-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;font-style:normal;font-size:12px;font-weight:800;padding:2px 8px;border-radius:var(--r-pill);background:var(--sky-2);color:#fff;animation:popIn .3s var(--spring) both}
 .lu-badge.l{background:var(--coral)}.lu-badge.r{background:var(--mint-2)}
 .lu-kid.board{animation:board .6s var(--ease) forwards}
-@keyframes board{to{transform:translateX(20px);opacity:.35}}
+@keyframes board{to{transform:translateX(20px)}} /* v204 (ผู้ใช้ขอ): ขึ้นรถแล้วไม่จาง */
 .hands{display:flex;justify-content:space-between;width:min(560px,90cqw);font-weight:700;color:var(--ink-3);font-size:14px}
 .kgrid-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
 .kgrid{display:grid;grid-template-columns:repeat(3,auto);gap:4px 14px;padding:8px 14px;border-radius:var(--r-lg);background:linear-gradient(#EAF4FF,#E7F6E8);box-shadow:var(--e1)}
@@ -4024,3 +4024,16 @@ ul.bul b.hl{color:var(--mint-2);background:none}ul.bul b.hl2{color:var(--coral-2
 
 .blab-p.sb svg rect{fill:url(#l-mint)}.blab-p.cube.sb svg rect{fill:url(#g-orange)}.blab-p.sg svg rect{fill:url(#l-yellow)}
 .blab-p.ticked::after{content:'✓';position:absolute;right:-4px;top:-6px;width:16px;height:16px;border-radius:50%;background:var(--mint);color:#fff;font:900 11px/16px var(--font);text-align:center}
+
+/* v204 (ผู้ใช้ขอ): ป้ายอันดับอยู่หน้าคนแข่ง (ทางซ้าย) ไม่ทับเส้นชัย */
+.rc-run .rc-badge{position:absolute;right:100%;margin-right:8px;z-index:2;font-size:13px;padding:3px 10px;box-shadow:0 2px 6px rgba(43,37,80,.18)}
+.rc-finish{z-index:1}
+/* v204 ด่าน 4: แต่ละทีมมีสีของตัวเอง */
+.rk-col.tm{box-shadow:var(--e1),inset 0 0 0 3px var(--tc);background:color-mix(in srgb,var(--tc) 14%,#fff)}
+.rk-col.tm .rk-name{color:color-mix(in srgb,var(--tc) 70%,#2B2550)}
+.tm-row{display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:14px;background:color-mix(in srgb,var(--tc) 12%,#fff);box-shadow:inset 0 0 0 2.5px var(--tc)}
+.tm-row b{font:800 18px var(--font);color:color-mix(in srgb,var(--tc) 70%,#2B2550);min-width:5.5em}
+.tm-dot{width:16px;height:16px;border-radius:50%;background:var(--tc)}
+.shq{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:16px;background:var(--surface);box-shadow:var(--e1)}.shq svg{width:54px;height:54px}.shq b{font:800 20px var(--font)}
+.slots.ar .slot.pick{box-shadow:0 0 0 3px var(--gold)}.cards .ncard.sel{transform:translateY(-4px);box-shadow:0 0 0 3px var(--gold),var(--e2)}
+.p2wsd .targetw svg{width:clamp(180px,22cqw,240px);height:auto}
