@@ -4153,9 +4153,7 @@ body[data-world=river] .keypad.mi-kp .btn{width:clamp(70px,8cqw,90px);min-height
 body[data-world=river] .keypad.mi-kp .btn.ok2{width:auto}
 body[data-world=river] .keypad.mi-kp .btn .ic{width:30px;height:30px}
 body[data-world=river] .qbody .mi-nl{width:min(900px,96cqw)}
-/* v224 (ผู้ใช้ขอ): ม.1 ดูมีสีสันขึ้น — กรอบการ์ดไล่สีแม่น้ำ ปุ่มตัวเลือกหลากสี แป้นตัวเลขฟ้า ช่องคำตอบเหลือง · ตัวเลขยังสีดำ */
-body[data-world=river] .card.stage-card{border:5px solid transparent;background:linear-gradient(180deg,#FFFEFA 0%,#FFFDF6 60%,#F6FBFE 100%) padding-box,linear-gradient(135deg,#4FC3F7 0%,#4FD1A1 35%,#FFD45C 68%,#FF9AA6 100%) border-box;box-shadow:var(--e2),0 0 0 3px rgba(255,255,255,.7)}
-body[data-world=river] .tutor.in-card{border-bottom:3px dotted #9FD6F2}
+/* v224 (ผู้ใช้ขอ): ม.1 ดูมีสีสันขึ้น — (v225: การ์ดโจทย์กลับเป็นแบบเดิม) ปุ่มตัวเลือกหลากสี แป้นตัวเลขฟ้า ช่องคำตอบเหลือง · ตัวเลขยังสีดำ */
 body[data-world=river] .qbody .opts .opt{--c:#E8F6FE;--c2:#8FCDEB}
 body[data-world=river] .qbody .opts .opt:nth-child(4n+2){--c:#E6F8EF;--c2:#86D6AE}
 body[data-world=river] .qbody .opts .opt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}
