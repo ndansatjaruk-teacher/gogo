@@ -5,6 +5,7 @@
 
 | ไฟล์ | ขนาด | เนื้อหา |
 |---|---|---|
+| `src/engine/zoomfix.js` | 3 KB | (v218) ไฟล์แรกที่โหลด: ตรวจว่าเบราว์เซอร์คืน getBoundingClientRect/getScreenCTM ใต้ CSS zoom แบบเก่า (Safari Mac, Chrome เก่า) ไหม ถ้าใช่ ปรับค่าให้ตรงเมาส์ · `zfScale(el)` แปลงระยะเมาส์ → px ของ style |
 | `src/engine/core.js` | 11 KB | ตัวช่วยพื้นฐาน: h() สร้าง element, เสียง say()/sfx, SET/SAVE (ค่าตั้ง/ความคืบหน้า) |
 | `src/engine/art.js` | 107 KB | ภาพวาด SVG ตัวละคร สิ่งของ ฉาก |
 | `src/engine/jungle.js` | 7 KB | ป่าดิบชื้น (ป.3) — rainforest pieces: giant buttress trees, vines, a river, walking / flying animals, insects |

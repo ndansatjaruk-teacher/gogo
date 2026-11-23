@@ -1,6 +1,7 @@
 # ลำดับไฟล์ที่ build.py นำมาต่อกัน (บนลงล่าง) — ไฟล์ทั้งหมดใช้ global scope ร่วมกัน
 # ไฟล์ที่ใช้ของจากไฟล์อื่นต้องอยู่ "หลัง" ไฟล์นั้น · ไฟล์ใหม่ให้เพิ่มบรรทัดที่นี่
 # Build order (top → bottom). All files share one global scope; a file must come after anything it uses.
+engine/zoomfix.js
 engine/core.js
 engine/art.js
 engine/jungle.js

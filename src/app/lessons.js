@@ -1368,8 +1368,8 @@ function traceDemo(v, obj) {
 function shapeCanvas() {
   const board = h('div', { class: 'scanvas ia' }); let sel = null, z = 1;
   const add = (v, p) => { const el = shapeEl(v, { p, cls: 'piece' }); el.dataset.rot = 0; el.style.left = 35 + Math.random() * 20 + '%'; el.style.top = 25 + Math.random() * 30 + '%'; board.append(el); select(el); sfx.pop(board.children.length);
-    el.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); select(el); el.style.zIndex = ++z; const r = board.getBoundingClientRect(), sx = e.clientX, sy = e.clientY, l0 = el.offsetLeft, t0 = el.offsetTop; el.setPointerCapture(e.pointerId);
-      const mv = ev => { el.style.left = Math.max(-20, Math.min(r.width - 20, l0 + ev.clientX - sx)) + 'px'; el.style.top = Math.max(-20, Math.min(r.height - 20, t0 + ev.clientY - sy)) + 'px'; };
+    el.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); select(el); el.style.zIndex = ++z; const k = zfScale(board), r = { width: board.offsetWidth, height: board.offsetHeight }, sx = e.clientX, sy = e.clientY, l0 = el.offsetLeft, t0 = el.offsetTop; el.setPointerCapture(e.pointerId);
+      const mv = ev => { el.style.left = Math.max(-20, Math.min(r.width - 20, l0 + (ev.clientX - sx) / k)) + 'px'; el.style.top = Math.max(-20, Math.min(r.height - 20, t0 + (ev.clientY - sy) / k)) + 'px'; };
       const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); }; el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); }); };
   const select = el => { board.querySelectorAll('.piece').forEach(p => p.classList.remove('sel')); sel = el; el && el.classList.add('sel'); };
   board.addEventListener('pointerdown', e => { if (e.target === board) select(null); });
