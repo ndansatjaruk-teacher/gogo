@@ -4126,6 +4126,14 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .keypad.mi-kp .btn.sym{color:var(--ink,#2B2550);font-size:32px} /* v216 (ผู้ใช้ขอ): − / . สีดำเหมือนตัวเลข */
 .keypad.mi-kp .btn.ok2{grid-column:span 2;width:auto}
 .mi-round{padding:6px 18px;border-radius:999px;background:#E4F4FD;box-shadow:var(--e1);font-size:clamp(17px,2.1cqw,22px);color:var(--ink)}
+.mi-sgn{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2cqw,20px);width:min(820px,94cqw)}
+.mi-sgc{display:flex;flex-direction:column;align-items:center;gap:4px;padding:clamp(12px,2cqw,22px);border-radius:var(--r-lg);background:var(--surface);box-shadow:var(--e2);color:var(--ink)}
+.mi-sgc .mi-sgq{font-size:clamp(28px,4cqw,46px);font-weight:900}
+.mi-sgc .mi-sgr,.mi-sgc small{visibility:hidden}
+.mi-sgc .mi-sgr{font-size:clamp(30px,4.4cqw,50px);font-weight:900;color:var(--ink)}
+.mi-sgc small{font-size:clamp(18px,2.4cqw,26px);color:var(--ink-2)}
+.mi-sgc.on .mi-sgr,.mi-sgc.on small{visibility:visible;animation:popIn .3s var(--spring) both}
+.mi-sgc.on.pos{background:#E3F7EA;box-shadow:var(--e1),inset 0 0 0 3px #4CC27B}.mi-sgc.on.neg{background:#FDE8EA;box-shadow:var(--e1),inset 0 0 0 3px #E5505E}
 .mi-two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,3cqw,36px);width:min(980px,96cqw);align-items:start}
 .mi-scol{display:flex;flex-direction:column;gap:8px;align-items:stretch;padding:12px;border-radius:var(--r-lg);background:var(--well);box-shadow:var(--inset)}
 .mi-shead{font-size:clamp(30px,4cqw,44px);font-weight:900;text-align:center;display:flex;justify-content:center}
@@ -4152,6 +4160,21 @@ body[data-world=river] .keypad.mi-kp .btn{width:clamp(70px,8cqw,90px);min-height
 body[data-world=river] .keypad.mi-kp .btn.ok2{width:auto}
 body[data-world=river] .keypad.mi-kp .btn .ic{width:30px;height:30px}
 body[data-world=river] .qbody .mi-nl{width:min(900px,96cqw)}
+/* v224 (ผู้ใช้ขอ): ม.1 ดูมีสีสันขึ้น — กรอบการ์ดไล่สีแม่น้ำ ปุ่มตัวเลือกหลากสี แป้นตัวเลขฟ้า ช่องคำตอบเหลือง · ตัวเลขยังสีดำ */
+body[data-world=river] .card.stage-card{border:5px solid transparent;background:linear-gradient(180deg,#FFFEFA 0%,#FFFDF6 60%,#F6FBFE 100%) padding-box,linear-gradient(135deg,#4FC3F7 0%,#4FD1A1 35%,#FFD45C 68%,#FF9AA6 100%) border-box;box-shadow:var(--e2),0 0 0 3px rgba(255,255,255,.7)}
+body[data-world=river] .tutor.in-card{border-bottom:3px dotted #9FD6F2}
+body[data-world=river] .qbody .opts .opt{--c:#E8F6FE;--c2:#8FCDEB}
+body[data-world=river] .qbody .opts .opt:nth-child(4n+2){--c:#E6F8EF;--c2:#86D6AE}
+body[data-world=river] .qbody .opts .opt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}
+body[data-world=river] .qbody .opts .opt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
+body[data-world=river] .keypad.mi-kp .btn:not(.primary):not(.sym){--c:#F2FAFE;--c2:#A9D9F0}
+body[data-world=river] .keypad.mi-kp .btn.sym{--c:#FFF6D9;--c2:#F2C45A}
+body[data-world=river] .mi-ans .ans-slot{background:#FFF9E6;box-shadow:inset 0 0 0 3px #FFD45C,var(--inset)}
+body[data-world=river] .mi-ans .ans-slot.filled{background:#fff;box-shadow:var(--e1),inset 0 0 0 3px #4FD1A1}
+body[data-world=river] .fst-row{border-left:6px solid #4FC3F7}
+body[data-world=river] .fst-row:nth-child(4n+2){border-left-color:#4FD1A1}body[data-world=river] .fst-row:nth-child(4n+3){border-left-color:#FFD45C}body[data-world=river] .fst-row:nth-child(4n+4){border-left-color:#FF9AA6}
+body[data-world=river] .exam-card .xopt:nth-child(4n+1){--c:#E8F6FE;--c2:#8FCDEB}body[data-world=river] .exam-card .xopt:nth-child(4n+2){--c:#E6F8EF;--c2:#86D6AE}
+body[data-world=river] .exam-card .xopt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}body[data-world=river] .exam-card .xopt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
 body[data-world=river] .qbody .opt .mi-x{flex-wrap:nowrap;white-space:nowrap}
 </style></head>
 <body><div id="app"></div>
@@ -27342,6 +27365,14 @@ function miPatternSim(rows, note) {
   return h('div', { class: 'colstack' }, h6wait(), h('div', { class: 'cap' }, 'แตะแถวทีละแถวจากบนลงล่าง สังเกตว่าผลคูณเปลี่ยนอย่างไร'), tbl, out);
 }
 /* flip cards: tap every card (counted by the teach gate) */
+/* v224 (ผู้ใช้ขอ): หน้าสรุปตัวใหญ่ — ตารางเครื่องหมายของผลคูณ 2 × 2 · แตะครบ 4 ช่อง */
+function miSignTable() {
+  const cells = [['บวก', 'บวก', 'บวก', '3 × 4 = 12'], ['บวก', 'ลบ', 'ลบ', '3 × (−4) = −12'], ['ลบ', 'บวก', 'ลบ', '(−3) × 4 = −12'], ['ลบ', 'ลบ', 'บวก', '(−3) × (−4) = 12']], out = fNote(); let seen = 0;
+  const grid = h('div', { class: 'mi-sgn' }, ...cells.map(([a, b, r, ex]) => { const c = h('button', { class: 'mi-sgc ia ' + (r === 'บวก' ? 'pos' : 'neg') }, h('span', { class: 'mi-sgq' }, `${a} × ${b}`), h('b', { class: 'mi-sgr' }, `= ${r}`), h('small', { class: 'num' }, ex));
+    c.onclick = e => { e.stopPropagation(); if (c.classList.contains('on')) return; c.classList.add('on'); sfx.pop(++seen); say(`${a} คูณ ${b} ได้${r}`, true);
+      if (seen === cells.length) { out.innerHTML = 'เครื่องหมาย<b>เหมือนกัน</b> ได้<b>บวก</b> และเครื่องหมาย<b>ต่างกัน</b> ได้<b>ลบ</b>'; sfx.ok(); teachDone(grid); } }; return c; }));
+  return h('div', { class: 'colstack no-side' }, h6wait(), h('div', { class: 'cap' }, 'แตะทุกช่องเพื่อเปิดดู'), grid, out);
+}
 function miCards(list) {
   return h('div', { class: 'mi-cards' }, ...list.map(([f, b]) => { const c = h('button', { class: 'mi-card fc' }, h('span', { class: 'f', html: f }), h('span', { class: 'b', html: b }));
     c.onclick = e => { e.stopPropagation(); c.classList.toggle('flip'); sfx.pop(2); if (c.classList.contains('flip')) say(miSay(c.querySelector('.b').textContent), true); }; return c; }));
@@ -27479,7 +27510,7 @@ const MIQ = { k: (n, lab) => Q.miKind({ n, lab }), c: (text, a) => Q.miCtx({ tex
 /* v223: ผลต่างของ 2 จำนวน (ผลไม่ติดลบ): ① เลือก มาก − น้อย ② หาคำตอบ · ตัวลวง = น้อย − มาก และลืมเครื่องหมายของตัวลบ */
 const miDiffQ = (a, b) => { const big = Math.max(a, b), sm = Math.min(a, b), e = `${miP(big)} − ${miP(sm)}`, w = [...new Set([`${miP(sm)} − ${miP(big)}`, `${miP(big)} − ${miP(-sm)}`])].filter(x => x !== e);
   return Q.miStory({ text: `หาผลต่างของ <span class="num">${miN(a)}</span> กับ <span class="num">${miN(b)}</span>`, expr: e, wrong: w, hint: `ผลต่าง = จำนวนที่มาก − จำนวนที่น้อย = ${e} (ผลต่างไม่ติดลบ)` }); };
-const LM1 = (no, place, title, short, goal, teach, game) => ({ id: 2000 + no, place, title, short, tone: TONES5[(no + 2) % 6], goal, teach, game });
+const LM1 = (no, place, title, short, goal, teach, game) => ({ id: 2000 + no, no, place, title, short, tone: TONES5[(no + 2) % 6], goal, teach, game });
 const MI_SUMS = { same: [[1, 6], [-3, -5], [-6, -2], [7, 2], [-6, -1], [-3, -3], [2, 6], [-1, -7]], mix: [[5, -3], [-7, 4], [-2, 6], [3, -8], [-5, 5], [6, -2], [-9, 3], [4, -4], [-1, 7]] };
 const LESSONS_M1C1 = [
   LM1(1, 'ท่าน้ำจำนวนเต็ม', 'จำนวนเต็ม ตอนที่ 1', 'รู้จักจำนวนเต็ม', 'บอกได้ว่าจำนวนใดเป็นจำนวนเต็มบวก จำนวนเต็มลบ หรือศูนย์ และใช้จำนวนเต็มแทนสถานการณ์ เช่น สูงหรือต่ำกว่าระดับน้ำ', [
@@ -27553,7 +27584,9 @@ const LESSONS_M1C1 = [
     Q.miStory({ text: 'ยอดเขาสูงกว่าระดับน้ำทะเล 1,200 เมตร ซากเรืออยู่ใต้ระดับน้ำทะเล 350 เมตร ทั้งสองอยู่ห่างกันกี่เมตร', expr: '1,200 − (−350)', wrong: ['1,200 − 350', '(−350) − 1,200'], unit: 'เมตร', hint: 'มาก − น้อย' })]),
   LM1(9, 'ลานกลุ่มคูณ', 'การคูณจำนวนเต็ม ตอนที่ 1', 'คูณบวกกับลบ', 'หาผลคูณของจำนวนเต็มบวกกับจำนวนเต็มลบ โดยมองเป็นการบวกซ้ำ และสมบัติการสลับที่', [
     T('<b>การคูณ = การบวกซ้ำ</b>: 4 × (−3) คือมี (−3) อยู่ 4 กลุ่ม — แตะกลุ่มทีละกลุ่ม', 'การคูณคือการบวกซ้ำ สี่คูณลบสาม คือมีลบสามอยู่สี่กลุ่ม แตะกลุ่มทีละกลุ่ม', el => el.append(miGroupSim(-3, 4))),
-    T('ตัวอย่างทีละขั้น: (−7) × 5', 'ตัวอย่างทีละขั้น ลบเจ็ด คูณ ห้า', el => el.append(dcWalk('(−7) × 5', [['① สลับที่ได้', '(−7) × 5 = 5 × (−7)'], ['② บวกซ้ำ 5 ครั้ง', '(−7) + (−7) + (−7) + (−7) + (−7)'], ['③ ผลรวม', '= −35']], '<b>บวก × ลบ = ลบ</b> · <b>ลบ × บวก = ลบ</b>')))
+    T('ตัวอย่างทีละขั้น: <b>ลบ × บวก</b> (−7) × 5', 'ตัวอย่างทีละขั้น ลบเจ็ด คูณ ห้า', el => el.append(dcWalk('(−7) × 5', [['① สลับที่ได้', '(−7) × 5 = 5 × (−7)'], ['② บวกซ้ำ 5 ครั้ง', '(−7) + (−7) + (−7) + (−7) + (−7)'], ['③ ผลรวม', '= −35']], '<b>(−7) × 5 = −35</b>'))),
+    T('ตัวอย่างทีละขั้น: <b>ลบ × ลบ</b> (−4) × (−3)', 'ตัวอย่างทีละขั้น ลบสี่ คูณ ลบสาม', el => el.append(dcWalk('(−4) × (−3)', [['① เริ่มจากที่รู้แล้ว', '(−4) × 3 = −12'], ['② ตัวคูณเปลี่ยนจาก 3 เป็น −3 (จำนวนตรงข้าม)', 'ผลคูณก็เปลี่ยนเป็นจำนวนตรงข้ามด้วย'], ['③ จำนวนตรงข้ามของ −12', '= 12']], '<b>(−4) × (−3) = 12</b> — ลบ × ลบ ได้บวก'))),
+    T('<b>สรุป</b>: เครื่องหมายของผลคูณ', 'สรุปเครื่องหมายของผลคูณ เครื่องหมายเหมือนกันได้บวก ต่างกันได้ลบ', el => el.append(miSignTable()))
   ], () => [MIQ.x('6 × (−4)', 'มี (−4) อยู่ 6 กลุ่ม'), MIQ.x('(−8) × 3', 'บวก × ลบ ได้ลบ'), MIQ.x('(−12) × 5'), MIQ.x('9 × (−11)'), MIQ.x('(−25) × 4'), MIQ.x('(−1) × 37', 'คูณด้วย −1 ได้จำนวนตรงข้าม'), MIQ.x('15 × (−20)'),
     Q.miPick({ q: '3 × (−6) เท่ากับข้อใด', opts: ['(−6) + (−6) + (−6)', '(−3) + (−3) + (−3)', '6 + 6 + 6'], right: '(−6) + (−6) + (−6)', hint: 'มี (−6) อยู่ 3 กลุ่ม' }),
     Q.miSignQ({ expr: '(−17) × 23' }), Q.miMiss({ expr: '☐ × 7 = −56', a: -8, hint: 'ผลคูณเป็นลบ และ 7 เป็นบวก ตัวที่หายไปต้องเป็นลบ' }),
@@ -27630,7 +27663,23 @@ const EXAM_M1C1 = xrot([
   { q: '(−6) × 15 + (−6) × 85 มีค่าเท่าใด', opts: ['−600', '600', '−90', '−510'], a: 0 },
   { q: 'ข้อใดไม่ถูกต้อง', opts: ['(−5) − 8 = 8 − (−5)', '(−5) + 8 = 8 + (−5)', '(−5) × 8 = 8 × (−5)', '[(−5) + 8] + 2 = (−5) + [8 + 2]'], a: 0 }
 ], 3);
-LESSONS_M1C1.find(L => L.id === 2008).pracQ = () => miDiffQ(6, -2); /* v223 (ผู้ใช้ขอ): ลองทำเองแบบปกติก่อน ไม่ใช่โจทย์ปัญหา */
+/* v224 (ผู้ใช้ขอ): ด่านพิเศษหลังด่าน 8 — ถามตอบเร็ว 15 ข้อ การบวกและการลบจำนวนเต็มเท่านั้น · สุ่มใหม่ทุกครั้ง ง่าย → ยาก
+   ข้อ 1–5 เลขหลักเดียว · 6–10 เลขสองหลัก · 11–15 สามจำนวน · วนครบ 7 แบบ (บวกลบ+ลบ, บวกต่างเครื่องหมาย 2 แบบ, ลบ 4 แบบ) */
+function miQuick15() {
+  const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1)), P = miP, out = [], seen = new Set();
+  const H = { same: 'เครื่องหมายเหมือนกัน: บวกค่าสัมบูรณ์ แล้วใส่เครื่องหมายเดิม', mix: 'ต่างเครื่องหมาย: มากลบน้อย ใช้เครื่องหมายของตัวที่ค่าสัมบูรณ์มากกว่า', sub: 'ลบ = บวกด้วยจำนวนตรงข้ามของตัวลบ' };
+  const K = [(lo, hi) => [`${P(-R(lo, hi))} + ${P(-R(lo, hi))}`, H.same], (lo, hi) => [`${P(-R(lo, hi))} + ${R(lo, hi)}`, H.mix], (lo, hi) => [`${R(lo, hi)} + ${P(-R(lo, hi))}`, H.mix],
+    (lo, hi) => [`${R(lo, hi)} − ${P(-R(lo, hi))}`, H.sub], (lo, hi) => [`${P(-R(lo, hi))} − ${R(lo, hi)}`, H.sub], (lo, hi) => [`${P(-R(lo, hi))} − ${P(-R(lo, hi))}`, H.sub], (lo, hi) => { const a = R(lo, hi); return [`${a} − ${a + R(lo, hi)}`, H.sub]; }];
+  for (let i = 0, t = 0; out.length < 15 && t < 400; t++) { let e, hn; const k = (i + Math.floor(i / 7)) % 7;
+    if (i < 5) [e, hn] = K[k](1, 9); else if (i < 10) [e, hn] = K[k](10, 40);
+    else { const a = R(2, 30) * (Math.random() < .5 ? -1 : 1), b = R(2, 30) * (Math.random() < .5 ? -1 : 1), c = R(2, 30) * (Math.random() < .5 ? -1 : 1); e = `${P(a)} ${Math.random() < .5 ? '+' : '−'} ${P(b)} − ${P(c)}`; hn = 'ทำจากซ้ายไปขวา ลบ = บวกด้วยจำนวนตรงข้าม'; }
+    if (seen.has(e)) continue; seen.add(e); out.push(MIQ.x(e, hn)); i++; }
+  return out;
+}
+LESSONS_M1C1.splice(LESSONS_M1C1.findIndex(L => L.id === 2008) + 1, 0, { id: 2016, bonus: true, place: 'แก่งถามตอบ', title: 'ด่านพิเศษ: บวก ลบ จำนวนเต็ม 15 ข้อ', short: 'ถามตอบ บวก ลบ', tone: 'yellow', learned: true, noTeach: true, gameN: 15,
+  goal: 'ฝึกบวกและลบจำนวนเต็มแบบถามตอบเร็ว 15 ข้อ (สุ่มใหม่ทุกครั้ง) เริ่มจากเลขหลักเดียว ไปสองหลัก และสามจำนวน', teach: [], game: miQuick15 });
+LESSONS_M1C1.find(L => L.id === 2008).pracQ = () => miDiffQ(6, -2);
+LESSONS_M1C1.find(L => L.id === 2010).pracQ = () => MIQ.x('(−6) × (−4)', 'ลบ × ลบ ได้บวก · 6 × 4 = 24'); /* v224 (ผู้ใช้ขอ): ลองทำเองแบบ 2 จำนวนก่อน */ /* v223 (ผู้ใช้ขอ): ลองทำเองแบบปกติก่อน ไม่ใช่โจทย์ปัญหา */
 LESSONS_M1C1.push({ id: 2019, boss: true, place: 'วังจระเข้', title: 'ด่านบอส: ม.1 บทที่ 1 จำนวนเต็ม', short: 'ด่านบอส · ข้อสอบ', tone: 'jade',
   goal: 'ตอบคำถามเรื่องจำนวนเต็ม 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะจระเข้',
   exam: EXAM_M1C1, pass: 16, bossName: 'จระเข้จำนวนเต็ม', bossPal: 'green', emblem: '±', bossKind: 'croc',
