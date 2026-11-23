@@ -544,17 +544,19 @@ function teachGate(vis, onDone) {
   const finish = () => { if (done) return; done = true; mo.disconnect(); onDone(); };
   /* v205 (ผู้ใช้ขอ: ทุกบทเรียน กดให้ครบก่อนจึงไปต่อ) — things the child taps to explore (each child in a line, each shelf cell, each figure…) must ALL be tapped */
   const exp = () => [...vis.querySelectorAll(EXP_SEL)].filter(e => e.onclick && e.offsetParent !== null && !e.closest('.opts, .keypad'));
-  const expOK = () => { const x = exp(); return !x.length || x.length > 16 || x.every(e => e.dataset.tapped); };
+  /* v208: รูปที่แตะนับได้ (นับปลา ฯลฯ) ต้องนับให้ครบทุกตัว — เดิมแตะ 2 ครั้งก็ผ่าน */
+  const cnt = () => [...vis.querySelectorAll('.obj.cnt')].filter(e => e.offsetParent !== null && !e.closest('.opts, .keypad, .qsim, .prac'));
+  const expOK = () => { const x = exp(), c = cnt(); return (!x.length || x.length > 16 || x.every(e => e.dataset.tapped)) && (!c.length || c.length > 16 || c.every(e => e.dataset.c)); };
   const check = () => { if (done) return; vis.querySelectorAll('button').forEach(b => { if (SEQ_BTN(b) && !seq.has(b) && b.offsetParent !== null) seq.add(b); });
     if (seq.size) { if ([...seq].every(fin) && expOK()) finish(); }
-    else if (exp().length && exp().length <= 16) { if (expOK()) finish(); }
+    else if ((exp().length && exp().length <= 16) || (cnt().length && cnt().length <= 16)) { if (expOK()) finish(); }
     else if (taps >= 2) finish(); };
   const mo = new MutationObserver(() => requestAnimationFrame(check)); mo.observe(vis, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'disabled'] });
   vis.addEventListener('click', e => { if (e.target.closest('.restart')) return; const xe = e.target.closest(EXP_SEL); if (xe) xe.dataset.tapped = 1; const sb = e.target.closest('button'); if (sb && seq.has(sb)) sb.dataset.clicked = 1; if (e.target.closest('.ia, button, canvas, .tappable, .sc-it, .hc, .rp, .lu-kid, .sh-cell')) { taps++; requestAnimationFrame(check); } }, true);
   vis.addEventListener('pointerdown', e => { if (e.target.closest('canvas, .piece, .drag, .lb-knob')) { taps++; requestAnimationFrame(check); } }, true);
   vis.addEventListener('teachdone', finish);
   if (!interactive) requestAnimationFrame(() => requestAnimationFrame(() => { if (vis.querySelector('.stg-next')) check(); else finish(); })); else requestAnimationFrame(check); // explanation steps the child opens one by one (v98)
-  return { isDone: () => done, next: () => [...seq].find(b => b.isConnected && b.offsetParent !== null && !b.disabled && !fin(b)) || exp().find(e => !e.dataset.tapped), left: () => exp().filter(e => !e.dataset.tapped).length };
+  return { isDone: () => done, next: () => [...seq].find(b => b.isConnected && b.offsetParent !== null && !b.disabled && !fin(b)) || exp().find(e => !e.dataset.tapped) || (cnt().length <= 16 ? cnt().find(e => !e.dataset.c) : null), left: () => exp().filter(e => !e.dataset.tapped).length || (cnt().length <= 16 ? cnt().filter(e => !e.dataset.c).length : 0) };
 }
 /* a sim with a “new numbers” button (.nxp): the clone page clicks it c times before it is shown, then the button is removed */
 const quietly = fn => { const m = SET.mute; SET.mute = true; try { return fn(); } finally { SET.mute = m; } };
@@ -597,6 +599,21 @@ function thinkGuide(rows) { // tap to open the next thinking step of the worked 
   return h('div', { class: 'tguide' }, h('div', { class: 'tg-h' }, 'ตัวช่วยคิด — ทำทีละขั้นเหมือนในตัวอย่าง'), list, btn);
 }
 let TEACH_LID = 0; // lesson id of the teaching pages on screen (practice questions use it)
+/* v208 (ผู้ใช้ขอ) ? ในหน้าเรียน = ขั้นนี้ต้องทำอะไรต่อ (คิดจากหน้าจอจริงตอนกด) และกระพริบสิ่งที่ต้องกด */
+function teachHelp(vis, s, G) {
+  if (vis.querySelector('.prac') && document.querySelector('.qh')) return; // a ‘try it’ question brings its own ?
+  let tgt = null; const lab = b => (b.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 30);
+  const guide = () => { const g = G(), out = [], inter = vis.querySelector('.ia, button, canvas, .tappable, [draggable]'); tgt = null; if (s.help) out.push(s.help);
+    if (g && g.isDone && g.isDone()) { out.push(inter ? 'ทำครบแล้ว! จะลองกดเล่นต่อก็ได้ หรือกด <b>ถัดไป</b> (มุมขวาล่าง)' : 'ฟังไก่น้อยอ่าน ดูภาพ แล้วกด <b>ถัดไป</b> (มุมขวาล่าง) หรือแตะตรงไหนก็ได้'); return out; }
+    const nb = g && g.next && g.next();
+    if (nb && nb.matches && nb.matches('.obj.cnt')) { tgt = nb; out.push(`<b>แตะทีละตัว</b>เพื่อนับ 1, 2, 3, … ให้ครบทุกตัว (ตัวที่กระพริบ) — เหลืออีก <b>${g.left()}</b> ตัว`); }
+    else if (nb && nb.matches && nb.matches(EXP_SEL)) { tgt = nb; out.push(`แตะ<b>ทุกอัน</b>ในภาพทีละอัน — เหลืออีก <b>${g.left ? g.left() : ''}</b> อัน`); }
+    else if (nb) { tgt = nb; out.push(`กดปุ่ม <b>“${lab(nb)}”</b> (ปุ่มที่กระพริบ)`); }
+    const gg = qGuide(vis).filter(t => !(tgt && tgt.matches('.obj.cnt') && /เพื่อนับ/.test(t))); out.push(...gg.filter(t => !out.includes(t)));
+    if (!nb && !gg.length) { const tip = vis.querySelector('.blab-tip, .cap, .tm-note'); tgt = vis.querySelector('.ia:not(.restart), .tappable'); out.push(tip && tip.textContent.trim() ? `ทำตามนี้: ${tip.textContent.trim().slice(0, 80)}` : 'ลอง<b>แตะ</b>หรือ<b>ลาก</b>สิ่งของในภาพ แล้วดูว่าเกิดอะไรขึ้น'); }
+    out.push('ทำครบแล้วปุ่ม <b>ถัดไป</b> จะเปลี่ยนเป็นสีเขียว'); return out; };
+  qHelp(vis, null, () => false, { teach: 1, guide, onOpen: () => { if (tgt && tgt.isConnected) { tgt.classList.remove('qh-target'); void tgt.offsetWidth; tgt.classList.add('qh-target'); setTimeout(() => tgt && tgt.classList.remove('qh-target'), 2000); } } });
+}
 function startTeach(li, at = 0, seen = false) {
   GAME_LID = 0;
   const L = LESSONS[li]; TEACH_LID = L.id; teachPractice(L); let i = at, dir = 1, gate = null; const doneSteps = new Set(seen ? L.teach.map((_, k) => k) : []);
@@ -605,7 +622,7 @@ function startTeach(li, at = 0, seen = false) {
   const steps = h('div', { class: 'steps' }), cap = h('div');
   const stage = shell({ lesson: true, world: WORLD_OF(cityOf(L)), top: lessonTop(L, 'บทเรียน'), bottom: [back, h('div', { class: 'mid' }, steps, cap), next] });
   let total = L.teach.length + 1, bub = null, hint = null, vis = null;
-  const setLock = locked => { next.classList.toggle('waiting', locked); if (hint) { hint.lastChild.textContent = locked ? 'ทำตัวอย่างให้ครบก่อน แล้วจึงไปต่อได้' : 'แตะตรงไหนก็ได้เพื่อไปต่อ'; hint.classList.toggle('lock', locked); } };
+  const setLock = locked => { next.classList.toggle('waiting', locked); if (hint) { hint.lastChild.textContent = locked ? 'ทำตัวอย่างให้ครบก่อน แล้วจึงไปต่อได้ · งงไหม? กดปุ่ม ? ด้านบน' : 'แตะตรงไหนก็ได้เพื่อไปต่อ'; hint.classList.toggle('lock', locked); } };
   function mountStep(s) {
     vis.innerHTML = ''; window.__lastWalk = null; s.v(vis); if (window.__lastWalk && !s.prac && !L.__guide) L.__guide = window.__lastWalk; if (s.nxClone) nxpAdvance(vis, s.nxClone);
     if (s.adjClone) adjAdvance(vis, s.adjClone);
@@ -622,9 +639,9 @@ function startTeach(li, at = 0, seen = false) {
       if (clones.length) { L.teach.splice(i + 1, 0, ...clones); total = L.teach.length + 1;
         const sh = [...doneSteps].map(k => k > i ? k + clones.length : k); doneSteps.clear(); sh.forEach(k => doneSteps.add(k)); if (seen) clones.forEach((_, c) => doneSteps.add(i + 1 + c)); dots(); } }
     vis.querySelectorAll('.nxp').forEach(b => b.remove());
-    if (doneSteps.has(i)) { window.__gate = gate = { isDone: () => true, next: () => null }; setLock(false); return; }
+    if (doneSteps.has(i)) { window.__gate = gate = { isDone: () => true, next: () => null }; setLock(false); teachHelp(vis, s, () => gate); return; }
     const k = i; window.__gate = gate = teachGate(vis, () => { doneSteps.add(k); if (k === i) { setLock(false); next.classList.add('ready'); setTimeout(() => next.classList.remove('ready'), 1200); markResult(vis); } });
-    setLock(!gate.isDone());
+    setLock(!gate.isDone()); teachHelp(vis, s, () => gate);
   }
   function dots() { steps.innerHTML = ''; for (let k = 0; k < total; k++) steps.append(h('i', { class: k < i ? 'done' : k === i ? 'on' : '' })); cap.textContent = `ขั้นที่ ${i + 1} จาก ${total}`; }
   function render() {
@@ -649,7 +666,7 @@ function startTeach(li, at = 0, seen = false) {
     }
   }
   const blocked = () => { if (!gate || gate.isDone()) return false;
-    sfx.no(); const nb = gate.next(), nl = gate.left ? gate.left() : 0; bub.set('ลองทำตัวอย่างให้ครบก่อนนะ' + (nb && nb.matches && nb.matches(EXP_SEL) ? ` — แตะให้ครบทุกอัน (เหลืออีก ${nl})` : nb ? ` — กดปุ่ม “${nb.textContent.trim()}”` : ' — ลองแตะหรือปรับในภาพดู'), 'bad', 'think'); say('ลองทำตัวอย่างให้ครบก่อนนะ', true);
+    sfx.no(); const nb = gate.next(), nl = gate.left ? gate.left() : 0; bub.set('ลองทำตัวอย่างให้ครบก่อนนะ' + (nb && nb.matches && nb.matches('.obj.cnt') ? ` — แตะนับให้ครบทุกตัว (เหลืออีก ${nl})` : nb && nb.matches && nb.matches(EXP_SEL) ? ` — แตะให้ครบทุกอัน (เหลืออีก ${nl})` : nb ? ` — กดปุ่ม “${nb.textContent.trim()}”` : ' — ลองแตะหรือปรับในภาพดู'), 'bad', 'think'); say('ลองทำตัวอย่างให้ครบก่อนนะ', true); if (nb && nb.isConnected) { nb.classList.remove('qh-target'); void nb.offsetWidth; nb.classList.add('qh-target'); setTimeout(() => nb.classList.remove('qh-target'), 2000); }
     const k0 = i; setTimeout(() => { if (k0 === i && i < L.teach.length && bub.isConnected) bub.set(L.teach[i].t, null, 'think'); }, 2800);
     if (nb) { nb.classList.remove('nudge'); void nb.offsetWidth; nb.classList.add('nudge'); nb.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     next.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 280 });
@@ -1026,7 +1043,7 @@ function startGame(li) {
           document.body.append(sh);
           if (attempts === 0 && i % 3 === 2) confetti(18);
         } else {
-          attempts++; { const pk = ctx.__pick; ctx.__pick = null; const hs = hint ? String(hint) : ''; if (hs || pk) lastWhy = (pk && pk.length < 60 ? `เลือก “${pk}” ซึ่งไม่ถูก` + (hs ? ' — ' : '') : '') + hs; } sfx.no(); markAns(body, false); const r = tryStep(attempts, hint, body);
+          attempts++; { const pk = ctx.__pick; ctx.__pick = null; const hs = hint ? String(hint) : ''; if (hs || pk) lastWhy = (pk && pk.length < 60 ? `เลือก “${pk}” ซึ่งไม่ถูก` + (hs ? ' — ' : '') : '') + hs; } sfx.no(); markAns(body, false); const r = tryStep(attempts, hint, body); if (qh && qh.hint && hint && !hintLeaks(String(hint), body)) qh.hint(hint); /* v208: ? บอกคำใบ้หลังตอบผิด */
           if (r.reveal) { // 3rd wrong try: show the answer, then move on
             done = true; qh && qh.done(); missed.push(q.say || q.prompt); revealAll(body, ctx, q); awaiting = true;
             bub.set(q.prompt + `<div class="bsub">${r.html}</div>`, 'bad', 'think'); say(r.say);

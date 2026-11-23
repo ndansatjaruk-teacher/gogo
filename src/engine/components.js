@@ -24,23 +24,35 @@ function bubbleRow(html, opts = {}) {
    ทุก 30 วินาที (ถ้ายังไม่ตอบ) ขึ้นคำพูด “มีอะไรถามมั้ย?” ข้างปุ่ม — ปิดได้ในตั้งค่า (SET.askNudge) · ตอบเสร็จแล้วคืนกรอบเดิมกลับที่ (แสดงคำตอบ)
    คำสั่งที่จำเป็น (ขั้นที่ 1: เลือก… · ให้เข็มชี้ …) ยังอยู่บนจอ · ใส่ class "qhelp" ให้กล่องใดก็ได้ที่เป็นคำแนะนำ หรือ q.help (HTML) */
 const QHELP_SEL = '.e4w-info, .qhelp';
+/* v208 (ผู้ใช้ขอ): ปุ่ม ? อยู่ในแถบคำพูดของไก่ (ไม่ทับปุ่มถัดไป) และบอกว่า “ตอนนี้ต้องทำอะไร” — หน้าเรียน: ขั้นนี้ต้องกด/แตะอะไร · เกม: วิธีตอบ + คำใบ้หลังตอบผิด */
+const QG = (sel, t) => [sel, t];
+const QGUIDE = [QG('.pairs.ia', 'แตะของ<b>แถวบน</b> 1 อัน แล้วแตะของ<b>แถวล่าง</b> 1 อัน ให้เป็นคู่ ทำจนครบ'), QG('.match', 'แตะรูป<b>ทางซ้าย</b> แล้วแตะคู่ของมัน<b>ทางขวา</b> (หรือลากเส้น) ให้ครบทุกคู่'),
+  QG('.slots.ar', 'แตะ<b>ชื่อ</b> แล้วแตะ<b>ช่อง</b>ที่จะวาง · แตะช่องที่วางแล้วเพื่อเอาออก'), QG('.slots', 'แตะการ์ดด้านล่างเพื่อวางลงช่องตามลำดับ · แตะช่องเพื่อเอาออก'),
+  QG('.counters.ia', 'แตะ<b>ตัวนับ</b>เพื่อเปลี่ยนสี ให้ได้ตามโจทย์ แล้วกด <b>ตรวจคำตอบ</b>'), QG('.ms-box', 'ทำ<b>ทีละขั้น</b>: ตอบขั้นที่มีกรอบสีเหลืองก่อน แล้วขั้นต่อไปจะเปิดเอง'),
+  QG('.blab', 'บล็อกช่วยคิดได้: <b>แตะบล็อก</b>เพื่อเอาออก/นับ · กดปุ่มใต้บล็อกเพื่อกระจาย/ทด'), QG('.rd-knob', '<b>ลากปุ่มกลม</b> (หรือแตะบนไม้บรรทัด) ให้ปลายอยู่ตรงตัวเลขที่โจทย์บอก แล้วกดตรวจคำตอบ'),
+  QG('.obj.cnt:not([data-c])', '<b>แตะรูปทีละอัน</b>เพื่อนับ'), QG('.keypad, .pad', 'กด<b>ตัวเลข</b>บนแป้นให้ได้คำตอบ แล้วกด <b>✓</b> (กด ‹ เพื่อลบ)'),
+  QG('.opts', 'อ่านโจทย์ แล้ว<b>แตะคำตอบที่ถูก</b> 1 ข้อ'), QG('canvas', 'ใช้นิ้ว<b>เขียน</b>ในช่อง'), QG('[draggable="true"], .ix-drag', '<b>ลาก</b>คำตอบไปวางในช่องว่าง')];
+function qGuide(root) { const out = [], seen = new Set(); QGUIDE.forEach(([sel, t]) => { if (out.length >= 3 || seen.has(t)) return; const el = root.querySelector(sel); if (el && el.offsetParent !== null) { out.push(t); seen.add(t); } }); return out; }
 function qHelp(body, q, isDone, o = {}) {
   document.querySelectorAll('.qh').forEach(x => x.done ? x.done() : x.remove());
   const nodes = [...body.querySelectorAll(QHELP_SEL)].map(n => ({ n, p: n.parentNode, nx: n.nextSibling }));
   const store = h('div', { class: 'qh-store' }); nodes.forEach(x => store.append(x.n));
-  const has = nodes.length || q.help;
-  const pop = h('div', { class: 'qh-pop', hidden: true }, h('div', { class: 'qh-h' }, 'คำแนะนำ'), store, q.help ? h('div', { class: 'qh-x', html: q.help }) : null,
-    has ? null : h('div', { class: 'qh-x', html: 'อ่านโจทย์ด้านบนอีกครั้ง หรือกดปุ่มลำโพงเพื่อฟังโจทย์<br>ลองทำดูก่อน — ถ้าตอบผิด ไก่น้อยจะบอกใบ้ให้' }));
-  const btn = h('button', { class: 'qh-btn ia', 'aria-label': 'ขอคำแนะนำ', 'aria-expanded': 'false' }, '?'), ask = h('div', { class: 'qh-ask', 'aria-live': 'polite' }, 'มีอะไรถามมั้ย? กด ? ได้เลย');
-  const wrap = h('div', { class: 'qh' + (o.teach ? ' qh-teach' : '') }, pop, ask, btn);
+  const dyn = h('div', { class: 'qh-x' }); let lastHint = '';
+  const pop = h('div', { class: 'qh-pop', hidden: true }, h('div', { class: 'qh-h' }, o.teach && !q ? 'ขั้นนี้ต้องทำอะไร?' : 'คำแนะนำ'), dyn, store, q && q.help ? h('div', { class: 'qh-x', html: q.help }) : null);
+  const btn = h('button', { class: 'qh-btn ia', 'aria-label': 'ขอคำแนะนำ', 'aria-expanded': 'false' }, '?'), ask = h('div', { class: 'qh-ask', 'aria-live': 'polite' }, 'งงไหม? กด ? ได้เลย');
+  const host = (body.closest('.teach-card, .stage-card') || document).querySelector('.tutor .speech'), wrap = h('div', { class: 'qh' + (host ? ' qh-in' : '') + (o.teach ? ' qh-teach' : '') }, btn, ask, pop);
+  const fill = () => { const L2 = o.guide ? [].concat(o.guide() || []) : qGuide(body); if (!o.guide && lastHint) L2.push(`<b>คำใบ้:</b> ${lastHint}`); if (!o.guide && !nodes.length && !(q && q.help) && !L2.length) L2.push('อ่านโจทย์ด้านบนอีกครั้ง หรือกดปุ่มลำโพงเพื่อฟังโจทย์ — ลองทำดูก่อน ถ้าตอบผิด ไก่น้อยจะบอกใบ้ให้');
+    dyn.innerHTML = L2.length ? `<ul class="bul">${L2.map(t => `<li>${t}</li>`).join('')}</ul>` : ''; dyn.hidden = !L2.length; };
   let auto = 0; const close = () => { clearTimeout(auto); pop.hidden = true; btn.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); };
   btn.onclick = e => { e.stopPropagation(); sfx.tap(); ask.classList.remove('on'); btn.classList.remove('wig');
-    if (!pop.hidden) { close(); return; } pop.hidden = false; btn.classList.add('on'); btn.setAttribute('aria-expanded', 'true'); clearTimeout(auto); auto = setTimeout(close, 3000); /* v203 (ผู้ใช้ขอ): คำแนะนำขึ้น 3 วินาทีแล้วหายไป */ say(pop.innerText.replace(/^คำแนะนำ\s*/, '').replace(/[✓→·]/g, ' '), true); };
+    if (!pop.hidden) { close(); return; } fill(); pop.hidden = false; btn.classList.add('on'); btn.setAttribute('aria-expanded', 'true'); clearTimeout(auto); auto = setTimeout(close, 3000); /* v203: ขึ้น 3 วินาทีแล้วหายไป */
+    o.onOpen && o.onOpen(); say(pop.innerText.replace(/^(คำแนะนำ|ขั้นนี้ต้องทำอะไร\?)\s*/, '').replace(/[✓→·‹]/g, ' '), true); };
   pop.addEventListener('click', e => { e.stopPropagation(); close(); });
   let sec = 0; const t = setInterval(() => { if (!wrap.isConnected) { clearInterval(t); return; } if (!body.isConnected || isDone()) { wrap.done(); return; }
     if (++sec % 30 || SET.askNudge === false || !pop.hidden) return; ask.classList.add('on'); btn.classList.add('wig'); setTimeout(() => { ask.classList.remove('on'); btn.classList.remove('wig'); }, 4500); }, 1000);
   wrap.done = () => { clearInterval(t); nodes.forEach(x => { if (x.p && x.p.isConnected) x.p.insertBefore(x.n, x.nx && x.nx.parentNode === x.p ? x.nx : null); }); wrap.remove(); };
-  document.body.append(wrap); return wrap;
+  wrap.hint = hs => { lastHint = String(hs || '').replace(/<br>/g, ' '); };
+  if (host) host.insertBefore(wrap, host.querySelector('.restart, .spk')); else document.body.append(wrap); return wrap;
 }
 
 /* v190 (ผู้ใช้ขอ): ลูกโป่งตอบถูก → แตกเป็นกระดาษสีชิ้นเล็ก ๆ (ตอบผิดไม่แตก) */
@@ -63,7 +75,7 @@ function objRow(e, n, opts = {}) {
 function makeCountable(container, onAll) {
   const objs = [...container.querySelectorAll('.obj')]; let c = 0;
   objs.forEach(o => {
-    o.classList.add('tappable', 'ia');
+    o.classList.add('tappable', 'ia', 'cnt');
     o.addEventListener('click', e => {
       e.stopPropagation(); if (o.dataset.c) return;
       c++; o.dataset.c = c; o.classList.add('counted'); o.append(h('span', { class: 'badge' }, c));

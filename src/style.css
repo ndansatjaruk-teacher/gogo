@@ -4037,3 +4037,14 @@ ul.bul b.hl{color:var(--mint-2);background:none}ul.bul b.hl2{color:var(--coral-2
 .shq{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:16px;background:var(--surface);box-shadow:var(--e1)}.shq svg{width:54px;height:54px}.shq b{font:800 20px var(--font)}
 .slots.ar .slot.pick{box-shadow:0 0 0 3px var(--gold)}.cards .ncard.sel{transform:translateY(-4px);box-shadow:0 0 0 3px var(--gold),var(--e2)}
 .p2wsd .targetw svg{width:clamp(180px,22cqw,240px);height:auto}
+
+/* v208 ปุ่ม ? อยู่ในแถบคำพูดของไก่ (ไม่ทับปุ่มถัดไป) */
+.qh.qh-in{position:relative;right:auto;bottom:auto;z-index:35;flex-direction:row;align-items:center;flex:none;margin-left:6px}
+.qh.qh-in.qh-teach{right:auto}
+.qh-in .qh-btn{width:46px;height:46px;font-size:25px}
+.qh-in .qh-pop{position:absolute;top:calc(100% + 10px);right:0}
+.qh-in .qh-ask{position:absolute;top:calc(100% + 10px);right:0;white-space:nowrap}
+.qh-in .qh-ask:after{top:-7px;bottom:auto}
+.qh-pop ul.bul{font-size:16px}
+.qh-target{animation:qhT .6s ease-in-out 3;outline:3px solid #FFD54F;outline-offset:3px;border-radius:12px}
+@keyframes qhT{50%{transform:scale(1.06)}}
