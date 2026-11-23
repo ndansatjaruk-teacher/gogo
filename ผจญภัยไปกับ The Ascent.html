@@ -1073,7 +1073,7 @@ a{color:var(--sky-2)}
 .lu-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;font-style:normal;font-size:12px;font-weight:800;padding:2px 8px;border-radius:var(--r-pill);background:var(--sky-2);color:#fff;animation:popIn .3s var(--spring) both}
 .lu-badge.l{background:var(--coral)}.lu-badge.r{background:var(--mint-2)}
 .lu-kid.board{animation:board .6s var(--ease) forwards}
-@keyframes board{to{transform:translateX(20px);opacity:.35}}
+@keyframes board{to{transform:translateX(20px)}} /* v204 (ผู้ใช้ขอ): ขึ้นรถแล้วไม่จาง */
 .hands{display:flex;justify-content:space-between;width:min(560px,90cqw);font-weight:700;color:var(--ink-3);font-size:14px}
 .kgrid-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
 .kgrid{display:grid;grid-template-columns:repeat(3,auto);gap:4px 14px;padding:8px 14px;border-radius:var(--r-lg);background:linear-gradient(#EAF4FF,#E7F6E8);box-shadow:var(--e1)}
@@ -4031,6 +4031,19 @@ ul.bul b.hl{color:var(--mint-2);background:none}ul.bul b.hl2{color:var(--coral-2
 
 .blab-p.sb svg rect{fill:url(#l-mint)}.blab-p.cube.sb svg rect{fill:url(#g-orange)}.blab-p.sg svg rect{fill:url(#l-yellow)}
 .blab-p.ticked::after{content:'✓';position:absolute;right:-4px;top:-6px;width:16px;height:16px;border-radius:50%;background:var(--mint);color:#fff;font:900 11px/16px var(--font);text-align:center}
+
+/* v204 (ผู้ใช้ขอ): ป้ายอันดับอยู่หน้าคนแข่ง (ทางซ้าย) ไม่ทับเส้นชัย */
+.rc-run .rc-badge{position:absolute;right:100%;margin-right:8px;z-index:2;font-size:13px;padding:3px 10px;box-shadow:0 2px 6px rgba(43,37,80,.18)}
+.rc-finish{z-index:1}
+/* v204 ด่าน 4: แต่ละทีมมีสีของตัวเอง */
+.rk-col.tm{box-shadow:var(--e1),inset 0 0 0 3px var(--tc);background:color-mix(in srgb,var(--tc) 14%,#fff)}
+.rk-col.tm .rk-name{color:color-mix(in srgb,var(--tc) 70%,#2B2550)}
+.tm-row{display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:14px;background:color-mix(in srgb,var(--tc) 12%,#fff);box-shadow:inset 0 0 0 2.5px var(--tc)}
+.tm-row b{font:800 18px var(--font);color:color-mix(in srgb,var(--tc) 70%,#2B2550);min-width:5.5em}
+.tm-dot{width:16px;height:16px;border-radius:50%;background:var(--tc)}
+.shq{display:flex;align-items:center;gap:8px;padding:6px 14px;border-radius:16px;background:var(--surface);box-shadow:var(--e1)}.shq svg{width:54px;height:54px}.shq b{font:800 20px var(--font)}
+.slots.ar .slot.pick{box-shadow:0 0 0 3px var(--gold)}.cards .ncard.sel{transform:translateY(-4px);box-shadow:0 0 0 3px var(--gold),var(--e2)}
+.p2wsd .targetw svg{width:clamp(180px,22cqw,240px);height:auto}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -7791,7 +7804,7 @@ Object.assign(Q, {
     const COL = ['ข้างซ้าย', 'ตรงกลาง', 'ข้างขวา'];
     if (ask === 'where') { const right = `ชั้นที่ ${r + 1} ${COL[c]}`, wrong = shuffle([[r, (c + 1) % 3], [(r + 1) % rows.length, c], [(r + rows.length - 1) % rows.length, (c + 2) % 3]]).slice(0, 2).map(([a, b]) => `ชั้นที่ ${a + 1} ${COL[b]}`);
       const q = `${names[rows[r][c]]}วางอยู่ชั้นใด ตำแหน่งใด?`;
-      return { prompt: q, say: q, mount(bd, ctx) { bd.append(shelf(rows)); bd.append(choices(ctx, shuffle([right, ...wrong]).map(x => ({ value: x, label: x })), right, { hint: 'ชั้นที่ 1 อยู่ล่างสุด นับขึ้นไป แล้วดูว่าอยู่ข้างซ้าย ตรงกลาง หรือข้างขวา' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('txt')); } }; }
+      return { prompt: q, say: q, mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'shq' }, art(rows[r][c]), h('b', null, names[rows[r][c]])), shelf(rows))); /* v204 (ผู้ใช้ขอ): ถามถึงผลไม้ใด ใส่รูปด้วย */ bd.append(choices(ctx, shuffle([right, ...wrong]).map(x => ({ value: x, label: x })), right, { hint: 'ชั้นที่ 1 อยู่ล่างสุด นับขึ้นไป แล้วดูว่าอยู่ข้างซ้าย ตรงกลาง หรือข้างขวา' })); bd.querySelectorAll('.opt').forEach(o => o.classList.add('txt')); } }; }
     const e = rows[r][c], q = `ชั้นที่ ${r + 1} ${COL[c]} วางผลไม้ใด?`, opts = shuffle([e, ...shuffle(rows.flat().filter(x => x !== e)).slice(0, 2)]);
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(shelf(rows)); bd.append(choices(ctx, opts.map(x => ({ value: x, node: h('span', { class: 'opt-art' }, art(x), h('b', null, names[x])) })), e, { hint: 'ชั้นที่ 1 อยู่ล่างสุด' })); } };
   },
@@ -7811,22 +7824,23 @@ Object.assign(Q, {
   /* practice: rank by amount */
   rankAsk({ items, unit, ask, k, who, pic }) {
     const order = [...items].sort((a, b) => b.n - a.n);
-    const vis = () => h('div', { class: 'rankvis' }, ...items.map(it => h('div', { class: 'rk-col' }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`))));
+    const vis = () => h('div', { class: 'rankvis' }, ...items.map(it => h('div', { class: 'rk-col' + (it.col ? ' tm' : ''), style: it.col ? { '--tc': it.col } : null }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`))));
     if (ask === 'who') { const q = `ใครได้<span class="hl">${ORD(k)}</span>? <small>(มากที่สุด = อันดับที่ 1)</small>`;
       return { prompt: q, say: `ใครได้${ORD(k)}`, mount(bd, ctx) { bd.append(vis()); nameChoices(bd, ctx, items.map(x => x.name), order[k - 1].name, 'เรียงจากมากไปน้อย คนที่ได้มากที่สุดเป็นอันดับที่ 1'); } }; }
     const q = `${who}ได้อันดับที่เท่าไร?`;
     return { prompt: q, say: q, mount(bd, ctx) { bd.append(vis()); ordChoices(bd, ctx, items.length, order.findIndex(x => x.name === who) + 1, 'เรียงจากมากไปน้อย คนที่ได้มากที่สุดเป็นอันดับที่ 1'); } };
   },
   /* practice: place names into slots from clues */
-  arrange({ clues, answer, slotLabel }) {
-    return { prompt: 'อ่านข้อความ แล้วแตะชื่อวางลงช่องให้ถูกตำแหน่ง', say: 'อ่านข้อความ แล้ววางชื่อให้ถูกตำแหน่ง',
+  arrange({ clues, answer, slotLabel }) { /* v204 (ผู้ใช้ขอ): เลือกได้เองว่าจะวางใครไว้ช่องไหน — แตะชื่อ แล้วแตะช่อง (หรือแตะช่องก่อน) */
+    return { prompt: 'อ่านข้อความ แตะชื่อ แล้วแตะช่องที่จะวาง', say: 'อ่านข้อความ แตะชื่อ แล้วแตะช่องที่จะวาง',
       mount(bd, ctx) {
-        const slots = h('div', { class: 'slots ia lbl ar' }), cards = h('div', { class: 'cards ia lbl' }), placed = Array(answer.length).fill(null);
+        const slots = h('div', { class: 'slots ia lbl ar' }), cards = h('div', { class: 'cards ia lbl' }), placed = Array(answer.length).fill(null); let sel = null, pickSlot = -1;
         const S = answer.map((_, i) => { const s = h('div', { class: 'slot' }); s.dataset.lab = slotLabel ? slotLabel(i) : i + 1; slots.append(s); return s; });
-        const render = () => S.forEach((s, i) => { s.textContent = placed[i] ? placed[i].v : ''; s.classList.toggle('filled', !!placed[i]); });
-        S.forEach((s, i) => s.onclick = e => { e.stopPropagation(); if (!placed[i] || slots.dataset.done) return; placed[i].c.classList.remove('used'); placed[i] = null; render(); });
-        shuffle(answer).forEach(v => { const cd = h('button', { class: 'ncard' }, v); cd.onclick = e => { e.stopPropagation(); if (cd.classList.contains('used')) return; const k = placed.indexOf(null); if (k < 0) return; placed[k] = { v, c: cd }; cd.classList.add('used'); sfx.pop(k); render();
-          if (!placed.includes(null)) { const ok = placed.every((p, i) => p.v === answer[i]); if (ok) { slots.dataset.done = 1; ctx.check(true); } else { ctx.check(false, 'อ่านข้อความทีละประโยค เริ่มจากคนที่รู้ตำแหน่งแน่นอนก่อน'); setTimeout(() => { placed.forEach(p => p && p.c.classList.remove('used')); placed.fill(null); render(); }, 900); } } }; cards.append(cd); });
+        const render = () => { S.forEach((s, i) => { s.textContent = placed[i] ? placed[i].v : ''; s.classList.toggle('filled', !!placed[i]); s.classList.toggle('pick', i === pickSlot); }); C.forEach(c => { c.classList.toggle('used', placed.some(p => p && p.c === c)); c.classList.toggle('sel', c === sel); }); };
+        const put = (i, c) => { const old = placed.findIndex(p => p && p.c === c); if (old >= 0) placed[old] = null; placed[i] = { v: c.textContent, c }; sel = null; pickSlot = -1; sfx.pop(i); render();
+          if (!placed.includes(null)) { const ok = placed.every((p, k) => p.v === answer[k]); if (ok) { slots.dataset.done = 1; ctx.check(true); } else { ctx.check(false, 'อ่านข้อความทีละประโยค เริ่มจากคนที่รู้ตำแหน่งแน่นอนก่อน — แตะช่องเพื่อเอาชื่อออกแล้ววางใหม่'); } } };
+        S.forEach((s, i) => s.onclick = e => { e.stopPropagation(); if (slots.dataset.done) return; if (sel) { put(i, sel); return; } if (placed[i]) { placed[i] = null; sfx.tap(); render(); return; } pickSlot = pickSlot === i ? -1 : i; sfx.tap(); render(); });
+        const C = shuffle(answer).map(v => { const cd = h('button', { class: 'ncard' }, v); cd.onclick = e => { e.stopPropagation(); if (slots.dataset.done) return; if (pickSlot >= 0) { put(pickSlot, cd); return; } sel = sel === cd ? null : cd; sfx.tap(); render(); }; cards.append(cd); return cd; });
         bd.append(h('div', { class: 'colstack' }, h('div', { class: 'stmt clues' }, ...clues.map(c => h('div', null, c))), slots, cards)); } };
   }
 });
@@ -27864,7 +27878,7 @@ const WS8_BALL = [{ name: 'หลิน', n: 10 }, { name: 'นุ้ย', n: 7 
 const WS8_SHELF = [['apple', 'mango', 'pomelo'], ['strawberry', 'mangosteen', 'watermelon'], ['durian', 'chompoo', 'pineapple'], ['banana', 'guava', 'grape']];
 const FRUIT_TH = { apple: 'แอปเปิล', mango: 'มะม่วง', pomelo: 'ส้มโอ', strawberry: 'สตรอว์เบอร์รี', mangosteen: 'มังคุด', watermelon: 'แตงโม', durian: 'ทุเรียน', chompoo: 'ชมพู่', pineapple: 'สับปะรด', banana: 'กล้วย', guava: 'ฝรั่ง', grape: 'องุ่น' };
 const WS8_BIKE = [{ name: 'บอล', e: 'kid1', pos: .74 }, { name: 'เบส', e: 'kid3', pos: .5 }, { name: 'ต้า', e: 'kid5', pos: .64 }, { name: 'เค', e: 'kid7', pos: .38 }, { name: 'ไกค์', e: 'kid9', pos: .84 }, { name: 'เกม', e: 'kid11', pos: .93 }];
-const WS8_DOLL = [{ name: 'ทีมสีฟ้า', n: 5 }, { name: 'ทีมสีเขียว', n: 2 }, { name: 'ทีมสีแดง', n: 6 }];
+const WS8_DOLL = [{ name: 'ทีมสีฟ้า', n: 5, col: '#4C9BF0' }, { name: 'ทีมสีเขียว', n: 2, col: '#2FBF8C' }, { name: 'ทีมสีแดง', n: 6, col: '#FF5A6A' }];
 const WS8_TARGET = [{ name: 'ทีมสีเขียว', col: '#2FBF8C', hits: [7, 8, 10] }, { name: 'ทีมสีน้ำเงิน', col: '#4C7BF0', hits: [6, 8, 9] }, { name: 'ทีมสีแดง', col: '#FF5A6A', hits: [9, 8, 7] }];
 /* tap a kid: neighbours get labelled */
 function lineTap(names) {
@@ -27891,7 +27905,7 @@ function raceSim(racers) {
   const btn = h('button', { class: 'btn primary ia', onclick: async e => { e.stopPropagation(); btn.disabled = true; sfx.page();
     order.forEach((r, k) => { const run = tr.runners[r.i]; run.style.transition = `left ${1.4 + k * .5}s cubic-bezier(.4,.1,.3,1)`; requestAnimationFrame(() => run.style.setProperty('--x', 1)); });
     for (let k = 0; k < order.length; k++) { await sleep(k ? 500 : 1400); const run = tr.runners[order[k].i]; run.append(h('i', { class: 'rc-badge m' + (k + 1) }, ORD(k + 1))); sfx.pop(k); say(`${order[k].name} ${ORD(k + 1)}`, true); }
-    out.textContent = order.map((r, k) => `${ORD(k + 1)} ${r.name}`).join(' · '); btn.remove(); } }, icon('play'), 'เริ่มแข่ง!');
+    out.innerHTML = bul(...order.map((r, k) => `<b>${ORD(k + 1)}</b> ${r.name}`)); btn.remove(); } }, icon('play'), 'เริ่มแข่ง!');
   return h('div', { class: 'colstack' }, tr, btn, out);
 }
 function busSim(names) {
@@ -27909,7 +27923,7 @@ function shelfTap(rows) {
 }
 /* amounts → press to sort into ranks (FLIP) */
 function rankSim(items, unit, pic) {
-  const box = h('div', { class: 'rankvis' }); const cols = items.map(it => { const c = h('div', { class: 'rk-col' }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`)); box.append(c); return c; });
+  const box = h('div', { class: 'rankvis' }); const cols = items.map(it => { const c = h('div', { class: 'rk-col' + (it.col ? ' tm' : ''), style: it.col ? { '--tc': it.col } : null }, pic ? h('div', { class: 'rk-pile' }, ...range(1, it.n).map(() => art(pic))) : null, h('b', { class: 'rk-name' }, it.name), h('span', { class: 'rk-n num' }, `${it.n} ${unit}`)); box.append(c); return c; });
   const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const first = cols.map(c => c.getBoundingClientRect().left);
     const order = items.map((it, i) => i).sort((a, b) => items[b].n - items[a].n); order.forEach(i => box.append(cols[i]));
     cols.forEach((c, i) => { const dx = first[i] - c.getBoundingClientRect().left; c.animate([{ transform: `translateX(${dx}px)` }, { transform: 'none' }], { duration: 600, easing: 'cubic-bezier(.3,1.2,.4,1)' }); });
@@ -27931,6 +27945,18 @@ function targetSim(teams) {
     btn.remove(); sfx.win(); say('ทีมที่ได้คะแนนรวมมากที่สุดได้อันดับที่หนึ่ง', true); } }, icon('plus'), 'รวมคะแนนแต่ละทีม');
   return h('div', { class: 'colstack' }, h('div', { class: 'rowstack' }, h('span', { class: 'targetw', html: targetSVG(teams) }), h('div', { class: 'colstack', style: { gap: '4px', alignItems: 'flex-start' } }, ...teams.map(t => h('div', { class: 'tg-row' }, h('i', { style: { background: t.col } }), h('b', null, t.name))))), btn, sums);
 }
+/* v204 (ผู้ใช้ขอ: ด่าน 4 ตรงจุดประสงค์ — จัดอันดับจากคะแนนรวม) target + coloured team rows with their hits; the child adds them up */
+const teamFig = teams => h('div', { class: 'rowstack' }, h('span', { class: 'targetw', html: targetSVG(teams) }), h('div', { class: 'colstack', style: { gap: '6px', alignItems: 'stretch' } }, ...teams.map(t => h('div', { class: 'tm-row', style: { '--tc': t.col } }, h('i', { class: 'tm-dot' }), h('b', null, t.name), h('span', { class: 'num', style: { fontSize: '20px', fontWeight: 800 } }, t.hits.join(' , '))))));
+const tSum = t => t.hits.reduce((a, b) => a + b, 0);
+Object.assign(Q, {
+  teamSum({ teams, i }) { const t = teams[i], q = `${t.name}ยิงได้<span class="hl">คะแนนรวม</span>เท่าไร?`;
+    return { prompt: q, say: q.replace(/<[^>]+>/g, ''), __sig: `ts ${t.name} ${t.hits}`, mount(bd, ctx) { bd.append(ppSide(teamFig(teams), ppAns(ctx, tSum(t), `บวกคะแนนทีละนัด: ${t.hits.join(' + ')}`, 'คะแนน'))); bd.classList.add('p2wsd'); } }; },
+  teamRank({ teams, ask, k, who }) { const ord = [...teams].sort((a, b) => tSum(b) - tSum(a)), hint = 'รวมคะแนนของแต่ละทีมก่อน แล้วเรียงจากมากไปน้อย ทีมที่ได้มากที่สุดเป็นอันดับที่ 1';
+    if (ask === 'who') { const q = `ทีมใดได้<span class="hl">${ORD(k)}</span>? <small>(คะแนนรวมมากที่สุด = อันดับที่ 1)</small>`;
+      return { prompt: q, say: `ทีมใดได้${ORD(k)}`, __sig: `tr w${k} ${teams.map(tSum)}`, mount(bd, ctx) { const col = h('div', { class: 'colstack' }); bd.append(ppSide(teamFig(teams), col)); bd.classList.add('p2wsd'); nameChoices(col, ctx, teams.map(t => t.name), ord[k - 1].name, hint); } }; }
+    const q = `${who}ได้อันดับที่เท่าไร?`;
+    return { prompt: q, say: q, __sig: `tr r${who} ${teams.map(tSum)}`, mount(bd, ctx) { const col = h('div', { class: 'colstack' }); bd.append(ppSide(teamFig(teams), col)); bd.classList.add('p2wsd'); ordChoices(col, ctx, teams.length, ord.findIndex(t => t.name === who) + 1, hint); } }; }
+});
 const LESSONS_CH8 = [
   { id: 251, title: 'การบอกตำแหน่งของสิ่งต่าง ๆ', short: 'บอกตำแหน่ง', tone: 'sky',
     goal: 'บอกตำแหน่งของสิ่งต่าง ๆ โดยใช้คำว่า ข้างซ้าย ข้างขวา ตรงกลาง ระหว่าง ข้างหน้า ข้างหลัง',
@@ -27964,9 +27990,9 @@ const LESSONS_CH8 = [
       { t: 'แข่งวางตุ๊กตา: ทีมที่วางได้<b>มากที่สุด</b>เป็นผู้ชนะ ได้<b>อันดับที่ 1</b>', s: 'แข่งวางตุ๊กตา ทีมที่วางได้มากที่สุดเป็นผู้ชนะ ได้อันดับที่หนึ่ง', v: el => el.append(rankSim(WS8_DOLL, 'ตัว', 'teddy')) },
       { t: 'ยิงเป้า: <b>รวมคะแนน</b>ของแต่ละทีมก่อน แล้วจัดอันดับจากคะแนนรวม', s: 'ยิงเป้า รวมคะแนนของแต่ละทีมก่อน แล้วจัดอันดับจากคะแนนรวม', v: el => el.append(targetSim(WS8_TARGET)) }
     ],
-    game: () => { const T = mixVals(WS8_TARGET, 'hits'), tg = T.map(t => ({ name: t.name, n: t.hits.reduce((a, b) => a + b, 0) })), DL = mixVals(WS8_DOLL, 'n');
+    game: () => { const T = (() => { for (;;) { const t = WS8_TARGET.map(x => ({ ...x, hits: [rnd(6, 10), rnd(6, 9), rnd(6, 10)] })), S = t.map(tSum); if (new Set(S).size === 3 && !t.some((x, i) => String(x.hits) === String(WS8_TARGET[i].hits))) return t; } })() /* v204: คะแนนใหม่ทุกเกม (ไม่ซ้ำข้อสอบบอส) */, tg = T.map(t => ({ name: t.name, n: t.hits.reduce((a, b) => a + b, 0) })), DL = mixVals(WS8_DOLL, 'n');
       return [Q.rankAsk({ items: DL, unit: 'ตัว', ask: 'who', k: 1, pic: 'teddy' }), Q.rankAsk({ items: DL, unit: 'ตัว', ask: 'who', k: 2, pic: 'teddy' }), Q.rankAsk({ items: DL, unit: 'ตัว', ask: 'rank', who: pick(DL).name, pic: 'teddy' }),
-        Q.three({ nums: shuffle(T[0].hits) }), Q.rankAsk({ items: tg, unit: 'คะแนน', ask: 'who', k: 1 }), Q.rankAsk({ items: tg, unit: 'คะแนน', ask: 'rank', who: pick(tg).name })]; } }
+        Q.teamSum({ teams: T, i: 0 }), Q.teamSum({ teams: T, i: 2 }), Q.teamRank({ teams: T, ask: 'who', k: 1 }), Q.teamRank({ teams: T, ask: 'who', k: 3 }), Q.teamRank({ teams: T, ask: 'rank', who: T[1].name })]; } /* v204: รวมคะแนนจากเป้าเอง แล้วจัดอันดับ (เดิมบอกคะแนนรวมให้) */ }
 ];
 const EXAM_CH8 = [
   { q: 'ใครยืนอยู่ข้างขวาของแตงโม', line: WS8_LINE, opts: ['ณัฐ', 'สิงห์', 'ส้ม'], a: 0 },
