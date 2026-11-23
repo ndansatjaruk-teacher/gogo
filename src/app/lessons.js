@@ -199,7 +199,7 @@ const LESSONS_CH1 = [
       { t: 'เต็มกรอบเหลือว่าง 1 ช่อง คือ <span class="hl">9</span>', v: el => el.append(tenFrame(9), bigNum(9, 'sm')) },
       { t: 'ในเกม ภาพจะโผล่มา<b>แป๊บเดียว</b> ดูให้ดีนะ!', v: el => el.append(mascot('wow', 'big')) }
     ],
-    game: () => [Q.flash({ n: rnd(2, 5), ms: 1800 }), ...shuffle(range(3, 11)).slice(0, 5).map(n => Q.flashPick({ n })), Q.matchGroups({ nums: shuffle(range(2, 9)).slice(0, 3), flash: true }), Q.matchGroups({ nums: shuffle(range(2, 9)).slice(0, 3), flash: true })] /* v134: ≥ 8 ข้อ */
+    game: () => [Q.flash({ n: rnd(2, 5), ms: 1800 }), ...shuffle(range(3, 11)).slice(0, 8).map(n => Q.flashPick({ n })), Q.matchGroups({ nums: shuffle(range(2, 9)).slice(0, 3), flash: true }), Q.matchGroups({ nums: shuffle(range(2, 9)).slice(0, 3), flash: true })] /* v134: ≥ 8 ข้อ · v209: ป.1 ≥ 10 ข้อ */
   }
 ];
 
@@ -361,7 +361,7 @@ const LESSONS_CH2 = [
       { t: '③ เขียน<b>ประโยคสัญลักษณ์</b>: 3 + 4 = ☐', v: el => el.append(eqRow([3, '+', 4, '=', '?'])) },
       { t: '④ หาคำตอบ แล้วตอบให้ครบ: <span class="hl">ปลายมีส้มทั้งหมด 7 ผล</span>', v: el => el.append(eqRow([3, '+', 4, '=', 7]), tenFrame2(3, 4)) }
     ],
-    game: () => shuffle(WORD_PROBLEMS).slice(0, 6).map(p => Q.story(p))
+    game: () => shuffle(WORD_PROBLEMS).slice(0, 12).map(p => Q.story(p))
   }
 ];
 /* ---------- Chapter 2 boss: ข้อสอบท้ายหน่วย — แต่งใหม่ทั้งหมด (original items) ---------- */
@@ -515,7 +515,7 @@ const LESSONS_CH3 = [
       { t: '② โจทย์<b>ถาม</b>: <span class="hl2">ภูยังมีลูกอมอยู่กี่เม็ด</span> → คำว่า “แบ่งให้” และ “เหลือ” บอกว่าต้องลบ', v: el => el.append(h('div', { class: 'chips' }, h('span', { class: 'kchip sub' }, 'ให้ไป'), h('span', { class: 'kchip sub' }, 'เหลือ'))) },
       { t: '③ ประโยคสัญลักษณ์ <b>8 − 6 = ☐</b>  ④ ตอบ <span class="hl2">ภูเหลือลูกอม 2 เม็ด</span>', v: el => el.append(eqRow([8, '−', 6, '=', 2]), tenCrossed(8, 6)) }
     ],
-    game: () => shuffle(SUB_PROBLEMS).slice(0, 6).map(p => Q.story(p))
+    game: () => shuffle(SUB_PROBLEMS).slice(0, 12).map(p => Q.story(p))
   }
 ];
 /* ---------- Chapter 3 boss: ข้อสอบท้ายหน่วย — แต่งใหม่ทั้งหมด (original items) ---------- */
@@ -994,7 +994,8 @@ const WS7_EST = [[W.pencil, 0], [W.watermelon, 1], [W.balloon, 0], [W.pumpkin, 1
 const WS7_KGCMP = [[W.chicken, W.fish, 4, 3], [W.fish, W.shrimp, 3, 1], [W.salmon, W.squid, 2, 7], [W.pork, W.squid, 5, 7], [W.rambutan, W.durian, 3, 6], [W.pork, W.chicken, 4, 2], [W.mango, W.orange, 7, 7], [W.pineapple, W.chompoo, 6, 1], [W.tomato, W.orange, 3, 4]];
 const WS7_KD = [[W.watermelon, 13], [IT('guava', 'อะโวคาโด'), 23], [W.cabbage, 35], [W.chili, 15], [W.eggplant, 25], [W.coconut, 8], [W.rambutan, 2], [W.mango, 12], [W.guava, 18], [IT('guava', 'น้อยหน่า'), 10], [W.banana, 27], [W.grape, 4]];
 const WS7_KDSET = [[W.rambutan, 3], [W.lemon, 6], [W.pineapple, 11], [W.tomato, 20], [W.guava, 25], [W.orange, 13]];
-const WS7_KDCMP = [[W.rambutan, W.chili, 7, 18], [W.chili, W.orange, 18, 4], [W.grape, W.rambutan, 10, 7], [W.rambutan, W.orange, 7, 4], [W.watermelon, W.chompoo, 4, 10], [W.pineapple, W.durian, 6, 12], [W.watermelon, W.pineapple, 4, 6], [W.durian, W.watermelon, 12, 4]];
+const WS7_KDCMP = [[W.rambutan, W.chili, 7, 18], [W.chili, W.orange, 18, 4], [W.grape, W.rambutan, 10, 7], [W.rambutan, W.orange, 7, 4], [W.watermelon, W.chompoo, 4, 10], [W.pineapple, W.durian, 6, 12], [W.watermelon, W.pineapple, 4, 6], [W.durian, W.watermelon, 12, 4],
+  /* v209: ป.1 เกมละ ≥ 10 ข้อ */ [W.mango, W.banana, 5, 2], [W.coconut, W.guava, 15, 3], [W.cabbage, W.carrot, 9, 1], [W.potato, W.eggplant, 2, 3], [W.pumpkin, W.corn, 16, 5], [W.apple, W.lemon, 3, 1], [W.coconut, W.pineapple, 15, 6], [W.mangosteen, W.mango, 1, 5]];
 const WS7_STORY1 = [
   { text: 'สุนัขหนัก 7 กิโลกรัม แมวหนัก 5 กิโลกรัม สุนัขหนักกว่าแมวกี่กิโลกรัม', a: 7, b: 5, op: '−', unit: 'กิโลกรัม' },
   { text: 'ฟักทองหนัก 10 กิโลกรัม กะหล่ำปลีหนัก 7 กิโลกรัม ถ้านำทั้งสองอย่างมาชั่งรวมกันจะหนักกี่กิโลกรัม', a: 10, b: 7, op: '+', unit: 'กิโลกรัม' },
@@ -1076,7 +1077,7 @@ const LESSONS_CH7 = [
       { t: 'เปรียบเทียบเป็นขีด แล้วบอกว่า<b>ต่างกันกี่ขีด</b> ด้วยการลบ', s: 'เปรียบเทียบเป็นขีด แล้วบอกว่าต่างกันกี่ขีด ด้วยการลบ', v: el => el.append(compareScales(W.chili, W.rambutan, 18, 7, 'kd')) },
       { t: 'อีกคู่: แตงโม กับ ชมพู่', v: el => el.append(compareScales(W.watermelon, W.chompoo, 4, 10, 'kd')) }
     ],
-    game: () => shuffle(WS7_KDCMP).slice(0, 6).map(([a, b, va, vb]) => Q.scalesCmp({ a, b, va, vb, unit: 'kd', diff: true })) },
+    game: () => shuffle(WS7_KDCMP).slice(0, 12).map(([a, b, va, vb]) => Q.scalesCmp({ a, b, va, vb, unit: 'kd', diff: true })) },
   { id: 246, title: 'โจทย์ปัญหาการบวก และโจทย์ปัญหาการลบ (1)', short: 'โจทย์น้ำหนัก (1)', tone: 'orange',
     goal: 'แสดงวิธีหาคำตอบของโจทย์ปัญหาการบวกและการลบเกี่ยวกับน้ำหนักที่มีหน่วยเป็นกิโลกรัมและขีด',
     teach: [
@@ -1455,7 +1456,8 @@ const LESSONS_CH9 = [
     ],
     game: () => [Q.traceWhat({ obj: 'coin', name: 'เหรียญ', kind: 'circle' }), Q.traceWhat({ obj: 'setsquare', name: 'ไม้ฉาก', kind: 'tri' }), Q.traceWhat({ obj: 'plate', name: 'จานรูปไข่', kind: 'ellipse' }), Q.traceWhat({ obj: 'cardbook', name: 'สมุด', kind: 'quad' }),
       Q.traceShape({ v: 'circle', obj: 'coin', name: 'เหรียญ' }), Q.traceShape({ v: 'book', obj: 'cardbook', name: 'สมุด' }),
-      Q.traceWhat({ obj: 'sandwichT', name: 'แซนด์วิช', kind: 'tri' }), Q.traceShape({ v: 'rtri', obj: 'setsquare', name: 'ไม้ฉาก' }), Q.traceShape({ v: 'wellipse', obj: 'plate', name: 'จานรูปไข่' })] /* v134: ≥ 8 ข้อ */ },
+      Q.traceWhat({ obj: 'sandwichT', name: 'แซนด์วิช', kind: 'tri' }), Q.traceShape({ v: 'rtri', obj: 'setsquare', name: 'ไม้ฉาก' }), Q.traceShape({ v: 'wellipse', obj: 'plate', name: 'จานรูปไข่' }),
+      /* v209: ป.1 ≥ 10 ข้อ */ Q.traceWhat({ obj: 'clock', name: 'นาฬิกาแขวน', kind: 'circle' }), Q.traceWhat({ obj: 'mirror', name: 'กระจกรูปไข่', kind: 'ellipse' }), Q.traceWhat({ obj: 'door', name: 'ประตู', kind: 'quad' }), Q.traceWhat({ obj: 'pizza', name: 'พิซซ่าชิ้นนี้', kind: 'tri' }), Q.traceWhat({ obj: 'cookie', name: 'คุกกี้', kind: 'circle' }), Q.traceWhat({ obj: 'egg', name: 'ไข่', kind: 'ellipse' }), Q.traceWhat({ obj: 'paper', name: 'กระดาษ', kind: 'quad' })] },
   { id: 267, title: 'แบบรูปซ้ำของรูปเรขาคณิตและรูปอื่น ๆ', short: 'แบบรูปซ้ำ', tone: 'sky',
     goal: 'บอกชุดที่ซ้ำในแบบรูปซ้ำของรูปเรขาคณิตและรูปอื่น ๆ',
     teach: [
@@ -1687,7 +1689,10 @@ const WS11_ST2 = () => [ST('ยายจะตัดผ้าให้ได้ 
   ST('ต้นสนสูง 11 เมตร เสาไฟสูง 4 เมตร ต้นสนสูงกว่าเสาไฟกี่เมตร', 11, 4, '-', 'เมตร', ['ต้นสน', 'เสาไฟ']), ST('เชือกสีแดงยาว 17 เซนติเมตร เชือกสีฟ้ายาว 9 เซนติเมตร เชือกสีแดงยาวกว่าเชือกสีฟ้ากี่เซนติเมตร', 17, 9, '-', 'เซนติเมตร', ['สีแดง', 'สีฟ้า']),
   ST('ต้นไม้สูง 8 เมตร ปีนี้สูงขึ้นอีก 2 เมตร ต้นไม้สูงกี่เมตร', 8, 2, '+', 'เมตร'), ST('ต้องการริบบิ้น 20 เซนติเมตร มีแล้ว 12 เซนติเมตร ต้องหาเพิ่มอีกกี่เซนติเมตร', 20, 12, '-', 'เซนติเมตร'),
   ST('ตัดเชือกไปใช้ 7 เมตร เหลือ 8 เมตร เดิมเชือกยาวกี่เมตร', 7, 8, '+', 'เมตร'), ST('ต้นมะพร้าวสูง 15 เมตร บ้านสูง 6 เมตร บ้านเตี้ยกว่าต้นมะพร้าวกี่เมตร', 15, 6, '-', 'เมตร', ['ต้นมะพร้าว', 'บ้าน']),
-  ST('ทางเดินยาว 19 เมตร เดินไปแล้ว 12 เมตร ต้องเดินอีกกี่เมตรจึงสุดทาง', 19, 12, '-', 'เมตร'), ST('ใช้เชือกไปผูกของ 6 เมตร เหลือ 9 เมตร เดิมมีเชือกยาวกี่เมตร', 6, 9, '+', 'เมตร'), ST('เสาธงสูง 12 เมตร ต้นไม้สูง 7 เมตร เสาธงสูงกว่าต้นไม้กี่เมตร', 12, 7, '-', 'เมตร', ['เสาธง', 'ต้นไม้'])];
+  ST('ทางเดินยาว 19 เมตร เดินไปแล้ว 12 เมตร ต้องเดินอีกกี่เมตรจึงสุดทาง', 19, 12, '-', 'เมตร'), ST('ใช้เชือกไปผูกของ 6 เมตร เหลือ 9 เมตร เดิมมีเชือกยาวกี่เมตร', 6, 9, '+', 'เมตร'), ST('เสาธงสูง 12 เมตร ต้นไม้สูง 7 เมตร เสาธงสูงกว่าต้นไม้กี่เมตร', 12, 7, '-', 'เมตร', ['เสาธง', 'ต้นไม้']),
+  /* v209: ป.1 ≥ 10 ข้อ */ ST('ดินสอยาว 18 เซนติเมตร ยางลบยาว 5 เซนติเมตร ดินสอยาวกว่ายางลบกี่เซนติเมตร', 18, 5, '-', 'เซนติเมตร', ['ดินสอ', 'ยางลบ']), ST('ต้องการไม้ไผ่ 16 เมตร มีแล้ว 9 เมตร ต้องหาเพิ่มอีกกี่เมตร', 16, 9, '-', 'เมตร'),
+  ST('แม่ใช้ผ้าไป 5 เมตร เหลือ 7 เมตร เดิมแม่มีผ้ายาวกี่เมตร', 5, 7, '+', 'เมตร'), ST('ต้นมะม่วงสูง 9 เมตร ต้นกล้วยสูง 3 เมตร ต้นกล้วยเตี้ยกว่าต้นมะม่วงกี่เมตร', 9, 3, '-', 'เมตร', ['ต้นมะม่วง', 'ต้นกล้วย']),
+  ST('สายไฟยาว 13 เมตร ต่อเพิ่มอีก 6 เมตร สายไฟยาวกี่เมตร', 13, 6, '+', 'เมตร'), ST('ถนนยาว 20 เมตร ทาสีไปแล้ว 14 เมตร ต้องทาสีอีกกี่เมตรจึงครบ', 20, 14, '-', 'เมตร')];
 /* v203 (ผู้ใช้ขอ): คำอธิบายผลเป็นข้อ ๆ เน้นคำสำคัญ */
 const bul = (...xs) => `<ul class="bul">${xs.filter(Boolean).map(x => `<li>${x}</li>`).join('')}</ul>`;
 /* put the two ends on the same start line */
@@ -1822,7 +1827,8 @@ const LESSONS_CH11 = [
       { t: 'วัด<b>ความสูง</b>ด้วยกล่องเรียงซ้อนกัน 1 กล่อง = 1 หน่วย', s: 'วัดความสูงด้วยกล่องเรียงซ้อนกัน หนึ่งกล่องเท่ากับหนึ่งหน่วย', v: el => el.append(tallTap(WS11_ANIMALS, { unit: 'box', guides: true })) }
     ],
     game: () => [...WS11_CLIP.map(item => Q.unitCount({ item, unit: 'clip' })), Q.unitCount({ item: WS11_ANIMALS[3], unit: 'box', vis: 'h', max: 7 }), Q.unitCount({ item: WS11_ANIMALS[1], unit: 'box', vis: 'h', max: 7 }), Q.lenExtreme({ items: reshuffle(WS11_CLIP), ask: pick(['long', 'short']), unit: 'clip' }),
-      Q.unitCount({ item: WS11_ANIMALS[0], unit: 'box', vis: 'h', max: 7 }), Q.unitCount({ item: WS11_ANIMALS[2], unit: 'box', vis: 'h', max: 7 }), Q.lenExtreme({ items: reshuffle(WS11_ANIMALS), ask: 'tall', vis: 'h', unit: 'box' })] /* v134: ≥ 8 ข้อ */ },
+      Q.unitCount({ item: WS11_ANIMALS[0], unit: 'box', vis: 'h', max: 7 }), Q.unitCount({ item: WS11_ANIMALS[2], unit: 'box', vis: 'h', max: 7 }), Q.lenExtreme({ items: reshuffle(WS11_ANIMALS), ask: 'tall', vis: 'h', unit: 'box' }),
+      /* v209: ป.1 ≥ 10 ข้อ */ Q.unitCount({ item: WS11_KITCHEN[0], unit: 'clip' }), Q.unitCount({ item: WS11_KITCHEN[2], unit: 'clip' }), Q.unitCount({ item: WS11_KITCHEN[3], unit: 'clip' }), Q.lenExtreme({ items: reshuffle(WS11_ANIMALS), ask: 'low', vis: 'h', unit: 'box' })] },
   { id: 293, title: 'การเปรียบเทียบความยาวโดยใช้หน่วยที่ไม่ใช่หน่วยมาตรฐาน', short: 'เปรียบเทียบด้วยหน่วย', tone: 'mint',
     goal: 'เปรียบเทียบความยาวและความสูงจากจำนวนหน่วยที่วัดได้ และบอกว่ายาวกว่าหรือสั้นกว่ากันอยู่กี่หน่วย',
     teach: [
@@ -1831,7 +1837,8 @@ const LESSONS_CH11 = [
     ],
     game: () => [Q.unitCount({ item: WS11_TALL[0], unit: 'cube', vis: 'h', max: 9 }), Q.unitCount({ item: WS11_TALL[3], unit: 'cube', vis: 'h', max: 9 }), Q.lenExtreme({ items: reshuffle(WS11_TALL), ask: 'tall', vis: 'h', unit: 'cube' }), Q.lenExtreme({ items: reshuffle(WS11_KITCHEN), ask: 'long', unit: 'cube' }), Q.lenExtreme({ items: reshuffle(WS11_KITCHEN), ask: 'short', unit: 'cube' }),
       Q.lenDiff({ a: WS11_KITCHEN[2], b: WS11_KITCHEN[0], unit: 'cube', vis: 'len' }), Q.lenDiff({ a: WS11_KITCHEN[3], b: WS11_KITCHEN[1], unit: 'cube', vis: 'len' }),
-      Q.unitCount({ item: WS11_TALL[1], unit: 'cube', vis: 'h', max: 9 }), Q.lenDiff({ a: WS11_TALL[2], b: WS11_TALL[3], unit: 'cube', vis: 'h' })] /* v134: ≥ 8 ข้อ */ },
+      Q.unitCount({ item: WS11_TALL[1], unit: 'cube', vis: 'h', max: 9 }), Q.lenDiff({ a: WS11_TALL[2], b: WS11_TALL[3], unit: 'cube', vis: 'h' }),
+      /* v209: ป.1 ≥ 10 ข้อ */ Q.unitCount({ item: WS11_TALL[2], unit: 'cube', vis: 'h', max: 9 }), Q.lenExtreme({ items: reshuffle(WS11_TALL), ask: 'low', vis: 'h', unit: 'cube' }), Q.lenDiff({ a: WS11_TALL[2], b: WS11_TALL[0], unit: 'cube', vis: 'h' }), Q.lenDiff({ a: WS11_TALL[3], b: WS11_TALL[1], unit: 'cube', vis: 'h' })] },
   { id: 294, title: 'การวัดความยาวเป็นเซนติเมตร', short: 'วัดเป็นเซนติเมตร', tone: 'orange',
     goal: 'วัดความยาวและความสูงเป็นเซนติเมตรโดยใช้ไม้บรรทัด และคาดคะเนความยาว',
     teach: [ /* v203 (ผู้ใช้ขอ): ไม้บรรทัดแบบเดียวกับชั้นอื่น — ตัวเลขตรงขีด มีเส้นประจากปลายลงมาที่สเกล */
@@ -2002,8 +2009,10 @@ const WS13_B2 = [[50, 23], [64, 36], [84, 45], [51, 28], [42, 13], [95, 27], [75
 const WS13_V = [[24, 2], [19, 6], [35, 3], [98, 7], [47, 4], [58, 8], [67, 2], [43, 1], [76, 4], [29, 8], [68, 3], [59, 6], [35, 2], [47, 7], [14, 3], [26, 14], [37, 13], [45, 24], [59, 36], [86, 22], [97, 63], [72, 12], [68, 20], [59, 41]];
 const WS13_MIX = [[68, 23], [43, 7], [75, 49], [90, 25], [39, 15], [83, 46], [62, 37], [98, 74], [75, 3], [32, 4], [81, 42], [57, 49], [70, 25], [63, 37], [74, 35], [60, 12], [64, 24], [44, 15], [90, 24], [67, 39], [42, 39], [80, 41], [83, 55], [84, 79], [40, 24], [73, 57], [64, 35]];
 const WS13_FAM = [[56, 23], [32, 39], [47, 8], [26, 15], [46, 34], [33, 59]];
-const WS13_X1 = [['?', '−', 13, '=', 54], [49, '+', '?', '=', 88], ['?', '+', 46, '=', 71], [84, '−', '?', '=', 75], [11, '+', '?', '=', 74], ['?', '−', 28, '=', 30], [50, '−', '?', '=', 33], ['?', '+', 36, '=', 72], ['?', '−', 39, '=', 29], ['?', '+', 38, '=', 43]];
-const WS13_X2 = [[58, '+', '?', '=', 68], [60, '−', '?', '=', 34], ['?', '+', 25, '=', 50], [77, '+', '?', '=', 94], ['?', '−', 26, '=', 4], [61, '+', '?', '=', 90], ['?', '+', 28, '=', 51], ['?', '−', 57, '=', 29], ['?', '−', 44, '=', 18]];
+const WS13_X1 = [['?', '−', 13, '=', 54], [49, '+', '?', '=', 88], ['?', '+', 46, '=', 71], [84, '−', '?', '=', 75], [11, '+', '?', '=', 74], ['?', '−', 28, '=', 30], [50, '−', '?', '=', 33], ['?', '+', 36, '=', 72], ['?', '−', 39, '=', 29], ['?', '+', 38, '=', 43],
+  /* v209: ป.1 ≥ 10 ข้อ */ [23, '+', '?', '=', 58], ['?', '−', 21, '=', 46], [96, '−', '?', '=', 41], ['?', '+', 32, '=', 89], [65, '+', '?', '=', 99], ['?', '−', 40, '=', 18], [78, '−', '?', '=', 52]];
+const WS13_X2 = [[58, '+', '?', '=', 68], [60, '−', '?', '=', 34], ['?', '+', 25, '=', 50], [77, '+', '?', '=', 94], ['?', '−', 26, '=', 4], [61, '+', '?', '=', 90], ['?', '+', 28, '=', 51], ['?', '−', 57, '=', 29], ['?', '−', 44, '=', 18],
+  /* v209: ป.1 ≥ 10 ข้อ */ [36, '+', '?', '=', 82], ['?', '+', 47, '=', 91], [80, '−', '?', '=', 27], ['?', '−', 38, '=', 45], [45, '+', '?', '=', 73], ['?', '−', 19, '=', 56], [92, '−', '?', '=', 58]];
 /* take away with rods and cubes; regroup one ten into ten ones when the ones are not enough */
 function subBlocksSim(a, b) { /* v202 (ผู้ใช้ขอ): เด็กกดเอาออก และกดกระจายเอง — ไม่ใช่กดปุ่มดูอย่างเดียว */
   const tb = Math.floor(b / 10), ub = b % 10, borrow = a % 10 < ub, eq = eqRow([a, '−', b, '=', '?']);
@@ -2140,7 +2149,7 @@ const LESSONS_CH13 = [
       { t: 'ตัวอย่างที่ 2: □ − 12 = 30 — ในประโยคการลบ <b>ตัวตั้งคือส่วนรวม</b>', s: 'ตัวอย่างที่สอง ช่องว่างลบสิบสองเท่ากับสามสิบ ในประโยคการลบ ตัวตั้งคือส่วนรวม', v: el => el.append(unkSim('□ − 12 = 30')) },
       { t: 'ตัวอย่างที่ 3: 50 − □ = 33 — □ เป็นส่วนย่อย', s: 'ตัวอย่างที่สาม ห้าสิบลบช่องว่างเท่ากับสามสิบสาม ช่องว่างเป็นส่วนย่อย', v: el => el.append(unkSim('50 − □ = 33')) }
     ],
-    game: () => pk(WS13_X1, 8).map(toks => Q.unk1(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ },
+    game: () => pk(WS13_X1, 12).map(toks => Q.unk1(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ },
   { id: 319, title: 'การหาค่าของตัวไม่ทราบค่า (2)', short: 'ตัวไม่ทราบค่า (2)', tone: 'mint',
     goal: 'หาค่าของตัวไม่ทราบค่าในประโยคสัญลักษณ์ที่มีการทดหรือการกระจาย',
     teach: [
@@ -2148,7 +2157,7 @@ const LESSONS_CH13 = [
       { t: 'ตัวอย่างที่ 2: 70 − □ = 26 — 0 ลบ 6 ไม่ได้ ต้องกระจาย 1 สิบ', s: 'ตัวอย่างที่สอง เจ็ดสิบลบช่องว่างเท่ากับยี่สิบหก', v: el => el.append(unkSim('70 − □ = 26')) },
       { t: 'ตั้งลบ 53 − 18 แบบทีละขั้น (กระจาย 1 สิบ)', s: 'ตั้งลบห้าสิบสามลบสิบแปด แบบทีละขั้น', v: el => el.append(colWalk([53, 18], '−')) }
     ],
-    game: () => pk(WS13_X2, 8).map(toks => Q.unk1(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ }
+    game: () => pk(WS13_X2, 12).map(toks => Q.unk1(toks.join(' ').replace('?', '□'))) /* v169: เลือกวิธีหา □ แล้วตั้งบวก/ลบ (เดิม findX ตอบอย่างเดียว) */ }
 ];
 const EXAM_CH13 = [
   { q: '59 − 5 = ☐', opts: ['54', '64', '9'], a: 0 },

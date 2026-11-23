@@ -9,8 +9,9 @@ const xPairs = A => A.flatMap((a, i) => A.slice(i + 1).map(b => [a, b]));
 const xS = (q, key) => ({ ...q, __sig: key }); // questions that differ only in pictures need a data signature
 
 /* ---------- ป.1 ---------- */
-XG(265, () => shuffle([Q.traceShape({ v: 'tri' }), Q.traceShape({ v: 'rect' }), Q.traceShape({ v: 'circle' }), Q.traceShape({ v: 'ellipse' }), Q.traceShape({ v: 'square' }), Q.traceShape({ v: 'rtri' }),
-  Q.traceShape({ v: 'tallrect' }), Q.traceShape({ v: 'wellipse' }), Q.robotCount({ kind: 'circle' }), Q.robotCount({ kind: 'quad' }), Q.robotCount({ kind: 'tri' }), Q.robotCount({ kind: 'ellipse' })]).slice(0, 6));
+/* v209 (ผู้ใช้ขอ ป.1 ≥ 10 ข้อ): ใช้ครบทุกข้อ — รูปแบบที่ 2 มีชื่อเรียกต่างกัน โจทย์จึงไม่ซ้ำ */
+XG(265, () => shuffle([Q.traceShape({ v: 'tri' }), Q.traceShape({ v: 'rect' }), Q.traceShape({ v: 'circle' }), Q.traceShape({ v: 'ellipse' }), Q.traceShape({ v: 'square', lab: 'รูปสี่เหลี่ยมที่ด้านยาวเท่ากัน' }), Q.traceShape({ v: 'rtri', lab: 'รูปสามเหลี่ยมมุมเหมือนไม้ฉาก' }),
+  Q.traceShape({ v: 'tallrect', lab: 'รูปสี่เหลี่ยมรูปตั้ง' }), Q.traceShape({ v: 'wellipse', lab: 'วงรีรูปนอน' }), Q.traceShape({ v: 'stri', lab: 'รูปสามเหลี่ยมรูปเอียง' }), Q.robotCount({ kind: 'circle' }), Q.robotCount({ kind: 'quad' }), Q.robotCount({ kind: 'tri' }), Q.robotCount({ kind: 'ellipse' })]));
 const WS9X_UNIT = [['sq.mint', 'ci.coral', 'ci.coral', 'sq.mint', 'ci.coral', 'ci.coral', 'sq.mint', 'ci.coral', 'ci.coral'], ['tri.yellow', 'tri.yellow', 'el.sky', 'tri.yellow', 'tri.yellow', 'el.sky', 'tri.yellow', 'tri.yellow', 'el.sky'],
   ['ci.lilac', 'ci.lilac.s', 'ci.lilac.s', 'ci.lilac', 'ci.lilac.s', 'ci.lilac.s', 'ci.lilac', 'ci.lilac.s', 'ci.lilac.s'], ['rect.pink', 'sq.sky', 'tri.mint', 'rect.pink', 'sq.sky', 'tri.mint', 'rect.pink', 'sq.sky', 'tri.mint'],
   ['heart', 'heart', 'star', 'heart', 'heart', 'star', 'heart', 'heart', 'star'], ['el.orange', 'el.orange.s', 'el.orange', 'el.orange.s', 'el.orange', 'el.orange.s', 'el.orange', 'el.orange.s']];

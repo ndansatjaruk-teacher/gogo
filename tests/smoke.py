@@ -23,7 +23,7 @@ MOUNT_ALL = r"""(li) => {
   const box = document.createElement('div'); box.style.cssText = 'position:fixed;left:-5000px;top:0;width:1100px;height:700px;container-type:inline-size;container-name:stage';
   document.body.append(box);
   let qs = []; try { qs = gameSet(L); } catch (e) { errs.push('gameSet: ' + e.message); }
-  if (qs.length < 8) warn.push(`only ${qs.length} game questions (rule: at least 8)`);
+  { const gm = typeof gameMin === 'function' ? gameMin(L) : 8; if (qs.length < gm) warn.push(`only ${qs.length} game questions (rule: at least ${gm})`); } /* ป.1: 10 (v209) */
   for (const q of qs) {
     n++; box.replaceChildren(); const bd = document.createElement('div'); box.append(bd);
     const ctx = { check() {}, say() {}, why() {}, progress() {}, onRight: null };

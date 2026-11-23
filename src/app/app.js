@@ -837,6 +837,8 @@ function fitFigs(body) {
    Questions are compared by CONTENT (rendered off-screen with sound and timers muted), so the same item is not asked twice
    unless the lesson's data pool is too small — then repeats are spread out, never back to back. */
 const GAME_N = 8, GAME_MIN = 8; // v108 (ผู้ใช้ขอ): อย่างน้อย 8 ข้อทุกด่าน
+/* v209 (ผู้ใช้ขอ): ป.1 อย่างน้อย 10 ข้อทุกเกม */
+const gameMin = L => ((cityOf(L) || {}).grade === 1 ? 10 : GAME_MIN);
 /* text of a mounted question with a space between every text node — option buttons used to run together ("5 ซม.ลูกบาศก์ปริซึม…"),
    so the same question with shuffled options looked new and was asked again (ผู้ใช้เจอโจทย์ซ้ำ) */
 const qText = d => { const w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT), a = []; let n; while ((n = w.nextNode())) { const t = n.nodeValue.trim(); if (t) a.push(t); } return a.join(' '); };
@@ -963,7 +965,7 @@ function teachDup(L, q) {
 function gameSet(L, N0) {
   const K = L.bonus ? [] : bossKeys(L), out = [], seen = new Set(), spare = [], boss = [];
   const first = ixBundle(L.game()); first.forEach(qKind0);
-  const N = N0 || L.gameN || Math.min(15, Math.max(GAME_N, Math.ceil(2.5 * new Set(first.map(q => q.__kind)).size))), NC = Math.max(N, Math.min(30, N * 2)); /* v190: เกม 40 ข้อ */
+  const GM = gameMin(L), N = N0 || Math.max(GM, L.gameN || Math.min(15, Math.max(GAME_N, Math.ceil(2.5 * new Set(first.map(q => q.__kind)).size)))), NC = Math.max(N, Math.min(30, N * 2)); /* v190: เกม 40 ข้อ */
   const base = {}; // the same story with new numbers at most twice per game
   /* the same wording with only another picture reads as the same question (ผู้ใช้เจอข้อซ้ำ) — one per game, a second only when the pool is short */
   const look = {}, lk = q => { qSig(q); const p = String(q.story || q.prompt || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); return p + '|' + (String(q.__txt || '').match(/\d+(?:[.,]\d+)*/g) || []).join(','); };
@@ -977,7 +979,7 @@ function gameSet(L, N0) {
     B.filter(q => !out.includes(q)).forEach(q => { seen.add(qSig(q)); dupSeen.add(dupOf(q)); const l = lk(q); look[l] = (look[l] || 0) + 1; spare[spare.indexOf(q)] = null; }); out.length = 0; out.push(...B); atomSeen.clear(); B.forEach(regA); }
   /* a small question pool gives a shorter game instead of asking the same question again (ผู้ใช้เจอโจทย์ซ้ำ) — repeats only to reach GAME_MIN */
   for (let j = 0; j < spare.length && out.length < N; j++) { const q = spare[j]; if (!q) continue; const k = qSig(q); if (seen.has(k) || (L.__prac && L.__prac.has(k)) || (q.__base && (base[q.__base] || 0) >= (q.__baseCap || 2)) || (look[lk(q)] || 0) >= 2) continue; add(q); spare[j] = null; }
-  const NF = Math.min(N, GAME_MIN);
+  const NF = Math.min(N, GM);
   /* v96: a question already in this game or tried on the practice page is not asked again (ผู้ใช้เจอข้อซ้ำ) — only a very small pool (< 3) may repeat */
   for (let j = 0; j < spare.length && out.length < NF; j++) { const q = spare[j]; if (!q) continue; const k = qSig(q); if (seen.has(k) || (q.__baseHard && (base[q.__base] || 0) >= q.__baseCap) || (L.__prac && L.__prac.has(k))) continue; add(q); spare[j] = null; }
   for (let j = 0; j < spare.length && out.length < 3; j++) { const q = spare[j]; if (!q || isDup(q) || (q.__baseHard && (base[q.__base] || 0) >= q.__baseCap)) continue; out.push(q); dupSeen.add(dupOf(q)); regA(q); seen.add(qSig(q)); spare[j] = null; } // v110: never the same question twice, even in a tiny pool
