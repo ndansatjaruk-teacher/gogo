@@ -1359,9 +1359,41 @@ button.solidbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #E7E0D1}
 .bm-bar{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:40px;border-radius:8px;font:800 18px var(--font-num);color:var(--ink);box-shadow:inset 0 0 0 2px rgba(43,37,80,.18)}
 .bm-bar small{font:700 11px var(--font);color:var(--ink-3)}
 .bm-bar.a{background:var(--sky-soft)}.bm-bar.b{background:var(--gold-soft)}
-.barm.cmp .bm-row{display:flex;align-items:center;gap:6px}
-.barm.cmp .bm-l{min-width:0;font-size:12px;color:var(--ink-3)}
-.barm.cmp .bm-diff{display:flex;align-items:center;justify-content:center;min-height:40px;border:2px dashed var(--coral);border-radius:8px;font:800 18px var(--font-num);color:var(--coral-2)}
+.barm.cmp{width:min(100%,560px);gap:10px}
+.barm.cmp .bm-row{display:flex;align-items:center;gap:10px}
+.barm.cmp .bm-l{flex:0 0 7.5em;text-align:right;font:700 17px var(--font);color:var(--ink-2);line-height:1.15}
+.barm.cmp .bm-track{flex:1;display:flex;min-width:0}
+.barm.cmp .bm-bar{min-height:44px;font-size:20px}
+.barm.cmp .bm-diff{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:44px;margin-left:3px;border:2px dashed var(--coral);border-radius:8px;color:var(--coral-2);background:rgba(255,111,125,.06)}
+.barm.cmp .bm-diff b{font:800 20px var(--font-num)}
+.barm.cmp .bm-diff small{font:700 11px var(--font);color:var(--coral-2);opacity:.85;white-space:nowrap}
+/* v201 picture model for word problems (ป.1 บทที่ 14) */
+.pm{display:flex;flex-direction:column;gap:8px;width:min(100%,640px)}
+.pm-top{height:34px;border:2.5px solid var(--ink-2);border-bottom:0;border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:center;font:700 16px var(--font);color:var(--ink-2);margin:0 2px -4px}
+.pm-top b{font:800 21px var(--font-num);color:var(--ink)}.pm-top small{font:700 14px var(--font)}
+.pm .q{color:var(--coral-2);font:900 24px var(--font-num)}
+.pm-track{display:flex;gap:6px;flex:1;min-width:0;align-items:flex-start}
+.pm-cell{display:flex;flex-direction:column;align-items:stretch;gap:3px;min-width:58px}
+.pm-box{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 6px 4px;min-height:84px;border-radius:12px;background:var(--sky-soft);box-shadow:inset 0 0 0 2px rgba(43,37,80,.16)}
+.pm-cell + .pm-cell .pm-box{background:var(--gold-soft)}
+.pm-ic{display:flex;flex-wrap:nowrap;justify-content:center;gap:0;min-height:40px}
+.pm-ic .art{width:clamp(28px,3.6cqw,40px);height:clamp(28px,3.6cqw,40px);flex:0 1 auto;min-width:0}
+.pm-n b{font:800 20px var(--font-num);color:var(--ink)}.pm-n small{font:700 13px var(--font);color:var(--ink-3)}
+.pm-cap{font:700 14px/1.2 var(--font);color:var(--ink-2);text-align:center;overflow-wrap:anywhere}
+.pm-box.q{background:rgba(255,111,125,.06)!important;box-shadow:none;border:2.5px dashed var(--coral)}
+.pm-box.q .pm-ic{opacity:.33}
+.pm-box.x{background:#FFF1F1!important}
+.pm-box.x .pm-ic .art{position:relative;opacity:.55}
+.pm-box.x .pm-ic{background:linear-gradient(to top right,transparent calc(50% - 2px),var(--coral-2) calc(50% - 2px),var(--coral-2) calc(50% + 2px),transparent calc(50% + 2px));border-radius:6px}
+.pm-box.same{background:var(--sky-soft)!important;opacity:.75}
+.pm-box.more{background:var(--mint-soft)!important;box-shadow:inset 0 0 0 2.5px var(--mint)}
+.pm-row{display:flex;align-items:flex-start;gap:10px}
+.pm-l{flex:0 0 6.2em;padding-top:30px;text-align:right;font:800 17px/1.15 var(--font);color:var(--ink-2)}
+.pm-tot{align-self:flex-end;font:700 16px var(--font);color:var(--ink-2)}
+.pm-len .pm-box{min-height:58px;flex-direction:row;gap:8px;background-image:repeating-linear-gradient(90deg,rgba(43,37,80,.18) 0 2px,transparent 2px 14px);background-size:100% 10px;background-repeat:no-repeat;background-position:bottom}
+.pm-len .pm-ic{min-height:0}.pm-len .pm-l{padding-top:16px}
+.pm-len .pm-cell{min-width:104px}.pm-n{text-align:center;line-height:1.1}
+.pm-why{max-width:600px;padding:8px 14px;border-radius:12px;background:var(--lilac-soft);font:600 17px/1.4 var(--font);color:var(--ink)}
 .storybox{max-width:560px;padding:12px 16px;border-radius:var(--r-md);background:var(--surface);box-shadow:var(--e1);font-size:clamp(16px,2cqw,20px);line-height:1.5}
 /* ===== final mega boss ===== */
 .boss-card.mega{background:radial-gradient(120% 90% at 50% 30%,#3A2A6E 0%,#241A4A 60%,#170F33 100%);color:#fff}

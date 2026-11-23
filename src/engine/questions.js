@@ -1414,7 +1414,7 @@ Object.assign(Q, {
    ========================================================= */
 Object.assign(Q, {
   /* write the sentence (choose) then the answer — numbers up to 100, bar model shown in step 2 */
-  story100({ text, a, b, op, unit, bar }) {
+  story100({ text, a, b, op, unit, bar, lab }) {
     const o = op === '+' ? '+' : '−', ans = op === '+' ? a + b : a - b, other = op === '+' ? '−' : '+', right = [a, o, b].join(' ');
     const cands = [[a, o, b], [a, other, b], op === '+' ? [a + b, '−', b] : [a - b, '+', b]].filter(x => !(x[1] === '−' && x[0] < x[2]));
     if (cands.length < 3) cands.push([a, o, b + (b < 90 ? 10 : -10)]);
@@ -1422,7 +1422,7 @@ Object.assign(Q, {
     return { prompt: text, say: text,
       mount(bd, ctx) { const step2 = h('div', { class: 'colstack', style: { display: 'none' } }), e = eqRow([a, o, b, '=', '?']);
         const ch = choices({ check: (ok, hint) => { if (ok) { ch.style.display = 'none'; step2.style.display = ''; sfx.pop(5); ctx.say('ใช่แล้ว! หาคำตอบเลย'); } else ctx.check(false, hint); } }, opts.map(s => { const p = s.split(' '); return { value: s, node: eqRow([+p[0], p[1], +p[2], '=', '?'], { sm: true }) }; }), right, { hint: op === '+' ? 'โจทย์ถามว่ารวมกัน เพิ่มขึ้น หรือมากกว่า ใช้การบวก' : 'โจทย์ถามว่าเหลือ น้อยกว่า หรือต่างกันเท่าไร ใช้การลบ' });
-        step2.append(bar ? barModel(bar) : storyModel({ text, a, b, op }), e, h('div', { class: 'rowstack' }, answerBox(ctx, ans, { hint: op === '+' ? 'ตั้งบวก หลักหน่วยก่อน แล้วหลักสิบ' : 'ตั้งลบ หลักหน่วยก่อน ถ้าไม่พอให้กระจาย 1 สิบ' }), h('div', { class: 'cap', style: { fontSize: '20px' } }, unit)));
+        step2.append(bar ? barModel(bar) : storyModel({ text, a, b, op, unit, lab }) /* v201: unit was missing — money showed children, captions kept the unit */, e, h('div', { class: 'rowstack' }, answerBox(ctx, ans, { hint: op === '+' ? 'ตั้งบวก หลักหน่วยก่อน แล้วหลักสิบ' : 'ตั้งลบ หลักหน่วยก่อน ถ้าไม่พอให้กระจาย 1 สิบ' }), h('div', { class: 'cap', style: { fontSize: '20px' } }, unit)));
         bd.append(h('div', { class: 'colstack' }, h('div', { class: 'cap' }, '① เลือกประโยคสัญลักษณ์'), ch, step2)); ctx.onRight = () => e.fill(ans); } };
   },
   /* practice: which story matches the sentence */

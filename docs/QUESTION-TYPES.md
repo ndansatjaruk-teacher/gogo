@@ -313,7 +313,7 @@
 | `Q.solidName` | `{ v }` | [`engine/questions.js:1107`](../src/engine/questions.js#L1107) |
 | `Q.sortEvenOdd` | `{ k = 6 } = {}` | [`engine/questions.js:636`](../src/engine/questions.js#L636) |
 | `Q.story` | `{ text, a, b, unit, art: ar = 'apple', art2, ask, op = '+', pic = 'join' }` | [`engine/questions.js:358`](../src/engine/questions.js#L358) |
-| `Q.story100` | `{ text, a, b, op, unit, bar }` | [`engine/questions.js:1417`](../src/engine/questions.js#L1417) |
+| `Q.story100` | `{ text, a, b, op, unit, bar, lab }` | [`engine/questions.js:1417`](../src/engine/questions.js#L1417) |
 | `Q.story20` | `{ text, a, b, op, unit }` | [`engine/questions.js:890`](../src/engine/questions.js#L890) |
 | `Q.storyFor` | `{ a, b, op, stories }` | [`engine/questions.js:1429`](../src/engine/questions.js#L1429) |
 | `Q.sub100` | `{ a, b, blocks = false }` | [`engine/questions.js:1366`](../src/engine/questions.js#L1366) |

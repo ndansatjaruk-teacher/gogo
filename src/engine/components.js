@@ -1050,23 +1050,87 @@ function vertSubLayout(a, b, o = {}) {
    GRADE 1 · CHAPTER 14 — bar model for word problems (part–part–whole / compare)
    ========================================================= */
 function barModel(o) { // o: { whole, parts: [a, b], labels: [la, lb], wl, q: 'whole' | 0 | 1, compare }
-  const W = o.whole || (o.parts[0] + o.parts[1]), pct = v => Math.max(12, v / W * 100) + '%', lab = (v, k) => (o.q === k ? '?' : v);
+  const W = o.whole || (o.parts ? o.parts[0] + o.parts[1] : 0), pct = v => Math.max(12, v / W * 100) + '%', lab = (v, k) => (o.q === k ? '?' : v);
   const w = h('div', { class: 'barm' + (o.compare ? ' cmp' : '') });
-  if (o.compare) { // two bars, the difference shown dashed
-    const [A, B] = o.parts, big = Math.max(A, B);
-    w.append(h('div', { class: 'bm-row' }, h('span', { class: 'bm-l' }, o.labels[0]), h('span', { class: 'bm-bar a', style: { width: A / big * 100 + '%' } }, lab(A, 0))),
-      h('div', { class: 'bm-row' }, h('span', { class: 'bm-l' }, o.labels[1]), h('span', { class: 'bm-bar b', style: { width: B / big * 100 + '%' } }, lab(B, 1)), h('span', { class: 'bm-diff', style: { width: (big - Math.min(A, B)) / big * 100 + '%' } }, o.q === 'diff' ? '?' : big - Math.min(A, B))));
+  if (o.compare) { /* v201: comparison bar model — o.rows: [[name, value], [name, value]], o.q: 0 | 1 | 'diff' (which number is unknown).
+       The longer bar fills the track; the shorter bar + the dashed difference end exactly where the longer bar ends, so the picture shows
+       longer = shorter + difference. Both rows share one track width (names sit in their own column) so the bars line up. */
+    const [[n0, v0], [n1, v1]] = o.rows, big = Math.max(v0, v1), small = Math.min(v0, v1), d = big - small;
+    const sw = Math.min(86, Math.max(14, small / big * 100));
+    const row = (k, name, v) => { const isSmall = v < big || (v0 === v1 && k === 1), track = h('div', { class: 'bm-track' });
+      track.append(h('span', { class: 'bm-bar ' + (k ? 'b' : 'a'), style: { width: (isSmall && d ? sw : 100) + '%' } }, o.q === k ? '?' : v));
+      if (isSmall && d) track.append(h('span', { class: 'bm-diff', style: { width: `calc(${100 - sw}% - 3px)` } }, h('small', null, o.dl || 'ส่วนที่ต่าง'), h('b', null, o.q === 'diff' ? '?' : d)));
+      return h('div', { class: 'bm-row' }, h('span', { class: 'bm-l' }, name), track); };
+    w.append(row(0, n0, v0), row(1, n1, v1));
     return w;
   }
   w.append(h('div', { class: 'bm-whole' }, h('span', null, o.wl ? `${o.wl} ` : '', h('b', null, lab(W, 'whole')))),
     h('div', { class: 'bm-parts' }, h('span', { class: 'bm-bar a', style: { width: pct(o.parts[0]) } }, h('small', null, o.labels[0]), h('b', null, lab(o.parts[0], 0))), h('span', { class: 'bm-bar b', style: { width: pct(o.parts[1]) } }, h('small', null, o.labels[1]), h('b', null, lab(o.parts[1], 1)))));
   return w;
 }
-/* bar model that fits a story: put together / take away / compare ("กว่า") */
+/* v201 (ผู้ใช้ขอ): PICTURE model for a word problem — instead of plain bars, each part is a box with a few pictures of the thing the story
+   is about (4–6 at most, not one per item: “31 แท่ง” shows a handful of pencils + the number) and a caption taken from the story.
+   Kinds: join (รวม/เพิ่ม → ทั้งหมด ?) · orig (ไปแล้ว + เหลือ → เดิม ?) · take (มี − เอาออก → เหลือ ?) · take2 (มี − เหลือ → หายไป ?)
+   need (ต้องการ − มีแล้ว → ต้องเพิ่ม ?) · part (ทั้งหมด − ส่วนหนึ่ง → อีกส่วน ?) · cmp+ / cmp− / diff (เปรียบเทียบสองอย่าง).
+   Lengths (ซม./เมตร) are drawn as ruler strips; money (บาท) as coins. storyModel(st).kind / .why tell storySim how to explain it. */
+const SM_NAMES = /(?<!ลูก)(ต้นข้าว|ต้นกล้า|น้ำฝน|ภูผา|ใบเตย|ก้องภพ|มะปราง|ธันวา|แพรวา|พอใจ|น้องเล็ก|ก้อง|แนน|โจ|บอล|บิ๊ก|ฝ้าย|โอม|นิด|บัว|โบ๊ท)/g;
+const SM_IC = [[/มะเฟือง/, 'starfruit'], [/มะยม/, 'plum'], [/มะละกอ/, 'papaya'], [/มะนาว/, 'lemon'], [/มะพร้าว/, 'palm'], [/มะม่วง/, 'mango'], [/ส้ม(?!ตำ)/, 'orange'],
+  [/สติกเกอร์/, 'star'], [/กุหลาบ/, 'rose'], [/ดอก/, 'flower'], [/ผักบุ้ง/, 'sprout'], [/ผักกาด/, 'cabbage'], [/หัวไชเท้า/, 'radish'], [/ลูกแก้ว|ลูกปัด/, 'marble'],
+  [/ลูกบอล/, 'ball'], [/ลูกโป่ง/, 'balloon'], [/ลูกอม/, 'lollipop'], [/เปลือกหอย/, 'shell'], [/พับนก|นกกระดาษ/, 'crane'], /* not /นก/: “กันกี่” contains น+ก */ [/ไข่/, 'egg'], [/ไก่/, 'hen'], [/เป็ด/, 'duck'],
+  [/แพะ/, 'goat'], [/แกะ/, 'sheep'], [/วัว/, 'cow'], [/ควาย/, 'buffalo'], [/หมู/, 'pig'], [/แมว/, 'cat'], [/สุนัข/, 'dog'], [/ปลา/, 'fish'], [/ขนมปัง/, 'croissant'],
+  [/ขนม/, 'cookie'], [/ดินสอ/, 'pencil'], [/ปากกา/, 'pen'], [/สมุด|หนังสือ/, 'book'], [/กระดาษ/, 'paper'], [/ริบบิ้น/, 'ribbon'], [/เชือก/, 'rope'], [/เสื้อ/, 'shirt'],
+  [/เก้าอี้/, 'chair'], [/กล่อง/, 'carton'], [/ตึก/, 'building'], [/ผลไม้/, 'apple'], [/ลำไย/, 'tree']];
+/* generic pictures: used only when neither the clause nor the whole story names a specific thing */
+const SM_GEN = [[/ต้น|สวน|ปลูก/, 'tree'], [/หญิง/, 'girl'], [/ชาย/, 'kid1'], [/นักเรียน|คน|ผู้โดยสาร|สมาชิก|น้อง|พี่|เพื่อน|แม่|พ่อ|ลุง|ป้า|ยาย|ครู/, 'kid']];
+const smIcon = (t, gen) => { t = String(t || ''); const nm = SM_NAMES.test(t); SM_NAMES.lastIndex = 0; const u = t.replace(SM_NAMES, ' ');
+  for (const [re, k] of gen ? SM_GEN : SM_IC) if (re.test(u)) return k; return gen && nm ? 'kid' : null; };
+const SM_KIDS = ['kid1', 'kid0', 'kid3', 'kid2', 'kid5', 'kid4', 'kid9', 'kid7'];
+function smBox(o) { /* o: { v, show, icon, M, cap, kind: '' | 'x' (taken away) | 'q' (unknown, dashed) | 'need', unit, len } */
+  const box = h('div', { class: 'pm-box' + (o.kind ? ' ' + o.kind : '') + (o.len ? ' len' : ''), 'data-ic': o.icon || '', style: { flexGrow: Math.max(o.v, o.M * .12), flexBasis: 0 } });
+  const ic = h('div', { class: 'pm-ic' });
+  if (o.len) ic.append(o.icon && (o.start || !/\b(q|x|more|same)\b/.test(o.kind || '')) ? art(o.icon) : ''); /* a ruler strip: the picture sits only at the start of a row */
+  else { const k = o.v <= 0 ? 0 : Math.max(1, Math.min(6, Math.round(6 * o.v / o.M))); for (let i = 0; i < k; i++) ic.append(art(o.icon === 'kid' ? SM_KIDS[i % SM_KIDS.length] : o.icon || 'dotA')); }
+  box.append(ic, h('div', { class: 'pm-n' }, o.show === '?' ? h('b', { class: 'q' }, '?') : h('b', null, String(o.show)), o.show === '?' ? '' : h('small', null, ' ' + (o.unit || ''))));
+  return h('div', { class: 'pm-cell', style: { flexGrow: Math.max(o.v, o.M * .12), flexBasis: 0 } }, box, o.cap ? h('div', { class: 'pm-cap' }, o.cap) : null);
+}
 function storyModel(st) {
-  const ans = st.op === '+' ? st.a + st.b : st.a - st.b, cmp = /กว่า/.test(st.text), orig = /เดิม/.test(st.text);
-  if (st.op === '+') return cmp ? barModel({ compare: true, parts: [st.a, ans], labels: ['', ''], q: 1 }) : barModel({ parts: [st.a, st.b], labels: ['', ''], q: 'whole' });
-  return cmp ? barModel({ compare: true, parts: [st.a, st.b], labels: ['', ''], q: 'diff' }) : barModel({ whole: st.a, parts: orig ? [ans, st.b] : [st.b, ans], labels: ['', ''], q: orig ? 0 : 1 });
+  const a = st.a, b = st.b, ans = st.op === '+' ? a + b : a - b, T = st.text, unit = st.unit || '', len = /เมตร/.test(unit), money = unit === 'บาท';
+  const num = n => { const m = new RegExp(`(?<![0-9])${n}(?![0-9])`).exec(T); return m ? m.index : -1; };
+  const ia = num(a), ib = (() => { if (ia < 0) return -1; const re = new RegExp(`(?<![0-9])${b}(?![0-9])`, 'g'); re.lastIndex = ia + String(a).length; const m = re.exec(T); return m ? m.index : -1; })();
+  const after = i => { const r = T.slice(i).replace(/^[0-9]+\s*/, ''); return r.startsWith(unit) ? r.slice(unit.length) : r; };
+  let s1 = ia > 0 ? T.slice(0, ia).trim() : '', sq = ib > 0 ? after(ib).trim() : '', s2 = (ib > 0 ? T.slice(ia + String(a).length, ib).replace(new RegExp('^\\s*' + unit), '') : '').trim().replace(/^และ/, '');
+  if (s1.lastIndexOf('มี') > 0) s1 = s1.slice(s1.lastIndexOf('มี'));
+  const qWord = /(?<!สี)เหลือ/.test(sq) ? 'เหลือ' : /เดิม|ตอนแรก/.test(sq) ? 'เดิม' : /ทั้งหมด/.test(sq) ? 'ทั้งหมด' : /รวม/.test(sq) ? 'รวมกัน' : /เพิ่ม/.test(sq) ? 'ต้องเพิ่มอีก' : '';
+  const sqCap = sq.split(' ')[0].replace(/กี่.*|เท่าไร.*/, '').trim();
+  const icT = money ? 'coin' : null, I = t => icT || smIcon(t) || smIcon(T) || smIcon(t, 1) || smIcon(T, 1);
+  const cmp = /กว่า/.test(T), L = st.lab || ['', ''];
+  const thing = !len && unit !== 'กิโลกรัม', rowIc = n => thing ? I(n) : len && /^ต้น/.test(n) && !smIcon(n, 1)?.startsWith('kid') ? 'tree' : icT || smIcon(n) || smIcon(n, 1) || smIcon(T) || smIcon(T, 1); /* counting stories: a row named after a person shows the THING; length/weight rows show the thing measured */
+  const w = h('div', { class: 'pm' + (len ? ' pm-len' : '') }); let kind, why;
+  if (cmp) { /* two rows, names in their own column; the shorter row + dashed difference ends where the longer row ends */
+    const diff = st.op === '-' && /กว่า[^0-9]*กี่/.test(T), big0 = st.op === '+' ? false : true; /* row 0 is the first thing named in the story */
+    const v0 = a, v1 = diff ? b : ans, M = Math.max(v0, v1), d = Math.abs(v0 - v1), i0 = rowIc(L[0]), i1 = rowIc(L[1]);
+    kind = diff ? 'diff' : st.op === '+' ? 'cmp+' : 'cmp-';
+    const row = (name, cells) => h('div', { class: 'pm-row' }, h('span', { class: 'pm-l' }, name), h('div', { class: 'pm-track' }, ...cells));
+    if (kind === 'diff') w.append(row(L[0], [smBox({ v: v0, show: v0, icon: i0, M, unit, len })]), row(L[1], [smBox({ v: v1, show: v1, icon: i1, M, unit, len }), smBox({ v: d, show: '?', icon: i0, M, unit, len, kind: 'q', cap: 'ต่างกัน' })]));
+    else if (kind === 'cmp+') w.append(row(L[0], [smBox({ v: v0, show: v0, icon: i0, M, unit, len }), h('div', { class: 'pm-cell pm-sp', style: { flexGrow: Math.max(b, M * .12), flexBasis: 0 } })]), /* spacer: the first row ends where “เท่ากับ…” ends */ row(L[1], [smBox({ v: v0, show: v0, icon: i1, M, unit, len, kind: 'same', start: 1, cap: 'เท่ากับ' + L[0] }), smBox({ v: b, show: b, icon: i1, M, unit, len, kind: 'more', cap: (/สูง/.test(T) ? 'สูงกว่า' : /ยาว/.test(T) ? 'ยาวกว่า' : /หนัก/.test(T) ? 'หนักกว่า' : /แพง/.test(T) ? 'แพงกว่า' : 'มากกว่า') })]), h('div', { class: 'pm-tot' }, L[1] + ' = ', h('b', { class: 'q' }, '?')));
+    else w.append(row(L[0], [smBox({ v: v0, show: v0, icon: i0, M, unit, len })]), row(L[1], [smBox({ v: v1, show: '?', icon: i1, M, unit, len, kind: 'q', start: 1 }), smBox({ v: b, show: b, icon: i0, M, unit, len, kind: 'x', cap: /สั้น/.test(T) ? 'สั้นกว่า' : /เตี้ย/.test(T) ? 'เตี้ยกว่า' : /ถูก/.test(T) ? 'ถูกกว่า' : 'น้อยกว่า' })]));
+    why = { diff: 'เทียบ 2 อย่าง หา<b>ส่วนที่ต่างกัน</b> → ใช้การ<b>ลบ</b> (มาก − น้อย)', 'cmp+': `รู้${L[0]} และ${L[1]}มากกว่าอีกเท่าไร → ใช้การ<b>บวก</b>`, 'cmp-': `รู้${L[0]} และ${L[1]}น้อยกว่าอีกเท่าไร → ใช้การ<b>ลบ</b>` }[kind];
+  } else {
+    const top = (cap, v) => h('div', { class: 'pm-top' }, h('span', null, cap ? cap + ' ' : '', v === '?' ? h('b', { class: 'q' }, '?') : h('b', null, `${v} `, h('small', null, unit))));
+    const need = st.op === '-' && /ต้องการ|อยากได้|ต้องใช้/.test(T), take2 = st.op === '-' && /(?<!สี)เหลือ/.test(s2), orig = st.op === '+' && /เดิม|ตอนแรก/.test(sq);
+    const part = st.op === '-' && !need && !take2 && (/ทั้งหมด|รวม/.test(s1) || /^เป็น/.test(s2) || /ที่เหลือเป็น|อยู่ใน|ห้องแรก/.test(T));
+    kind = st.op === '+' ? (orig ? 'orig' : 'join') : need ? 'need' : take2 ? 'take2' : part ? 'part' : 'take';
+    const M = st.op === '+' ? ans : a;
+    if (kind === 'join') w.append(top(qWord || 'ทั้งหมด', '?'), h('div', { class: 'pm-track' }, smBox({ v: a, show: a, icon: I(s1), M, unit, len, cap: s1 }), smBox({ v: b, show: b, icon: I(s2), M, unit, len, cap: s2 })));
+    if (kind === 'orig') w.append(top('เดิม', '?'), h('div', { class: 'pm-track' }, smBox({ v: b, show: b, icon: I(T), M, unit, len, cap: s2 || 'เหลือ' }), smBox({ v: a, show: a, icon: I(T), M, unit, len, kind: 'x', cap: s1 })));
+    if (kind === 'take') w.append(top(s1, a), h('div', { class: 'pm-track' }, smBox({ v: ans, show: '?', icon: I(s1), M, unit, len, kind: 'q', start: 1, cap: qWord || 'เหลือ' }), smBox({ v: b, show: b, icon: I(s1), M, unit, len, kind: 'x', cap: s2 })));
+    if (kind === 'take2') w.append(top(s1, a), h('div', { class: 'pm-track' }, smBox({ v: b, show: b, icon: I(s1), M, unit, len, cap: 'เหลือ' }), smBox({ v: ans, show: '?', icon: I(s1), M, unit, len, kind: 'x q', cap: sqCap || 'หายไป' })));
+    if (kind === 'need') w.append(top(s1, a), h('div', { class: 'pm-track' }, smBox({ v: b, show: b, icon: I(s1), M, unit, len, cap: s2 }), smBox({ v: ans, show: '?', icon: I(s1), M, unit, len, kind: 'q', cap: 'ต้องเพิ่มอีก' })));
+    if (kind === 'part') w.append(top(s1, a), h('div', { class: 'pm-track' }, smBox({ v: b, show: b, icon: I(s2), M, unit, len, cap: s2 }), smBox({ v: ans, show: '?', icon: I(sq), M, unit, len, kind: 'q', cap: sqCap || 'อีกส่วน' })));
+    why = { join: 'รู้ 2 ส่วน หา<b>ทั้งหมด</b> → ใช้การ<b>บวก</b>', orig: 'รู้ส่วนที่ไปแล้ว และส่วนที่เหลือ หา<b>ของเดิม</b> → ใช้การ<b>บวก</b>', take: 'มีอยู่ เอาออกไปบางส่วน หา<b>ที่เหลือ</b> → ใช้การ<b>ลบ</b>',
+      take2: 'มีอยู่ เหลือเท่านี้ หา<b>ส่วนที่หายไป</b> → ใช้การ<b>ลบ</b>', need: 'ต้องการเท่านี้ มีแล้วบางส่วน หา<b>ส่วนที่ยังขาด</b> → ใช้การ<b>ลบ</b>', part: 'รู้ทั้งหมด และส่วนหนึ่ง หา<b>อีกส่วน</b> → ใช้การ<b>ลบ</b>' }[kind];
+  }
+  w.kind = kind; w.why = why; return w;
 }
 
 /* v112 (ผู้ใช้ขอ): แตะแล้วลากนิ้วผ่านลูกคิด — เม็ดที่นิ้วอยู่ยกขึ้นนิดหนึ่ง พอนิ้วผ่านไปก็วางลง (ช่วยนับทีละเม็ด) */
