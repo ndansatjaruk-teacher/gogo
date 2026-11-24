@@ -222,11 +222,11 @@
 | `Q.matchFrames` | `{ nums }` | [`engine/questions.js:827`](../src/engine/questions.js#L827) |
 | `Q.matchSums` | `{ n = 3 } = {}` | [`engine/questions.js:333`](../src/engine/questions.js#L333) |
 | `Q.meterJudge` | `{ e, name, more }` | [`engine/questions.js:1394`](../src/engine/questions.js#L1394) |
-| `Q.mgBuild` | `T, q` | [`grades/m1/m1g.js:373`](../src/grades/m1/m1g.js#L373) |
-| `Q.mgFigs` | `{ q, figs, right, hint, sig }` | [`grades/m1/m1g.js:383`](../src/grades/m1/m1g.js#L383) |
-| `Q.mgMeasure` | `{ deg, rot` | [`grades/m1/m1g.js:376`](../src/grades/m1/m1g.js#L376) |
-| `Q.mgNum` | `{ q, fig, a, unit, hint, sig }` | [`grades/m1/m1g.js:386`](../src/grades/m1/m1g.js#L386) |
-| `Q.mgPick` | `{ q, fig, opts, right, hint, sig }` | [`grades/m1/m1g.js:380`](../src/grades/m1/m1g.js#L380) |
+| `Q.mgBuild` | `T, q` | [`grades/m1/geo/mg-quest.js:5`](../src/grades/m1/geo/mg-quest.js#L5) |
+| `Q.mgFigs` | `{ q, figs, right, hint, sig }` | [`grades/m1/geo/mg-quest.js:15`](../src/grades/m1/geo/mg-quest.js#L15) |
+| `Q.mgMeasure` | `{ deg, rot` | [`grades/m1/geo/mg-quest.js:8`](../src/grades/m1/geo/mg-quest.js#L8) |
+| `Q.mgNum` | `{ q, fig, a, unit, hint, sig }` | [`grades/m1/geo/mg-quest.js:18`](../src/grades/m1/geo/mg-quest.js#L18) |
+| `Q.mgPick` | `{ q, fig, opts, right, hint, sig }` | [`grades/m1/geo/mg-quest.js:12`](../src/grades/m1/geo/mg-quest.js#L12) |
 | `Q.miAvg` | `{ text, nums, unit }` | [`grades/m1/m1i.js:376`](../src/grades/m1/m1i.js#L376) |
 | `Q.miCalc` | `{ expr, hint, fig, q, unit }` | [`grades/m1/m1i.js:355`](../src/grades/m1/m1i.js#L355) |
 | `Q.miChipQ` | `{ a, b }` | [`grades/m1/m1i.js:398`](../src/grades/m1/m1i.js#L398) |

@@ -71,6 +71,10 @@ grades/p4/p4x.js
 grades/p5/p5x.js
 grades/p6/p6x.js
 grades/m1/m1i.js
+grades/m1/geo/mg-board.js
+grades/m1/geo/mg-tasks.js
+grades/m1/geo/mg-sims.js
+grades/m1/geo/mg-quest.js
 grades/m1/m1g.js
 grades/m1/m1e.js
 grades/m3/m3s.js
