@@ -74,6 +74,32 @@ function e3SignSim() {
     if (seen.size === 6) { out.innerHTML += '<br>ฐานติดลบต้องมี<b>วงเล็บ</b> · ไม่มีวงเล็บ ฐานคือ 2 แล้วค่อยใส่เครื่องหมายลบ'; sfx.ok(); teachDone(wrap); } } }, `n = ${n}`)));
   wrap.append(h('div', { class: 'cap' }, 'แตะ n ทีละค่า เทียบ (−2)ⁿ กับ −2ⁿ'), row, tbl, out); return wrap;
 }
+/* กำลังคู่ได้บวก กำลังคี่ได้ลบ: แตะ n แล้วจับคู่ตัวลบทีละคู่ (ลบ × ลบ = บวก) ดูว่าเหลือตัวลบไหม */
+function e3PairSim(b = -4) {
+  const wrap = e3Wrap(), chips = h('div', { class: 'e3-pairs' }), res = h('div', { class: 'e3-big e3-pres' }), ev = h('div', { class: 'e3-rule even' }, h('b', null, 'เลขชี้กำลังคู่ → บวก')), od = h('div', { class: 'e3-rule odd' }, h('b', null, 'เลขชี้กำลังคี่ → ลบ')), out = fNote(), seen = new Set(), NS = [2, 3, 4, 5, 6];
+  const show = n => { const k = n >> 1; let s = '';
+    for (let i = 0; i < k; i++) s += `<span class="e3-pr" style="--d:${0.25 + i * 0.35}s"><span class="e3-f">${e3B(b)}</span><span class="e3-f">${e3B(b)}</span><i>+</i></span>`;
+    if (n % 2) s += `<span class="e3-pr one" style="--d:${0.25 + k * 0.35}s"><span class="e3-f">${e3B(b)}</span><i>−</i></span>`;
+    chips.innerHTML = s; const v = b ** n;
+    res.innerHTML = `${e3P(b, n)} = <b class="${v < 0 ? 'neg' : 'pos'}">${e3Fmt(v)}</b>`;
+    (n % 2 ? od : ev).append(h('span', { class: 'e3-rx', html: `${e3P(b, n)} = ${e3Fmt(v)}` }));
+    out.innerHTML = n % 2 ? `n = ${n} เป็น<b>จำนวนคี่</b> — จับคู่ได้ ${k} คู่ แต่<b>เหลือตัวลบ 1 ตัว</b> → ผลเป็น<b>ลบ</b>` : `n = ${n} เป็น<b>จำนวนคู่</b> — จับคู่ได้ ${k} คู่พอดี ทุกคู่เป็นบวก → ผลเป็น<b>บวก</b>`; };
+  const row = h('div', { class: 'rowstack e3-chips' }, ...NS.map(n => h('button', { class: 'btn ia e3-nb', onclick: e => { e.stopPropagation(); if (seen.has(n)) return; e.currentTarget.classList.add('on'); seen.add(n); show(n); sfx.pop(n);
+    if (seen.size === NS.length) { out.innerHTML = 'ฐานเป็นจำนวนลบ: เลขชี้กำลัง<b>คู่</b> → ตัวลบจับคู่ได้หมด ผลเป็น<b>บวก</b>&emsp;เลขชี้กำลัง<b>คี่</b> → เหลือตัวลบ 1 ตัว ผลเป็น<b>ลบ</b>'; sfx.ok(); teachDone(wrap); } } }, `n = ${n}`)));
+  wrap.append(h('div', { class: 'cap', html: `ลบ × ลบ = <b>บวก</b> — แตะ n ทีละค่า แล้วดูว่า ${e3B(b)} จับคู่กันได้หมดไหม` }), row, chips, res, h('div', { class: 'e3-rules' }, ev, od), out);
+  chips.innerHTML = '<span class="e3-ph">แตะ n ด้านบน</span>'; return wrap;
+}
+/* ตัวอย่าง: ทายว่าผลเป็นบวกหรือลบ แล้วดูเหตุผล */
+function e3SignEx(items) {
+  const wrap = e3Wrap(), grid = h('div', { class: 'e3-exg' }), out = fNote(); let got = 0;
+  items.forEach(([ex, v, why]) => { const box = h('div', { class: 'e3-exc' }), ans = h('div', { class: 'e3-exa' }), btns = h('div', { class: 'rowstack' });
+    ['บวก', 'ลบ'].forEach(t => btns.append(h('button', { class: 'btn ia e3-sg ' + (t === 'บวก' ? 'p' : 'm'), onclick: e => { e.stopPropagation(); if (box.classList.contains('ok')) return; const right = (v > 0) === (t === 'บวก');
+      if (!right) { sfx.no(); const b = e.currentTarget; b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); out.innerHTML = 'ยังไม่ใช่ — ดูวงเล็บก่อน แล้วดูว่าเลขชี้กำลังเป็นคู่หรือคี่'; return; }
+      box.classList.add('ok'); btns.remove(); ans.innerHTML = `${why}<br><b class="${v < 0 ? 'neg' : 'pos'}">= ${e3Fmt(v)}</b>`; got++; sfx.pop(got + 2); out.innerHTML = `ถูกต้อง ${got} จาก ${items.length} ข้อ`;
+      if (got === items.length) { out.innerHTML = 'ครบแล้ว ✓ ดู<b>วงเล็บ</b>ก่อนเสมอ แล้วค่อยดูว่าเลขชี้กำลังเป็นคู่หรือคี่'; sfx.ok(); teachDone(wrap); } } }, t)));
+    box.append(h('div', { class: 'e3-big', html: ex }), btns, ans); grid.append(box); });
+  wrap.append(h('div', { class: 'cap' }, 'ค่าของแต่ละข้อเป็นบวกหรือลบ แตะคำตอบ'), grid, out); return wrap;
+}
 /* ฐานเป็นเศษส่วน: คูณด้วย ½ ซ้ำ — พื้นที่ที่ระบายเหลือครึ่งหนึ่งทุกครั้ง */
 function e3HalfSim(max = 4) {
   const wrap = e3Wrap(), sq = h('div', { class: 'e3-sq' }), big = h('div', { class: 'e3-big' }), out = fNote(); let n = 0;
@@ -244,7 +270,9 @@ const LESSONS_M1C3 = [
     Q.e3N({ q: 'หาค่า', expr: `${e3P(2, 3)} + ${e3P(3, 2)}`, a: 17, hint: '8 + 9', sig: 'sum89', diff: 20 }), Q.e3N({ q: 'หาค่า', expr: `${e3P(5, 2)} − ${e3P(2, 4)}`, a: 9, hint: '25 − 16', sig: 'sub', diff: 22 }),
     e3TF(`${e3P(1, 100)} = 1`, true, '1 คูณกันกี่ตัวก็ได้ 1'), e3TF(`${e3P(4, 3)} = ${e3P(3, 4)}`, false, '64 กับ 81')]),
   LM3E(5, 'แก่งวงเล็บลบ', 'เลขยกกำลังที่มีฐานเป็นจำนวนลบและเครื่องหมายวงเล็บ', 'ฐานลบ·วงเล็บ', 'หาค่าเลขยกกำลังที่มีฐานเป็นจำนวนลบ บอกเครื่องหมายของผลลัพธ์จากเลขชี้กำลังคู่หรือคี่ และแยกความแตกต่างระหว่าง (−a)ⁿ กับ −aⁿ', [
+    T('<b>กำลังคู่ได้บวก กำลังคี่ได้ลบ</b> — จับคู่ตัวลบ', 'กำลังคู่ได้บวก กำลังคี่ได้ลบ จับคู่ตัวลบ', el => el.append(e3PairSim(-4))),
     T('<b>(−2)ⁿ กับ −2ⁿ</b> — แตะ n ทีละค่า', 'ลบสองทั้งหมดยกกำลังเอ็น กับ ลบของสองยกกำลังเอ็น แตะเอ็นทีละค่า', el => el.append(e3SignSim())),
+    T('ตัวอย่าง: <b>บวกหรือลบ?</b>', 'ตัวอย่าง บวกหรือลบ', el => el.append(e3SignEx([[e3P(-1, 100), 1, 'ฐาน −1, เลขชี้กำลัง 100 เป็น<b>คู่</b> → บวก'], [e3P(-5, 3), -125, 'ฐาน −5, เลขชี้กำลัง 3 เป็น<b>คี่</b> → ลบ'], [e3P(-3, 4), 81, 'ฐาน −3, เลขชี้กำลัง 4 เป็น<b>คู่</b> → บวก'], [`<span>−${e3P(6, 2)}</span>`, -36, '<b>ไม่มีวงเล็บ</b> ฐานคือ 6 → 6² = 36 แล้วใส่ลบ']]))),
     T('ตัวอย่างทีละขั้น: <b>(−3)² กับ −3²</b>', 'ตัวอย่างทีละขั้น ลบสามทั้งหมดยกกำลังสอง กับ ลบของสามยกกำลังสอง', el => el.append(dcWalk(`${e3P(-3, 2)} &emsp; กับ &emsp; −${e3P(3, 2)}`, [['① ดูฐาน', `${e3P(-3, 2)} ฐานคือ −3 · −${e3P(3, 2)} ฐานคือ 3`], ['② (−3)²', '(−3) × (−3) = 9'], ['③ −3²', '−(3 × 3) = −9']], '<b>วงเล็บเปลี่ยนคำตอบ: 9 ≠ −9</b>')))
   ], () => [E3Q.neg(), E3Q.neg(), E3Q.neg(), E3Q.neg(), E3Q.sign(), E3Q.sign(), E3Q.base(),
     Q.e3O({ q: 'ข้อใดมีค่า<b>เป็นลบ</b>', opts: [`−${e3P(4, 2)}`, e3P(-4, 2), e3P(-1, 6), e3P(-2, 4)], right: `−${e3P(4, 2)}`, hint: 'หาค่าทีละข้อ ระวังวงเล็บ', sig: 'negpick', diff: 30 }),
