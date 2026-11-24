@@ -2004,6 +2004,8 @@ button.h6-node.btn{min-height:0}
 .c8-layers .gside-r{width:min(560px,92cqw);max-width:none;flex:0 0 auto}
 /* ---------- ป.6 บทที่ 9 รูปเรขาคณิตสามมิติ ---------- */
 .s9-view{cursor:grab;touch-action:none}.s9-view:active{cursor:grabbing}
+/* iPad: the faces are rebuilt every frame while turning — let the box (never rebuilt) take the touch */
+.s9-view svg{pointer-events:none}
 .s9-svg .s9-l{paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
 .s9-netpick{grid-template-columns:repeat(3,minmax(0,150px))}
 .t6-q > .t6-board.sm:has(.s9-svg){width:min(420px,86cqw)}
@@ -4547,6 +4549,45 @@ const zfScale = el => { const w = el.offsetWidth; return w ? (el.getBoundingClie
 
 'use strict';
 /* =========================================================
+   DRAGKEEP (v239): keep the element under the finger alive while dragging.
+   Almost every drag widget redraws its picture with `el.innerHTML = …` on each pointermove.
+   That deletes the very element the finger pressed (a handle, a dot…). Desktop browsers and
+   Chrome carry on, but iPad Safari stops sending the drag once that element is gone — so the
+   dot "doesn't move" (ผู้ใช้เจอ: ลากจุดในแผนภาพกล่องไม่ได้).
+   Fix for every widget at once: while a pointer is down, an innerHTML assignment on an element
+   that contains the pressed element is applied as an in-place update (same tags → attributes
+   and text are patched, nodes are kept); only parts whose structure changed are replaced.
+   Outside a drag, innerHTML works exactly as before. Prefix dk.
+   ========================================================= */
+let DK_T = null;
+/* only presses inside a drawn picture (svg) — buttons and lists keep the old behaviour */
+addEventListener('pointerdown', e => { const t = e.target; DK_T = t && t.nodeType === 1 && t.closest && t.closest('svg') ? t : null; }, true);
+['pointerup', 'pointercancel'].forEach(k => addEventListener(k, () => { DK_T = null; }, true));
+/* patch a's children to look like b's (b's nodes are moved into a where new) */
+/* keyed by tag + class: a node that only moved (because an arc or label before it came or went) is kept, never rebuilt */
+const dkC = e => (e.getAttribute('class') || '').trim().split(/\s+/)[0]; /* first class only: 'r4-peg on' while held is still the same peg */
+const dkSame = (x, y) => x.nodeType === y.nodeType && x.nodeName === y.nodeName && (x.nodeType !== 1 || dkC(x) === dkC(y));
+function dkPatch(x, y) {
+  if (x.nodeType !== 1) { if (x.nodeValue !== y.nodeValue) x.nodeValue = y.nodeValue; return; }
+  for (const at of [...x.attributes]) if (!y.hasAttribute(at.name)) x.removeAttribute(at.name);
+  for (const at of [...y.attributes]) if (x.getAttribute(at.name) !== at.value) x.setAttribute(at.name, at.value);
+  dkKids(x, y); }
+function dkKids(a, b) { const A = [...a.childNodes], B = [...b.childNodes]; let j = 0;
+  for (const y of B) { let m = -1;
+    for (let k = j; k < A.length; k++) { if (dkSame(A[k], y)) { m = k; break; } if (DK_T && A[k].contains && A[k].contains(DK_T)) break; }
+    if (m < 0) { a.insertBefore(y, j < A.length ? A[j] : null); continue; }
+    for (let k = j; k < m; k++) a.removeChild(A[k]);
+    dkPatch(A[m], y); j = m + 1; }
+  for (let k = A.length - 1; k >= j; k--) if (A[k].parentNode === a) a.removeChild(A[k]); }
+const dkMorph = (el, html, set) => { const t = el.namespaceURI && el.namespaceURI !== 'http://www.w3.org/1999/xhtml' ? document.createElementNS(el.namespaceURI, el.localName) : document.createElement(el.localName); set.call(t, html); dkKids(el, t); };
+(() => {
+  const d = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML'); if (!d || !d.set) return;
+  Object.defineProperty(Element.prototype, 'innerHTML', { configurable: true, enumerable: d.enumerable, get: d.get,
+    set(v) { const t = DK_T; if (t && t !== this && t.isConnected && this.contains(t)) { try { dkMorph(this, String(v), d.set); return; } catch (_) { } } d.set.call(this, v); } });
+})();
+
+'use strict';
+/* =========================================================
    CORE: utilities, storage, sound, speech
    ========================================================= */
 const $ = (s, r = document) => r.querySelector(s);
@@ -5858,6 +5899,29 @@ function dtOwlSVG(state, pal, emblem = '?') {
     ${state !== 'flex' ? extra : ''}
   </g>
 </svg>`;
+}
+
+/* ---------- ม.2 map path: a trail of shoe prints (v239) ----------
+   walks the same smooth curve as catmull(way), drops a print every DT_STEP px,
+   left / right in turn; prints up to the child's current stop are gold. */
+const DT_STEP = 34;
+function dtTrail(way, doneSeg) {
+  const pts = []; /* [x, y, angle, segment] sampled densely along the curve */
+  for (let i = 0; i < way.length - 1; i++) {
+    const p0 = way[i - 1] || way[i], p1 = way[i], p2 = way[i + 1], p3 = way[i + 2] || p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    for (let k = 0; k < 40; k++) { const t = k / 40, u = 1 - t;
+      const x = u * u * u * p1[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * p2[0], y = u * u * u * p1[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * p2[1];
+      pts.push([x, y, i]); } }
+  pts.push([...way[way.length - 1], way.length - 2]);
+  let s = '', acc = DT_STEP / 2, side = 1;
+  for (let j = 1; j < pts.length; j++) {
+    const a = pts[j - 1], b = pts[j], L = Math.hypot(b[0] - a[0], b[1] - a[1]); acc += L;
+    if (acc < DT_STEP) continue; acc = 0; side = -side;
+    const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), nx = -Math.sin(ang) * 8 * side, ny = Math.cos(ang) * 8 * side, done = b[2] < doneSeg;
+    s += `<g transform="translate(${(b[0] + nx).toFixed(1)} ${(b[1] + ny).toFixed(1)}) rotate(${(ang * 180 / Math.PI).toFixed(0)})" fill="${done ? '#F5B52E' : '#7A6A88'}" fill-opacity="${done ? 1 : .55}"><ellipse cx="4" cy="0" rx="7.2" ry="5"/><ellipse cx="-7.5" cy="0" rx="4.2" ry="3.9"/></g>`;
+  }
+  return s;
 }
 
 'use strict';
@@ -18882,7 +18946,7 @@ function simStretch() {
     const k = eq ? 'circle' : 'ellipse'; made.add(k);
     out.innerHTML = eq ? '<b>วงกลม</b> — จากจุดตรงกลางไปถึงขอบ <b>ยาวเท่ากันทุกเส้น</b> (เส้นสีเขียว)' : '<b>วงรี</b> — จากจุดตรงกลางไปถึงขอบ <b>ยาวไม่เท่ากัน</b> (ยาวด้านหนึ่ง สั้นอีกด้าน)';
     if (made.size === 2 && !box.dataset.ok) { box.dataset.ok = 1; teachDone(box); }
-    wrap.querySelectorAll('.g2h').forEach(g => g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); const svg = wrap.firstChild, ax = g.dataset.h; try { g.setPointerCapture(e.pointerId); } catch (_) {}
+    wrap.querySelectorAll('.g2h').forEach(g => !g.__bd && (g.__bd = 1) && g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); const svg = wrap.firstChild, ax = g.dataset.h; try { g.setPointerCapture(e.pointerId); } catch (_) {}
       const mv = ev => { const p = p2svgPt(svg, ev); if (ax === 'x') rx = Math.max(24, Math.min(140, Math.round(p.x - 150))); else ry = Math.max(24, Math.min(92, Math.round(100 - p.y))); if (Math.abs(rx - ry) < 4) (ax === 'x' ? rx = ry : ry = rx); draw(); };
       const up = () => { document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); sfx.tap(); }; document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up); })); };
   draw();
@@ -22928,7 +22992,7 @@ const l3len = mm => `${Math.floor(mm / 10)} ซม. ${mm % 10} มม.`;
 function l3RulerDrag(it, o, onSet) { // drag the red handle: the object's right end snaps to millimetres
   const G = l3rg(o), wrap = h('div', { class: 'p2rwrap ia', html: l3RulerSVG(it, { ...o, handle: true }) }), svg = wrap.firstChild; let b = it.b;
   const draw = () => { wrap.innerHTML = l3RulerSVG({ ...it, b }, { ...o, handle: true }); bind(); };
-  const bind = () => { const g = wrap.querySelector('.l3-h'); g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { g.setPointerCapture(e.pointerId); } catch (_) {}
+  const bind = () => { const g = wrap.querySelector('.l3-h'); if (g.__bd) return; g.__bd = 1; /* v239: ผูกครั้งเดียว (dragkeep เก็บปุ่มเดิมไว้ระหว่างลาก) */ g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { g.setPointerCapture(e.pointerId); } catch (_) {}
     const mv = ev => { const v = Math.max(it.a + 3, Math.min(G.max * 10, Math.round((p2svgPt(wrap.firstChild, ev).x - G.x0) / G.u))); if (v !== b) { b = v; const keep = wrap.querySelector('.l3-h'); draw(); sfx.tap(); onSet && onSet(b - it.a, false); } };
     const up = () => { document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); onSet && onSet(b - it.a, true); }; document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up); }); };
   bind(); wrap.val = () => b - it.a; return wrap; }
@@ -32442,7 +32506,7 @@ Object.assign(Q, {
   rulDraw({ len, k = 'straw', col = 'mint', name = 'หลอด', max = 12 }) {
     const q = `ลากปุ่มกลมที่ปลาย ให้${name}ยาว <span class="hl">${len} เซนติเมตร</span>`;
     return { prompt: q, say: `ลากปลายให้${name}ยาว ${WORD[len]} เซนติเมตร`, __sig: `rd ${len}`, mount(bd, ctx) { let cur = 2; const G = p2rg([{}], { max }), wrap = h('div', { class: 'p2rwrap ia' }), read = h('b', { class: 'num ss-read' });
-      const draw = () => { wrap.innerHTML = p2rulerSVG([{ k, a: 0, b: cur, col, name }], { max }); const svg = wrap.firstChild; const kn = document.createElementNS(SVGNS, 'circle'); kn.setAttribute('cx', G.X(cur)); kn.setAttribute('cy', G.top + 15); kn.setAttribute('r', 13); kn.setAttribute('class', 'rd-knob'); svg.append(kn); read.textContent = `${cur} เซนติเมตร`; };
+      const draw = () => { wrap.innerHTML = p2rulerSVG([{ k, a: 0, b: cur, col, name }], { max }); const svg = wrap.firstChild; const kn = svg.querySelector('.rd-knob') || document.createElementNS(SVGNS, 'circle'); /* v239: ปุ่มเดิมอยู่ต่อระหว่างลาก (iPad) */ kn.setAttribute('cx', G.X(cur)); kn.setAttribute('cy', G.top + 15); kn.setAttribute('r', 13); kn.setAttribute('class', 'rd-knob'); svg.append(kn); read.textContent = `${cur} เซนติเมตร`; };
       const at = e => { const svg = wrap.firstChild, v = Math.max(1, Math.min(max, Math.round((p2svgPt(svg, e).x - G.x0) / G.u))); if (v !== cur) { cur = v; draw(); sfx.tap(); } };
       wrap.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { wrap.setPointerCapture(e.pointerId); } catch (_) {} at(e); const mv = ev => at(ev), up = () => { wrap.removeEventListener('pointermove', mv); wrap.removeEventListener('pointerup', up); }; wrap.addEventListener('pointermove', mv); wrap.addEventListener('pointerup', up); });
       wrap.addEventListener('click', e => e.stopPropagation()); draw();
@@ -34836,7 +34900,10 @@ function showMap(cityId) {
     hills = t;
   }
   const road = detect ? { shadow: '#4A3A2A', edge: '#A8946E', surf: '#E3D3AE', dots: true } : polar ? { shadow: '#2A5A8A', edge: '#9CCBEA', surf: '#EEF8FF', dots: true } : river ? { shadow: '#1E5A7A', edge: '#E3CF98', surf: '#6EC3EC' } : desert ? { shadow: '#6B3F14', edge: '#B97A3A', surf: '#F4D49A', dots: true } : mountain ? { shadow: '#3B2A1A', edge: '#A98A66', surf: '#E8D2AC', dots: true } : cave ? { shadow: '#000', edge: '#5B4F78', surf: '#8D80A8', seam: '#6E6290', dots: true } : beach ? { shadow: '#5A3D1A', edge: '#B98654', surf: '#E2B57F', seam: '#C69361', dots: false } : jungle ? { shadow: '#2E4A1F', edge: '#B08455', surf: '#DDB985', dots: true } : { shadow: '#2B2550', edge: '#E6D3AC', surf: '#F8ECD2', dots: true };
-  const roadSvg = river ? `
+  const roadSvg = detect ? `
+    <path d="${dAll}" fill="none" stroke="#4A3A2A" stroke-opacity=".08" stroke-width="40" stroke-linecap="round" transform="translate(0 5)" filter="url(#roadBlur)"/>
+    <path d="${dAll}" fill="none" stroke="#E9DCBC" stroke-opacity=".7" stroke-width="34" stroke-linecap="round"/>
+    ${dtTrail(way, dDone ? idxOf[lastDone] : 0)}` : river ? `
     <path d="${dAll}" fill="none" stroke="${road.shadow}" stroke-opacity=".14" stroke-width="66" stroke-linecap="round" transform="translate(0 6)" filter="url(#roadBlur)"/>
     <path d="${dAll}" fill="none" stroke="#C9B47C" stroke-width="64" stroke-linecap="round"/>
     <path d="${dAll}" fill="none" stroke="${road.edge}" stroke-width="58" stroke-linecap="round"/>
