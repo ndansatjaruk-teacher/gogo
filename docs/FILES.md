@@ -79,6 +79,8 @@
 | `src/grades/m2/m2s.js` | 36 KB | (v238) ม.2 สถิติ (2): ตัวช่วย รูป (แผนภาพจุด ต้น-ใบ ฮิสโทแกรม) หน้าลงมือ `Q.s2Opt` / `Q.s2Num` (prefix s2) |
 | `src/grades/m2/m2l.js` | 117 KB | (v238) ม.2 บทที่ 7 สถิติ (2): บทเรียน 8701–8715 + บอส 8719 จอมโจรนกฮูก |
 | `src/grades/m3/m3s.js` | 128 KB | (v230) ม.3 บทที่ 6 สถิติ (3): มัธยฐาน ควอร์ไทล์ (ไม่นับมัธยฐานเมื่อ n คี่) `m3Five` · IQR · ค่านอกเกณฑ์ `m3FiveO` · แผนภาพกล่อง `m3BoxSVG`/`m3VBoxSVG` · หน้าลงมือ 12 แบบ · ข้อ `Q.m3*` · ด่าน 3601–3614 + บอส 3619 |
+| `src/grades/m3/m3t.js` | 60 KB | (v240) ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ: ราก/เศษส่วน `tgRatioH` `tgF` `tgRt` · ค่าตาราง 3 ตำแหน่ง `tgV` · มุมพิเศษ `TG_SP` · รูปสามเหลี่ยมมุมฉาก `tgTriSVG` · ฉากเรื่อง `tgScn` · หน้าลากด้วย `tgScene`/`tgDrag` (ภารกิจ `tgMission`) · หน้าแตะ `tgBuild` `tgSimSides` `tgPickSim` `tgSpTable` `tgTableSim` · ข้อ `Q.tgOpt` `Q.tgNum` (`story`) `Q.tgSide` |
+| `src/grades/m3/m3tl.js` | 70 KB | (v240) ม.3 บทที่ 11: บทเรียน 4101–4118 (8–11 = cosec sec cot เนื้อหาเสริม) + บอส 4119 หมีขาวตรีโกณ |
 | `src/app/lessons.js` | 477 KB | ด่าน ป.1 + ทะเบียนเมืองทั้งหมด (CITIES, GRADES, LESSONS) |
 | `src/app/learn.js` | 50 KB | หน้า “รู้จักก่อน” |
 | `src/app/wpic.js` | 9 KB | รูปประกอบตัวอย่างทีละขั้น |

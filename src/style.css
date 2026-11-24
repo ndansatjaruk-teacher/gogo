@@ -4506,3 +4506,60 @@ body[data-world=detect] .keypad.mi-kp .btn.sym{--c:#FFF1E2;--c2:#F2C08A}
 .exam-card .xqt .xfig .s2-stem table,.exam-card .xqt .xfig .s2-ft table{font-size:18px}
 button.m3-t.used{opacity:.28;pointer-events:none}
 .s2-qrow .s2-ft table{font-size:clamp(20px,2.4cqw,26px)}
+/* v240 ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ (grades/m3/m3t.js, prefix tg) — ข้าม = ชมพู · ชิด = ฟ้า · ฉาก = ม่วง */
+.tg-fig{display:flex;justify-content:center}
+.tg-fig svg,.tg-board svg{display:block;width:100%;height:auto;overflow:visible}
+.tg-fig .tg-tri{width:min(400px,46cqw);max-height:min(40cqh,280px)}
+.tg-fig .tg-scn{width:min(460px,48cqw);max-height:min(42cqh,300px)}
+.tg-fig .tg-vt{font-size:15px}
+.colstack > .tg-fig .tg-tri{width:min(380px,60cqw);max-height:min(34cqh,240px)}
+.tg-qrow{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3cqw,34px);width:100%;flex-wrap:wrap}
+.tg-qrow > .tg-fig{flex:1 1 340px;max-width:480px}
+.tg-qrow > .opts,.tg-qrow > .mi-ans{flex:0 1 auto}
+.tg-board{display:flex;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.tg-board.ia{cursor:grab}
+.tg-board .tg-tri{width:min(420px,52cqw);max-height:min(40cqh,280px)}
+.tg-board .tg-scene{width:min(560px,60cqw);max-height:min(48cqh,350px)}
+.tg-board .tg-pyth{width:min(520px,60cqw);max-height:min(52cqh,380px)}
+.tg-row{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2.4cqw,28px);width:100%;flex-wrap:nowrap}
+@container (max-width: 640px){.tg-row{flex-wrap:wrap}}
+.tg-row > .tg-board{flex:0 1 auto}
+.tg-side,.tg-sidecol{flex:0 1 300px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.tg-live{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 14px;border-radius:14px;background:#fff;box-shadow:var(--e1)}
+.tg-big{font:900 clamp(22px,2.8cqw,30px) var(--font)}
+.tg-eq{display:inline-flex;align-items:center;flex-wrap:wrap;gap:.3em;font:800 clamp(18px,2.2cqw,24px) var(--font-num);color:var(--ink)}
+.tg-eq .fop{color:var(--ink-3);font-weight:800}
+.tg-f{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.04;font-family:var(--font-num);font-weight:800;margin:0 .08em}
+.tg-f > i{font-style:normal;font-size:.86em;padding:0 .14em;white-space:nowrap}
+.tg-f > i:first-child{border-bottom:.09em solid currentColor;padding-bottom:.05em}
+.tg-f > s{display:none}
+.tg-rt{white-space:nowrap}.tg-rt > span{border-top:.08em solid currentColor;padding:0 .06em;margin-left:.02em}
+.tg-mis{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.tg-mi{padding:5px 12px;border-radius:999px;background:#EEF4FB;color:var(--ink-2);font-weight:800;font-size:clamp(14px,1.7cqw,18px);box-shadow:inset 0 0 0 1.5px #CFE0F2}
+.tg-mi.ok{background:#DDF6EC;color:#1B8862;box-shadow:inset 0 0 0 2px #4FC79A}.tg-mi.ok::before{content:'✓ '}
+.tg-card{padding:10px 16px;border-radius:14px;background:#fff;box-shadow:var(--e1)}
+.tg-done{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.tg-chip2{padding:4px 10px;border-radius:10px;background:#FFF6D6;font:800 clamp(15px,1.8cqw,19px) var(--font-num);color:var(--ink);display:inline-flex;align-items:center;gap:.2em}
+.tg-steps{gap:8px;min-width:min(300px,40cqw)}
+.tg-tb{border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;box-shadow:var(--e1);background:#fff;font-size:clamp(17px,2.1cqw,23px)}
+.tg-tb th{background:#EAF4FD;padding:5px 10px;font-weight:800}.tg-tb td{padding:5px 10px;font:800 1em var(--font-num);text-align:center;color:var(--ink)}
+.tg-sp table{font-size:clamp(18px,2.2cqw,24px)}.tg-sp td{min-width:3.2em;cursor:pointer}.tg-sp td.hl{background:#FFF6D6}
+.tg-vt table{font-size:clamp(13px,1.5cqw,16px)}.tg-vt td,.tg-vt th{padding:2px 10px}.tg-vt td{cursor:pointer}.tg-vt td.hl{background:#FFE27A}
+.tg-vt.sm td{cursor:default}
+.tg-fig2{display:flex;align-items:center;gap:6px}.tg-fig2 svg{width:min(250px,26cqw);height:auto}
+.tg-two{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}.tg-two svg{width:min(320px,40cqw);height:auto;max-height:min(30cqh,220px)}
+.fbig .tg-two svg{width:min(260px,34cqw)}
+.tg-note{padding:6px 14px;border-radius:12px;background:#FFF3C4;color:#7A5A06;font-weight:800;font-size:clamp(15px,1.8cqw,19px);display:inline-flex;align-items:center;gap:.3em;flex-wrap:wrap;justify-content:center}
+.tg-opts .opt .tg-f{font-size:1.05em}
+.tg-sv{font:900 22px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+.tg-vn{font:800 20px var(--font-num);fill:#2B2550;font-style:italic;paint-order:stroke;stroke:#fff;stroke-width:4px}
+.tg-ang{font:900 19px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.tg-lb{font:800 16px var(--font);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.tg-chip text{font:800 15px var(--font);fill:#fff}
+.tg-hit{cursor:pointer;pointer-events:stroke}
+.fbig > svg.tg-tri,.fbig > svg.tg-scn{width:min(440px,60cqw);height:auto;max-height:min(36cqh,280px);flex-basis:100%}
+.xfig .tg-tri,.xfig .tg-scn{width:min(320px,60cqw);height:auto;max-height:200px}
+.tg-story{max-width:min(520px,52cqw);padding:12px 16px;border-radius:14px;background:#fff;box-shadow:var(--e1);font-size:clamp(17px,2.1cqw,22px);line-height:1.55;font-weight:600;color:var(--ink);text-align:left}
+.tg-left{flex:1 1 340px;max-width:520px;align-items:center;gap:10px}
+.tg-left .tg-fig .tg-tri,.tg-left .tg-fig .tg-scn{max-height:200px}
+.tg-left > .tg-fig{width:100%}

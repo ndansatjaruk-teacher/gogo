@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-455 types
+458 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -412,6 +412,9 @@
 | `Q.tenSplit` | `{ a, b }` | [`engine/questions.js:904`](../src/engine/questions.js#L904) |
 | `Q.tensRead` | `{ n, ask = 'digit' }` | [`engine/questions.js:1291`](../src/engine/questions.js#L1291) |
 | `Q.tenSub` | `{ a, b }` | [`engine/questions.js:502`](../src/engine/questions.js#L502) |
+| `Q.tgNum` | `{ story, q, fig, a, unit, hint, sig, base, cap, diff }` | [`grades/m3/m3t.js:322`](../src/grades/m3/m3t.js#L322) |
+| `Q.tgOpt` | `{ story, q, fig, opts, right, hint, sig, base, cap, diff }` | [`grades/m3/m3t.js:319`](../src/grades/m3/m3t.js#L319) |
+| `Q.tgSide` | `{ q, tri, ask, hint, sig, diff }` | [`grades/m3/m3t.js:325`](../src/grades/m3/m3t.js#L325) |
 | `Q.three` | `{ nums, op = '+' }` | [`engine/questions.js:890`](../src/engine/questions.js#L890) |
 | `Q.tkCalQ` | `{ m, y, marks, q, a, opts, num, unit = '', hint }` | [`grades/p2/p2t.js:194`](../src/grades/p2/p2t.js#L194) |
 | `Q.tkDigPick` | `{ h: H, m }` | [`grades/p2/p2t.js:225`](../src/grades/p2/p2t.js#L225) |

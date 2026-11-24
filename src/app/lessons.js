@@ -2959,7 +2959,10 @@ const CITIES = [
   { id: 94, grade: 8, name: 'เมืองนักสืบข้อมูล', chapter: 'บทที่ 7 สถิติ (2)', lessons: LESSONS_M2C7,
     theme: { detect: true, hills: ['#E6DDF6', '#DCD1F0', '#F2E6DA'], far: '#F1ECFA', edge: ['dtlamp', 'dthouse', 'dtboard', 'dtoffice'], small: ['dtmagnify', 'dtbook', 'dtprints', 'dthydrant', 'dtbench', 'dtbox'] } },
   { id: 93, grade: 9, name: 'ขั้วโลกสถิติ', chapter: 'บทที่ 6 สถิติ (3)', lessons: LESSONS_M3C6,
-    theme: { polar: true, hills: ['#E4F2FC', '#D6ECFA', '#EAF0FD'], far: '#F2F8FE', edge: ['igloo', 'snowman', 'iceberg', 'sled'], small: ['icecrys', 'snowpile', 'plflag', 'icecrys', 'snowpile', 'plpengs'] } }
+    theme: { polar: true, hills: ['#E4F2FC', '#D6ECFA', '#EAF0FD'], far: '#F2F8FE', edge: ['igloo', 'snowman', 'iceberg', 'sled'], small: ['icecrys', 'snowpile', 'plflag', 'icecrys', 'snowpile', 'plpengs'] } },
+  /* v240 (ผู้ใช้ขอ): ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ (หนังสือ สสวท. เล่ม 2 บทที่ 5 — ผู้ใช้นับต่อเนื่องเป็นบทที่ 11) */
+  { id: 95, grade: 9, term: 2, name: 'ภูน้ำแข็งตรีโกณ', chapter: 'บทที่ 11 อัตราส่วนตรีโกณมิติ', lessons: LESSONS_M3C11,
+    theme: { polar: true, hills: ['#E2EEFB', '#D3E6F8', '#E9EAFB'], far: '#F0F6FE', edge: ['iceberg', 'igloo', 'plflag', 'snowman'], small: ['plpengs', 'icecrys', 'seal', 'snowpile', 'fishhole', 'icecrys'] } }
 ];
 CITIES.forEach(c => { c.grade = c.grade || 1; });
 const GRADES = [{ id: 1, name: 'ป.1', world: 'เมืองตัวเลข' }, { id: 2, name: 'ป.2', world: 'ชายหาด', cls: 'beach' }, { id: 3, name: 'ป.3', world: 'ป่าดิบชื้น', cls: 'jungle' }, { id: 4, name: 'ป.4', world: 'ทะเลทราย', cls: 'desert' }, { id: 5, name: 'ป.5', world: 'ถ้ำ', cls: 'cave' }, { id: 6, name: 'ป.6', world: 'ภูเขา', cls: 'mountain' }, { id: 7, name: 'ม.1', world: 'แม่น้ำ', cls: 'river' }, { id: 8, name: 'ม.2', world: 'เมืองนักสืบ', cls: 'detect' }, { id: 9, name: 'ม.3', world: 'ขั้วโลกหิมะ', cls: 'polar' }];
