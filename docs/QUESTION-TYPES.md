@@ -196,23 +196,23 @@
 | `Q.lIsPar` | `{ a, va, b, vb }` | [`grades/p5/p5g.js:202`](../src/grades/p5/p5g.js#L202) |
 | `Q.lName` | `{ a, b }` | [`grades/p5/p5g.js:180`](../src/grades/p5/p5g.js#L180) |
 | `Q.lTap` | `{ k, rel }` | [`grades/p5/p5g.js:171`](../src/grades/p5/p5g.js#L171) |
-| `Q.m3Build` | `data` | [`grades/m3/m3s.js:285`](../src/grades/m3/m3s.js#L285) |
-| `Q.m3FenceQ` | `data, side` | [`grades/m3/m3s.js:327`](../src/grades/m3/m3s.js#L327) |
-| `Q.m3FreqQ` | `pairs, key` | [`grades/m3/m3s.js:318`](../src/grades/m3/m3s.js#L318) |
-| `Q.m3HalfN` | `n` | [`grades/m3/m3s.js:301`](../src/grades/m3/m3s.js#L301) |
-| `Q.m3HalfPick` | `data, up` | [`grades/m3/m3s.js:302`](../src/grades/m3/m3s.js#L302) |
-| `Q.m3IqrQ` | `data, sorted` | [`grades/m3/m3s.js:323`](../src/grades/m3/m3s.js#L323) |
-| `Q.m3Num` | `{ q, fig, tiles, sortFirst, a, unit, hint, sig, base, diff }` | [`grades/m3/m3s.js:293`](../src/grades/m3/m3s.js#L293) |
-| `Q.m3Opt` | `{ q, fig, tiles, sortFirst, opts, right, hint, sig, base, diff }` | [`grades/m3/m3s.js:288`](../src/grades/m3/m3s.js#L288) |
-| `Q.m3OutPick` | `data` | [`grades/m3/m3s.js:329`](../src/grades/m3/m3s.js#L329) |
-| `Q.m3Pick` | `data` | [`grades/m3/m3s.js:280`](../src/grades/m3/m3s.js#L280) |
-| `Q.m3PickT` | `F` | [`grades/m3/m3s.js:347`](../src/grades/m3/m3s.js#L347) |
-| `Q.m3PosQ` | `n, k` | [`grades/m3/m3s.js:305`](../src/grades/m3/m3s.js#L305) |
-| `Q.m3Q` | `{ data, k, sorted, med, ctx: tx }` | [`grades/m3/m3s.js:265`](../src/grades/m3/m3s.js#L265) |
-| `Q.m3Read` | `{ F, ask, ctx: tx, vert }` | [`grades/m3/m3s.js:275`](../src/grades/m3/m3s.js#L275) |
-| `Q.m3StemQ` | `data, key` | [`grades/m3/m3s.js:315`](../src/grades/m3/m3s.js#L315) |
-| `Q.m3Tap` | `data, keys` | [`grades/m3/m3s.js:272`](../src/grades/m3/m3s.js#L272) |
-| `Q.m3XQ` | `key` | [`grades/m3/m3s.js:311`](../src/grades/m3/m3s.js#L311) |
+| `Q.m3Build` | `data` | [`grades/m3/m3s.js:350`](../src/grades/m3/m3s.js#L350) |
+| `Q.m3FenceQ` | `data, side` | [`grades/m3/m3s.js:392`](../src/grades/m3/m3s.js#L392) |
+| `Q.m3FreqQ` | `pairs, key` | [`grades/m3/m3s.js:383`](../src/grades/m3/m3s.js#L383) |
+| `Q.m3HalfN` | `n` | [`grades/m3/m3s.js:366`](../src/grades/m3/m3s.js#L366) |
+| `Q.m3HalfPick` | `data, up` | [`grades/m3/m3s.js:367`](../src/grades/m3/m3s.js#L367) |
+| `Q.m3IqrQ` | `data, sorted` | [`grades/m3/m3s.js:388`](../src/grades/m3/m3s.js#L388) |
+| `Q.m3Num` | `{ q, fig, tiles, sortFirst, a, unit, hint, sig, base, diff }` | [`grades/m3/m3s.js:358`](../src/grades/m3/m3s.js#L358) |
+| `Q.m3Opt` | `{ q, fig, tiles, sortFirst, opts, right, hint, sig, base, diff }` | [`grades/m3/m3s.js:353`](../src/grades/m3/m3s.js#L353) |
+| `Q.m3OutPick` | `data` | [`grades/m3/m3s.js:394`](../src/grades/m3/m3s.js#L394) |
+| `Q.m3Pick` | `data` | [`grades/m3/m3s.js:345`](../src/grades/m3/m3s.js#L345) |
+| `Q.m3PickT` | `F` | [`grades/m3/m3s.js:412`](../src/grades/m3/m3s.js#L412) |
+| `Q.m3PosQ` | `n, k` | [`grades/m3/m3s.js:370`](../src/grades/m3/m3s.js#L370) |
+| `Q.m3Q` | `{ data, k, sorted, med, ctx: tx }` | [`grades/m3/m3s.js:330`](../src/grades/m3/m3s.js#L330) |
+| `Q.m3Read` | `{ F, ask, ctx: tx, vert }` | [`grades/m3/m3s.js:340`](../src/grades/m3/m3s.js#L340) |
+| `Q.m3StemQ` | `data, key` | [`grades/m3/m3s.js:380`](../src/grades/m3/m3s.js#L380) |
+| `Q.m3Tap` | `data, keys` | [`grades/m3/m3s.js:337`](../src/grades/m3/m3s.js#L337) |
+| `Q.m3XQ` | `key` | [`grades/m3/m3s.js:376`](../src/grades/m3/m3s.js#L376) |
 | `Q.makeTen` | `{ a }` | [`engine/questions.js:312`](../src/engine/questions.js#L312) |
 | `Q.makeTen20` | `{ a, b }` | [`engine/questions.js:877`](../src/engine/questions.js#L877) |
 | `Q.marbles` | `{ a, n }` | [`engine/questions.js:1063`](../src/engine/questions.js#L1063) |

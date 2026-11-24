@@ -193,13 +193,78 @@ function m3OutSim(data) {
     if (found.size === F.outs.length) { sfx.ok(); out.innerHTML = `ค่านอกเกณฑ์คือ <b>${F.outs.map(m3N).join(', ')}</b> — ในแผนภาพกล่องเขียนเป็น<b>จุด</b><br>วิสเกอร์ลากถึง <b>${m3N(F.wlo)}</b> และ <b>${m3N(F.whi)}</b> (ค่าที่ไกลที่สุดที่ไม่ใช่ค่านอกเกณฑ์)`; teachDone(wrap); } else out.innerHTML = `ถูกต้อง — ยังมีอีก ${F.outs.length - found.size} จุด`; });
   draw(); out.innerHTML = `Q₁ = ${m3N(F.q1)}&emsp;Q₃ = ${m3N(F.q3)} — กด <b>ขั้นต่อไป</b>`; wrap.append(dots, box, btn, out); return wrap;
 }
-/* ส่วนประกอบของแผนภาพกล่อง: แตะทั้ง 5 ค่า */
+/* แผนภาพกล่องที่ค่อย ๆ วาด + ไฮไลต์ (ด่าน 6)
+   o.show: ค่าที่วาดแล้ว (min q1 q2 q3 max) · o.hl: ส่วนที่ไฮไลต์ (min q1 q2 q3 max lw rw box) · o.fresh: ส่วนที่เพิ่งวาด (เล่นแอนิเมชัน)
+   o.dots: ข้อมูล → แผนภาพจุดด้านบน (o.dotHL(v) = สีจุด) · o.marks: จุดเล็กที่ 5 ค่า · o.quarters: แถบ 4 ส่วน · o.names: ป้ายชื่อ + ค่า */
+function m3BoxHL(F, ax, o = {}) {
+  const W = 640, pad = 44, X = v => pad + (v - ax.lo) / (ax.hi - ax.lo) * (W - 2 * pad), dt = o.dots ? 64 : 0, y = 62 + dt, hh = 34, yAx = y + 56, H = yAx + 32;
+  const S = new Set(o.show || []), HL = new Set(o.hl || []), FR = new Set(o.fresh || []), HC = '#FFD43B';
+  const seg = (d, part, w = 2.6) => (HL.has(part) ? `<path d="${d}" class="m3-halo" stroke="${HC}" stroke-width="15" stroke-linecap="round" fill="none"/>` : '') + `<path d="${d}" pathLength="1" class="${FR.has(part) ? 'm3-draw' : ''}" stroke="#2B2550" stroke-width="${w}" fill="none"/>`;
+  let s = '';
+  if (o.quarters) { const b = [F.min, F.q1, F.q2, F.q3, F.max], qc = ['#CFE6FA', '#FFE7A3', '#FBD9E3', '#D7F2E8'];
+    for (let i = 0; i < 4; i++) s += `<rect class="m3-fade" x="${X(b[i])}" y="${y - hh / 2 - 30}" width="${Math.max(2, X(b[i + 1]) - X(b[i]))}" height="${yAx - y + hh / 2 + 30}" fill="${qc[i]}" opacity=".85"/><text x="${(X(b[i]) + X(b[i + 1])) / 2}" y="${y - hh / 2 - 9}" text-anchor="middle" class="m3-lb">≈25%</text>`; }
+  if (o.axis !== false) { s += `<path d="M${pad - 10} ${yAx} H${W - pad + 10}" stroke="#2B2550" stroke-width="2" pathLength="1" class="${FR.has('axis') ? 'm3-draw' : ''}"/>`;
+    for (let v = ax.lo; v <= ax.hi + 1e-9; v += ax.step) s += `<g class="${FR.has('axis') ? 'm3-fade' : ''}"><path d="M${X(v)} ${yAx - 5} V${yAx + 5}" stroke="#2B2550" stroke-width="1.6"/><text x="${X(v)}" y="${yAx + 22}" text-anchor="middle" class="m3-ax">${m3N(v)}</text></g>`; }
+  if (o.dots) { const cnt = {}; m3Sort(o.dots).forEach(v => { cnt[v] = (cnt[v] || 0) + 1; const c = o.dotHL ? o.dotHL(v) : '#7C5CE0'; s += `<circle cx="${X(v)}" cy="${dt + 2 - (cnt[v] - 1) * 18}" r="8" fill="${c}" stroke="#fff" stroke-width="1.5"/>`; });
+}
+  if (S.has('q1') && S.has('q3')) s += (HL.has('box') ? `<rect x="${X(F.q1) - 6}" y="${y - hh / 2 - 6}" width="${X(F.q3) - X(F.q1) + 12}" height="${hh + 12}" rx="8" fill="${HC}" class="m3-halo"/>` : '') + `<rect class="${FR.has('box') ? 'm3-fade' : ''}" x="${X(F.q1)}" y="${y - hh / 2}" width="${Math.max(1, X(F.q3) - X(F.q1))}" height="${hh}" fill="#3D9BE9" fill-opacity=".3"/>` + seg(`M${X(F.q1)} ${y - hh / 2} H${X(F.q3)} M${X(F.q1)} ${y + hh / 2} H${X(F.q3)}`, 'box', 2.6);
+  if (S.has('min') && S.has('q1')) s += seg(`M${X(F.min)} ${y} H${X(F.q1)}`, 'lw');
+  if (S.has('q3') && S.has('max')) s += seg(`M${X(F.q3)} ${y} H${X(F.max)}`, 'rw');
+  if (S.has('min')) s += seg(`M${X(F.min)} ${y - 11} V${y + 11}`, 'min');
+  if (S.has('max')) s += seg(`M${X(F.max)} ${y - 11} V${y + 11}`, 'max');
+  ['q1', 'q3'].forEach(k => { if (S.has(k)) s += seg(`M${X(F[k])} ${y - hh / 2} V${y + hh / 2}`, k); });
+  if (S.has('q2')) s += seg(`M${X(F.q2)} ${y - hh / 2} V${y + hh / 2}`, 'q2', 3.2);
+  if (o.marks) M3K5.forEach(k => { s += `<circle class="${FR.has('marks') ? 'm3-fade' : ''}" cx="${X(F[k])}" cy="${y}" r="6" fill="#7C5CE0" stroke="#fff" stroke-width="2"/>`; });
+  M3K5.forEach((k, j) => { if (!(S.has(k) || o.marks) || o.names === false) return; const up = j % 2 === 0, ty = up ? y - hh / 2 - 9 : y + hh / 2 + 19, t = `${o.names ? M3KS[k] + ' ' : ''}${m3N(F[k])}`, on = HL.has(k);
+    if (on) { const w = t.length * 8.6 + 14; s += `<rect x="${X(F[k]) - w / 2}" y="${ty - 17}" width="${w}" height="23" rx="11.5" fill="${HC}"/>`; }
+    s += `<text x="${X(F[k])}" y="${ty}" text-anchor="middle" class="m3-lb${FR.has(k) ? ' m3-fade' : ''}">${t}</text>`; });
+  return `<svg class="m3-box m3-hlbox" viewBox="0 0 ${W} ${H}" aria-hidden="true">${s}</svg>`;
+}
+const M3K5 = ['min', 'q1', 'q2', 'q3', 'max'];
+/* ตำแหน่ง (เริ่ม 0) ของข้อมูลที่ให้ค่า k — ตัวกลางมี 2 ตัวได้ 2 ตำแหน่ง */
+const m3IdxOf = (n, k) => { const P = m3Pos(n), p = k === 'min' ? 1 : k === 'max' ? n : P[k]; return [...new Set([Math.floor(p) - 1, Math.ceil(p) - 1])]; };
+const m3TileRow = (a, mark = {}) => `<div class="m3-tiles ${a.length > 11 ? '' : 'big'}">${a.map((v, i) => `<span class="m3-t ${mark[i] || ''}">${m3N(v)}<i>${i + 1}</i></span>`).join('')}</div>`;
+/* แผนภาพกล่องคืออะไร: แตะ กล่อง / เส้นในกล่อง / วิสเกอร์ / 4 ส่วน */
+function m3BoxWhat(data) {
+  const F = m3Five(data), ax = m3Axis(F), wrap = h('div', { class: 'colstack no-side' }, h6wait()), fig = h('div', { class: 'm3-figbox big' }), out = fNote(), seen = new Set(), all = M3K5;
+  const Y = '#FFC21A', G = '#CFCBDF', P = '#7C5CE0'; const tip = h('div', { class: 'cap', html: 'แตะแต่ละปุ่มเพื่อดูว่าส่วนนั้นคืออะไร' });
+  const view = { box: { hl: ['box', 'q1', 'q3'], dot: v => v >= F.q1 && v <= F.q3 ? Y : G, txt: `<b>กล่อง</b> เริ่มที่ Q₁ = ${m3N(F.q1)} จบที่ Q₃ = ${m3N(F.q3)} — ข้อมูล<b>ช่วงกลาง</b>ประมาณครึ่งหนึ่ง (50%) อยู่ในกล่อง` },
+    q2: { hl: ['q2'], dot: v => v === F.q2 ? Y : v < F.q2 ? '#8EC5F2' : '#F2A7BE', txt: `<b>เส้นในกล่อง</b> คือ Q₂ หรือมัธยฐาน = ${m3N(F.q2)} — ข้อมูลครึ่งหนึ่งอยู่ทางซ้าย อีกครึ่งหนึ่งอยู่ทางขวา` },
+    wh: { hl: ['lw', 'rw', 'min', 'max'], dot: v => v < F.q1 || v > F.q3 ? Y : G, txt: `<b>วิสเกอร์</b> (whisker แปลว่า หนวด) คือเส้นที่ยื่นออกจากกล่อง 2 ข้าง ด้านซ้ายยื่นไปถึง<b>ค่าต่ำสุด</b> ${m3N(F.min)}&emsp;ด้านขวายื่นไปถึง<b>ค่าสูงสุด</b> ${m3N(F.max)}` },
+    qt: { hl: [], quarters: true, dot: () => P, txt: `ค่าทั้ง 5 แบ่งข้อมูลเป็น <b>4 ส่วน</b> แต่ละส่วนมีข้อมูลประมาณ <b>25%</b> — ส่วนที่ยาวกว่า<b>ไม่ได้</b>แปลว่ามีข้อมูลมากกว่า แต่แปลว่าข้อมูลกระจายห่างกันกว่า` } };
+  const draw = (k, fr) => { const V = view[k] || {}; fig.innerHTML = m3BoxHL(F, ax, { show: all, dots: F.a, dotHL: V.dot, hl: V.hl, quarters: V.quarters, names: V.quarters ? false : true, fresh: fr }); };
+  const row = h('div', { class: 'rowstack m3-parts' }, ...[['box', 'กล่อง'], ['q2', 'เส้นในกล่อง'], ['wh', 'วิสเกอร์'], ['qt', 'แบ่งเป็น 4 ส่วน']].map(([k, t], j) => h('button', { class: 'btn ia m3-part', style: { '--pc': M3COL[j % 4] }, onclick: e => { e.stopPropagation(); e.currentTarget.classList.add('on'); seen.add(k); draw(k); out.innerHTML = view[k].txt; sfx.pop(seen.size + 1);
+    if (seen.size === 4) { tip.innerHTML = '✓ แผนภาพกล่องสรุปข้อมูลทั้งชุดด้วย <b>5 ค่า</b>: ค่าต่ำสุด Q₁ Q₂ Q₃ ค่าสูงสุด'; teachDone(wrap); } } }, t)));
+  wrap.append(h('div', { class: 'cap', html: `ระยะไถลของเพนกวิน ${F.n} ตัว (เมตร) — จุดด้านบนคือข้อมูลแต่ละตัว ด้านล่างคือ<b>แผนภาพกล่อง</b> (box plot)` }), fig, tip, row, out);
+  draw(''); out.innerHTML = 'แผนภาพกล่องมี <b>กล่อง</b> 1 กล่อง และ<b>เส้น</b>ยื่นออกมา 2 ข้าง'; return wrap;
+}
+/* วาดแผนภาพกล่องทีละขั้น: หา 5 ค่า → เส้นจำนวน → จุด 5 ค่า → กล่อง + Q₂ → วิสเกอร์ */
+function m3DrawWalk(data) {
+  const F = m3Five(data), ax = m3Axis(F), n = F.n, wrap = h('div', { class: 'colstack no-side' }, h6wait()), tl = h('div', { class: 'm3-datab' }), fig = h('div', { class: 'm3-figbox big' }), out = fNote(), list = h('div', { class: 'colstack fstory' }); let k = 0;
+  const mk = {}; M3K5.forEach(q => m3IdxOf(n, q).forEach(i => mk[i] = 'pick hl'));
+  const steps = [
+    ['① หา 5 ค่า', `ค่าต่ำสุด ${m3N(F.min)}&emsp;Q₁ ${m3N(F.q1)}&emsp;Q₂ ${m3N(F.q2)}&emsp;Q₃ ${m3N(F.q3)}&emsp;ค่าสูงสุด ${m3N(F.max)}`, () => { tl.innerHTML = m3TileRow(F.a, mk); fig.innerHTML = ''; }],
+    ['② เขียนเส้นจำนวน', `สเกลต้องครอบคลุม ${m3N(F.min)} ถึง ${m3N(F.max)} และแบ่งช่องเท่า ๆ กัน`, () => { fig.innerHTML = m3BoxHL(F, ax, { fresh: ['axis'] }); }],
+    ['③ ทำจุดที่ 5 ค่า', 'วางจุดเหนือเส้นจำนวนตรงค่าทั้ง 5', () => { fig.innerHTML = m3BoxHL(F, ax, { marks: true, fresh: ['marks'], hl: M3K5 }); }],
+    ['④ เขียนกล่อง', 'กล่องเริ่มที่ Q₁ จบที่ Q₃ และขีดเส้นในกล่องที่ Q₂', () => { fig.innerHTML = m3BoxHL(F, ax, { marks: true, show: ['q1', 'q2', 'q3'], fresh: ['q1', 'q2', 'q3', 'box'], hl: ['box', 'q1', 'q2', 'q3'] }); }],
+    ['⑤ เขียนวิสเกอร์', 'ลากเส้นจากกล่องไปถึงค่าต่ำสุดและค่าสูงสุด', () => { fig.innerHTML = m3BoxHL(F, ax, { show: M3K5, fresh: ['lw', 'rw', 'min', 'max'], hl: ['lw', 'rw', 'min', 'max'] }); }]];
+  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); const [lab, body, fn] = steps[k]; list.append(h('div', { class: 'fst-row' }, h('b', null, lab), h('span', { html: body }))); fn(); sfx.pop(k); k++;
+    if (k >= steps.length) { btn.remove(); out.innerHTML = '<b>ได้แผนภาพกล่องแล้ว</b> ✓'; sfx.ok(); teachDone(wrap); } } }, icon('right'), 'ขั้นต่อไป');
+  tl.innerHTML = m3TileRow(F.a);
+  wrap.append(h('div', { class: 'cap' }, `ข้อมูล ${n} ตัว เรียงจากน้อยไปมากแล้ว`), tl, fig, list, btn, out); return wrap;
+}
+/* ส่วนประกอบของแผนภาพกล่อง: แตะทีละค่าตามลำดับ แผนภาพค่อย ๆ ขึ้นมาทีละส่วน (ส่วนที่เพิ่งขึ้นจะถูกไฮไลต์) */
 function m3BoxParts(data) {
-  const F = m3Five(data), ax = m3Axis(F), wrap = h('div', { class: 'colstack no-side' }, h6wait()), fig = h('div', { class: 'm3-figbox big', html: m3BoxSVG([{ F }], { ...ax }) }), out = fNote(), seen = new Set();
-  const row = h('div', { class: 'rowstack m3-parts' }, ...['min', 'q1', 'q2', 'q3', 'max'].map((k, j) => h('button', { class: 'btn ia m3-part', style: { '--pc': M3COL[j % 4] }, onclick: e => { e.stopPropagation(); e.currentTarget.classList.add('on'); seen.add(k); fig.innerHTML = m3BoxSVG([{ F }], { ...ax, labels: 'val', band: [F[k] - .15, F[k] + .15, '#E36A8C'] });
-    const txt = { min: 'ปลายวิสเกอร์ด้านซ้าย = ค่าต่ำสุด', q1: 'ขอบซ้ายของกล่อง = Q₁', q2: 'เส้นในกล่อง = Q₂ (มัธยฐาน)', q3: 'ขอบขวาของกล่อง = Q₃', max: 'ปลายวิสเกอร์ด้านขวา = ค่าสูงสุด' }[k];
-    out.innerHTML = `${txt} = <b>${m3N(F[k])}</b>`; sfx.pop(seen.size + 1); if (seen.size === 5) { out.innerHTML += '<br>กล่อง = Q₁ ถึง Q₃&emsp;<b>วิสเกอร์</b> = เส้นสองข้างไปถึงค่าต่ำสุดและค่าสูงสุด'; teachDone(wrap); } } }, M3KS[k])));
-  wrap.append(h('div', { class: 'cap', html: `ข้อมูล: ${F.a.join(', ')}` }), fig, row, out); return wrap;
+  const F = m3Five(data), ax = m3Axis(F), wrap = h('div', { class: 'colstack no-side' }, h6wait()), tl = h('div', { class: 'm3-datab' }), fig = h('div', { class: 'm3-figbox big' }), out = fNote(), shown = [], mk = {};
+  const part = { min: ['min'], q1: ['q1', 'lw'], q2: ['q2'], q3: ['q3', 'box'], max: ['max', 'rw'] };
+  const txt = { min: `<b>ค่าต่ำสุด</b> = ${m3N(F.min)} → ขีดเส้นสั้นที่ปลายด้านซ้าย`, q1: `<b>Q₁</b> = ${m3N(F.q1)} → ขอบซ้ายของกล่อง และ<b>วิสเกอร์ด้านซ้าย</b>ลากจากค่าต่ำสุดมาถึงกล่อง`, q2: `<b>Q₂ (มัธยฐาน)</b> = ${m3N(F.q2)} → เส้นตรงในกล่อง`, q3: `<b>Q₃</b> = ${m3N(F.q3)} → ขอบขวาของกล่อง ได้<b>กล่อง</b>จาก Q₁ ถึง Q₃`, max: `<b>ค่าสูงสุด</b> = ${m3N(F.max)} → <b>วิสเกอร์ด้านขวา</b>ลากจากกล่องไปถึงค่าสูงสุด` };
+  const btns = M3K5.map((k, j) => h('button', { class: 'btn ia m3-part' + (j ? ' lock' : ' next'), style: { '--pc': M3COL[j % 4] }, onclick: e => { e.stopPropagation(); const b = e.currentTarget; if (shown.length !== j) { if (j > shown.length) { sfx.no(); out.innerHTML = `แตะ <b>${M3KS[M3K5[shown.length]]}</b> ก่อน`; } return; }
+    shown.push(k); b.classList.remove('next'); b.classList.add('on'); if (btns[j + 1]) btns[j + 1].classList.replace('lock', 'next');
+    Object.keys(mk).forEach(i => mk[i] = 'got'); m3IdxOf(F.n, k).forEach(i => mk[i] = 'pick hl'); tl.innerHTML = m3TileRow(F.a, mk);
+    fig.innerHTML = m3BoxHL(F, ax, { show: shown, hl: [...part[k], k], fresh: part[k], names: true }); out.innerHTML = txt[k]; sfx.pop(shown.length + 1);
+    if (shown.length === 5) { out.innerHTML = txt[k] + '&emsp;✓ ครบ 5 ค่าแล้ว'; teachDone(wrap); } } }, M3KS[k]));
+  tl.innerHTML = m3TileRow(F.a); fig.innerHTML = m3BoxHL(F, ax, {});
+  wrap.append(h('div', { class: 'cap' }, `ข้อมูล ${F.n} ตัว เรียงแล้ว — แตะทีละค่าตามลำดับ แล้วดูแผนภาพกล่องค่อย ๆ ขึ้นมา`), tl, fig, h('div', { class: 'rowstack m3-parts' }, ...btns), out); out.innerHTML = 'เริ่มที่ <b>ค่าต่ำสุด</b>'; return wrap;
 }
 /* สร้างแผนภาพกล่องเอง: ลากจุดทั้ง 5 ไปวางให้ตรงค่า */
 function m3BoxBuild(data, o = {}) {
@@ -426,8 +491,9 @@ const LESSONS_M3C6 = [
     Q.m3Opt({ q: 'ถ้าค่าสูงสุดของข้อมูลเพิ่มขึ้นมาก ๆ ค่าใด<b>ไม่เปลี่ยน</b>', opts: ['IQR', 'พิสัย', 'ค่าสูงสุด', 'ความยาวของวิสเกอร์ด้านขวา'], right: 'IQR', hint: 'IQR ใช้ Q₁ และ Q₃ เท่านั้น', sig: 'iqrfix', diff: 18 }),
     m3TF('IQR คือความยาวของกล่องในแผนภาพกล่อง', true, 'จาก Q₁ ถึง Q₃'), m3TF('IQR = ค่าสูงสุด − ค่าต่ำสุด', false, 'นั่นคือพิสัย — IQR = Q₃ − Q₁')]),
   LM3(8, 'โรงต่อเลื่อน', 'องค์ประกอบและการสร้างแผนภาพกล่อง', 'สร้างแผนภาพกล่อง', 'บอกองค์ประกอบของแผนภาพกล่อง (กล่อง วิสเกอร์ และค่าทั้ง 5) และสร้างแผนภาพกล่องจากข้อมูล', [
-    T('<b>องค์ประกอบของแผนภาพกล่อง</b> — แตะทั้ง 5 ค่า', 'องค์ประกอบของแผนภาพกล่อง แตะทั้งห้าค่า', el => el.append(m3BoxParts([31, 35, 38, 40, 42, 45, 47, 50, 53, 56, 60, 66]))),
-    T('ตัวอย่างทีละขั้น: <b>สร้างแผนภาพกล่อง</b>', 'ตัวอย่างทีละขั้น สร้างแผนภาพกล่อง', el => { const d = [8, 12, 13, 15, 17, 18, 21, 24, 26, 30, 35], F = m3Five(d), ax = m3Axis(F); el.append(dcWalk(m3Tiles(d) + m3BoxSVG([{ F }], { ...ax, labels: 'val' }), [['① หา 5 ค่า', `ค่าต่ำสุด ${F.min} · Q₁ ${m3N(F.q1)} · Q₂ ${m3N(F.q2)} · Q₃ ${m3N(F.q3)} · ค่าสูงสุด ${F.max}`], ['② เขียนเส้นจำนวน', `มีสเกลครอบคลุม ${F.min} ถึง ${F.max}`], ['③ เขียนกล่อง', `จาก Q₁ ถึง Q₃ และเส้นในกล่องที่ Q₂`], ['④ เขียนวิสเกอร์', 'จากกล่องไปถึงค่าต่ำสุดและค่าสูงสุด']], '<b>ได้แผนภาพกล่อง</b> (box plot)')); }),
+    T('<b>แผนภาพกล่องคืออะไร</b> — แตะดูแต่ละส่วน', 'แผนภาพกล่องคืออะไร แตะดูแต่ละส่วน', el => el.append(m3BoxWhat([4, 6, 7, 9, 10, 12, 13, 15, 18, 20, 24]))),
+    T('<b>วาดแผนภาพกล่องอย่างไร</b> — ทีละขั้น', 'วาดแผนภาพกล่องอย่างไร ทีละขั้น', el => el.append(m3DrawWalk([8, 12, 13, 15, 17, 18, 21, 24, 26, 30, 35]))),
+    T('<b>องค์ประกอบของแผนภาพกล่อง</b> — แตะทีละค่า', 'องค์ประกอบของแผนภาพกล่อง แตะทีละค่า', el => el.append(m3BoxParts([31, 35, 38, 40, 42, 45, 47, 50, 53, 56, 60, 66]))),
     T('<b>ลองสร้างเอง</b>: ลากจุดทั้ง 5 ให้ตรงค่าของข้อมูล', 'ลองสร้างเอง ลากจุดทั้งห้าให้ตรงค่าของข้อมูล', el => el.append(m3BoxBuild([22, 25, 27, 30, 31, 34, 36, 38, 41, 45, 48])))
   ], () => [Q.m3Read({ F: m3GenF5(), ask: 'q2' }), Q.m3Read({ F: m3GenF5(), ask: 'q1' }), Q.m3Read({ F: m3GenF5(), ask: 'q3' }), Q.m3Read({ F: m3GenF5(), ask: 'max' }),
     Q.m3Pick(m3Gen(11, 20, 80)), Q.m3Pick(m3Gen(12, 10, 60)), Q.m3Build(m3Gen(11, 10, 40)),
