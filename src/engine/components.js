@@ -1234,6 +1234,7 @@ const CVN_TH = {
   cave: { who: 'ค้างคาว', go: 'บิน', by: 'ก้อน', to: 'คริสตัล', walker: () => SCENERY.bat, goal: () => SCENERY.crystal, hop: 26 },
   city: { who: 'ลูกเจี๊ยบ', go: 'เดิน', by: 'ก้อน', to: 'บ้าน', walker: () => ART.chick, goal: () => SCENERY.house, hop: 10 },
   river: { who: 'เรือ', go: 'พาย', by: 'ทุ่น', to: 'ท่าน้ำ', walker: () => SCENERY.kayak, goal: () => SCENERY.pier, hop: 6 },
+  detect: { who: 'สุนัขนักสืบ', go: 'เดิน', by: 'รอยเท้า', to: 'สำนักงานนักสืบ', walker: () => SCENERY.dtdog, goal: () => SCENERY.dtoffice, hop: 10 },
   polar: { who: 'เพนกวิน', go: 'ไถล', by: 'ก้อน', to: 'อิกลู', walker: () => SCENERY.plpeng, goal: () => SCENERY.igloo, hop: 12 }
 };
 const cvnTheme = () => { const w = document.body.dataset.world; return Object.assign({ key: CVN_TH[w] ? w : 'desert' }, CVN_TH[w] || CVN_TH.desert); };

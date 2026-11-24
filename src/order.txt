@@ -8,6 +8,7 @@ engine/jungle.js
 engine/life.js
 engine/river.js
 engine/polar.js
+engine/detect.js
 engine/ink.js
 engine/components.js
 engine/questions.js
@@ -78,6 +79,8 @@ grades/m1/geo/mg-quest.js
 grades/m1/m1g.js
 grades/m1/m1e.js
 grades/m3/m3s.js
+grades/m2/m2s.js
+grades/m2/m2l.js
 app/lessons.js
 app/learn.js
 app/wpic.js

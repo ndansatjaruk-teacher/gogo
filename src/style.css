@@ -4134,36 +4134,36 @@ body[data-world=river]{background:linear-gradient(180deg,#D4EEFB 0%,#EAF7E2 45%,
 .mi-skind{text-align:center;color:var(--ink-2);font-size:clamp(14px,1.7cqw,18px);font-weight:700}
 .mi-scol .fst-row{font-size:clamp(16px,2cqw,21px);flex-wrap:wrap}
 .mi-scol .mi-big{font-size:1.4em;color:var(--ink)}
-body:is([data-world=river],[data-world=polar]) .fst-row span b{color:var(--ink)}
-body:is([data-world=river],[data-world=polar]) .fnote.fres b{color:var(--ink)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .fst-row span b{color:var(--ink)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .fnote.fres b{color:var(--ink)}
 .mi-tryopts .opt{min-width:clamp(110px,13cqw,150px);font-size:clamp(24px,3cqw,34px);font-weight:900}
 /* v219 (ผู้ใช้ขอ): ม.1 พื้นที่เหลือเยอะ — โจทย์ คำตอบ ปุ่มตัวเลข ตัวใหญ่ขึ้น · ตัวเลขสีดำ */
-body:is([data-world=river],[data-world=polar]) .stage-card .tutor .speech{font-size:clamp(24px,2.8cqw,32px)}
-body:is([data-world=river],[data-world=polar]) .qbody .fbig{font-size:clamp(40px,6cqw,68px)}
-body:is([data-world=river],[data-world=polar]) .qbody .opt{font-size:clamp(24px,3cqw,36px);min-height:clamp(76px,9cqw,96px);padding:10px 26px;white-space:nowrap}
-body:is([data-world=river],[data-world=polar]) .qbody .opt.txt{max-width:none;justify-content:center;text-align:center}
-body:is([data-world=river],[data-world=polar]) .exam-card .xqt{font-size:clamp(26px,3cqw,34px)}
-body:is([data-world=river],[data-world=polar]) .exam-card .xopts{gap:16px}
-body:is([data-world=river],[data-world=polar]) .exam-card .xopt{min-height:clamp(80px,9cqw,104px)}
-body:is([data-world=river],[data-world=polar]) .exam-card .xopt .xt{font-size:clamp(24px,3cqw,38px)}
-body:is([data-world=river],[data-world=polar]) .qbody .storybox{font-size:clamp(20px,2.6cqw,28px)}
-body:is([data-world=river],[data-world=polar]) .mi-ans .ans-slot{min-width:clamp(130px,15cqw,180px);height:clamp(100px,11cqw,124px);font-size:clamp(64px,7cqw,84px)}
-body:is([data-world=river],[data-world=polar]) .mi-ans .ans-slot.filled{color:var(--ink)}
-body:is([data-world=river],[data-world=polar]) .keypad.mi-kp{gap:12px}
-body:is([data-world=river],[data-world=polar]) .keypad.mi-kp .btn{width:clamp(70px,8cqw,90px);min-height:clamp(62px,7cqw,76px);font-size:clamp(30px,3.4cqw,38px)}
-body:is([data-world=river],[data-world=polar]) .keypad.mi-kp .btn.ok2{width:auto}
-body:is([data-world=river],[data-world=polar]) .keypad.mi-kp .btn .ic{width:30px;height:30px}
-body:is([data-world=river],[data-world=polar]) .qbody .mi-nl{width:min(900px,96cqw)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .stage-card .tutor .speech{font-size:clamp(24px,2.8cqw,32px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .fbig{font-size:clamp(40px,6cqw,68px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opt{font-size:clamp(24px,3cqw,36px);min-height:clamp(76px,9cqw,96px);padding:10px 26px;white-space:nowrap}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opt.txt{max-width:none;justify-content:center;text-align:center}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xqt{font-size:clamp(26px,3cqw,34px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopts{gap:16px}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt{min-height:clamp(80px,9cqw,104px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt .xt{font-size:clamp(24px,3cqw,38px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .storybox{font-size:clamp(20px,2.6cqw,28px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .mi-ans .ans-slot{min-width:clamp(130px,15cqw,180px);height:clamp(100px,11cqw,124px);font-size:clamp(64px,7cqw,84px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .mi-ans .ans-slot.filled{color:var(--ink)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .keypad.mi-kp{gap:12px}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .keypad.mi-kp .btn{width:clamp(70px,8cqw,90px);min-height:clamp(62px,7cqw,76px);font-size:clamp(30px,3.4cqw,38px)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .keypad.mi-kp .btn.ok2{width:auto}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .keypad.mi-kp .btn .ic{width:30px;height:30px}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .mi-nl{width:min(900px,96cqw)}
 /* v224 (ผู้ใช้ขอ): ม.1 ดูมีสีสันขึ้น — (v225: การ์ดโจทย์กลับเป็นแบบเดิม) ปุ่มตัวเลือกหลากสี แป้นตัวเลขฟ้า ช่องคำตอบเหลือง · ตัวเลขยังสีดำ */
-body:is([data-world=river],[data-world=polar]) .qbody .opts .opt{--c:#E8F6FE;--c2:#8FCDEB}
-body:is([data-world=river],[data-world=polar]) .qbody .opts .opt:nth-child(4n+2){--c:#F1EDFB;--c2:#C3B5EA}
-body:is([data-world=river],[data-world=polar]) .qbody .opts .opt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}
-body:is([data-world=river],[data-world=polar]) .qbody .opts .opt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
-body:is([data-world=river],[data-world=polar]) .keypad.mi-kp .btn:not(.primary):not(.sym){--c:#F2FAFE;--c2:#A9D9F0}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opts .opt{--c:#E8F6FE;--c2:#8FCDEB}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opts .opt:nth-child(4n+2){--c:#F1EDFB;--c2:#C3B5EA}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opts .opt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opts .opt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .keypad.mi-kp .btn:not(.primary):not(.sym){--c:#F2FAFE;--c2:#A9D9F0}
 /* v226 (ผู้ใช้ขอ): ตอบถูกแล้วตัวหนังสือ ม.1 ยังเป็นสีดำ (เดิมปุ่มที่ถูกเป็นตัวขาวบนเขียว) */
 
-body:is([data-world=river],[data-world=polar]) .mk-ok{color:var(--ink)!important}
-body:is([data-world=river],[data-world=polar]) .ans.done .ans-slot{color:var(--ink)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .mk-ok{color:var(--ink)!important}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .ans.done .ans-slot{color:var(--ink)}
 /* v226 (ผู้ใช้ขอ): แป้นตัวเลขทุกโลกมีสีอ่อน ๆ ตามธีม — ปุ่มตัวเลข = สีหลักของโลก ปุ่มอื่น (ลบ/จุด/สัญลักษณ์) = สีรอง · ปุ่มส่งคำตอบคงเดิม */
 body[data-world=city] .keypad .btn:not(.primary){--c:#FFF7EE;--c2:#EED9BF}
 body[data-world=city] .keypad .btn:not(.primary):is([aria-label],.sym,.kdot){--c:#EEF3FC;--c2:#C9D6EE}
@@ -4177,17 +4177,17 @@ body[data-world=jungle] .keypad .btn:not(.primary){--c:#EEF8EE;--c2:#BEE0BE}
 body[data-world=jungle] .keypad .btn:not(.primary):is([aria-label],.sym,.kdot){--c:#FFF7DE;--c2:#EBD69A}
 body[data-world=beach] .keypad .btn:not(.primary){--c:#ECF8F9;--c2:#B2DFE3}
 body[data-world=beach] .keypad .btn:not(.primary):is([aria-label],.sym,.kdot){--c:#FFF3E6;--c2:#EFCDA8}
-body:is([data-world=river],[data-world=polar]) .keypad:not(.mi-kp) .btn:not(.primary){--c:#F2FAFE;--c2:#A9D9F0}
-body:is([data-world=river],[data-world=polar]) .keypad.mi-kp .btn.sym{--c:#FFF6D9;--c2:#F2C45A}
-body:is([data-world=river],[data-world=polar]) .mi-ans .ans-slot{background:#FFF9E6;box-shadow:inset 0 0 0 3px #FFD45C,var(--inset)}
-body:is([data-world=river],[data-world=polar]) .mi-ans .ans-slot.filled{background:#fff;box-shadow:var(--e1),inset 0 0 0 3px #4FD1A1}
-body:is([data-world=river],[data-world=polar]) .fst-row{border-left:6px solid #4FC3F7}
-body:is([data-world=river],[data-world=polar]) .fst-row:nth-child(4n+2){border-left-color:#4FD1A1}body:is([data-world=river],[data-world=polar]) .fst-row:nth-child(4n+3){border-left-color:#FFD45C}body:is([data-world=river],[data-world=polar]) .fst-row:nth-child(4n+4){border-left-color:#FF9AA6}
-body:is([data-world=river],[data-world=polar]) .exam-card .xopt:nth-child(4n+1){--c:#E8F6FE;--c2:#8FCDEB}body:is([data-world=river],[data-world=polar]) .exam-card .xopt:nth-child(4n+2){--c:#F1EDFB;--c2:#C3B5EA}
-body:is([data-world=river],[data-world=polar]) .exam-card .xopt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}body:is([data-world=river],[data-world=polar]) .exam-card .xopt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
-body:is([data-world=river],[data-world=polar]) .opt.right,body:is([data-world=river],[data-world=polar]) .qbody .opts .opt.right{--c:#CFF0DC;--c2:#5FC08A;color:var(--ink);outline:3px solid #3FB56E;outline-offset:-3px} /* v226: ตอบถูกยังเห็นชัด (สีเขียว) แต่ตัวหนังสือดำ */
-body:is([data-world=river],[data-world=polar]) .exam-card .xopt.right{--c:var(--mint-soft);--c2:#A9E2C8}body:is([data-world=river],[data-world=polar]) .exam-card .xopt.wrong{--c:var(--coral-soft);--c2:#F5C7CC}
-body:is([data-world=river],[data-world=polar]) .qbody .opt .mi-x{flex-wrap:nowrap;white-space:nowrap}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .keypad:not(.mi-kp) .btn:not(.primary){--c:#F2FAFE;--c2:#A9D9F0}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .keypad.mi-kp .btn.sym{--c:#FFF6D9;--c2:#F2C45A}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .mi-ans .ans-slot{background:#FFF9E6;box-shadow:inset 0 0 0 3px #FFD45C,var(--inset)}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .mi-ans .ans-slot.filled{background:#fff;box-shadow:var(--e1),inset 0 0 0 3px #4FD1A1}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .fst-row{border-left:6px solid #4FC3F7}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .fst-row:nth-child(4n+2){border-left-color:#4FD1A1}body:is([data-world=river],[data-world=polar],[data-world=detect]) .fst-row:nth-child(4n+3){border-left-color:#FFD45C}body:is([data-world=river],[data-world=polar],[data-world=detect]) .fst-row:nth-child(4n+4){border-left-color:#FF9AA6}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt:nth-child(4n+1){--c:#E8F6FE;--c2:#8FCDEB}body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt:nth-child(4n+2){--c:#F1EDFB;--c2:#C3B5EA}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt:nth-child(4n+3){--c:#FFF6D9;--c2:#F2C45A}body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt:nth-child(4n+4){--c:#FDECEF;--c2:#F2A3AE}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .opt.right,body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opts .opt.right{--c:#CFF0DC;--c2:#5FC08A;color:var(--ink);outline:3px solid #3FB56E;outline-offset:-3px} /* v226: ตอบถูกยังเห็นชัด (สีเขียว) แต่ตัวหนังสือดำ */
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt.right{--c:var(--mint-soft);--c2:#A9E2C8}body:is([data-world=river],[data-world=polar],[data-world=detect]) .exam-card .xopt.wrong{--c:var(--coral-soft);--c2:#F5C7CC}
+body:is([data-world=river],[data-world=polar],[data-world=detect]) .qbody .opt .mi-x{flex-wrap:nowrap;white-space:nowrap}
 /* ===== v227 ม.1 บทที่ 2 การสร้างทางเรขาคณิต (m1g.js) ===== */
 .mg-paper{background:#FFFFFF;box-shadow:var(--e1),inset 0 0 0 2px #E8E2D3}
 .cns-svg .mg-arc{stroke:#6F5FD0;stroke-width:2;fill:none}
@@ -4429,3 +4429,78 @@ button.m3-t{cursor:pointer;border:0}
 .e3-exc .e3-big{font-size:clamp(30px,3.8cqw,42px)}
 .e3-sg{min-width:96px}.e3-sg.p{background:#E3F6F1}.e3-sg.m{background:#FDE3EC}
 .e3-exa{text-align:center;font:700 clamp(15px,1.8cqw,19px) var(--font);color:var(--ink);line-height:1.45}.e3-exa b.neg,.e3-exa b.pos{font:900 1.3em var(--font-num)}
+/* ===== ม.2 detective world "เมืองนักสืบข้อมูล" (engine/detect.js) — กฎ ม.ต้น ใช้ร่วมด้วย :is() ===== */
+.gtab.detect.on{background:linear-gradient(135deg,#7C5CE0,#E36A8C)}
+#stage.detect{background:linear-gradient(180deg,rgba(241,236,250,.74),rgba(246,233,218,.82))}
+#stage.detect .lvl .name{box-shadow:0 2px 0 rgba(70,50,120,.14),var(--e1)}
+body[data-world=detect]{background:linear-gradient(180deg,#8E86D8 0%,#C9B6EC 45%,#FFE9C9 100%)}
+.dt-walk{animation:dtWalk 8s ease-in-out infinite}
+@keyframes dtWalk{0%,100%{transform:translateX(0) scaleX(1)}45%{transform:translateX(var(--sd,100px)) scaleX(1)}50%{transform:translateX(var(--sd,100px)) scaleX(-1)}95%{transform:translateX(0) scaleX(-1)}}
+.dt-walk .dt-mag{transform-origin:17px 4px;animation:dtMag 1.2s ease-in-out infinite alternate}
+@keyframes dtMag{to{transform:rotate(-14deg) translateY(-2px)}}
+.dt-float{animation:dtFloat 7s ease-in-out infinite}
+@keyframes dtFloat{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-22px) rotate(8deg)}}
+.dt-glow{animation:dtGlow 2.4s ease-in-out infinite alternate}
+@keyframes dtGlow{to{opacity:.12}}
+.dt-twk{animation:dtTwk 4s ease-in-out infinite}
+@keyframes dtTwk{50%{opacity:.2}}
+.boss-svg.owlthief .b-body{animation:plBreath 2.6s ease-in-out infinite;transform-origin:60px 120px}
+.boss-svg.owlthief .dt-head{transform-origin:60px 50px;animation:dtHead 3.2s ease-in-out infinite}
+@keyframes dtHead{0%,70%,100%{transform:rotate(0)}80%{transform:rotate(-10deg)}90%{transform:rotate(8deg)}}
+.boss-svg.owlthief .dt-sack{transform-origin:94px 86px;animation:dtSack 2s ease-in-out infinite alternate}
+@keyframes dtSack{to{transform:rotate(6deg)}}
+@media (prefers-reduced-motion:reduce){.dt-walk,.dt-walk .dt-mag,.dt-float,.dt-glow,.dt-twk,.boss-svg.owlthief .b-body,.boss-svg.owlthief .dt-head,.boss-svg.owlthief .dt-sack{animation:none}}
+body[data-world=detect] .keypad .btn:not(.primary){--c:#F3EFFD;--c2:#C9BEF5}
+body[data-world=detect] .keypad .btn:not(.primary):is([aria-label],.sym,.kdot){--c:#FFF1E2;--c2:#F2C08A}
+body[data-world=detect] .keypad.mi-kp .btn:not(.primary):not(.sym){--c:#F3EFFD;--c2:#C9BEF5}
+body[data-world=detect] .keypad.mi-kp .btn.sym{--c:#FFF1E2;--c2:#F2C08A}
+/* ===== ม.2 สถิติ (2) (grades/m2/m2s.js) — ใช้ .m3-tiles .m3-t .m3-out ร่วมด้วย ===== */
+.s2-dot,.s2-hist{display:block;width:100%;height:auto;overflow:visible}
+.s2-fig{display:flex;justify-content:center}
+.s2-fig .s2-hist{width:min(560px,90cqw);max-height:min(42cqh,300px)}
+.s2-fig .s2-dot{width:min(640px,92cqw);max-height:min(36cqh,260px)}
+.s2-qrow{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3cqw,32px);flex-wrap:wrap;width:100%}
+.s2-qrow > .s2-fig,.s2-qrow > .m3-figbox{width:auto;flex:1 1 360px;max-width:620px}
+.s2-qrow > .m3-tiles{flex:0 1 420px}
+.s2-stem{display:flex;flex-direction:column;align-items:center;gap:4px}
+.s2-stem table{border-collapse:collapse;background:#fff;border-radius:12px;box-shadow:var(--e1);overflow:hidden;font-size:clamp(20px,2.3cqw,26px)}
+.s2-stem th{background:#F1ECFA;padding:5px 14px;font-weight:800;color:var(--ink)}
+.s2-stem td{padding:4px 14px;font:800 1em var(--font-num);color:var(--ink);text-align:left;min-width:2em}
+.s2-stem td:first-child{text-align:center;border-right:2.5px solid #2B2550}
+.s2-stem.two td:first-child{text-align:right;border-right:0}.s2-stem.two td:nth-child(2){text-align:center;border-left:2.5px solid #2B2550;border-right:2.5px solid #2B2550}.s2-stem.two th.l{text-align:right}
+.s2-stem i{font-style:normal;display:inline-block;min-width:.9em;margin:0 .14em;padding:0 .08em;border-radius:6px;text-align:center}
+.s2-stem i.new{background:#FFE27A;animation:popIn .3s var(--spring) both}
+.s2-stem i.gone{visibility:hidden}
+.s2-stem small{color:var(--ink-2);font-size:15px}
+.s2-tapstem i.ia{cursor:pointer;background:#F3EFFD;box-shadow:inset 0 0 0 2px #C9BEF5}
+.s2-tapstem i.done{background:#CFF0DC;box-shadow:inset 0 0 0 2px #5FC08A}
+.s2-ft table{font-size:clamp(17px,2cqw,22px)}
+.s2-ft tr.hl td{background:#FFF1B8}
+.s2-ft tr.tot td{background:#F3EFFF;font-weight:900}
+.s2-ft tr.ia{cursor:pointer}
+.s2-tal{font:900 1.05em var(--font-num);letter-spacing:.06em;min-width:5em;text-align:left!important;color:#7C5CE0}
+.s2-tal s{text-decoration-thickness:3px;text-decoration-color:#E36A8C}
+.s2-two{display:flex;flex-direction:column;align-items:stretch;gap:2px;width:min(640px,92cqw)}
+.s2-two small{font-weight:800;color:var(--ink-2);font-size:15px}
+.s2-two .s2-dot{max-height:none}
+.s2-towers{display:flex;align-items:flex-end;justify-content:center;gap:clamp(12px,2.4cqw,26px);min-height:min(36cqh,300px)}
+.s2-tw{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 8px;border-radius:12px;transition:background .2s}
+.s2-tw.from{background:#FDE3EC}.s2-tw.to{background:#D7F2E8}
+.s2-tw b{font:900 22px var(--font-num);color:var(--ink)}.s2-tw small{font-weight:800;color:var(--ink-2)}
+.s2-blk{display:flex;flex-direction:column-reverse;gap:3px}
+.s2-blk i{display:block;width:clamp(38px,5cqw,52px);height:clamp(18px,2.6cqh,26px);border-radius:5px;background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.15)}
+.s2-cmp{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.s2-cmp span{padding:6px 14px;border-radius:999px;background:#fff;box-shadow:var(--e1),inset 0 0 0 2.5px var(--pc);font-size:clamp(16px,1.9cqw,20px)}
+.s2-cmp b{font:900 1.1em var(--font-num)}
+.s2-claims{display:flex;flex-direction:column;gap:8px;width:min(860px,94cqw)}
+.s2-claim{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:10px 16px!important;font-size:clamp(17px,2cqw,21px)!important}
+.s2-claim em{font-style:normal;font-size:.9em}
+.s2-claim.yes{box-shadow:inset 0 0 0 3px #4FB97A,var(--e1)!important}.s2-claim.no{box-shadow:inset 0 0 0 3px #E0445A,var(--e1)!important}
+.s2-card .s2-fd{width:44px;height:33px}
+.s2-form{font-size:clamp(20px,2.4cqw,26px);display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap}
+.s2-form .fq{display:inline-flex;flex-direction:column;align-items:center}.s2-form .fq b:first-child{border-bottom:2.5px solid var(--ink);padding:0 6px}
+.exam-card .xqt .xfig{display:flex;justify-content:center;margin-top:6px}
+.exam-card .xqt .xfig > svg{width:min(560px,82cqw);height:auto;max-height:230px}
+.exam-card .xqt .xfig .s2-stem table,.exam-card .xqt .xfig .s2-ft table{font-size:18px}
+button.m3-t.used{opacity:.28;pointer-events:none}
+.s2-qrow .s2-ft table{font-size:clamp(20px,2.4cqw,26px)}

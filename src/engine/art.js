@@ -402,6 +402,7 @@ const sceneryHTML = k => `<svg viewBox="0 0 64 64" aria-hidden="true">${SCENERY[
 /* ---------- boss: original "ราชาปีศาจตัวเลข" rig, recoloured per city ---------- */
 function bossSVG(state = 'idle', pal = 'lilac', emblem = '?', kind = 'blob') {
   if (kind === 'mega') return megaBossSVG(state, emblem);
+  if (kind === 'owlthief') return dtOwlSVG(state, pal, emblem); /* ม.2 detective world (engine/detect.js) */
   if (kind === 'pbear') return plBearSVG(state, pal, emblem); /* ม.3 polar world (engine/polar.js) */
   if (kind === 'croc') return rvCrocSVG(state, pal, emblem); /* ม.1 river world (engine/river.js) */
   const [l, b, d, line] = PAL[pal];

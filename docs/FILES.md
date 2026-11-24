@@ -12,6 +12,7 @@
 | `src/engine/life.js` | 15 KB | LIFE LAYER — things that move in every world's background and on every map |
 | `src/engine/river.js` | 12 KB | โลกแม่น้ำ (ม.1): scenery ริมน้ำ ฉากหลัง สิ่งเคลื่อนไหว บอสจระเข้ |
 | `src/engine/polar.js` | 13 KB | (v230) โลกขั้วโลกหิมะ (ม.3): scenery อิกลู ภูเขาน้ำแข็ง เพนกวิน แมวน้ำ ฉากหลังแสงเหนือ หิมะตก บอสหมีขาว `plBearSVG` (bossKind 'pbear') |
+| `src/engine/detect.js` | 18 KB | (v238) โลก ม.2 "เมืองนักสืบข้อมูล": ฉาก แผนที่ สุนัขนักสืบ บอสจอมโจรนกฮูก `owlthief` (prefix dt) |
 | `src/engine/ink.js` | 28 KB | กระดานเขียนด้วยนิ้ว/ปากกา |
 | `src/engine/components.js` | 101 KB | ส่วนประกอบหน้าจอที่ใช้ซ้ำ: แป้นตัวเลข กระดาน การ์ด ฯลฯ |
 | `src/engine/questions.js` | 165 KB | ชนิดคำถามพื้นฐาน Q.* ที่ทุกชั้นใช้ |
@@ -75,6 +76,8 @@
 | `src/grades/m1/geo/mg-sims.js` | 24 KB | (v237) หน้าเรียน: ตัวอย่าง ลองสร้าง หน้าลากสำรวจ (`mgDrag`, `mgArmDeg`) |
 | `src/grades/m1/geo/mg-quest.js` | 25 KB | (v237) ข้อในเกม `Q.mg*` |
 | `src/grades/m1/m1e.js` | 75 KB | (v233) ม.1 บทที่ 3 เลขยกกำลัง: แสดงผล `e3P/e3PF` · หน้าลงมือ 12 แบบ (พับกระดาษ แยกตัวประกอบ กระจายนับ ตัดคู่ เลื่อนจุดทศนิยม …) · ข้อ `Q.e3N/e3O` + `E3Q.*` · ด่าน 2301–2314 + บอส 2319 |
+| `src/grades/m2/m2s.js` | 36 KB | (v238) ม.2 สถิติ (2): ตัวช่วย รูป (แผนภาพจุด ต้น-ใบ ฮิสโทแกรม) หน้าลงมือ `Q.s2Opt` / `Q.s2Num` (prefix s2) |
+| `src/grades/m2/m2l.js` | 117 KB | (v238) ม.2 บทที่ 7 สถิติ (2): บทเรียน 8701–8715 + บอส 8719 จอมโจรนกฮูก |
 | `src/grades/m3/m3s.js` | 128 KB | (v230) ม.3 บทที่ 6 สถิติ (3): มัธยฐาน ควอร์ไทล์ (ไม่นับมัธยฐานเมื่อ n คี่) `m3Five` · IQR · ค่านอกเกณฑ์ `m3FiveO` · แผนภาพกล่อง `m3BoxSVG`/`m3VBoxSVG` · หน้าลงมือ 12 แบบ · ข้อ `Q.m3*` · ด่าน 3601–3614 + บอส 3619 |
 | `src/app/lessons.js` | 477 KB | ด่าน ป.1 + ทะเบียนเมืองทั้งหมด (CITIES, GRADES, LESSONS) |
 | `src/app/learn.js` | 50 KB | หน้า “รู้จักก่อน” |
