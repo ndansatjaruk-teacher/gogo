@@ -6,7 +6,7 @@
              goal(G) → {ok, why}, sol:[{say, ops:[...]}], marks:[{p,name}], okMsg }
        ops: {t:'seg',a,b} · {t:'arc',c,r,a0,a1} · {t:'pt',p,name} · {t:'prot',c,rot} · {t:'mark',c,rot,deg}   (หน่วย ซม. แกน y ขึ้น)
    - mgFig(spec)  รูปนิ่ง (โจทย์เลือกตอบ / การ์ด)
-   - งานสร้าง mgT.* · ข้อ Q.mg* · บทเรียน LESSONS_M1C2 (2101–2109) + บอส 2119
+   - งานสร้าง mgT.* · ข้อ Q.mg* · บทเรียน LESSONS_M1C2 (2201–2212, v231 ชุดใหม่ 12 ด่าน) + บอส 2219
    ใช้ cnsAdd/cnsDist/cnsDir/cnsAng/cnsF จาก p5q.js (โหลดก่อน)
    ========================================================= */
 const MG_W = 640, MG_H = 420, MG_K = 44, MG_BW = MG_W / MG_K, MG_BH = MG_H / MG_K;
@@ -212,6 +212,7 @@ function mgBoard(T, cb = {}) {
     if (T.goal && T.manual !== false) tbar.append(h('button', { class: 'btn sm ia primary mg-chk', onclick: e => { e.stopPropagation(); check(true); } }, icon('check'), h('span', null, 'ตรวจ')));
     if (teach) tbar.append(h('button', { class: 'btn sm ia cnsf-r', onclick: e => { e.stopPropagation(); if (done) return; wrap.reveal(); try { teachDone(wrap); } catch (_) { } } }, icon('eye'), h('span', null, 'ดูเฉลย'))); }
   wrap.append(h('div', { class: 'cns-side' }, head, tbar, msg), board);
+  wrap.selfTest = () => { S = JSON.parse(S0); runOps(sol.flatMap(s => s.ops || []), false); const r = T.goal ? T.goal(G) : { ok: true }; S = JSON.parse(S0); return r; }; /* ตรวจว่าเฉลยผ่าน goal (tests) */
   wrap.reveal = () => { if (done) return; S = JSON.parse(S0); hist = []; runOps(sol.flatMap(s => s.ops || []), false); done = true; (T.marks || []).forEach(m => G.ptName(m.p, m.name)); finish(); req(); say2('ดูเฉลย: ' + (T.revealMsg || 'ทำตามขั้นตอนนี้')); };
   wrap._t = { S: () => S, G, RUL, prot, comp, X, U, setTool: k => tbar.querySelector(`[data-k="${k}"]`)?.click(), done: () => done, rulKnob, protKnob, compPts, render, check };
   render(); if (!demo) say2(T.start || 'เลือกอุปกรณ์ แล้วลงมือสร้างได้เลย'); return wrap;
@@ -231,8 +232,8 @@ function mgFig(f, o = {}) {
   (f.segs || []).forEach(([a, b, col]) => { s += L(at(a), at(b), 2.8, col || undefined); });
   (f.rays || []).forEach(([a, b, col, ext]) => { const A = at(a), B = at(b), d = mgA(A, B), E = mgP(A, d, mgD(A, B) + (ext ?? .8)); s += L(A, E, 2.8, col || undefined) + arw(E, d); });
   (f.lines || []).forEach(([a, b, ext]) => { const A = at(a), B = at(b), d = mgA(A, B), e = ext ?? .8, E1 = mgP(A, d + 180, e), E2 = mgP(B, d, e); s += L(E1, E2, 2.8) + arw(E2, d) + arw(E1, d + 180); });
-  (f.angs || []).forEach(([v, a, b, lab, col, rr]) => { const V = at(v), d0 = mgA(V, at(a)), d1 = mgA(V, at(b)); let lo = d0, sw = mgNrm(d1 - d0); if (sw > 180 && !o.reflex) { lo = d1; sw = 360 - sw; } const r = rr || .65, A = Xp(mgP(V, lo, r)), B = Xp(mgP(V, lo + sw, r)), T = Xp(mgP(V, lo + sw / 2, r + .55));
-    s += Math.abs(sw - 90) < .5 && !lab ? `<path d="M${Xp(mgP(V, lo, .45))} L${Xp(mgAdd(mgP(V, lo, .45), mgU(lo + 90), .45))} L${Xp(mgP(V, lo + 90, .45))}" fill="none" stroke="${col || '#C25B00'}" stroke-width="2"/>` : `<path d="M${A} A${r * K} ${r * K} 0 ${sw > 180 ? 1 : 0} 0 ${B}" fill="none" stroke="${col || '#C25B00'}" stroke-width="2.2"/>`;
+  (f.angs || []).forEach(([v, a, b, lab, col, rr, fo]) => { const V = at(v), d0 = mgA(V, at(a)), d1 = mgA(V, at(b)); let lo = d0, sw = mgNrm(d1 - d0); if (sw > 180 && !o.reflex) { lo = d1; sw = 360 - sw; } const r = rr || .65, A = Xp(mgP(V, lo, r)), B = Xp(mgP(V, lo + sw, r)), T = Xp(mgP(V, lo + sw / 2, r + .55));
+    s += Math.abs(sw - 90) < .5 && !lab ? `<path d="M${Xp(mgP(V, lo, .45))} L${Xp(mgAdd(mgP(V, lo, .45), mgU(lo + 90), .45))} L${Xp(mgP(V, lo + 90, .45))}" fill="none" stroke="${col || '#C25B00'}" stroke-width="2"/>` : (fo ? `<path d="M${Xp(V)} L${A} A${r * K} ${r * K} 0 ${sw > 180 ? 1 : 0} 0 ${B} Z" fill="${col}" fill-opacity="${fo}"/>` : '') + `<path d="M${A} A${r * K} ${r * K} 0 ${sw > 180 ? 1 : 0} 0 ${B}" fill="none" stroke="${col || '#C25B00'}" stroke-width="2.2"/>`;
     if (lab) s += `<text x="${T[0]}" y="${T[1] + 5}" text-anchor="middle" class="mg-fl">${lab}</text>`; });
   (f.ticks || []).forEach(([a, b, n]) => { const A = at(a), B = at(b), m = mgMid(A, B), d = mgA(A, B); for (let i = 0; i < (n || 1); i++) { const c = mgP(m, d, (i - ((n || 1) - 1) / 2) * .16); s += L(mgP(c, d + 90, .18), mgP(c, d - 90, .18), 2, '#C25B00'); } });
   (f.labs || []).forEach(([p, t, dx = 0, dy = 0]) => { const q = Xp(at(p)); s += `<text x="${q[0] + dx}" y="${q[1] + dy}" text-anchor="middle" class="mg-fl">${t}</text>`; });
@@ -257,7 +258,7 @@ const mgT = {
       marks: [{ p: Q, name: 'D' }], okMsg: '<b>สร้างเสร็จแล้ว!</b> CD ยาวเท่ากับ AB 🎉',
       goal: G => { const a = G.arcAt(C); if (!a.length) return { ok: false, why: 'ยังไม่ได้วางเข็มวงเวียนที่จุด C แล้วเขียนส่วนโค้ง' }; return a.some(x => Math.abs(x.r - L) < .12 && mgCov(x, 0)) ? { ok: true } : { ok: false, why: a.some(x => Math.abs(x.r - L) < .12) ? 'ส่วนโค้งยังไม่ตัดรังสี CX' : `รัศมีวงเวียน ${mgF(a[a.length - 1].r)} ซม. ยังไม่เท่ากับ AB (ลองวางเข็มที่ A แล้วลากขาดินสอไปที่ B)` }; } }; },
   /* ผลบวกของความยาว: บนรังสี PX สร้าง PR = AB + CD */
-  sumSeg(a = 3.1, b = 2.4) { const A = [1.4, 8], B = [1.4 + a, 8], C = [7.6, 8], Dd = [7.6 + b, 8], P = [1.8, 3], X = [5, 3], Q = mgP(P, 0, a), R = mgP(P, 0, a + b);
+  sumSeg(a = 3.1, b = 2.4) { const A = [1.4, 8], B = [1.4 + a, 8], C = [7.6, 8], Dd = [7.6 + b, 8], P = [1.8, 3], X = [13, 3], Q = mgP(P, 0, a), R = mgP(P, 0, a + b);
     return { title: 'บนรังสี PX สร้าง <b>PR = AB + CD</b> ด้วยวงเวียน', given: { pts: { A, B, C, D: Dd, P, X }, segs: [['A', 'B'], ['C', 'D']], rays: [['P', 'X']] }, compC: [12, 5.6], newNames: 'QRSTUVW',
       sol: [{ say: 'กางวงเวียนยาวเท่า AB วางเข็มที่ P เขียนส่วนโค้งตัดรังสี ได้จุด Q', ops: [{ t: 'arc', c: A, r: a, a0: -10, a1: 10 }, { t: 'arc', c: P, r: a, a0: -20, a1: 20 }, { t: 'pt', p: Q, name: 'Q' }] },
         { say: 'กางวงเวียนยาวเท่า CD วางเข็มที่ <b>Q</b> เขียนส่วนโค้งตัดรังสีต่อไป ได้จุด R', ops: [{ t: 'arc', c: C, r: b, a0: -10, a1: 10 }, { t: 'arc', c: Q, r: b, a0: -20, a1: 20 }, { t: 'pt', p: R, name: 'R' }, { t: 'away' }] }],
@@ -372,7 +373,7 @@ const mgT = {
 Q.mgBuild = (T, q) => ({ prompt: q, say: q.replace(/<[^>]+>/g, ''), __sig: `mgb ${q}`, __diff: 60, __kind: 'mgb', __base: 'mgb', __baseCap: 2, __baseHard: true,
   mount(bd, ctx) { bd.append(h('div', { class: 'colstack cns-q' }, mgBoard(T, { onOK: () => setTimeout(() => ctx.check(true), 900), onWrong: why => ctx.check(false, why) }))); } });
 /* วัดมุมด้วยครึ่งวงกลม แล้วตอบขนาด */
-Q.mgMeasure = ({ deg, rot = 0, name = 'ABC' }) => { const B = [4.4, 1.6], A = mgP(B, rot, 6), C = mgP(B, rot + deg, 5.6), T = { title: `ใช้ครึ่งวงกลมวัด <b>∠${name}</b>`, given: { pts: { [name[0]]: A, [name[1]]: B, [name[2]]: C }, rays: [[name[1], name[0]], [name[1], name[2]]] }, tools: ['prot'], tool0: 'prot', protC: [11, 6.4], start: 'ลากครึ่งวงกลมให้จุดศูนย์กลางอยู่ที่จุดยอด แล้วหมุนให้ 0° ทับแขนมุมข้างหนึ่ง' };
+Q.mgMeasure = ({ deg, rot = 0, name = 'ABC' }) => { const B = [4.4, 1.6], A = mgP(B, rot, 6), C = mgP(B, rot + deg, 5.6), T = { title: `ใช้ครึ่งวงกลมวัด <b>∠${name}</b>`, given: { pts: { [name[0]]: A, [name[1]]: B, [name[2]]: C }, rays: [[name[1], name[0]], [name[1], name[2]]] }, tools: ['prot'], tool0: 'prot', protC: [11, 6], start: 'ลากครึ่งวงกลมให้จุดศูนย์กลางอยู่ที่จุดยอด แล้วหมุนให้ 0° ทับแขนมุมข้างหนึ่ง' };
   return { prompt: `วัดขนาดของ ∠${name} แล้วตอบเป็นองศา`, say: `วัดขนาดของมุม ${name.split('').join(' ')} แล้วตอบเป็นองศา`, __sig: `mgm ${deg} ${rot}`, __diff: 40, __kind: 'mgm', __base: 'mgm', __baseCap: 2,
     mount(bd, ctx) { const b = mgBoard(T, {}); b.classList.add('mg-meas'); bd.append(h('div', { class: 'mg-qrow' }, b, miAns(ctx, deg, { unit: 'องศา', hint: 'อ่านสเกลที่เริ่มจาก 0 ตรงแขนมุมข้างแรก' }))); } }; };
 /* เลือกตอบ (มีรูป) */
@@ -469,113 +470,356 @@ const mgParAngQ = d => Q.mgNum({ q: `ℓ ∥ m มีเส้นตัด t ถ
   return mgFig({ pts: { _1: L1a, _2: L1b, _3: L2a, _4: L2b, P, Q: Qq, _5: T1, _6: T2, _7: mgP(P, 180, 1), _8: mgP(Qq, 0, 1) }, lines: [['_1', '_2', .1], ['_3', '_4', .1]], segs: [['_5', '_6']], angs: [['Q', '_8', 'P', `${d}°`, '#3D8BD9', .7], ['P', '_7', 'Q', 'x', '#E5487A', .7]], labs: [[[3.6, 2.35], 'ℓ'], [[3.6, .35], 'm'], [T1, 't', 10, -6]], hide: ['_1', '_2', '_3', '_4', '_5', '_6', '_7', '_8'] }, { max: 320 }); })(), a: d, unit: 'องศา', hint: 'เส้นขนานกัน มุมแย้งมีขนาดเท่ากัน', sig: 'par ' + d });
 
 /* =========================================================
-   บทเรียน 2101–2109 + บอส 2119
+   v231 — งานสร้างเพิ่ม (ใช้กับบทเรียน 12 ด่านชุดใหม่)
    ========================================================= */
-const LM2 = (no, place, title, short, goal, teach, game) => ({ id: 2100 + no, no, place, title, short, tone: TONES5[(no + 3) % 6], goal, teach, game });
+Object.assign(mgT, {
+  /* สร้างส่วนของเส้นตรงตามความยาวที่กำหนด (ไม้บรรทัดหรือวงเวียน) */
+  segLen(L = 5) { const P = [2, 3], X = [12.8, 3], Q = mgP(P, 0, L);
+    return { title: `บนรังสี PX สร้าง <b>PQ ยาว ${mgF(L)} ซม.</b>`, given: { pts: { P, X }, rays: [['P', 'X']] }, compC: [11.6, 6.4], rulO: [1, 7.6], newNames: 'QRST',
+      sol: [{ say: `กางวงเวียนบนไม้บรรทัดให้ยาว <b>${mgF(L)} ซม.</b> แล้ววางเข็มที่ <b>P</b> เขียนส่วนโค้งตัดรังสี`, ops: [{ t: 'arc', c: P, r: L, a0: -14, a1: 14 }] },
+        { say: 'จุดที่ส่วนโค้งตัดรังสีคือ <b>Q</b> → PQ ยาวตามที่กำหนด', ops: [{ t: 'pt', p: Q, name: 'Q' }, { t: 'away' }] }],
+      marks: [{ p: Q, name: 'Q' }], okMsg: `<b>สร้างเสร็จแล้ว!</b> PQ ยาว ${mgF(L)} ซม. 🎉`,
+      goal: G => G.arcAt(P).some(x => Math.abs(x.r - L) < .12 && mgCov(x, 0)) || G.hasPt(Q, .12) ? { ok: true } : { ok: false, why: `วางเข็มที่ P กางวงเวียน ${mgF(L)} ซม. (เทียบกับไม้บรรทัด) แล้วเขียนส่วนโค้งตัดรังสี` } }; },
+  /* ผลต่างของความยาว: PR = AB − CD */
+  diffSeg(a = 5.2, b = 2.1) { const A = [1.4, 8], B = [1.4 + a, 8], C = [8.4, 8], Dd = [8.4 + b, 8], P = [1.8, 3], X = [13, 3], Q = mgP(P, 0, a), R = mgP(P, 0, a - b);
+    return { title: 'บนรังสี PX สร้าง <b>PR = AB − CD</b> ด้วยวงเวียน', given: { pts: { A, B, C, D: Dd, P, X }, segs: [['A', 'B'], ['C', 'D']], rays: [['P', 'X']] }, compC: [12, 5.6], newNames: 'QRSTUVW',
+      sol: [{ say: 'ลอก AB จาก P ลงบนรังสี ได้จุด <b>Q</b> (PQ = AB)', ops: [{ t: 'arc', c: A, r: a, a0: -10, a1: 10 }, { t: 'arc', c: P, r: a, a0: -16, a1: 16 }, { t: 'pt', p: Q, name: 'Q' }] },
+        { say: 'กางวงเวียนยาวเท่า CD วางเข็มที่ <b>Q</b> เขียนส่วนโค้ง<b>ย้อนกลับ</b>มาทาง P ได้จุด <b>R</b>', ops: [{ t: 'arc', c: C, r: b, a0: -10, a1: 10 }, { t: 'arc', c: Q, r: b, a0: 162, a1: 198 }, { t: 'pt', p: R, name: 'R' }, { t: 'away' }] }],
+      marks: [{ p: Q, name: 'Q' }, { p: R, name: 'R' }], okMsg: '<b>สร้างเสร็จแล้ว!</b> PR = AB − CD 🎉',
+      goal: G => { const q = G.arcAt(P).some(x => Math.abs(x.r - a) < .12 && mgCov(x, 0)), r = G.arcAt(Q).some(x => Math.abs(x.r - b) < .12 && mgCov(x, 180)); return q && r ? { ok: true } : { ok: false, why: !q ? 'ขั้นแรก: ลอก AB จากจุด P ลงบนรังสีก่อน' : 'ต่อไปลอก CD จากจุดปลาย Q ย้อนกลับมาทาง P' }; } }; },
+  /* k เท่าของความยาว: PR = k × AB */
+  kSeg(a = 2.4, k = 3) { const A = [1.4, 8], B = [1.4 + a, 8], P = [1.8, 3], X = [13, 3], pts = Array.from({ length: k + 1 }, (_, i) => mgP(P, 0, a * i)), nm = 'QRSTU';
+    const sol = [{ say: 'กางวงเวียนยาวเท่า <b>AB</b>', ops: [{ t: 'arc', c: A, r: a, a0: -10, a1: 10 }] }];
+    for (let i = 0; i < k; i++) sol.push({ say: `วางเข็มที่${i ? `จุด <b>${nm[i - 1]}</b>` : ' <b>P</b>'} เขียนส่วนโค้งตัดรังสี ได้จุด <b>${nm[i]}</b>`, ops: [{ t: 'arc', c: pts[i], r: a, a0: -16, a1: 16 }, { t: 'pt', p: pts[i + 1], name: nm[i] }, ...(i === k - 1 ? [{ t: 'away' }] : [])] });
+    return { title: `บนรังสี PX สร้างส่วนของเส้นตรงยาว <b>${k} เท่าของ AB</b>`, given: { pts: { A, B, P, X }, segs: [['A', 'B']], rays: [['P', 'X']] }, compC: [12, 5.6], newNames: 'QRSTUVW',
+      sol, marks: pts.slice(1).map((p, i) => ({ p, name: nm[i] })), okMsg: `<b>สร้างเสร็จแล้ว!</b> ยาว ${k} × AB = ${mgF(a * k)} ซม. 🎉`,
+      goal: G => { const bad = pts.slice(0, k).findIndex(p => !G.arcAt(p).some(x => Math.abs(x.r - a) < .12 && mgCov(x, 0))); return bad < 0 ? { ok: true } : { ok: false, why: bad === 0 ? 'เริ่มจากลอก AB จากจุด P' : `ลอก AB ต่อจากจุดปลายที่ได้ (ครั้งที่ ${bad + 1})` }; } }; },
+  /* แบ่งส่วนของเส้นตรงเป็น 4 ส่วนเท่ากัน (แบ่งครึ่งซ้ำ) */
+  quartSeg(L = 9.6) { const A = [7.25 - L / 2, 4.4], B = [7.25 + L / 2, 4.4], M = mgMid(A, B), Q1 = mgMid(A, M), Q3 = mgMid(M, B), sol = [];
+    const bis = (p, q, nmM, last) => { const l = mgD(p, q), r = l / 2 + .9, hh = Math.sqrt(r * r - l * l / 4), m = mgMid(p, q), ta = Math.atan2(hh, l / 2) * 180 / Math.PI;
+      sol.push({ say: `แบ่งครึ่ง ${nmM[0]}: วางเข็มที่ปลายทั้งสอง เขียนส่วนโค้งรัศมีเท่ากัน (เกินครึ่ง) ตัดกันสองจุด`, ops: [{ t: 'arc', c: p, r, a0: -ta - 12, a1: ta + 12 }, { t: 'arc', c: q, r, a0: 180 - ta - 12, a1: 180 + ta + 12 }] });
+      sol.push({ say: `ลากเส้นผ่านจุดตัดทั้งสอง ได้จุดกึ่งกลาง <b>${nmM[1]}</b>`, ops: [{ t: 'seg', a: [m[0], m[1] + hh + .4], b: [m[0], m[1] - hh - .4] }, { t: 'pt', p: m, name: nmM[1] }, ...(last ? [{ t: 'away' }] : [])] }); };
+    bis(A, B, ['AB', 'M']); bis(A, M, ['AM', 'C']); bis(M, B, ['MB', 'D'], true);
+    return { title: '<b>แบ่ง AB เป็น 4 ส่วนเท่ากัน</b> (แบ่งครึ่ง แล้วแบ่งครึ่งอีกครั้ง)', given: { pts: { A, B }, segs: [['A', 'B']] }, compC: [13, 6], newNames: 'MCDEFGH', sol,
+      marks: [{ p: M, name: 'M' }, { p: Q1, name: 'C' }, { p: Q3, name: 'D' }], okMsg: `<b>สร้างเสร็จแล้ว!</b> AC = CM = MD = DB = ${mgF(L / 4)} ซม. 🎉`,
+      goal: G => { const a = G.lineAt(M, 90), b = G.lineAt(Q1, 90), c = G.lineAt(Q3, 90); return a && b && c ? { ok: true } : { ok: false, why: !a ? 'แบ่งครึ่ง AB ก่อน (ได้จุดกึ่งกลาง M)' : 'แบ่งครึ่ง AM และ MB อีกครั้ง' }; } }; },
+  /* เขียนวงกลม: จุดศูนย์กลาง O รัศมี r */
+  circ(r = 3) { const O = [6, 4.7];
+    return { title: `เขียน<b>วงกลม</b> จุดศูนย์กลาง O รัศมี ${mgF(r)} ซม.`, given: { pts: { O } }, compC: [11.8, 6], rulO: [1, .9], newNames: 'ABC',
+      sol: [{ say: `กางวงเวียนบนไม้บรรทัดให้ห่าง <b>${mgF(r)} ซม.</b> (ระยะนี้คือ<b>รัศมี</b>)`, ops: [{ t: 'arc', c: O, r, a0: 0, a1: 20 }] }, { say: 'วางเข็มที่จุดศูนย์กลาง <b>O</b> แล้วหมุนวงเวียนรอบเดียว', ops: [{ t: 'arc', c: O, r, a0: 0, a1: 360 }, { t: 'away' }] }],
+      okMsg: `<b>เขียนเสร็จแล้ว!</b> ทุกจุดบนวงกลมห่างจาก O เท่ากัน = ${mgF(r)} ซม. 🎉`,
+      goal: G => G.arcAt(O).some(x => Math.abs(x.r - r) < .12 && x.a1 - x.a0 >= 300) ? { ok: true } : { ok: false, why: G.arcAt(O).some(x => Math.abs(x.r - r) < .12) ? 'หมุนวงเวียนต่อให้ครบรอบ' : `วางเข็มที่ O และกางวงเวียนให้ยาว ${mgF(r)} ซม.` } }; },
+  /* จุดตัดของส่วนโค้ง: หาจุด C ที่ห่างจาก A และ B ตามที่กำหนด */
+  meet(ra = 4, rb = 3, d = 5) { const A = [4.2, 2.4], B = [4.2 + d, 2.4], C = mgXCC(A, ra, B, rb).sort((p, q) => q[1] - p[1])[0];
+    return { title: `หาจุด C ที่ห่างจาก A <b>${mgF(ra)} ซม.</b> และห่างจาก B <b>${mgF(rb)} ซม.</b> (อยู่เหนือ AB)`, given: { pts: { A, B }, segs: [['A', 'B']] }, compC: [11.2, 6], rulO: [.8, 8.4], newNames: 'CDE',
+      sol: [{ say: `กางวงเวียน ${mgF(ra)} ซม. วางเข็มที่ <b>A</b> เขียนส่วนโค้ง — ทุกจุดบนส่วนโค้งนี้ห่างจาก A ${mgF(ra)} ซม.`, ops: [{ t: 'arc', c: A, r: ra, a0: mgA(A, C) - 22, a1: mgA(A, C) + 22 }] },
+        { say: `กางวงเวียน ${mgF(rb)} ซม. วางเข็มที่ <b>B</b> เขียนส่วนโค้งตัดกัน — <b>จุดตัด</b>ห่างจากทั้งสองจุดตามที่ต้องการ`, ops: [{ t: 'arc', c: B, r: rb, a0: mgA(B, C) - 22, a1: mgA(B, C) + 22 }, { t: 'pt', p: C, name: 'C' }, { t: 'away' }] }],
+      marks: [{ p: C, name: 'C' }], okMsg: `<b>หาจุด C ได้แล้ว!</b> CA = ${mgF(ra)} ซม. และ CB = ${mgF(rb)} ซม. 🎉`,
+      goal: G => { const a = G.arcAt(A).some(x => Math.abs(x.r - ra) < .12 && mgCov(x, mgA(A, C))), b = G.arcAt(B).some(x => Math.abs(x.r - rb) < .12 && mgCov(x, mgA(B, C))); return a && b ? { ok: true } : { ok: false, why: !a ? `เขียนส่วนโค้งรัศมี ${mgF(ra)} ซม. จากจุด A ให้ผ่านด้านบนของ AB` : `เขียนส่วนโค้งรัศมี ${mgF(rb)} ซม. จากจุด B ให้ตัดส่วนโค้งแรก` }; } }; },
+  /* ผลบวกของมุม: ที่ O สร้าง ∠XOZ = ∠ABC + ∠DEF */
+  sumAng(a = 40, b = 35) { const Bv = [1.2, 6.2], Ev = [6, 6.2], O = [2.6, 1.2], Xx = [12.6, 1.2], r = 1.6, sol = [];
+    const A1 = mgP(Bv, 0, 3), C1 = mgP(Bv, a, 3), D1 = mgP(Ev, 0, 3), F1 = mgP(Ev, b, 3);
+    const copy = (V, deg, base, nm, last) => { const P1 = mgP(V, 0, r), P2 = mgP(V, deg, r), Q1 = mgP(O, base, r), Q2 = mgP(O, base + deg, r), c = mgD(P1, P2), Y = mgP(O, base + deg, 6.2);
+      sol.push({ say: `วางเข็มที่จุดยอดของมุม${base ? 'ที่สอง' : 'แรก'} เขียนส่วนโค้งตัดแขนทั้งสอง แล้วใช้<b>รัศมีเดิม</b>เขียนส่วนโค้งที่ O`, ops: [{ t: 'arc', c: V, r, a0: -12, a1: deg + 12 }, { t: 'arc', c: O, r, a0: base - 8, a1: base + deg + 20 }] });
+      sol.push({ say: 'กางวงเวียนเท่าระยะระหว่างจุดตัดบนมุมเดิม ไปเขียนตัดที่ส่วนโค้งของ O', ops: [{ t: 'arc', c: P1, r: c, a0: mgA(P1, P2) - 12, a1: mgA(P1, P2) + 12 }, { t: 'arc', c: Q1, r: c, a0: mgA(Q1, Q2) - 14, a1: mgA(Q1, Q2) + 14 }] });
+      sol.push({ say: `ลากรังสีจาก O ผ่านจุดตัด ได้รังสี <b>O${nm}</b>`, ops: [{ t: 'seg', a: O, b: Y }, { t: 'pt', p: Y, name: nm }, ...(last ? [{ t: 'away' }] : [])] }); };
+    copy(Bv, a, 0, 'Y'); copy(Ev, b, a, 'Z', true);
+    return { title: `ที่จุด O สร้าง <b>∠XOZ = ∠ABC + ∠DEF</b>`, given: { pts: { A: A1, B: Bv, C: C1, D: D1, E: Ev, F: F1, O, X: Xx }, segs: [['B', 'A'], ['B', 'C'], ['E', 'D'], ['E', 'F']], rays: [['O', 'X']] }, compC: [12.2, 6.6], newNames: 'YZPQRS', sol,
+      marks: [{ p: mgP(O, a, 6.2), name: 'Y' }, { p: mgP(O, a + b, 6.2), name: 'Z' }], okMsg: `<b>สร้างเสร็จแล้ว!</b> ∠XOZ = ${a}° + ${b}° = ${a + b}° 🎉`,
+      goal: G => { const r1 = G.rayAt(O, a), r2 = G.rayAt(O, a + b); return r1 && r2 && G.nArcs() >= 4 ? { ok: true } : { ok: false, why: !r1 ? 'ลอก ∠ABC ไปไว้ที่ O บนรังสี OX ก่อน' : 'ลอก ∠DEF ต่อจากรังสีใหม่ที่ได้' }; } }; },
+  /* เส้นขนานโดยอาศัยเส้นตั้งฉากสองครั้ง */
+  parPerp() { const A = [1, 2], B = [13, 2], P = [7, 6], r = 5, dd = Math.sqrt(r * r - 16), C1 = [P[0] - dd, 2], C2 = [P[0] + dd, 2], r2 = 3.6, R = [P[0], 2 + Math.sqrt(r2 * r2 - dd * dd)], F = [P[0], 2], s = 1.3, U1 = [P[0], P[1] + s], U2 = [P[0], P[1] - s], r3 = 2.1, hx = Math.sqrt(r3 * r3 - s * s);
+    return { title: 'สร้างเส้นผ่าน P ให้<b>ขนานกับ AB</b> โดยใช้<b>เส้นตั้งฉากสองครั้ง</b>', given: { pts: { A, B, P }, lines: [['A', 'B']] }, compC: [2.4, 7.4], newNames: 'QRSTUV',
+      sol: [{ say: '① สร้างเส้นตั้งฉากจาก P ไปยัง AB: วางเข็มที่ P เขียนส่วนโค้งตัด AB สองจุด', ops: [{ t: 'arc', c: P, r, a0: mgA(P, C1) - 8, a1: mgA(P, C2) + 8 }] },
+        { say: 'วางเข็มที่จุดตัดทั้งสอง เขียนส่วนโค้งรัศมีเท่ากันตัดกัน', ops: [{ t: 'arc', c: C1, r: r2, a0: mgA(C1, R) - 14, a1: mgA(C1, R) + 14 }, { t: 'arc', c: C2, r: r2, a0: mgA(C2, R) - 14, a1: mgA(C2, R) + 14 }] },
+        { say: 'ลากเส้นผ่าน P กับจุดตัด ลงถึง AB ที่ <b>Q</b> → PQ ⊥ AB', ops: [{ t: 'seg', a: [P[0], 8.6], b: F }, { t: 'pt', p: F, name: 'Q' }] },
+        { say: '② สร้างเส้นตั้งฉากกับ PQ ที่จุด P: วางเข็มที่ P เขียนส่วนโค้งตัด PQ สองข้างของ P', ops: [{ t: 'arc', c: P, r: s, a0: 70, a1: 110 }, { t: 'arc', c: P, r: s, a0: 250, a1: 290 }] },
+        { say: 'กางวงเวียนให้ยาวขึ้น วางเข็มที่จุดตัดทั้งสองข้าง เขียนส่วนโค้งตัดกันทางขวาของ P', ops: [{ t: 'arc', c: U1, r: r3, a0: mgA(U1, [P[0] + hx, P[1]]) - 12, a1: mgA(U1, [P[0] + hx, P[1]]) + 12 }, { t: 'arc', c: U2, r: r3, a0: mgA(U2, [P[0] + hx, P[1]]) - 12, a1: mgA(U2, [P[0] + hx, P[1]]) + 12 }] },
+        { say: 'ลากเส้นผ่าน P กับจุดตัด → ตั้งฉากกับ PQ จึง<b>ขนานกับ AB</b>', ops: [{ t: 'seg', a: [1.4, P[1]], b: [13, P[1]] }, { t: 'away' }] }],
+      okMsg: '<b>สร้างเสร็จแล้ว!</b> เส้นที่ผ่าน P ตั้งฉากกับ PQ เหมือน AB จึงขนานกับ AB 🎉',
+      goal: G => { const v = G.lineAt(P, 90), hz = G.lineAt(P, 0, 1.3); return v && hz && G.nArcs() >= 4 ? { ok: true } : { ok: false, why: !v ? 'ขั้นแรก: สร้างเส้นตั้งฉากจาก P ไปยัง AB' : 'ต่อไป: สร้างเส้นตั้งฉากกับเส้นนั้นที่จุด P' }; } }; },
+  /* ส่วนสูงของรูปสามเหลี่ยม: เส้นตั้งฉากจากจุดยอด C ไปยังฐาน AB */
+  altitude() { const A = [1.4, 2.6], B = [12.6, 2.6], C = [5.2, 7.8], r = 5.8, dd = Math.sqrt(r * r - (C[1] - A[1]) ** 2), C1 = [C[0] - dd, A[1]], C2 = [C[0] + dd, A[1]], r2 = 3.2, R = [C[0], A[1] - Math.sqrt(r2 * r2 - dd * dd)], F = [C[0], A[1]];
+    return { title: 'สร้าง<b>ส่วนสูง</b>ของรูปสามเหลี่ยม ABC จากจุดยอด C ไปยังฐาน AB', given: { pts: { A, B, C }, segs: [['A', 'B'], ['B', 'C'], ['C', 'A']] }, compC: [11.4, 6.2], newNames: 'DEFGH',
+      sol: [{ say: 'วางเข็มที่ <b>C</b> เขียนส่วนโค้งตัดฐาน AB สองจุด', ops: [{ t: 'arc', c: C, r, a0: mgA(C, C1) - 6, a1: mgA(C, C2) + 6 }] },
+        { say: 'วางเข็มที่จุดตัดทั้งสอง เขียนส่วนโค้งรัศมีเท่ากันตัดกัน<b>ใต้ฐาน</b>', ops: [{ t: 'arc', c: C1, r: r2, a0: mgA(C1, R) - 14, a1: mgA(C1, R) + 14 }, { t: 'arc', c: C2, r: r2, a0: mgA(C2, R) - 14, a1: mgA(C2, R) + 14 }] },
+        { say: 'ลากเส้นจาก C ไปยังจุดตัดนั้น ตัด AB ที่ <b>D</b> → CD คือส่วนสูง (CD ⊥ AB)', ops: [{ t: 'seg', a: C, b: [C[0], R[1] - .3] }, { t: 'pt', p: F, name: 'D' }, { t: 'away' }] }],
+      marks: [{ p: F, name: 'D' }], okMsg: '<b>สร้างเสร็จแล้ว!</b> CD ตั้งฉากกับ AB — เป็นส่วนสูงของรูปสามเหลี่ยม 🎉',
+      goal: G => { const ln = G.lineAt(C, 90) && G.segs().some(s => mgDseg(s, C) < .14 && mgDseg(s, F) < .2); return ln && G.nArcs() >= 3 ? { ok: true } : { ok: false, why: !G.arcAt(C).length ? 'เริ่มจากวางเข็มที่ C เขียนส่วนโค้งตัด AB สองจุด' : G.nArcs() < 3 ? 'เขียนส่วนโค้งรัศมีเท่ากันจากจุดตัดทั้งสองบน AB' : 'ลากเส้นจาก C ผ่านจุดตัดของส่วนโค้งให้ถึง AB' }; } }; },
+  /* รูปหกเหลี่ยมด้านเท่ามุมเท่า: วงกลมแล้วก้าวรัศมีเดิมรอบวง */
+  hexagon(r = 3) { const O = [7.25, 4.75], V = [0, 60, 120, 180, 240, 300].map(d => mgP(O, d, r)), nm = 'ABCDEF', sol = [{ say: `เขียนวงกลมจุดศูนย์กลาง O รัศมี ${mgF(r)} ซม. แล้วทำจุด <b>A</b> บนวงกลม`, ops: [{ t: 'arc', c: O, r, a0: 0, a1: 360 }, { t: 'pt', p: V[0], name: 'A' }] }];
+    for (let i = 0; i < 5; i++) sol.push({ say: `<b>รัศมีเดิม</b> วางเข็มที่ ${nm[i]} เขียนส่วนโค้งตัดวงกลม ได้จุด <b>${nm[i + 1]}</b>`, ops: [{ t: 'arc', c: V[i], r, a0: 60 * i + 105, a1: 60 * i + 135 }, { t: 'pt', p: V[i + 1], name: nm[i + 1] }] });
+    sol.push({ say: 'ลากส่วนของเส้นตรงเชื่อมจุดทั้งหกตามลำดับ', ops: [...V.map((p, i) => ({ t: 'seg', a: p, b: V[(i + 1) % 6] })), { t: 'away' }] });
+    return { title: `สร้าง<b>รูปหกเหลี่ยมด้านเท่ามุมเท่า</b> ด้านยาว ${mgF(r)} ซม.`, given: { pts: { O } }, compC: [12.6, 6.2], newNames: 'ABCDEFG', sol,
+      okMsg: `<b>สร้างเสร็จแล้ว!</b> ทุกด้านยาวเท่ารัศมี = ${mgF(r)} ซม. 🎉`,
+      goal: G => G.arcAt(O).some(x => Math.abs(x.r - r) < .12) && G.nSegs() >= 6 ? { ok: true } : { ok: false, why: 'เขียนวงกลม แล้วก้าววงเวียนรัศมีเดิมรอบวง ลากเส้นเชื่อม 6 จุด' } }; }
+});
+
+/* =========================================================
+   หน้าลงมือ (v231)
+   ========================================================= */
+const mgSvg = (W, H, cls) => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', `0 0 ${W} ${H}`); s.setAttribute('class', cls + ' ia'); return s; };
+const mgSvgPt = (svg, e) => { const m = svg.getScreenCTM(), q = svg.createSVGPoint(); q.x = e.clientX; q.y = e.clientY; const r = q.matrixTransform(m.inverse()); return [r.x, r.y]; };
+const mgDrag = (svg, on, up) => { let dn = false; svg.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); dn = true; try { svg.setPointerCapture(e.pointerId); } catch (_) { } on(mgSvgPt(svg, e)); });
+  svg.addEventListener('pointermove', e => { if (dn) on(mgSvgPt(svg, e)); }); svg.addEventListener('pointerup', () => { if (!dn) return; dn = false; up && up(); }); svg.addEventListener('click', e => e.stopPropagation()); };
+const MG_AT = [['มุมแหลม', d => d > 0 && d < 90, '#3D8BD9'], ['มุมฉาก', d => d === 90, '#E5487A'], ['มุมป้าน', d => d > 90 && d < 180, '#F0A020'], ['มุมตรง', d => d === 180, '#4FB97A'], ['มุมกลับ', d => d > 180 && d < 360, '#7C5CE0']];
+/* ชนิดของมุม: ลากแขนของมุม ดูขนาดและชื่อชนิดเปลี่ยนตาม — หาให้ครบ 5 ชนิด */
+function mgAngTypeSim() {
+  const W = 560, H = 340, O = [280, 170], R = 130, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait()); let th = 50;
+  const chips = h('div', { class: 'rowstack mg-sets' }, ...MG_AT.map(([n, , c]) => h('span', { class: 'mg-chip', style: { '--pc': c } }, n)));
+  const P = (d, r) => [O[0] + r * Math.cos(d * Math.PI / 180), O[1] - r * Math.sin(d * Math.PI / 180)];
+  const draw = () => { const k = MG_AT.findIndex(t => t[1](th)), col = k < 0 ? '#9790B0' : MG_AT[k][2], a = P(th, 58), e = P(th, R);
+    const sector = th === 0 ? '' : `<path d="M${O} L${P(0, 58)} A58 58 0 ${th > 180 ? 1 : 0} 0 ${a} Z" fill="${col}" fill-opacity=".28" stroke="${col}" stroke-width="2.4"/>`;
+    const sq = th === 90 ? `<path d="M${P(0, 22)} L${[O[0] + 22, O[1] - 22]} L${P(90, 22)}" fill="none" stroke="${col}" stroke-width="2.4"/>` : '';
+    svg.innerHTML = `${sector}${sq}<path d="M${O} L${P(0, R + 30)}" stroke="#2B2550" stroke-width="3.4" stroke-linecap="round"/><path d="M${O} L${e}" stroke="#2B2550" stroke-width="3.4" stroke-linecap="round"/><circle cx="${O[0]}" cy="${O[1]}" r="5" fill="#2B2550"/>
+      <circle cx="${e[0]}" cy="${e[1]}" r="15" fill="#7C5CE0" fill-opacity=".22" stroke="#7C5CE0" stroke-width="2.5"/><circle cx="${e[0]}" cy="${e[1]}" r="6" fill="#7C5CE0"/>
+      <text x="${P(th / 2, 86)[0]}" y="${P(th / 2, 86)[1] + 7}" text-anchor="middle" class="mg-big">${th}°</text><text x="${O[0] - 8}" y="${O[1] + 26}" class="mg-fn">B</text><text x="${P(0, R + 34)[0]}" y="${O[1] + 26}" class="mg-fn">A</text><text x="${e[0] + 12}" y="${e[1] - 12}" class="mg-fn">C</text>`;
+    chips.querySelectorAll('.mg-chip').forEach((c, i) => c.classList.toggle('now', i === k));
+    if (k >= 0) { seen.add(k); chips.children[k].classList.add('on'); }
+    out.innerHTML = `∠ABC = <b>${th}°</b> → <b style="color:${col}">${k < 0 ? '-' : MG_AT[k][0]}</b>` + (seen.size === 5 ? '&emsp;ครบทั้ง 5 ชนิดแล้ว ✓' : `&emsp;(พบแล้ว ${seen.size} จาก 5 ชนิด)`); };
+  mgDrag(svg, p => { let d = Math.round(Math.atan2(O[1] - p[1], p[0] - O[0]) * 180 / Math.PI); d = (d + 360) % 360; [90, 180].forEach(s => { if (Math.abs(d - s) <= 4) d = s; }); if (d < 3) d = 3; if (d > 357) d = 357; th = d; draw(); }, () => { sfx.pop(seen.size + 1); if (seen.size === 5) { sfx.ok(); teachDone(wrap); } });
+  draw(); wrap.append(h('div', { class: 'cap' }, 'ลากจุดสีม่วงที่ปลายแขน BC ไปรอบ ๆ — หามุมให้ครบทั้ง 5 ชนิด (มุมฉากและมุมตรงจะดูดเข้าที่พอดี)'), chips, svg, out); return wrap;
+}
+/* สมบัติของเส้นแบ่งครึ่ง: 'seg' จุดบนเส้นตั้งฉากแบ่งครึ่ง AB ห่างจาก A และ B เท่ากัน · 'ang' จุดบนเส้นแบ่งครึ่งมุมห่างจากแขนทั้งสองเท่ากัน */
+function mgEquiSim(mode) {
+  const W = 560, H = 320, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), K = 40, hits = new Set(); let P = mode === 'seg' ? [200, 80] : [330, 150];
+  const A = [120, 260], B = [440, 260], V = [70, 280], ARM = 62, bis = ARM / 2, Pa = (d, r) => [V[0] + r * Math.cos(d * Math.PI / 180), V[1] - r * Math.sin(d * Math.PI / 180)];
+  const foot = (d, p) => { const u = [Math.cos(d * Math.PI / 180), -Math.sin(d * Math.PI / 180)], t = (p[0] - V[0]) * u[0] + (p[1] - V[1]) * u[1]; return [V[0] + u[0] * t, V[1] + u[1] * t]; };
+  const L = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) / K, f1 = x => (Math.round(x * 10) / 10).toFixed(1);
+  const draw = () => { let s = '', on = false;
+    if (mode === 'seg') { const d1 = L(P, A), d2 = L(P, B); on = Math.abs(P[0] - 280) < .5;
+      s += `<path d="M280 20 V300" stroke="#E5487A" stroke-width="2.4" stroke-dasharray="7 6"/><path d="M${A} L${B}" stroke="#2B2550" stroke-width="3.4"/><path d="M270 260 h10 v-10" fill="none" stroke="#E5487A" stroke-width="2"/>`;
+      s += `<path d="M${P} L${A}" stroke="#3D8BD9" stroke-width="2.6"/><path d="M${P} L${B}" stroke="#F0A020" stroke-width="2.6"/>`;
+      s += `<text x="${(P[0] + A[0]) / 2 - 16}" y="${(P[1] + A[1]) / 2}" text-anchor="end" class="mg-len a">PA = ${f1(d1)}</text><text x="${(P[0] + B[0]) / 2 + 16}" y="${(P[1] + B[1]) / 2}" class="mg-len b">PB = ${f1(d2)}</text>`;
+      s += `<circle cx="${A[0]}" cy="${A[1]}" r="5" fill="#2B2550"/><circle cx="${B[0]}" cy="${B[1]}" r="5" fill="#2B2550"/><text x="${A[0] - 22}" y="${A[1] + 8}" class="mg-fn">A</text><text x="${B[0] + 10}" y="${B[1] + 8}" class="mg-fn">B</text>`;
+      out.innerHTML = `PA = <b>${f1(d1)}</b> ซม.&emsp;PB = <b>${f1(d2)}</b> ซม.` + (on ? '&emsp;<b style="color:#2E8A57">P อยู่บนเส้นแบ่งครึ่ง → PA = PB</b>' : ''); }
+    else { const F1 = foot(0, P), F2 = foot(ARM, P), d1 = L(P, F1), d2 = L(P, F2), dg = Math.atan2(V[1] - P[1], P[0] - V[0]) * 180 / Math.PI; on = Math.abs(dg - bis) < .5;
+      s += `<path d="M${V} L${Pa(bis, 520)}" stroke="#E5487A" stroke-width="2.4" stroke-dasharray="7 6"/><path d="M${V} L${Pa(0, 470)}" stroke="#2B2550" stroke-width="3.4"/><path d="M${V} L${Pa(ARM, 300)}" stroke="#2B2550" stroke-width="3.4"/>`;
+      s += `<path d="M${P} L${F1}" stroke="#3D8BD9" stroke-width="2.6"/><path d="M${P} L${F2}" stroke="#F0A020" stroke-width="2.6"/><text x="${P[0] + 14}" y="${(P[1] + F1[1]) / 2 + 6}" class="mg-len a">${f1(d1)}</text><text x="${(P[0] + F2[0]) / 2 - 12}" y="${(P[1] + F2[1]) / 2 - 8}" text-anchor="end" class="mg-len b">${f1(d2)}</text>`;
+      s += `<circle cx="${V[0]}" cy="${V[1]}" r="5" fill="#2B2550"/><text x="${V[0] - 24}" y="${V[1] + 6}" class="mg-fn">O</text>`;
+      out.innerHTML = `ระยะจาก P ถึงแขน OA = <b>${f1(d1)}</b> ซม.&emsp;ถึงแขน OB = <b>${f1(d2)}</b> ซม.` + (on ? '&emsp;<b style="color:#2E8A57">เท่ากัน!</b>' : ''); }
+    s += `<circle cx="${P[0]}" cy="${P[1]}" r="15" fill="#7C5CE0" fill-opacity=".22" stroke="#7C5CE0" stroke-width="2.5"/><circle cx="${P[0]}" cy="${P[1]}" r="6" fill="${on ? '#2E8A57' : '#7C5CE0'}"/><text x="${P[0] + 14}" y="${P[1] - 14}" class="mg-fn">P</text>`;
+    svg.innerHTML = s; return on; };
+  mgDrag(svg, p => { let q = [Math.max(30, Math.min(W - 30, p[0])), Math.max(20, Math.min(H - 30, p[1]))];
+    if (mode === 'seg' && Math.abs(q[0] - 280) < 12) q[0] = 280;
+    if (mode === 'ang') { const dg = Math.atan2(V[1] - q[1], q[0] - V[0]) * 180 / Math.PI, r = Math.hypot(q[0] - V[0], q[1] - V[1]); if (Math.abs(dg - bis) < 4 && r > 40) q = Pa(bis, r); }
+    P = q; draw(); }, () => { if (draw()) { const k = Math.round(P[1] / 30); if (!hits.has(k)) { hits.add(k); sfx.pop(hits.size + 2); } }
+    if (hits.size >= 3) { out.innerHTML += mode === 'seg' ? '<br>สรุป: <b>ทุกจุดบนเส้นตั้งฉากแบ่งครึ่ง AB อยู่ห่างจาก A และ B เท่ากัน</b>' : '<br>สรุป: <b>ทุกจุดบนเส้นแบ่งครึ่งมุมอยู่ห่างจากแขนทั้งสองของมุมเท่ากัน</b>'; sfx.ok(); teachDone(wrap); }
+    else if (draw()) out.innerHTML += `&emsp;(ลองอีก ${3 - hits.size} ตำแหน่งบนเส้นประ)`; });
+  draw(); wrap.append(h('div', { class: 'cap' }, mode === 'seg' ? 'ลากจุด P ไปวางบนเส้นประสีชมพู (เส้นตั้งฉากแบ่งครึ่ง AB) อย่างน้อย 3 ตำแหน่ง แล้วเทียบ PA กับ PB' : 'ลากจุด P ไปวางบนเส้นประสีชมพู (เส้นแบ่งครึ่งมุม) อย่างน้อย 3 ตำแหน่ง แล้วเทียบระยะถึงแขนทั้งสอง'), svg, out); return wrap;
+}
+/* ระยะห่างระหว่างจุดกับเส้นตรง: เลื่อนจุด Q บนเส้นตรง หาตำแหน่งที่ PQ สั้นที่สุด */
+function mgDistSim() {
+  const W = 560, H = 300, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), P = [300, 70], y = 250, K = 40; let qx = 110, moves = 0, done = false;
+  const draw = () => { const d = Math.hypot(qx - P[0], y - P[1]) / K, on = qx === P[0];
+    svg.innerHTML = `<path d="M20 ${y} H${W - 20}" stroke="#2B2550" stroke-width="3.4"/><text x="${W - 34}" y="${y + 28}" class="mg-fn">B</text><text x="22" y="${y + 28}" class="mg-fn">A</text>
+      <path d="M${P} L${qx} ${y}" stroke="${on ? '#2E8A57' : '#E5487A'}" stroke-width="3"/>${on ? `<path d="M${qx} ${y - 16} h16 v16" fill="none" stroke="#2E8A57" stroke-width="2.4"/>` : ''}
+      <text x="${(P[0] + qx) / 2 + 12}" y="${(P[1] + y) / 2}" class="mg-len">PQ = ${d.toFixed(1)} ซม.</text><circle cx="${P[0]}" cy="${P[1]}" r="6" fill="#2B2550"/><text x="${P[0] + 10}" y="${P[1] - 8}" class="mg-fn">P</text>
+      <circle cx="${qx}" cy="${y}" r="15" fill="#7C5CE0" fill-opacity=".22" stroke="#7C5CE0" stroke-width="2.5"/><circle cx="${qx}" cy="${y}" r="6" fill="#7C5CE0"/><text x="${qx - 6}" y="${y + 34}" class="mg-fn">Q</text>`;
+    out.innerHTML = on ? `PQ = <b>${d.toFixed(1)} ซม.</b> สั้นที่สุด — <b>PQ ⊥ AB</b> ✓<br>ระยะห่างระหว่างจุด P กับเส้นตรง AB วัดตาม<b>แนวตั้งฉาก</b>` : `PQ = <b>${d.toFixed(1)} ซม.</b> — เลื่อน Q หาตำแหน่งที่ PQ <b>สั้นที่สุด</b>`; return on; };
+  mgDrag(svg, p => { let x = Math.max(30, Math.min(W - 30, Math.round(p[0]))); if (Math.abs(x - P[0]) < 10) x = P[0]; qx = x; draw(); }, () => { moves++; sfx.pop(moves % 6 + 1); if (draw() && moves >= 2 && !done) { done = true; sfx.ok(); teachDone(wrap); } });
+  draw(); wrap.append(h('div', { class: 'cap' }, 'ลากจุด Q (สีม่วง) ไปตามเส้นตรง AB แล้วดูความยาวของ PQ'), svg, out); return wrap;
+}
+/* เส้นขนานกับเส้นตัด: ลากเส้นตัดเปลี่ยนมุม แตะปุ่มดูคู่มุม */
+const MG_PAIR = { corr: [['1', '5'], ['2', '6'], ['3', '7'], ['4', '8']], alt: [['3', '5'], ['4', '6']], co: [['3', '6'], ['4', '5']], ext: [['1', '7'], ['2', '8']] };
+const MG_PNAME = { corr: 'มุมสมนัย', alt: 'มุมแย้ง', co: 'มุมภายในบนข้างเดียวกันของเส้นตัด', vert: 'มุมตรงข้าม' };
+const mgSecDeg = (k, t) => (+k % 2 ? t : 180 - t);
+function mgTransSim() {
+  const W = 600, H = 330, y1 = 110, y2 = 240, X1 = 330, svg = mgSvg(W, H, 'mg-sum mg-trans'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), seen = new Set(); let t = 60, show = null;
+  const col = { corr: '#3D8BD9', alt: '#E5487A', co: '#2FB5A3' };
+  const P = (c, d, r) => [c[0] + r * Math.cos(d * Math.PI / 180), c[1] - r * Math.sin(d * Math.PI / 180)];
+  const draw = () => { const Ia = [X1, y1], Ib = [X1 - (y2 - y1) / Math.tan(t * Math.PI / 180), y2], sec = [[0, t], [t, 180], [180, 180 + t], [180 + t, 360]];
+    const hl = show ? MG_PAIR[show][0] : []; let s = `<path d="M20 ${y1} H${W - 20}" stroke="#2B2550" stroke-width="3.2"/><path d="M20 ${y2} H${W - 20}" stroke="#2B2550" stroke-width="3.2"/><text x="${W - 26}" y="${y1 - 10}" class="mg-fn">ℓ</text><text x="${W - 26}" y="${y2 - 10}" class="mg-fn">m</text>`;
+    const e1 = P(Ia, t, 90), e2 = P(Ib, t + 180, 90); s += `<path d="M${e1} L${e2}" stroke="#7C5CE0" stroke-width="3.2"/>`;
+    [Ia, Ib].forEach((c, j) => sec.forEach(([a0, a1], i) => { const k = String(j * 4 + i + 1), on = hl.includes(k), r = 30, m = (a0 + a1) / 2, A = P(c, a0, r), B = P(c, a1, r), T = P(c, m, 46);
+      s += `<path d="M${c} L${A} A${r} ${r} 0 0 0 ${B} Z" fill="${on ? col[show] : '#E9E5F5'}" fill-opacity="${on ? .75 : .7}" stroke="${on ? col[show] : '#C9C2DD'}" stroke-width="1.6"/><text x="${T[0]}" y="${T[1] + 6}" text-anchor="middle" class="mg-sn${on ? ' on' : ''}">${k}</text>`; }));
+    s += `<circle cx="${e1[0]}" cy="${e1[1]}" r="15" fill="#7C5CE0" fill-opacity=".22" stroke="#7C5CE0" stroke-width="2.5"/><circle cx="${e1[0]}" cy="${e1[1]}" r="6" fill="#7C5CE0"/><text x="${e1[0] + 14}" y="${e1[1] + 4}" class="mg-fn">t</text>`;
+    svg.innerHTML = s;
+    if (show) { const [a, b] = MG_PAIR[show][0], da = mgSecDeg(a, t), db = mgSecDeg(b, t); out.innerHTML = `${MG_PNAME[show]}: ∠${a} = <b>${da}°</b> และ ∠${b} = <b>${db}°</b> → ${show === 'co' ? `รวมกัน <b>${da + db}°</b>` : '<b>เท่ากัน</b>'}`; } };
+  mgDrag(svg, p => { if (p[1] > y1 - 10) return; let d = Math.round(Math.atan2(y1 - p[1], p[0] - X1) * 180 / Math.PI); t = Math.max(35, Math.min(145, d)); draw(); }, () => sfx.tap());
+  const row = h('div', { class: 'rowstack mg-sets' }, ...['corr', 'alt', 'co'].map(k => h('button', { class: 'btn ia mg-set', style: { '--pc': col[k] }, onclick: e => { e.stopPropagation(); e.currentTarget.classList.add('on'); show = k; seen.add(k); draw(); sfx.pop(seen.size + 2); if (seen.size === 3) { out.innerHTML += '<br>ลากปลายเส้นตัด t ดู — <b>ℓ ∥ m</b> มุมสมนัยและมุมแย้งเท่ากันเสมอ มุมภายในบนข้างเดียวกันรวมกัน 180° เสมอ'; teachDone(wrap); } } }, MG_PNAME[k])));
+  draw(); wrap.append(h('div', { class: 'cap' }, 'ℓ ∥ m และ t เป็นเส้นตัด — แตะปุ่มดูคู่มุม แล้วลากจุดสีม่วงเพื่อเปลี่ยนมุมของเส้นตัด'), row, svg, out); return wrap;
+}
+
+/* =========================================================
+   ข้อในเกม (v231)
+   ========================================================= */
+/* รูปเส้นขนาน ℓ, m กับเส้นตัด t · marks = [[เลขมุม, ป้าย, สี]] */
+const mgTransFig = (t, marks, max = 420) => { const Pp = [1.2, 2.8], Qq = mgP(Pp, 180 + t, 2.8 / Math.sin(t * Math.PI / 180)), sec = [[0, t], [t, 180], [180, 180 + t], [180 + t, 360]], f = { pts: { _a: [-3.6, 2.8], _b: [4.6, 2.8], _c: [-3.6, 0], _d: [4.6, 0], _p: Pp, _q: Qq, _e: mgP(Pp, t, 1.3), _f: mgP(Qq, t + 180, 1.3) }, lines: [['_a', '_b', .1], ['_c', '_d', .1]], segs: [['_e', '_f']], angs: [], labs: [[[4.9, 3.1], 'ℓ'], [[4.9, .3], 'm'], [mgP(Pp, t, 1.5), 't']], hide: ['_a', '_b', '_c', '_d', '_p', '_q', '_e', '_f'] };
+  marks.forEach(([k, lab, col]) => { const c = +k <= 4 ? Pp : Qq, [a0, a1] = sec[(+k - 1) % 4]; f.angs.push([c, mgP(c, a0, 1), mgP(c, a1, 1), lab, col, .62, .45]); }); return mgFig(f, { max, pad: .5 }); };
+const mgPairQ = kind => { const t = mgPick([50, 55, 60, 65, 70, 115, 120, 125]), [a, b] = mgPick(kind === 'vert' ? [['1', '3'], ['2', '4'], ['5', '7']] : MG_PAIR[kind]);
+  return Q.mgPick({ q: 'ℓ ∥ m มุมที่ระบายสีทั้งสองเป็นมุมคู่ใด', fig: mgTransFig(t, [[a, '', '#3D8BD9'], [b, '', '#E5487A']]), opts: ['มุมสมนัย', 'มุมแย้ง', 'มุมภายในบนข้างเดียวกันของเส้นตัด', 'มุมตรงข้าม'], right: MG_PNAME[kind], hint: 'สมนัย = ตำแหน่งเดียวกันที่จุดตัดทั้งสอง · แย้ง = อยู่ระหว่างเส้นขนาน คนละข้างของเส้นตัด · ภายในข้างเดียวกัน = อยู่ระหว่างเส้นขนาน ข้างเดียวกัน', sig: 'pair' + kind + ' ' + t + a + b }); };
+const mgPairNumQ = kind => { const t = mgPick([48, 52, 58, 64, 72, 108, 116, 124]), [a, b] = mgPick(MG_PAIR[kind]), da = mgSecDeg(a, t), db = mgSecDeg(b, t);
+  return Q.mgNum({ q: `ℓ ∥ m ถ้ามุมสีฟ้ามีขนาด ${da}° มุม x มีขนาดกี่องศา`, fig: mgTransFig(t, [[a, `${da}°`, '#3D8BD9'], [b, 'x', '#E5487A']]), a: db, unit: 'องศา', hint: kind === 'co' ? 'มุมภายในบนข้างเดียวกันของเส้นตัด รวมกันได้ 180°' : `${MG_PNAME[kind]}มีขนาดเท่ากัน`, sig: 'pairn' + kind + ' ' + t + a + b }); };
+/* ความสัมพันธ์ของเส้นตรงสองเส้น */
+const mgRelQ = k => { const f = k === 'par' ? { pts: { A: [0, 1.6], B: [4, 1.6], C: [0, 0], D: [4, 0] }, lines: [['A', 'B', .3], ['C', 'D', .3]] } : k === 'perp' ? { pts: { A: [0, 1], B: [4, 1], C: [2, -.6], D: [2, 2.6] }, lines: [['A', 'B', .3], ['C', 'D', .3]], angs: [[[2, 1], [3, 1], [2, 2], '']] } : { pts: { A: [0, .4], B: [4, 1.6], C: [.6, 2.4], D: [3.4, -.4] }, lines: [['A', 'B', .3], ['C', 'D', .3]] };
+  return Q.mgPick({ q: 'เส้นตรง AB กับเส้นตรง CD มีความสัมพันธ์กันอย่างไร', fig: mgFig(f, { max: 300 }), opts: ['ขนานกัน', 'ตั้งฉากกัน', 'ตัดกันแต่ไม่ตั้งฉาก'], right: { par: 'ขนานกัน', perp: 'ตั้งฉากกัน', cut: 'ตัดกันแต่ไม่ตั้งฉาก' }[k], hint: 'ขนาน = ไม่ตัดกันเลย · ตั้งฉาก = ตัดกันเป็นมุมฉาก', sig: 'rel' + k }); };
+/* เครื่องมือ */
+const MG_TOOL = [['ต้องการ<b>วัดความยาว</b>ของส่วนของเส้นตรง ใช้เครื่องมือใด', 'ไม้บรรทัด', ['วงเวียน', 'โพรแทรกเตอร์', 'ไม้ฉาก']], ['ต้องการ<b>เขียนวงกลมหรือส่วนโค้ง</b> ใช้เครื่องมือใด', 'วงเวียน', ['ไม้บรรทัด', 'โพรแทรกเตอร์', 'ไม้ฉาก']],
+  ['ต้องการ<b>วัดขนาดของมุม</b> ใช้เครื่องมือใด', 'โพรแทรกเตอร์', ['วงเวียน', 'ไม้บรรทัด', 'สันตรง']], ['ต้องการ<b>ตรวจว่ามุมเป็นมุมฉาก</b>อย่างรวดเร็ว ใช้เครื่องมือใด', 'ไม้ฉาก', ['วงเวียน', 'สันตรง', 'ไม้บรรทัดอย่างเดียว']],
+  ['ใน<b>การสร้างทางเรขาคณิต</b> ใช้เครื่องมือคู่ใด', 'วงเวียนและสันตรง', ['โพรแทรกเตอร์และไม้ฉาก', 'ไม้บรรทัดวัดความยาวอย่างเดียว', 'กรรไกรและกาว']], ['ต้องการ<b>ลอกความยาว</b>ของ AB ไปไว้ที่อื่นโดยไม่วัด ใช้เครื่องมือใด', 'วงเวียน', ['โพรแทรกเตอร์', 'ไม้ฉาก', 'ยางลบ']]];
+const mgToolQ = i => { const [q, r, w] = MG_TOOL[i]; return Q.mgPick({ q, opts: [r, ...w], right: r, hint: 'คิดว่างานนั้นต้องวัด ต้องเขียนส่วนโค้ง หรือต้องการมุม', sig: 'tool' + i }); };
+/* ส่วนประกอบของมุม */
+const mgPartQ = k => { const n = mgPick(['PQR', 'XYZ', 'KLM']), f = mgAngFig(mgPick([50, 70, 110]), { n, rot: mgPick([0, 20]) }), right = k === 'v' ? `จุด ${n[1]}` : `${mgSym('ray', n[1] + n[0])} และ ${mgSym('ray', n[1] + n[2])}`;
+  return Q.mgPick({ q: k === 'v' ? `<b>จุดยอด</b>ของ ∠${n} คือจุดใด` : `<b>แขน</b>ของ ∠${n} คือข้อใด`, fig: f, opts: k === 'v' ? [`จุด ${n[0]}`, `จุด ${n[1]}`, `จุด ${n[2]}`] : [right, `${mgSym('ray', n[0] + n[1])} และ ${mgSym('ray', n[2] + n[1])}`, `${mgSym('seg', n[0] + n[2])}`], right, hint: 'ชื่อมุมเขียนจุดยอดไว้ตรงกลาง แขนคือรังสีที่เริ่มจากจุดยอด', sig: 'part' + k + ' ' + n }); };
+/* ชนิดของรูปสามเหลี่ยม */
+const mgTriSideQ = () => { const [L, nm] = mgPick([[[5, 5, 5], 'รูปสามเหลี่ยมด้านเท่า'], [[6, 6, 4], 'รูปสามเหลี่ยมหน้าจั่ว'], [[4, 6, 7], 'รูปสามเหลี่ยมด้านไม่เท่า'], [[7, 4, 7], 'รูปสามเหลี่ยมหน้าจั่ว'], [[3, 5, 6], 'รูปสามเหลี่ยมด้านไม่เท่า']]);
+  return Q.mgPick({ q: `รูปสามเหลี่ยมที่มีด้านยาว ${L.join(' ซม., ')} ซม. เป็นรูปสามเหลี่ยมชนิดใด (จำแนกตามด้าน)`, opts: ['รูปสามเหลี่ยมด้านเท่า', 'รูปสามเหลี่ยมหน้าจั่ว', 'รูปสามเหลี่ยมด้านไม่เท่า'], right: nm, hint: 'ด้านเท่ากัน 3 ด้าน = ด้านเท่า · 2 ด้าน = หน้าจั่ว · ไม่เท่ากันเลย = ด้านไม่เท่า', sig: 'triS ' + L }); };
+const mgTriAngQ = () => { const [A, nm] = mgPick([[[50, 60, 70], 'รูปสามเหลี่ยมมุมแหลม'], [[90, 35, 55], 'รูปสามเหลี่ยมมุมฉาก'], [[110, 40, 30], 'รูปสามเหลี่ยมมุมป้าน'], [[45, 45, 90], 'รูปสามเหลี่ยมมุมฉาก'], [[65, 65, 50], 'รูปสามเหลี่ยมมุมแหลม'], [[25, 130, 25], 'รูปสามเหลี่ยมมุมป้าน']]);
+  return Q.mgPick({ q: `รูปสามเหลี่ยมที่มีมุม ${A.join('°, ')}° เป็นรูปสามเหลี่ยมชนิดใด (จำแนกตามมุม)`, opts: ['รูปสามเหลี่ยมมุมแหลม', 'รูปสามเหลี่ยมมุมฉาก', 'รูปสามเหลี่ยมมุมป้าน'], right: nm, hint: 'ดูมุมที่ใหญ่ที่สุด: < 90° แหลม · = 90° ฉาก · > 90° ป้าน', sig: 'triA ' + A }); };
+const mgSegOpQ = k => { const a = mgPick([4, 5, 6, 7]), b = mgPick([1.5, 2, 2.5, 3]), [q, v, hnt] = { add: [`AB ยาว ${a} ซม. และ CD ยาว ${b} ซม. สร้าง PQ = AB + CD ด้วยวงเวียน PQ ยาวกี่ ซม.`, a + b, 'ลอก AB แล้วลอก CD ต่อ'], sub: [`AB ยาว ${a} ซม. และ CD ยาว ${b} ซม. สร้าง PQ = AB − CD ด้วยวงเวียน PQ ยาวกี่ ซม.`, a - b, 'ลอก AB แล้วลอก CD ย้อนกลับจากปลาย'], two: [`AB ยาว ${b} ซม. สร้าง PQ = 3AB (ลอก AB ต่อกัน 3 ครั้ง) PQ ยาวกี่ ซม.`, 3 * b, `${b} × 3`], mix: [`AB ยาว ${a} ซม. และ CD ยาว ${b} ซม. สร้าง PQ = AB + 2CD PQ ยาวกี่ ซม.`, a + 2 * b, 'ลอก AB แล้วลอก CD ต่ออีก 2 ครั้ง'] }[k];
+  return Q.mgNum({ q, a: Math.round(v * 10) / 10, unit: 'ซม.', hint: hnt, sig: 'seg' + k + ' ' + a + b }); };
+
+const mgPbQ = v => Q.mgNum({ q: `P อยู่บนเส้นตั้งฉากแบ่งครึ่ง AB ถ้า PA ยาว ${v} ซม. แล้ว PB ยาวกี่ ซม.`, fig: mgFig({ pts: { A: [0, 0], B: [5, 0], P: [2.5, 2.6] }, segs: [['A', 'B'], ['P', 'A'], ['P', 'B']], dash: [[[2.5, -.6], [2.5, 3.2]]], ticks: [['A', [2.5, 0], 1], [[2.5, 0], 'B', 1]] }, { max: 340 }), a: v, unit: 'ซม.', hint: 'จุดบนเส้นตั้งฉากแบ่งครึ่งอยู่ห่างจาก A และ B เท่ากัน', sig: 'pbeq ' + v });
+const mgBisRevQ = v => Q.mgNum({ q: `OC แบ่งครึ่ง ∠AOB ถ้า ∠AOC = ${v}° แล้ว ∠AOB มีขนาดกี่องศา`, a: 2 * v, unit: 'องศา', hint: 'มุมเดิม = 2 เท่าของมุมที่แบ่งได้', sig: 'bisrev ' + v });
+/* =========================================================
+   บทเรียน 2201–2212 + บอส 2219 (ชุดใหม่ v231 — 12 ด่านตามโครงสร้างที่ผู้ใช้ให้)
+   ========================================================= */
+const LM2 = (no, place, title, short, goal, teach, game) => ({ id: 2200 + no, no, place, title, short, tone: TONES5[(no + 3) % 6], goal, teach, game });
 const LESSONS_M1C2 = [
-  LM2(1, 'ท่าเรือรูปพื้นฐาน', 'รูปเรขาคณิตพื้นฐาน', 'จุด เส้น รังสี มุม', 'บอกและเขียนสัญลักษณ์ของจุด เส้นตรง ส่วนของเส้นตรง รังสี และมุม จำแนกชนิดของมุม และใช้ครึ่งวงกลม (โปรแทรกเตอร์) วัดและสร้างมุม', [
+  LM2(1, 'ท่าเรือรูปพื้นฐาน', 'รู้จักรูปเรขาคณิตและสัญลักษณ์พื้นฐาน', 'จุด เส้น รังสี มุม', 'แยกความแตกต่างของจุด เส้นตรง ส่วนของเส้นตรง รังสี และมุม อ่านและเขียนสัญลักษณ์ บอกจุดยอดและแขนของมุม จำแนกชนิดของมุม และรู้จักเส้นขนาน เส้นตั้งฉาก', [
     T('รู้จัก<b>จุด เส้นตรง ส่วนของเส้นตรง รังสี</b> — แตะการ์ดดูทีละใบ', 'รู้จักจุด เส้นตรง ส่วนของเส้นตรง และรังสี แตะการ์ดดูทีละใบ', el => el.append(mgCards([
       [mgKindFig('pt') + '<b>จุด</b>', `<b>จุด A</b><small>ใช้บอกตำแหน่ง ไม่มีขนาด</small>`, 'จุด'], [mgKindFig('line') + '<b>เส้นตรง</b>', `<b>${mgSym('line', 'AB')}</b><small>ยาวไม่สิ้นสุดทั้งสองทาง</small>`, 'เส้นตรง'],
       [mgKindFig('seg') + '<b>ส่วนของเส้นตรง</b>', `<b>${mgSym('seg', 'AB')}</b><small>มีจุดปลาย 2 จุด วัดความยาวได้</small>`, 'ส่วนของเส้นตรง'], [mgKindFig('ray') + '<b>รังสี</b>', `<b>${mgSym('ray', 'AB')}</b><small>มีจุดปลาย 1 จุด (A) ยาวไม่สิ้นสุดทางเดียว</small>`, 'รังสี']], 'mg-cards'))),
-    T('<b>ชนิดของมุม</b> — แตะการ์ดดูขนาดของมุมแต่ละชนิด', 'ชนิดของมุม แตะการ์ดดูขนาดของมุมแต่ละชนิด', el => el.append(mgCards([[40, 'มุมแหลม', 'มากกว่า 0° แต่น้อยกว่า 90°'], [90, 'มุมฉาก', 'เท่ากับ 90°'], [130, 'มุมป้าน', 'มากกว่า 90° แต่น้อยกว่า 180°'], [180, 'มุมตรง', 'เท่ากับ 180°'], [250, 'มุมกลับ', 'มากกว่า 180° แต่น้อยกว่า 360°']].map(([d, n, m]) => [mgAngFig(d, { max: 150 }) + `<b>${n}</b>`, `<b>${m}</b>`, n]), 'mg-cards mg-cards5'))),
-    T('ตัวอย่างทีละขั้น: <b>วัดมุมด้วยครึ่งวงกลม</b>', 'ตัวอย่างทีละขั้น วัดมุมด้วยครึ่งวงกลม', mgDemo(mgMeasDemo(65, 15))),
-    T('ตัวอย่างทีละขั้น: <b>สร้างมุม 50° ด้วยครึ่งวงกลม</b>', 'ตัวอย่างทีละขั้น สร้างมุมห้าสิบองศาด้วยครึ่งวงกลม', mgDemo(mgT.protAng(50))),
-    T('<b>ลองสร้างเอง</b>: ใช้ครึ่งวงกลมสร้างมุม 115° — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง ใช้ครึ่งวงกลมสร้างมุมหนึ่งร้อยสิบห้าองศา', mgTry(mgT.protAng(115)))
-  ], () => [mgKindQ('seg', 'PQ'), mgKindQ('ray', 'MN'), mgKindQ('line', 'XY'), mgSymQ('seg', 'CD'), mgSymQ('ray', 'EF'), mgSymQ('line', 'GH'), ...[0, 1, 2, 3, 4].map(mgAngKindQ),
+    T('<b>มุม</b>: จุดยอดและแขน — แตะการ์ดดูทีละใบ', 'มุม จุดยอดและแขน แตะการ์ดดูทีละใบ', el => el.append(h('div', { class: 'mg-qrow' }, h('div', { class: 'mg-figbox', html: mgAngFig(55, { n: 'BAC', lab: '' }) }), mgCards([['ชื่อมุม', '<b>∠BAC หรือ ∠CAB</b><small>จุดยอดอยู่ตรงกลางเสมอ</small>'], ['จุดยอด', '<b>จุด A</b><small>จุดปลายร่วมของรังสีสองเส้น</small>'], ['แขนของมุม', `<b>${mgSym('ray', 'AB')} และ ${mgSym('ray', 'AC')}</b>`]], 'mg-cards')))),
+    T('<b>ชนิดของมุม</b> — ลากแขนของมุมให้ครบ 5 ชนิด', 'ชนิดของมุม ลากแขนของมุมให้ครบห้าชนิด', el => el.append(mgAngTypeSim())),
+    T('<b>เส้นตรงสองเส้น</b> และรูปหลายเหลี่ยม — แตะการ์ดดูทีละใบ', 'เส้นตรงสองเส้น และรูปหลายเหลี่ยม แตะการ์ดดูทีละใบ', el => el.append(mgCards([['ขนานกัน', '<b>ℓ ∥ m</b><small>ไม่ตัดกัน ห่างกันเท่ากันตลอด</small>'], ['ตั้งฉากกัน', '<b>AB ⊥ CD</b><small>ตัดกันเป็นมุมฉาก 90°</small>'], ['จุดสองจุด', '<b>ลากเส้นตรงผ่านได้เพียงเส้นเดียว</b>'], ['เส้นตรงสองเส้นตัดกัน', '<b>ตัดกันได้เพียงจุดเดียว</b>'], ['รูปสามเหลี่ยม', '<b>ส่วนของเส้นตรง 3 เส้น</b><small>มีจุดยอด 3 จุด</small>'], ['รูปสี่เหลี่ยม', '<b>ส่วนของเส้นตรง 4 เส้น</b><small>มีจุดยอด 4 จุด</small>']], 'mg-cards')))
+  ], () => [mgKindQ('seg', 'PQ'), mgKindQ('line', 'XY'), mgSymQ('seg', 'CD'), mgSymQ('ray', 'EF'), mgSymQ('line', 'GH'), mgPartQ('v'), mgPartQ('a'), ...[0, 1, 2, 3, 4].map(mgAngKindQ), mgRelQ('par'), mgRelQ('perp'), mgRelQ('cut'),
+    Q.mgNum({ q: 'กำหนดจุดสองจุด ลากเส้นตรงผ่านจุดทั้งสองได้กี่เส้น', a: 1, unit: 'เส้น', hint: 'มีเส้นตรงเพียงเส้นเดียวที่ผ่านจุดสองจุด', sig: 'prop1' }),
+    mgTF(`${mgSym('ray', 'AB')} กับ ${mgSym('ray', 'BA')} เป็นรังสีเดียวกัน`, false, 'จุดปลายต่างกัน (A กับ B) และไปคนละทาง จึงเป็นคนละรังสี'), mgTF('มุมกลับมีขนาดมากกว่า 180° แต่น้อยกว่า 360°', true, ''), mgTF('ส่วนของเส้นตรงวัดความยาวได้ แต่รังสีวัดความยาวไม่ได้', true, 'รังสียาวไม่สิ้นสุดทางเดียว')]),
+  LM2(2, 'โรงเครื่องมือริมน้ำ', 'รู้จักเครื่องมือและหลักการสร้างทางเรขาคณิต', 'เครื่องมือ·รัศมี', 'ใช้ไม้บรรทัด วงเวียน ไม้ฉาก และโพรแทรกเตอร์ได้ถูกต้อง บอกความแตกต่างระหว่างการวัดกับการสร้าง เข้าใจจุดศูนย์กลาง รัศมี และจุดตัดของส่วนโค้ง', [
+    T('<b>เครื่องมือ</b> และ<b>การวัด ≠ การสร้าง</b> — แตะการ์ดดูทีละใบ', 'เครื่องมือ และการวัดไม่เหมือนการสร้าง แตะการ์ดดูทีละใบ', el => el.append(mgCards([['ไม้บรรทัด', '<b>วัดความยาว ลากเส้นตรง</b><small>มีสเกลบอกความยาว</small>'], ['สันตรง', '<b>ลากเส้นตรงเท่านั้น</b><small>ไม่ใช้สเกลวัด</small>'], ['วงเวียน', '<b>เขียนวงกลม/ส่วนโค้ง ลอกความยาว</b>'], ['ไม้ฉาก', '<b>เขียน/ตรวจมุมฉาก</b>'], ['โพรแทรกเตอร์', '<b>วัดและเขียนมุม</b><small>ในเกมนี้คือครึ่งวงกลม</small>'], ['การสร้าง', '<b>ใช้วงเวียนและสันตรง</b><small>อาศัยความยาวที่เท่ากัน ไม่กะด้วยสายตา และเห็นร่องรอยการสร้าง</small>']], 'mg-cards'))),
+    T('ตัวอย่างทีละขั้น: <b>จุดศูนย์กลางและรัศมี</b> — เขียนวงกลม', 'ตัวอย่างทีละขั้น จุดศูนย์กลางและรัศมี เขียนวงกลม', mgDemo(mgT.circ(3))),
+    T('<b>ลองหาเอง</b>: จุดตัดของส่วนโค้ง — ติดตรงไหนกด คำใบ้', 'ลองหาเอง จุดตัดของส่วนโค้ง', mgTry(mgT.meet(4, 3, 5))),
+    T('ตัวอย่างทีละขั้น: <b>วัดมุมด้วยโพรแทรกเตอร์ (ครึ่งวงกลม)</b>', 'ตัวอย่างทีละขั้น วัดมุมด้วยโพรแทรกเตอร์', mgDemo(mgMeasDemo(65, 15)))
+  ], () => [0, 1, 2, 3, 4, 5].map(mgToolQ).concat([Q.mgBuild(mgT.circ(mgPick([2.5, 3.5, 4])), 'เขียนวงกลมตามรัศมีที่กำหนด'), Q.mgBuild(mgT.meet(mgPick([4.5, 5]), mgPick([3.5, 4]), 6), 'หาจุดที่อยู่ห่างจากสองจุดตามที่กำหนด'),
     Q.mgMeasure({ deg: mgPick([35, 55, 70]), rot: mgPick([0, 20]) }), Q.mgMeasure({ deg: mgPick([110, 125, 145]), rot: mgPick([0, 10]), name: 'PQR' }),
-    Q.mgBuild(mgT.protAng(mgPick([40, 75, 80])), 'ใช้ครึ่งวงกลมสร้างมุมตามที่กำหนด'), Q.mgBuild(mgT.protAng(mgPick([105, 130, 150])), 'ใช้ครึ่งวงกลมสร้างมุมป้านตามที่กำหนด'),
-    mgTF('ผ่านจุดสองจุดใด ๆ ลากเส้นตรงได้เพียงเส้นเดียว', true, 'มีเส้นตรงเพียงเส้นเดียวที่ผ่านจุดสองจุด'), mgTF(`${mgSym('ray', 'AB')} กับ ${mgSym('ray', 'BA')} เป็นรังสีเดียวกัน`, false, 'จุดปลายต่างกัน (A กับ B) และไปคนละทาง จึงเป็นคนละรังสี'), mgTF('มุมกลับมีขนาดมากกว่า 90° แต่น้อยกว่า 180°', false, 'นั่นคือมุมป้าน — มุมกลับมากกว่า 180°')]),
-  LM2(2, 'ลำธารลอกเส้น', 'การสร้างเกี่ยวกับส่วนของเส้นตรง', 'ลอกเส้น·แบ่งครึ่ง', 'สร้างส่วนของเส้นตรงให้ยาวเท่ากับที่กำหนด สร้างผลบวก/ผลต่างของความยาว และแบ่งครึ่งส่วนของเส้นตรงด้วยวงเวียนและสันตรง', [
+    Q.mgNum({ q: 'วงกลมรัศมี 3.5 ซม. มีเส้นผ่านศูนย์กลางยาวกี่ ซม.', a: 7, unit: 'ซม.', hint: 'เส้นผ่านศูนย์กลาง = 2 × รัศมี', sig: 'diam' }),
+    Q.mgPick({ q: 'ข้อใดเป็น<b>การสร้าง</b> ไม่ใช่การวัด', opts: ['ใช้วงเวียนลอกความยาว AB ไปไว้บนรังสี', 'ใช้ไม้บรรทัดวัดว่า AB ยาว 5 ซม.', 'ใช้โพรแทรกเตอร์อ่านว่ามุมกาง 60°', 'กะระยะด้วยสายตาแล้ววาด'], right: 'ใช้วงเวียนลอกความยาว AB ไปไว้บนรังสี', hint: 'การสร้างใช้วงเวียนและสันตรง โดยไม่อ่านตัวเลข', sig: 'cons' }),
+    mgTF('ทุกจุดบนวงกลมอยู่ห่างจากจุดศูนย์กลางเท่ากัน', true, 'ระยะนั้นคือรัศมี'), mgTF('จุดตัดของส่วนโค้งจาก A รัศมี 4 ซม. กับส่วนโค้งจาก B รัศมี 3 ซม. อยู่ห่างจาก A 3 ซม.', false, 'อยู่บนส่วนโค้งจาก A จึงห่างจาก A 4 ซม.')])),
+  LM2(3, 'ลำธารลอกเส้น', 'การสร้างส่วนของเส้นตรงและการคัดลอกความยาว', 'สร้าง·ลอกความยาว', 'สร้างส่วนของเส้นตรงตามความยาวที่กำหนด คัดลอกความยาวด้วยวงเวียน และสร้างความยาวที่เป็นผลบวก ผลต่าง หรือหลายเท่าของความยาวที่กำหนด', [
     T('ตัวอย่างทีละขั้น: <b>สร้าง CD ให้ยาวเท่ากับ AB</b> (ลอกความยาวด้วยวงเวียน)', 'ตัวอย่างทีละขั้น สร้างซีดีให้ยาวเท่ากับเอบี', mgDemo(mgT.copySeg(4.3))),
-    T('ตัวอย่างทีละขั้น: <b>แบ่งครึ่ง AB</b> หาจุดกึ่งกลาง', 'ตัวอย่างทีละขั้น แบ่งครึ่งเอบี หาจุดกึ่งกลาง', mgDemo(mgT.bisSeg(7))),
-    T('<b>ลองสร้างเอง</b>: แบ่งครึ่ง AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง แบ่งครึ่งเอบี', mgTry(mgT.bisSeg(6.2)))
-  ], () => [Q.mgBuild(mgT.copySeg(mgPick([3.6, 4.7, 5.2])), 'ลอกความยาว AB ลงบนรังสี CX'), Q.mgBuild(mgT.bisSeg(mgPick([5.6, 6.6, 7.4])), 'แบ่งครึ่ง AB ด้วยวงเวียนและสันตรง'), Q.mgBuild(mgT.sumSeg(mgPick([2.8, 3.3]), mgPick([2.1, 2.6])), 'สร้างผลบวกของความยาวด้วยวงเวียน'),
-    mgTraceQ('bisSeg', 'การแบ่งครึ่งส่วนของเส้นตรง'), mgTraceQ('copySeg', 'การสร้างส่วนของเส้นตรงให้ยาวเท่ากับที่กำหนด'), mgHalfQ(mgPick([9, 11, 13])), mgHalfQ(mgPick([7.4, 8.6]), 'ซม.'),
-    Q.mgPick({ q: 'การแบ่งครึ่ง AB ต้องกางวงเวียนอย่างไร', opts: ['ยาวกว่าครึ่งหนึ่งของ AB', 'สั้นกว่าครึ่งหนึ่งของ AB', 'ยาวเท่าครึ่งหนึ่งของ AB พอดี'], right: 'ยาวกว่าครึ่งหนึ่งของ AB', hint: 'ถ้าสั้นกว่าหรือเท่ากับครึ่ง ส่วนโค้งจากสองปลายจะไม่ตัดกันสองจุด' }),
-    Q.mgPick({ q: 'เส้นที่ได้จากการแบ่งครึ่ง AB ทำมุมกับ AB กี่องศา', opts: ['90°', '45°', '60°', '180°'], right: '90°', hint: 'เส้นแบ่งครึ่งที่ได้ตั้งฉากกับ AB' }),
-    Q.mgNum({ q: 'AB ยาว 7 ซม. และ CD ยาว 3 ซม. ถ้าสร้าง PQ = AB − CD ด้วยวงเวียน PQ ยาวกี่ ซม.', a: 4, unit: 'ซม.', hint: 'ลอก AB แล้วลอก CD ย้อนกลับจากปลาย' }), Q.mgNum({ q: 'AB ยาว 2.5 ซม. ถ้าสร้าง PQ = 3AB (ลอก AB ต่อกัน 3 ครั้ง) PQ ยาวกี่ ซม.', a: 7.5, unit: 'ซม.', hint: '2.5 × 3' }),
-    mgTF('ส่วนของเส้นตรงหนึ่งเส้นมีจุดกึ่งกลางได้เพียงจุดเดียว', true, 'จุดกึ่งกลางมีจุดเดียว'), mgTF('การลอกความยาวด้วยวงเวียน ต้องไม่เปลี่ยนรัศมีระหว่างยกวงเวียนไปวาง', true, 'รัศมีคือความยาวที่ลอกมา')]),
-  LM2(3, 'คุ้งลอกมุม', 'การสร้างเกี่ยวกับมุม', 'ลอกมุม·แบ่งครึ่งมุม', 'สร้างมุมให้มีขนาดเท่ากับมุมที่กำหนด และแบ่งครึ่งมุมด้วยวงเวียนและสันตรง', [
-    T('ตัวอย่างทีละขั้น: <b>สร้างมุมให้เท่ากับมุมที่กำหนด</b> (ลอกมุม)', 'ตัวอย่างทีละขั้น สร้างมุมให้เท่ากับมุมที่กำหนด', mgDemo(mgT.copyAng(50))),
+    T('ตัวอย่างทีละขั้น: <b>PR = AB + CD</b> (ส่วนของเส้นตรงต่อเนื่องกัน)', 'ตัวอย่างทีละขั้น พีอาร์เท่ากับเอบีบวกซีดี', mgDemo(mgT.sumSeg(3.1, 2.4))),
+    T('ตัวอย่างทีละขั้น: <b>PR = AB − CD</b>', 'ตัวอย่างทีละขั้น พีอาร์เท่ากับเอบีลบซีดี', mgDemo(mgT.diffSeg(5.2, 2.1))),
+    T('<b>ลองสร้างเอง</b>: ยาว 3 เท่าของ AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง ยาวสามเท่าของเอบี', mgTry(mgT.kSeg(2.4, 3)))
+  ], () => [Q.mgBuild(mgT.segLen(mgPick([4.5, 5.5, 6.5])), 'สร้างส่วนของเส้นตรงตามความยาวที่กำหนด'), Q.mgBuild(mgT.copySeg(mgPick([3.6, 4.7, 5.2])), 'ลอกความยาว AB ลงบนรังสี CX'), Q.mgBuild(mgT.sumSeg(mgPick([2.8, 3.3]), mgPick([2.1, 2.6])), 'สร้างผลบวกของความยาวด้วยวงเวียน'), Q.mgBuild(mgT.diffSeg(mgPick([4.6, 5.6]), mgPick([1.8, 2.3])), 'สร้างผลต่างของความยาวด้วยวงเวียน'), Q.mgBuild(mgT.kSeg(mgPick([2, 2.6]), 2), 'สร้างความยาว 2 เท่าของ AB'),
+    mgTraceQ('copySeg', 'การสร้างส่วนของเส้นตรงให้ยาวเท่ากับที่กำหนด'), mgSegOpQ('add'), mgSegOpQ('sub'), mgSegOpQ('two'), mgSegOpQ('mix'),
+    Q.mgPick({ q: 'การลอกความยาว AB ด้วยวงเวียน ขั้นแรกทำอย่างไร', opts: ['วางเข็มที่ A กางขาดินสอไปที่ B', 'วัด AB ด้วยไม้บรรทัดแล้วจำตัวเลข', 'วางเข็มที่กึ่งกลางของ AB', 'กางวงเวียนเท่าใดก็ได้'], right: 'วางเข็มที่ A กางขาดินสอไปที่ B', hint: 'รัศมีวงเวียนต้องเท่ากับ AB', sig: 'cpstep' }),
+    Q.mgPick({ q: 'สร้าง PR = AB − CD ขั้นที่สองต้องลอก CD อย่างไร', opts: ['จากจุดปลายของส่วนแรก ย้อนกลับมาทางจุดเริ่มต้น', 'ต่อออกไปข้างหน้า', 'จากจุดเริ่มต้น P', 'ไม่ต้องลอก CD'], right: 'จากจุดปลายของส่วนแรก ย้อนกลับมาทางจุดเริ่มต้น', hint: 'ลบ = ตัดความยาวออก', sig: 'dfstep' }),
+    mgTF('การลอกความยาวด้วยวงเวียน ต้องไม่เปลี่ยนรัศมีระหว่างยกวงเวียนไปวาง', true, 'รัศมีคือความยาวที่ลอกมา'), mgTF('ถ้า AB = 5 ซม. และ CD = 2 ซม. แล้ว AB + 2CD = 14 ซม.', false, '5 + 2 × 2 = 9 ซม.')]),
+  LM2(4, 'สะพานจุดกึ่งกลาง', 'การแบ่งครึ่งส่วนของเส้นตรง', 'จุดกึ่งกลาง', 'บอกความหมายของจุดกึ่งกลาง แบ่งครึ่งส่วนของเส้นตรงด้วยวงเวียน สร้างเส้นตั้งฉากแบ่งครึ่ง และใช้สมบัติว่าจุดบนเส้นตั้งฉากแบ่งครึ่งอยู่ห่างจากปลายทั้งสองเท่ากัน', [
+    T('<b>จุดกึ่งกลาง</b> — แตะการ์ดดูทีละใบ', 'จุดกึ่งกลาง แตะการ์ดดูทีละใบ', el => el.append(h('div', { class: 'colstack' }, h('div', { class: 'mg-figbox', html: mgFig({ pts: { A: [0, 0], M: [2.5, 0], B: [5, 0] }, segs: [['A', 'B']], ticks: [['A', 'M', 1], ['M', 'B', 1]] }, { max: 300 }) }), mgCards([['จุดกึ่งกลาง', '<b>แบ่ง AB เป็น 2 ส่วนยาวเท่ากัน</b><small>AM = MB</small>'], ['เส้นตั้งฉากแบ่งครึ่ง', '<b>ผ่านจุดกึ่งกลาง และตั้งฉากกับ AB</b>'], ['รัศมีที่ใช้', '<b>ยาวกว่าครึ่งของ AB</b><small>ส่วนโค้งจึงตัดกันสองจุด</small>']], 'mg-cards')))),
+    T('ตัวอย่างทีละขั้น: <b>แบ่งครึ่ง AB</b> (เส้นตั้งฉากแบ่งครึ่ง)', 'ตัวอย่างทีละขั้น แบ่งครึ่งเอบี', mgDemo(mgT.bisSeg(7))),
+    T('<b>สมบัติ</b>: จุดบนเส้นตั้งฉากแบ่งครึ่ง — ลากจุด P ดู', 'สมบัติของจุดบนเส้นตั้งฉากแบ่งครึ่ง ลากจุดพีดู', el => el.append(mgEquiSim('seg'))),
+    T('<b>ลองสร้างเอง</b>: แบ่ง AB เป็น 4 ส่วนเท่ากัน — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง แบ่งเอบีเป็นสี่ส่วนเท่ากัน', mgTry(mgT.quartSeg(9.6)))
+  ], () => [Q.mgBuild(mgT.bisSeg(mgPick([5.6, 6.6, 7.4])), 'แบ่งครึ่ง AB ด้วยวงเวียนและสันตรง'), Q.mgBuild(mgT.quartSeg(mgPick([8.8, 10])), 'แบ่ง AB เป็น 4 ส่วนเท่ากัน'),
+    mgTraceQ('bisSeg', 'การแบ่งครึ่งส่วนของเส้นตรง'), mgHalfQ(mgPick([9, 11, 13])), mgHalfQ(mgPick([7.4, 8.6])),
+    Q.mgNum({ q: 'แบ่ง AB ที่ยาว 12 ซม. ออกเป็น 4 ส่วนเท่ากัน แต่ละส่วนยาวกี่ ซม.', a: 3, unit: 'ซม.', hint: 'แบ่งครึ่งได้ 6 แล้วแบ่งครึ่งอีกได้ 3', sig: 'quart' }),
+    mgPbQ(mgPick([4.5, 5.5, 6])),
+    Q.mgPick({ q: 'การแบ่งครึ่ง AB ต้องกางวงเวียนอย่างไร', opts: ['ยาวกว่าครึ่งหนึ่งของ AB', 'สั้นกว่าครึ่งหนึ่งของ AB', 'ยาวเท่าครึ่งหนึ่งของ AB พอดี'], right: 'ยาวกว่าครึ่งหนึ่งของ AB', hint: 'ถ้าสั้นกว่าหรือเท่ากับครึ่ง ส่วนโค้งจากสองปลายจะไม่ตัดกันสองจุด', sig: 'bisr' }),
+    Q.mgPick({ q: 'เส้นที่ได้จากการแบ่งครึ่ง AB ทำมุมกับ AB กี่องศา', opts: ['90°', '45°', '60°', '180°'], right: '90°', hint: 'เส้นแบ่งครึ่งที่ได้ตั้งฉากกับ AB', sig: 'bisa' }),
+    mgTF('ส่วนของเส้นตรงหนึ่งเส้นมีจุดกึ่งกลางได้เพียงจุดเดียว', true, 'จุดกึ่งกลางมีจุดเดียว'), mgTF('การแบ่งส่วนของเส้นตรงเป็น 8 ส่วนเท่ากัน ทำได้โดยแบ่งครึ่งซ้ำ 3 ครั้ง', true, '2 × 2 × 2 = 8')]),
+  LM2(5, 'คุ้งลอกมุม', 'การสร้างมุมและการคัดลอกมุม', 'วัด·สร้าง·ลอกมุม', 'บอกส่วนประกอบของมุม อ่านขนาดของมุม สร้างมุมด้วยโพรแทรกเตอร์ และคัดลอกมุมให้มีขนาดเท่ากับมุมที่กำหนดด้วยวงเวียนและสันตรง', [
+    T('ตัวอย่างทีละขั้น: <b>สร้างมุม 50° ด้วยโพรแทรกเตอร์</b>', 'ตัวอย่างทีละขั้น สร้างมุมห้าสิบองศาด้วยโพรแทรกเตอร์', mgDemo(mgT.protAng(50))),
+    T('ตัวอย่างทีละขั้น: <b>ลอกมุม</b> สร้าง ∠XOY ให้เท่ากับ ∠ABC', 'ตัวอย่างทีละขั้น ลอกมุม', mgDemo(mgT.copyAng(50))),
+    T('<b>ลองสร้างเอง</b>: ลอกมุม — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง ลอกมุม', mgTry(mgT.copyAng(70)))
+  ], () => [mgPartQ('v'), mgPartQ('a'), Q.mgMeasure({ deg: mgPick([40, 60, 75]), rot: mgPick([0, 15]) }), Q.mgMeasure({ deg: mgPick([105, 130, 150]), rot: mgPick([0, 10]), name: 'XYZ' }),
+    Q.mgBuild(mgT.protAng(mgPick([40, 75, 80, 105, 130])), 'ใช้โพรแทรกเตอร์สร้างมุมตามที่กำหนด'), Q.mgBuild(mgT.copyAng(mgPick([40, 55, 65])), 'สร้างมุมให้เท่ากับ ∠ABC'),
+    Q.mgPick({ q: 'การลอกมุม ต้องใช้ระยะใดเป็นรัศมีครั้งที่สอง', opts: ['ระยะระหว่างจุดตัดสองจุดบนแขนของมุมเดิม', 'ความยาวแขนของมุม', 'ระยะจากจุดยอดถึงจุดตัด', 'รัศมีเท่าใดก็ได้'], right: 'ระยะระหว่างจุดตัดสองจุดบนแขนของมุมเดิม', hint: 'ระยะนี้บอกว่ามุมกางมากแค่ไหน', sig: 'cpang' }),
+    Q.mgPick({ q: 'การวัดมุมด้วยโพรแทรกเตอร์ ต้องวางจุดศูนย์กลางไว้ที่ใด', opts: ['จุดยอดของมุม', 'ปลายแขนของมุม', 'กึ่งกลางแขนของมุม', 'ที่ใดก็ได้'], right: 'จุดยอดของมุม', hint: 'แล้วให้เส้น 0° ทับแขนข้างหนึ่ง', sig: 'protc' }),
+    Q.mgPick({ q: 'ความยาวแขนของมุมมีผลต่อขนาดของมุมหรือไม่', opts: ['ไม่มีผล ขนาดมุมขึ้นกับการกางของแขน', 'แขนยาว มุมใหญ่', 'แขนสั้น มุมใหญ่', 'แขนยาวเท่ากันเท่านั้นจึงวัดได้'], right: 'ไม่มีผล ขนาดมุมขึ้นกับการกางของแขน', hint: 'แขนของมุมเป็นรังสี ยาวไม่สิ้นสุดอยู่แล้ว', sig: 'armlen' }),
+    mgTF('ลอกมุมแล้ว มุมใหม่มีขนาดเท่ากับมุมเดิม แม้แขนจะยาวไม่เท่ากัน', true, ''), mgTF('การลอกมุมด้วยวงเวียน ต้องใช้โพรแทรกเตอร์วัดก่อน', false, 'ลอกด้วยวงเวียนและสันตรงได้โดยไม่ต้องวัด')]),
+  LM2(6, 'ท่าแบ่งครึ่งมุม', 'การแบ่งครึ่งมุม', 'แบ่งครึ่งมุม', 'บอกความหมายของเส้นแบ่งครึ่งมุม สร้างเส้นแบ่งครึ่งมุมด้วยวงเวียน หาขนาดมุมหลังแบ่งครึ่ง และใช้สมบัติว่าจุดบนเส้นแบ่งครึ่งมุมอยู่ห่างจากแขนทั้งสองเท่ากัน', [
     T('ตัวอย่างทีละขั้น: <b>แบ่งครึ่งมุม</b>', 'ตัวอย่างทีละขั้น แบ่งครึ่งมุม', mgDemo(mgT.bisAng(76))),
+    T('<b>สมบัติ</b>: จุดบนเส้นแบ่งครึ่งมุม — ลากจุด P ดู', 'สมบัติของจุดบนเส้นแบ่งครึ่งมุม ลากจุดพีดู', el => el.append(mgEquiSim('ang'))),
     T('<b>ลองสร้างเอง</b>: แบ่งครึ่ง ∠AOB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง แบ่งครึ่งมุมเอโอบี', mgTry(mgT.bisAng(104)))
-  ], () => [Q.mgBuild(mgT.copyAng(mgPick([40, 55, 65])), 'สร้างมุมให้เท่ากับ ∠ABC'), Q.mgBuild(mgT.bisAng(mgPick([64, 88, 120])), 'แบ่งครึ่งมุมด้วยวงเวียนและสันตรง'),
+  ], () => [Q.mgBuild(mgT.bisAng(mgPick([64, 88, 120])), 'แบ่งครึ่งมุมด้วยวงเวียนและสันตรง'), Q.mgBuild(mgT.bisAng(mgPick([50, 140])), 'แบ่งครึ่งมุมด้วยวงเวียนและสันตรง'),
     mgTraceQ('bisAng', 'การแบ่งครึ่งมุม'), mgBisNumQ(mgPick([64, 86])), mgBisNumQ(mgPick([110, 136])), mgBisNumQ(mgPick([75, 95])),
-    Q.mgNum({ q: 'แบ่งครึ่ง ∠AOB ซึ่งมีขนาด 120° แล้วแบ่งครึ่งมุมที่ได้อีกครั้ง จะได้มุมขนาดกี่องศา', a: 30, unit: 'องศา', hint: '120 ÷ 2 ÷ 2' }),
-    Q.mgPick({ q: 'ขั้นแรกของการแบ่งครึ่ง ∠AOB คือข้อใด', opts: ['วางเข็มวงเวียนที่จุดยอด O เขียนส่วนโค้งตัดแขนมุมทั้งสอง', 'ลากเส้นจาก A ไป B', 'วางครึ่งวงกลมวัดมุม', 'วางเข็มวงเวียนที่ A แล้วเขียนวงกลม'], right: 'วางเข็มวงเวียนที่จุดยอด O เขียนส่วนโค้งตัดแขนมุมทั้งสอง', hint: 'เริ่มที่จุดยอดของมุมเสมอ' }),
-    Q.mgPick({ q: 'การลอกมุม ต้องใช้ระยะใดเป็นรัศมีครั้งที่สอง', opts: ['ระยะระหว่างจุดตัดสองจุดบนแขนของมุมเดิม', 'ความยาวแขนของมุม', 'ระยะจากจุดยอดถึงจุดตัด', 'รัศมีเท่าใดก็ได้'], right: 'ระยะระหว่างจุดตัดสองจุดบนแขนของมุมเดิม', hint: 'ระยะนี้บอกว่ามุมกางมากแค่ไหน' }),
+    mgBisRevQ(mgPick([28, 37, 46])),
+    Q.mgNum({ q: 'แบ่งครึ่ง ∠AOB ซึ่งมีขนาด 120° แล้วแบ่งครึ่งมุมที่ได้อีกครั้ง จะได้มุมขนาดกี่องศา', a: 30, unit: 'องศา', hint: '120 ÷ 2 ÷ 2', sig: 'bis2' }),
+    Q.mgNum({ q: 'จุด P อยู่บนเส้นแบ่งครึ่ง ∠AOB และห่างจากแขน OA 3 ซม. P ห่างจากแขน OB กี่ ซม.', a: 3, unit: 'ซม.', hint: 'จุดบนเส้นแบ่งครึ่งมุมห่างจากแขนทั้งสองเท่ากัน', sig: 'bisprop' }),
+    Q.mgPick({ q: 'ขั้นแรกของการแบ่งครึ่ง ∠AOB คือข้อใด', opts: ['วางเข็มวงเวียนที่จุดยอด O เขียนส่วนโค้งตัดแขนมุมทั้งสอง', 'ลากเส้นจาก A ไป B', 'วางโพรแทรกเตอร์วัดมุม', 'วางเข็มวงเวียนที่ A แล้วเขียนวงกลม'], right: 'วางเข็มวงเวียนที่จุดยอด O เขียนส่วนโค้งตัดแขนมุมทั้งสอง', hint: 'เริ่มที่จุดยอดของมุมเสมอ', sig: 'bisstep' }),
     mgTF('เส้นแบ่งครึ่งมุมแบ่งมุมออกเป็นสองมุมที่มีขนาดเท่ากัน', true, ''), mgTF('ถ้ามุมเดิมมีขนาด 90° แบ่งครึ่งแล้วได้มุม 40°', false, '90 ÷ 2 = 45°')]),
-  LM2(4, 'สะพานตั้งฉาก', 'การสร้างเส้นตั้งฉาก', 'เส้นตั้งฉาก', 'สร้างเส้นตั้งฉากที่จุดบนเส้นตรง และสร้างเส้นตั้งฉากจากจุดภายนอกมายังเส้นตรง', [
-    T('ตัวอย่างทีละขั้น: <b>เส้นตั้งฉากที่จุด P บนเส้นตรง</b>', 'ตัวอย่างทีละขั้น เส้นตั้งฉากที่จุดพีบนเส้นตรง', mgDemo(mgT.perpAt())),
-    T('ตัวอย่างทีละขั้น: <b>เส้นตั้งฉากจากจุด P ภายนอกเส้นตรง</b>', 'ตัวอย่างทีละขั้น เส้นตั้งฉากจากจุดพีภายนอกเส้นตรง', mgDemo(mgT.perpFrom())),
-    T('<b>ลองสร้างเอง</b>: สร้างเส้นตั้งฉากจากจุด P มายัง AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างเส้นตั้งฉากจากจุดพีมายังเอบี', mgTry(mgT.perpFrom()))
-  ], () => [Q.mgBuild(mgT.perpAt(), 'สร้างเส้นตั้งฉากที่จุด P บนเส้นตรง AB'), Q.mgBuild(mgT.perpFrom(), 'สร้างเส้นตั้งฉากจากจุด P มายัง AB'),
-    mgTraceQ('perpAt', 'การสร้างเส้นตั้งฉากที่จุดบนเส้นตรง'), mgTraceQ('perpFrom', 'การสร้างเส้นตั้งฉากจากจุดภายนอก'),
-    ...[[35], [52], [68]].map(([d]) => Q.mgNum({ q: `OC ⊥ AB ที่จุด O ถ้า ∠COD = ${d}° ∠DOB มีขนาดกี่องศา`, fig: (() => { const O = [0, 0], A = [-3.4, 0], B = [3.4, 0], C = [0, 3.2], Dd = mgP(O, 90 - d, 3.3); return mgFig({ pts: { A, O, B, C, D: Dd }, lines: [['A', 'B', .2]], rays: [['O', 'C'], ['O', 'D']], angs: [['O', 'B', 'C', ''], ['O', 'D', 'C', `${d}°`, '#3D8BD9', .9]], off: { O: [-6, 22] } }, { max: 280 }); })(), a: 90 - d, unit: 'องศา', hint: '∠COB = 90° แบ่งเป็น ∠COD กับ ∠DOB', sig: 'perpn ' + d })),
-    Q.mgPick({ q: 'PQ ⊥ AB หมายความว่าอย่างไร', opts: ['PQ ตั้งฉากกับ AB (ทำมุม 90°)', 'PQ ขนานกับ AB', 'PQ ยาวเท่ากับ AB', 'PQ แบ่งครึ่ง AB เสมอ'], right: 'PQ ตั้งฉากกับ AB (ทำมุม 90°)', hint: '⊥ อ่านว่า ตั้งฉากกับ' }),
-    Q.mgPick({ q: 'เส้นตั้งฉากจากจุด P ไปยังเส้นตรง AB มีสมบัติใด', opts: ['เป็นระยะที่สั้นที่สุดจาก P ถึง AB', 'ยาวที่สุดจาก P ถึง AB', 'ขนานกับ AB', 'มีได้หลายเส้น'], right: 'เป็นระยะที่สั้นที่สุดจาก P ถึง AB', hint: 'ระยะห่างระหว่างจุดกับเส้นตรงวัดตามแนวตั้งฉาก' }),
-    mgTF('การสร้างเส้นตั้งฉาก ต้องเขียนส่วนโค้งสองส่วนที่มีรัศมีเท่ากันจากจุดสองจุดบนเส้นตรง', true, ''), mgTF('มุมที่เกิดจากเส้นตรงสองเส้นที่ตั้งฉากกัน มีขนาด 45°', false, 'ตั้งฉาก = 90°')]),
-  LM2(5, 'แก่งมุมพิเศษ', 'การสร้างมุมที่มีขนาดต่าง ๆ', 'มุม 60° 90° 45°', 'สร้างมุมขนาด 60° 120° 90° และมุมที่ได้จากการแบ่งครึ่ง เช่น 30° 45° 135° ด้วยวงเวียนและสันตรง', [
-    T('มุมที่สร้างได้ด้วย<b>วงเวียนและสันตรง</b> — แตะการ์ดดูว่าได้มาอย่างไร', 'มุมที่สร้างได้ด้วยวงเวียนและสันตรง แตะการ์ดดูว่าได้มาอย่างไร', el => el.append(miCards([['60°', '<b>รูปสามเหลี่ยมด้านเท่า</b><small>รัศมีเดิมตัดกัน</small>'], ['90°', '<b>เส้นตั้งฉาก</b><small>แบ่งครึ่งมุมตรง 180°</small>'], ['30°', '<b>แบ่งครึ่ง 60°</b>'], ['45°', '<b>แบ่งครึ่ง 90°</b>'], ['120°', '<b>60° + 60°</b><small>หรือ 180° − 60°</small>'], ['135°', '<b>90° + 45°</b>'], ['75°', '<b>60° + 15°</b><small>15° = แบ่งครึ่ง 30°</small>'], ['150°', '<b>180° − 30°</b>']]))),
+  LM2(7, 'แก่งมุมพิเศษ', 'การสร้างมุมขนาดต่าง ๆ', 'มุม 30° 45° 60°…', 'สร้างมุม 60° 90° 120° และมุมที่ได้จากการแบ่งครึ่งหรือนำมุมมารวมกัน เช่น 30° 45° 135° 150° ด้วยวงเวียนและสันตรง', [
+    T('มุมที่สร้างได้ด้วย<b>วงเวียนและสันตรง</b> — แตะการ์ดดูว่าได้มาอย่างไร', 'มุมที่สร้างได้ด้วยวงเวียนและสันตรง แตะการ์ดดูว่าได้มาอย่างไร', el => el.append(miCards([['60°', '<b>รูปสามเหลี่ยมด้านเท่า</b><small>รัศมีเดิมตัดกัน</small>'], ['90°', '<b>เส้นตั้งฉาก</b><small>แบ่งครึ่งมุมตรง 180°</small>'], ['30°', '<b>แบ่งครึ่ง 60°</b>'], ['45°', '<b>แบ่งครึ่ง 90°</b>'], ['120°', '<b>60° + 60°</b><small>หรือ 180° − 60°</small>'], ['135°', '<b>90° + 45°</b>'], ['150°', '<b>180° − 30°</b>'], ['รวมมุม', '<b>ลอกมุมต่อกัน</b><small>เช่น 60° + 45° = 105°</small>']]))),
     T('ตัวอย่างทีละขั้น: <b>สร้างมุม 60°</b>', 'ตัวอย่างทีละขั้น สร้างมุมหกสิบองศา', mgDemo(mgT.angle(60))),
     T('ตัวอย่างทีละขั้น: <b>สร้างมุม 45°</b> (สร้าง 90° แล้วแบ่งครึ่ง)', 'ตัวอย่างทีละขั้น สร้างมุมสี่สิบห้าองศา', mgDemo(mgT.angle(45))),
+    T('ตัวอย่างทีละขั้น: <b>นำมุมมารวมกัน</b> ∠ABC + ∠DEF', 'ตัวอย่างทีละขั้น นำมุมมารวมกัน', mgDemo(mgT.sumAng(40, 35))),
     T('<b>ลองสร้างเอง</b>: สร้างมุม 30° — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างมุมสามสิบองศา', mgTry(mgT.angle(30)))
-  ], () => [Q.mgBuild(mgT.angle(mgPick([60, 90, 120])), 'สร้างมุมด้วยวงเวียนและสันตรง'), Q.mgBuild(mgT.angle(mgPick([30, 45, 135, 150])), 'สร้างมุมด้วยวงเวียนและสันตรง (ใช้การแบ่งครึ่ง)'),
+  ], () => [Q.mgBuild(mgT.angle(mgPick([60, 90, 120])), 'สร้างมุมด้วยวงเวียนและสันตรง'), Q.mgBuild(mgT.angle(mgPick([45, 135, 150])), 'สร้างมุมด้วยวงเวียนและสันตรง (ใช้การแบ่งครึ่ง)'), Q.mgBuild(mgT.sumAng(mgPick([35, 45]), mgPick([30, 40])), 'สร้างมุมที่เป็นผลบวกของมุมสองมุม'),
     mgTraceQ('angle60', 'การสร้างมุม 60°'),
-    Q.mgPick({ q: 'มุมขนาดใดสร้างด้วยวงเวียนและสันตรง<b>ไม่ได้</b>', opts: ['40°', '15°', '105°', '135°'], right: '40°', hint: 'มุมที่สร้างได้มาจาก 60° 90° 180° และการแบ่งครึ่ง/บวก/ลบมุมเหล่านี้' }),
-    Q.mgPick({ q: 'การสร้างมุม 75° ทำได้โดยข้อใด', opts: ['สร้างมุม 60° แล้วต่อด้วยมุม 15°', 'แบ่งครึ่งมุม 120°', 'สร้างมุม 90° แล้วต่อด้วยมุม 15°', 'แบ่งครึ่งมุม 180°'], right: 'สร้างมุม 60° แล้วต่อด้วยมุม 15°', hint: '60 + 15 = 75' }),
-    Q.mgPick({ q: 'มุม 22.5° ได้จากการแบ่งครึ่งมุมขนาดใด', opts: ['45°', '60°', '30°', '90°'], right: '45°', hint: '22.5 × 2 = 45' }),
-    Q.mgPick({ q: 'การสร้างมุม 150° ข้อใดถูกต้อง', opts: ['สร้างมุม 30° แล้วใช้มุมประชิดบนเส้นตรง (180° − 30°)', 'แบ่งครึ่งมุม 120°', 'สร้างมุม 60° สองครั้ง', 'สร้างมุม 90° แล้วต่อด้วยมุม 45°'], right: 'สร้างมุม 30° แล้วใช้มุมประชิดบนเส้นตรง (180° − 30°)', hint: '180 − 30 = 150' }),
-    Q.mgNum({ q: 'แบ่งครึ่งมุมฉาก แล้วแบ่งครึ่งมุมที่ได้อีกครั้ง จะได้มุมขนาดกี่องศา', a: 22.5, unit: 'องศา', hint: '90 ÷ 2 ÷ 2' }), Q.mgNum({ q: 'สร้างมุม 60° แล้วต่อด้วยมุม 45° ที่จุดยอดเดียวกัน จะได้มุมรวมขนาดกี่องศา', a: 105, unit: 'องศา', hint: '60 + 45' }),
-    Q.mgPick({ q: 'การสร้างมุม 90° ที่จุด O บนเส้นตรง ใช้การสร้างใด', opts: ['การสร้างเส้นตั้งฉากที่จุดบนเส้นตรง', 'การลอกส่วนของเส้นตรง', 'การสร้างเส้นขนาน', 'การแบ่งครึ่งมุม 60°'], right: 'การสร้างเส้นตั้งฉากที่จุดบนเส้นตรง', hint: 'มุมฉาก = เส้นตั้งฉาก' }),
-    Q.mgNum({ q: 'สร้างมุม 90° แล้วแบ่งครึ่ง จากนั้นนำมุมที่ได้ไปต่อกับมุม 90° จะได้มุมรวมกี่องศา', a: 135, unit: 'องศา', hint: '90 + 45' }), Q.mgNum({ q: 'แบ่งครึ่งมุม 60° แล้วนำมุมที่ได้ไปต่อกับมุม 60° อีกมุมหนึ่ง จะได้มุมรวมกี่องศา', a: 90, unit: 'องศา', hint: '60 + 30' }),
+    Q.mgPick({ q: 'มุมขนาดใดสร้างด้วยวงเวียนและสันตรง<b>ไม่ได้</b>', opts: ['40°', '15°', '105°', '135°'], right: '40°', hint: 'มุมที่สร้างได้มาจาก 60° 90° 180° และการแบ่งครึ่ง/บวก/ลบมุมเหล่านี้', sig: 'cant' }),
+    Q.mgPick({ q: 'การสร้างมุม 75° ทำได้โดยข้อใด', opts: ['สร้างมุม 60° แล้วต่อด้วยมุม 15°', 'แบ่งครึ่งมุม 120°', 'สร้างมุม 90° แล้วต่อด้วยมุม 15°', 'แบ่งครึ่งมุม 180°'], right: 'สร้างมุม 60° แล้วต่อด้วยมุม 15°', hint: '60 + 15 = 75', sig: 'a75' }),
+    Q.mgPick({ q: 'การสร้างมุม 150° ข้อใดถูกต้อง', opts: ['สร้างมุม 30° แล้วใช้มุมประชิดบนเส้นตรง (180° − 30°)', 'แบ่งครึ่งมุม 120°', 'สร้างมุม 60° สองครั้ง', 'สร้างมุม 90° แล้วต่อด้วยมุม 45°'], right: 'สร้างมุม 30° แล้วใช้มุมประชิดบนเส้นตรง (180° − 30°)', hint: '180 − 30 = 150', sig: 'a150' }),
+    Q.mgNum({ q: 'แบ่งครึ่งมุมฉาก แล้วแบ่งครึ่งมุมที่ได้อีกครั้ง จะได้มุมขนาดกี่องศา', a: 22.5, unit: 'องศา', hint: '90 ÷ 2 ÷ 2', sig: 'a225' }), Q.mgNum({ q: 'สร้างมุม 60° แล้วต่อด้วยมุม 45° ที่จุดยอดเดียวกัน จะได้มุมรวมขนาดกี่องศา', a: 105, unit: 'องศา', hint: '60 + 45', sig: 'a105' }),
+    Q.mgNum({ q: '∠ABC = 70° และ ∠DEF = 25° สร้างมุมที่มีขนาดเท่ากับ ∠ABC − ∠DEF จะได้มุมกี่องศา', a: 45, unit: 'องศา', hint: 'ลอก ∠ABC แล้วลอก ∠DEF ย้อนกลับเข้าไปในมุม', sig: 'adiff' }),
+    Q.mgPick({ q: 'การสร้างมุม 90° ที่จุด O บนเส้นตรง ใช้การสร้างใด', opts: ['การสร้างเส้นตั้งฉากที่จุดบนเส้นตรง', 'การลอกส่วนของเส้นตรง', 'การสร้างเส้นขนาน', 'การแบ่งครึ่งมุม 60°'], right: 'การสร้างเส้นตั้งฉากที่จุดบนเส้นตรง', hint: 'มุมฉาก = เส้นตั้งฉาก', sig: 'a90' }),
+    Q.mgNum({ q: 'แบ่งครึ่งมุม 60° แล้วนำมุมที่ได้ไปต่อกับมุม 60° อีกมุมหนึ่ง จะได้มุมรวมกี่องศา', a: 90, unit: 'องศา', hint: '60 + 30', sig: 'a6030' }),
     mgTF('ในการสร้างมุม 60° ใช้รัศมีเดียวกันตลอด เพราะได้รูปสามเหลี่ยมด้านเท่า', true, ''), mgTF('มุม 120° สร้างได้จากการแบ่งครึ่งมุม 60°', false, 'แบ่งครึ่ง 60° ได้ 30° — 120° คือ 60° + 60°')]),
-  LM2(6, 'เกาะสามเหลี่ยม', 'การสร้างรูปสามเหลี่ยม', 'สร้างสามเหลี่ยม', 'สร้างรูปสามเหลี่ยมเมื่อกำหนดความยาวของด้านสามด้าน ด้านสองด้านกับมุมในระหว่าง หรือมุมสองมุมกับด้านในระหว่าง', [
-    T('ตัวอย่างทีละขั้น: <b>กำหนดด้านสามด้าน</b> (ด้าน ด้าน ด้าน)', 'ตัวอย่างทีละขั้น กำหนดด้านสามด้าน', mgDemo(mgT.tri('sss', { c: 6, b: 4, a: 5 }))),
-    T('ตัวอย่างทีละขั้น: <b>กำหนดด้านสองด้านและมุมในระหว่าง</b> (ด้าน มุม ด้าน)', 'ตัวอย่างทีละขั้น กำหนดด้านสองด้านและมุมในระหว่าง', mgDemo(mgT.tri('sas', { c: 6, b: 4, A: 50 }))),
-    T('<b>ลองสร้างเอง</b>: กำหนดมุมสองมุมและด้านในระหว่าง (มุม ด้าน มุม) — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง กำหนดมุมสองมุมและด้านในระหว่าง', mgTry(mgT.tri('asa', { c: 6, A: 45, B: 60 })))
-  ], () => [Q.mgBuild(mgT.tri('sss', mgPick([{ c: 6, b: 4, a: 5 }, { c: 7, b: 5, a: 4 }, { c: 6.5, b: 4.5, a: 5.5 }])), 'สร้างรูปสามเหลี่ยมจากด้านสามด้าน'), Q.mgBuild(mgT.tri('sas', mgPick([{ c: 6, b: 4, A: 60 }, { c: 7, b: 3.5, A: 45 }, { c: 5.5, b: 4, A: 70 }])), 'สร้างรูปสามเหลี่ยมจากด้าน มุม ด้าน'),
-    Q.mgBuild(mgT.tri('asa', mgPick([{ c: 6, A: 50, B: 60 }, { c: 7, A: 40, B: 70 }])), 'สร้างรูปสามเหลี่ยมจากมุม ด้าน มุม'),
-    Q.mgPick({ q: 'ข้อมูลชุดใดสร้างรูปสามเหลี่ยมได้เพียงแบบเดียว (ทุกคนสร้างได้รูปเท่ากัน)', opts: ['ด้านสามด้าน', 'มุมสามมุม', 'มุมหนึ่งมุมเท่านั้น', 'ด้านหนึ่งด้านเท่านั้น'], right: 'ด้านสามด้าน', hint: 'รู้แค่มุม รูปจะใหญ่หรือเล็กก็ได้' }),
-    Q.mgPick({ q: 'สร้างรูปสามเหลี่ยม ABC เมื่อกำหนด AB, ∠A และ AC ควรเริ่มอย่างไร', opts: ['สร้าง AB แล้วสร้างมุม A บน AB', 'สร้างมุม C ก่อน', 'สร้าง BC ก่อน', 'วาดวงกลมรัศมี AB'], right: 'สร้าง AB แล้วสร้างมุม A บน AB', hint: 'มุม A อยู่ระหว่างด้าน AB และ AC' }),
-    mgThirdQ(mgPick([40, 55]), mgPick([65, 70])), mgThirdQ(mgPick([90]), mgPick([35, 48])), mgThirdQ(mgPick([25, 30]), mgPick([110, 105])),
-    Q.mgPick({ q: 'กำหนด AB = 6 ซม. AC = 4 ซม. BC = 11 ซม. สร้างรูปสามเหลี่ยม ABC ได้หรือไม่', opts: ['ไม่ได้ เพราะ 6 + 4 น้อยกว่า 11', 'ได้ เป็นรูปสามเหลี่ยมมุมป้าน', 'ได้ เป็นรูปสามเหลี่ยมมุมฉาก', 'ได้ หลายรูป'], right: 'ไม่ได้ เพราะ 6 + 4 น้อยกว่า 11', hint: 'ส่วนโค้งจาก A และ B จะไม่ตัดกัน' }),
-    mgTF('รูปสามเหลี่ยมด้านเท่าที่ยาวด้านละ 5 ซม. มีมุมทุกมุม 60°', true, ''), mgTF('กำหนดมุมสามมุม 50°, 60°, 70° สร้างรูปสามเหลี่ยมได้เพียงขนาดเดียว', false, 'รูปมีรูปร่างเดียวกันแต่ขนาดใหญ่หรือเล็กก็ได้')]),
-  LM2(7, 'ลานสำรวจ', 'การสำรวจเกี่ยวกับรูปสามเหลี่ยม', 'ด้าน·มุมสามเหลี่ยม', 'สำรวจความยาวของด้านที่ประกอบเป็นรูปสามเหลี่ยมได้ ผลบวกของมุมภายใน และมุมภายนอกของรูปสามเหลี่ยม', [
-    T('<b>ความยาวสามด้าน</b> ประกอบเป็นรูปสามเหลี่ยมได้เสมอไหม — ลองทุกชุด', 'ความยาวสามด้านประกอบเป็นรูปสามเหลี่ยมได้เสมอไหม ลองทุกชุด', el => el.append(mgIneqSim([[4, 5, 7], [2, 3, 7], [3, 4, 7], [5, 5, 5]]))),
-    T('<b>มุมภายใน</b>ของรูปสามเหลี่ยมรวมกันได้เท่าไร — ลากจุดยอดดู', 'มุมภายในของรูปสามเหลี่ยมรวมกันได้เท่าไร ลากจุดยอดดู', el => el.append(mgSumSim())),
-    T('ตัวอย่างทีละขั้น: <b>มุมภายนอก</b>ของรูปสามเหลี่ยม', 'ตัวอย่างทีละขั้น มุมภายนอกของรูปสามเหลี่ยม', el => el.append(dcWalk((() => { const A = [0, 0], B = [4.6, 0], s = Math.sin(70 * Math.PI / 180) / Math.sin(60 * Math.PI / 180) * 4.6, C = mgP(A, 50, s), Dd = mgP(C, mgA(B, C), 2); return mgFig({ pts: { A, B, C, D: Dd }, segs: [['A', 'B'], ['B', 'C'], ['C', 'A'], ['C', 'D']], angs: [['A', 'B', 'C', '50°'], ['B', 'C', 'A', '70°'], ['C', 'D', 'A', '?']] }, { max: 300 }); })(),
-      [['① มุมภายในทั้งสาม', '∠A + ∠B + ∠ACB = 180° → 50 + 70 + ∠ACB = 180 → ∠ACB = 60°'], ['② มุมบนเส้นตรง', '∠ACB + ∠ACD = 180° (มุมตรง) → ∠ACD = 120°'], ['③ สังเกต', '120 = 50 + 70']], '<b>มุมภายนอก = ผลบวกของมุมภายในสองมุมที่ไม่ได้อยู่ติดกับมัน</b>')))
-  ], () => [mgIneqQ(), mgIneqQ(), mgRangeQ(mgPick([4, 5]), mgPick([7, 9])), mgRangeQ(mgPick([3, 6]), mgPick([8, 10])), mgThirdQ(mgPick([35, 45]), mgPick([80, 75])), mgThirdQ(mgPick([60]), mgPick([60])), mgExtQ(mgPick([40, 45]), mgPick([65, 70])), mgExtQ(mgPick([30, 35]), mgPick([90, 85])),
-    Q.mgPick({ q: 'รูปสามเหลี่ยมที่มีมุมหนึ่งเป็น 100° มุมที่เหลืออีกสองมุมรวมกันกี่องศา', opts: ['80°', '100°', '180°', '260°'], right: '80°', hint: '180 − 100' }),
-    mgTF('รูปสามเหลี่ยมหนึ่งรูปมีมุมฉากได้สองมุม', false, 'ถ้ามี 90° สองมุม รวมกันก็ 180° แล้ว มุมที่สามจะเป็น 0° ไม่ได้'), mgTF('ด้านที่ยาวที่สุดของรูปสามเหลี่ยม ต้องสั้นกว่าผลบวกของอีกสองด้าน', true, '')]),
-  LM2(8, 'ทางน้ำคู่ขนาน', 'การสร้างเส้นขนาน', 'เส้นขนาน', 'สร้างเส้นตรงให้ผ่านจุดที่กำหนดและขนานกับเส้นตรงที่กำหนด โดยใช้การสร้างมุมให้เท่ากัน', [
-    T('<b>เส้นขนาน</b> — แตะการ์ดดูทีละใบ', 'เส้นขนาน แตะการ์ดดูทีละใบ', el => el.append(miCards([['เส้นขนานคืออะไร', '<b>ไม่ตัดกัน</b><small>ห่างกันเท่ากันตลอด</small>'], ['สัญลักษณ์', `<b>ℓ ∥ m</b><small>อ่านว่า ℓ ขนานกับ m</small>`], ['ใช้อะไรสร้าง', '<b>มุมที่เท่ากัน</b><small>ลอกมุมที่เส้นตัดทำกับเส้นเดิม</small>'], ['มุมแย้ง', '<b>เท่ากัน</b><small>เมื่อเส้นตรงสองเส้นขนานกัน</small>']]))),
-    T('ตัวอย่างทีละขั้น: <b>สร้างเส้นผ่าน P ให้ขนานกับ AB</b>', 'ตัวอย่างทีละขั้น สร้างเส้นผ่านพีให้ขนานกับเอบี', mgDemo(mgT.parallel())),
+  LM2(8, 'สะพานตั้งฉาก', 'การสร้างเส้นตั้งฉาก', 'เส้นตั้งฉาก', 'สร้างเส้นตั้งฉากผ่านจุดบนเส้นตรงและจากจุดภายนอกเส้นตรง และบอกได้ว่าระยะห่างระหว่างจุดกับเส้นตรงวัดตามแนวตั้งฉาก', [
+    T('ตัวอย่างทีละขั้น: <b>เส้นตั้งฉากที่จุด P บนเส้นตรง</b>', 'ตัวอย่างทีละขั้น เส้นตั้งฉากที่จุดพีบนเส้นตรง', mgDemo(mgT.perpAt())),
+    T('ตัวอย่างทีละขั้น: <b>เส้นตั้งฉากจากจุด P ภายนอกเส้นตรง</b>', 'ตัวอย่างทีละขั้น เส้นตั้งฉากจากจุดพีภายนอกเส้นตรง', mgDemo(mgT.perpFrom())),
+    T('<b>ระยะห่างระหว่างจุดกับเส้นตรง</b> — เลื่อนจุด Q หาระยะที่สั้นที่สุด', 'ระยะห่างระหว่างจุดกับเส้นตรง เลื่อนจุดคิวหาระยะที่สั้นที่สุด', el => el.append(mgDistSim())),
+    T('<b>ลองสร้างเอง</b>: เส้นตั้งฉากจากจุด P มายัง AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างเส้นตั้งฉากจากจุดพีมายังเอบี', mgTry(mgT.perpFrom()))
+  ], () => [Q.mgBuild(mgT.perpAt(), 'สร้างเส้นตั้งฉากที่จุด P บนเส้นตรง AB'), Q.mgBuild(mgT.perpFrom(), 'สร้างเส้นตั้งฉากจากจุด P มายัง AB'),
+    mgTraceQ('perpAt', 'การสร้างเส้นตั้งฉากที่จุดบนเส้นตรง'), mgTraceQ('perpFrom', 'การสร้างเส้นตั้งฉากจากจุดภายนอก'),
+    ...[35, 52, 68].map(d => Q.mgNum({ q: `OC ⊥ AB ที่จุด O ถ้า ∠COD = ${d}° ∠DOB มีขนาดกี่องศา`, fig: (() => { const O = [0, 0], A = [-3.4, 0], B = [3.4, 0], C = [0, 3.2], Dd = mgP(O, 90 - d, 3.3); return mgFig({ pts: { A, O, B, C, D: Dd }, lines: [['A', 'B', .2]], rays: [['O', 'C'], ['O', 'D']], angs: [['O', 'B', 'C', ''], ['O', 'D', 'C', `${d}°`, '#3D8BD9', .9]], off: { O: [-6, 22] } }, { max: 280 }); })(), a: 90 - d, unit: 'องศา', hint: '∠COB = 90° แบ่งเป็น ∠COD กับ ∠DOB', sig: 'perpn ' + d })),
+    Q.mgPick({ q: 'PQ ⊥ AB หมายความว่าอย่างไร', opts: ['PQ ตั้งฉากกับ AB (ทำมุม 90°)', 'PQ ขนานกับ AB', 'PQ ยาวเท่ากับ AB', 'PQ แบ่งครึ่ง AB เสมอ'], right: 'PQ ตั้งฉากกับ AB (ทำมุม 90°)', hint: '⊥ อ่านว่า ตั้งฉากกับ', sig: 'perpsym' }),
+    Q.mgPick({ q: '<b>ระยะห่าง</b>ระหว่างจุด P กับเส้นตรง AB คือความยาวของส่วนของเส้นตรงใด', opts: ['ส่วนของเส้นตรงจาก P ที่ตั้งฉากกับ AB', 'ส่วนของเส้นตรงจาก P ไปยังจุด A', 'ส่วนของเส้นตรงที่ยาวที่สุดจาก P ถึง AB', 'ส่วนของเส้นตรงจาก P ที่ขนานกับ AB'], right: 'ส่วนของเส้นตรงจาก P ที่ตั้งฉากกับ AB', hint: 'แนวตั้งฉากให้ระยะที่สั้นที่สุด', sig: 'dist' }),
+    Q.mgNum({ q: 'จาก P ลากเส้นไปยังเส้นตรง AB ได้ยาว 5 ซม., 4 ซม., 3 ซม. และ 6 ซม. (เส้นหนึ่งตั้งฉากกับ AB) ระยะห่างระหว่าง P กับ AB เท่ากับกี่ ซม.', a: 3, unit: 'ซม.', hint: 'เส้นที่ตั้งฉากสั้นที่สุด', sig: 'distn' }),
+    mgTF('ผ่านจุด P บนเส้นตรง AB สร้างเส้นตั้งฉากกับ AB ได้เพียงเส้นเดียว', true, ''), mgTF('มุมที่เกิดจากเส้นตรงสองเส้นที่ตั้งฉากกัน มีขนาด 45°', false, 'ตั้งฉาก = 90°')]),
+  LM2(9, 'ทางแยกเส้นตัด', 'ความสัมพันธ์ของเส้นขนานและเส้นตัด', 'มุมแย้ง·สมนัย', 'บอกมุมภายใน มุมภายนอก มุมแย้ง มุมสมนัย และมุมภายในบนข้างเดียวกันของเส้นตัด และใช้สมบัติของมุมเมื่อเส้นตรงสองเส้นขนานกันหาขนาดของมุม', [
+    T('<b>เส้นตัด</b>และชื่อของมุม — แตะการ์ดดูทีละใบ', 'เส้นตัดและชื่อของมุม แตะการ์ดดูทีละใบ', el => el.append(h('div', { class: 'mg-qrow' }, h('div', { class: 'mg-figbox mg-tf', html: mgTransFig(60, [['1', '1', '#C9C2DD'], ['2', '2', '#C9C2DD'], ['3', '3', '#C9C2DD'], ['4', '4', '#C9C2DD'], ['5', '5', '#C9C2DD'], ['6', '6', '#C9C2DD'], ['7', '7', '#C9C2DD'], ['8', '8', '#C9C2DD']], 480) }),
+      mgCards([['เส้นตัด', '<b>เส้นตรงที่ตัดเส้นตรงสองเส้น</b><small>ในรูปคือ t</small>'], ['มุมภายใน', '<b>∠3 ∠4 ∠5 ∠6</b><small>อยู่ระหว่าง ℓ กับ m</small>'], ['มุมภายนอก', '<b>∠1 ∠2 ∠7 ∠8</b><small>อยู่นอก ℓ กับ m</small>'], ['มุมแย้ง', '<b>∠3 กับ ∠5 · ∠4 กับ ∠6</b><small>มุมภายใน คนละข้างของเส้นตัด</small>'], ['มุมสมนัย', '<b>∠1 กับ ∠5 · ∠2 กับ ∠6 …</b><small>ตำแหน่งเดียวกันที่จุดตัดทั้งสอง</small>']], 'mg-cards')))),
+    T('<b>เมื่อ ℓ ∥ m</b> — แตะปุ่มดูคู่มุม แล้วลากเส้นตัด', 'เมื่อเอลขนานกับเอ็ม แตะปุ่มดูคู่มุม แล้วลากเส้นตัด', el => el.append(mgTransSim())),
+    T('ตัวอย่างทีละขั้น: <b>หาขนาดของมุมเมื่อเส้นขนานกัน</b>', 'ตัวอย่างทีละขั้น หาขนาดของมุมเมื่อเส้นขนานกัน', el => el.append(dcWalk(mgTransFig(62, [['1', '62°', '#3D8BD9'], ['6', 'y', '#E5487A'], ['5', 'x', '#F0A020']]),
+      [['① มุมสมนัย', '∠1 กับ ∠5 เป็นมุมสมนัย → x = 62°'], ['② มุมบนเส้นตรง', '∠5 + ∠6 = 180° (มุมตรง) → y = 180° − 62° = 118°'], ['③ ตรวจด้วยมุมภายในข้างเดียวกัน', '∠4 = 118° (คู่กับ ∠1 บนเส้นตรง) และ ∠4 + ∠5 = 118° + 62° = 180° ✓']], '<b>x = 62° และ y = 118°</b>')))
+  ], () => [mgPairQ('corr'), mgPairQ('alt'), mgPairQ('co'), mgPairQ('vert'), mgPairNumQ('corr'), mgPairNumQ('alt'), mgPairNumQ('co'), mgParAngQ(mgPick([50, 55, 62])),
+    Q.mgPick({ q: 'มุมคู่ใดที่<b>รวมกันได้ 180°</b> เมื่อ ℓ ∥ m', opts: ['มุมภายในบนข้างเดียวกันของเส้นตัด', 'มุมแย้ง', 'มุมสมนัย', 'มุมตรงข้าม'], right: 'มุมภายในบนข้างเดียวกันของเส้นตัด', hint: 'มุมแย้งและสมนัยมีขนาดเท่ากัน', sig: 'sum180' }),
+    Q.mgPick({ q: 'เส้นตรงสองเส้นมีเส้นตัด ทำให้มุมแย้งคู่หนึ่งเป็น 72° และ 72° สรุปได้ว่าอย่างไร', opts: ['เส้นตรงสองเส้นนั้นขนานกัน', 'เส้นตรงสองเส้นนั้นตั้งฉากกัน', 'สรุปอะไรไม่ได้', 'เส้นตัดตั้งฉากกับเส้นทั้งสอง'], right: 'เส้นตรงสองเส้นนั้นขนานกัน', hint: 'ถ้ามุมแย้งเท่ากัน เส้นตรงคู่นั้นขนานกัน', sig: 'conv' }),
+    mgTF('มุมภายในอยู่ระหว่างเส้นตรงสองเส้นที่ถูกตัด', true, ''), mgTF('เมื่อ ℓ ∥ m มุมสมนัยรวมกันได้ 180° เสมอ', false, 'มุมสมนัยมีขนาดเท่ากัน')]),
+  LM2(10, 'ทางน้ำคู่ขนาน', 'การสร้างเส้นขนาน', 'สร้างเส้นขนาน', 'สร้างเส้นตรงผ่านจุดที่กำหนดให้ขนานกับเส้นตรงที่กำหนด ด้วยการสร้างมุมที่เท่ากัน และด้วยเส้นตั้งฉากสองครั้ง และแก้โจทย์ประยุกต์', [
+    T('ตัวอย่างทีละขั้น: <b>เส้นผ่าน P ขนานกับ AB</b> (สร้างมุมที่เท่ากัน)', 'ตัวอย่างทีละขั้น เส้นผ่านพีขนานกับเอบี สร้างมุมที่เท่ากัน', mgDemo(mgT.parallel())),
+    T('ตัวอย่างทีละขั้น: <b>เส้นขนานโดยใช้เส้นตั้งฉาก</b>', 'ตัวอย่างทีละขั้น เส้นขนานโดยใช้เส้นตั้งฉาก', mgDemo(mgT.parPerp())),
     T('<b>ลองสร้างเอง</b>: เส้นผ่าน P ขนานกับ AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง เส้นผ่านพีขนานกับเอบี', mgTry(mgT.parallel()))
-  ], () => [Q.mgBuild(mgT.parallel(), 'สร้างเส้นผ่าน P ให้ขนานกับ AB'), mgTraceQ('parallel', 'การสร้างเส้นขนาน'), mgParAngQ(mgPick([50, 55])), mgParAngQ(mgPick([62, 68])), mgParAngQ(mgPick([40, 45])),
-    Q.mgPick({ q: 'ℓ ∥ m อ่านว่าอย่างไร', opts: ['ℓ ขนานกับ m', 'ℓ ตั้งฉากกับ m', 'ℓ ตัดกับ m', 'ℓ ยาวเท่ากับ m'], right: 'ℓ ขนานกับ m', hint: '∥ = ขนาน' }),
-    Q.mgPick({ q: 'การสร้างเส้นขนานผ่านจุด P อาศัยการสร้างใด', opts: ['สร้างมุมให้เท่ากับมุมที่กำหนด', 'แบ่งครึ่งส่วนของเส้นตรง', 'สร้างมุม 60°', 'วัดความยาวด้วยไม้บรรทัด'], right: 'สร้างมุมให้เท่ากับมุมที่กำหนด', hint: 'ลอกมุมที่เส้นตัดทำกับเส้นเดิมไปไว้ที่ P' }),
-    Q.mgNum({ q: 'ℓ ∥ m มีเส้นตัดทำให้เกิดมุมภายในบนข้างเดียวกันของเส้นตัดคู่หนึ่ง ถ้ามุมหนึ่งเป็น 70° อีกมุมหนึ่งกี่องศา', a: 110, unit: 'องศา', hint: 'มุมภายในบนข้างเดียวกันของเส้นตัด รวมกันได้ 180°' }),
-    mgTF('เส้นตรงสองเส้นที่ขนานกันจะตัดกันเมื่อลากต่อไปยาว ๆ', false, 'เส้นขนานไม่ตัดกันเลย'), mgTF('ถ้าเส้นตัดทำมุมแย้งเท่ากัน เส้นตรงคู่นั้นขนานกัน', true, ''), mgTF('ผ่านจุด P ที่อยู่นอกเส้นตรง ℓ มีเส้นตรงที่ขนานกับ ℓ ได้เพียงเส้นเดียว', true, '')]),
-  LM2(9, 'ปากน้ำสี่เหลี่ยม', 'การสร้างรูปสี่เหลี่ยม', 'สร้างสี่เหลี่ยม', 'สร้างรูปสี่เหลี่ยมชนิดต่าง ๆ เมื่อกำหนดความยาวของด้าน ขนาดของมุม หรือเส้นทแยงมุม โดยใช้การสร้างพื้นฐาน', [
+  ], () => [Q.mgBuild(mgT.parallel(), 'สร้างเส้นผ่าน P ให้ขนานกับ AB'), Q.mgBuild(mgT.parPerp(), 'สร้างเส้นผ่าน P ให้ขนานกับ AB โดยใช้เส้นตั้งฉาก'), mgTraceQ('parallel', 'การสร้างเส้นขนาน'),
+    Q.mgPick({ q: 'การสร้างเส้นขนานผ่านจุด P โดยวิธีลอกมุม อาศัยสมบัติใด', opts: ['ถ้ามุมสมนัย (หรือมุมแย้ง) เท่ากัน เส้นตรงสองเส้นขนานกัน', 'ถ้าเส้นตรงยาวเท่ากัน จะขนานกัน', 'ถ้ามุมรวมกัน 90° จะขนานกัน', 'จุดกึ่งกลางของส่วนของเส้นตรง'], right: 'ถ้ามุมสมนัย (หรือมุมแย้ง) เท่ากัน เส้นตรงสองเส้นขนานกัน', hint: 'ลอกมุมที่เส้นตัดทำกับ AB ไปไว้ที่ P', sig: 'pprop' }),
+    Q.mgPick({ q: 'ถ้าเส้นตรง ℓ และ m ต่างก็ตั้งฉากกับเส้นตรง n แล้ว ℓ กับ m เป็นอย่างไร', opts: ['ขนานกัน', 'ตั้งฉากกัน', 'ตัดกันเป็นมุม 45°', 'สรุปไม่ได้'], right: 'ขนานกัน', hint: 'มุมสมนัยเป็น 90° เท่ากัน', sig: 'pperp' }),
+    Q.mgPick({ q: 'ต้องการสร้างถนน CD ให้ขนานกับคลอง AB และห่างกัน 3 ซม. ควรทำอย่างไร', opts: ['สร้างเส้นตั้งฉากกับ AB วัดไป 3 ซม. แล้วสร้างเส้นตั้งฉากอีกครั้ง', 'ลากเส้นใดก็ได้ที่ห่าง 3 ซม. ด้วยสายตา', 'แบ่งครึ่ง AB แล้วลากเส้น', 'สร้างมุม 60° ที่ปลาย AB'], right: 'สร้างเส้นตั้งฉากกับ AB วัดไป 3 ซม. แล้วสร้างเส้นตั้งฉากอีกครั้ง', hint: 'ระยะห่างระหว่างเส้นขนานวัดตามแนวตั้งฉาก', sig: 'pdist' }),
+    mgPairNumQ('corr'), mgPairNumQ('co'),
+    Q.mgNum({ q: 'ℓ ∥ m มีเส้นตัดทำให้เกิดมุมภายในบนข้างเดียวกันของเส้นตัดคู่หนึ่ง ถ้ามุมหนึ่งเป็น 70° อีกมุมหนึ่งกี่องศา', a: 110, unit: 'องศา', hint: 'รวมกันได้ 180°', sig: 'co70' }),
+    mgTF('ผ่านจุด P ที่อยู่นอกเส้นตรง ℓ มีเส้นตรงที่ขนานกับ ℓ ได้เพียงเส้นเดียว', true, ''), mgTF('เส้นตรงสองเส้นที่ขนานกันจะตัดกันเมื่อลากต่อไปยาว ๆ', false, 'เส้นขนานไม่ตัดกันเลย'), mgTF('ระยะห่างระหว่างเส้นขนานคู่หนึ่งเท่ากันทุกตำแหน่ง', true, '')]),
+  LM2(11, 'เกาะสามเหลี่ยม', 'การสำรวจและสร้างรูปสามเหลี่ยม', 'สามเหลี่ยม', 'จำแนกรูปสามเหลี่ยมตามด้านและมุม รู้ว่ามุมภายในรวมกัน 180° และความยาวสามด้านต้องสอดคล้องกับเงื่อนไข สร้างรูปสามเหลี่ยมเมื่อกำหนดด้านสามด้าน หรือด้านกับมุม และสร้างส่วนสูง', [
+    T('<b>ชนิดของรูปสามเหลี่ยม</b> — แตะการ์ดดูทีละใบ', 'ชนิดของรูปสามเหลี่ยม แตะการ์ดดูทีละใบ', el => el.append(mgCards([['ด้านเท่า', '<b>ด้านยาวเท่ากัน 3 ด้าน</b><small>มุมละ 60°</small>'], ['หน้าจั่ว', '<b>ด้านยาวเท่ากัน 2 ด้าน</b><small>มุมที่ฐานเท่ากัน</small>'], ['ด้านไม่เท่า', '<b>ด้านยาวไม่เท่ากันเลย</b>'], ['มุมแหลม', '<b>ทุกมุมเล็กกว่า 90°</b>'], ['มุมฉาก', '<b>มีมุมหนึ่งเป็น 90°</b>'], ['มุมป้าน', '<b>มีมุมหนึ่งใหญ่กว่า 90°</b>']], 'mg-cards'))),
+    T('<b>ความยาวสามด้าน</b> ประกอบเป็นรูปสามเหลี่ยมได้เสมอไหม — ลองทุกชุด', 'ความยาวสามด้านประกอบเป็นรูปสามเหลี่ยมได้เสมอไหม ลองทุกชุด', el => el.append(mgIneqSim([[4, 5, 7], [2, 3, 6], [3, 4, 7], [5, 5, 5]]))),
+    T('<b>มุมภายใน</b>ของรูปสามเหลี่ยมรวมกันได้เท่าไร — ลากจุดยอดดู', 'มุมภายในของรูปสามเหลี่ยมรวมกันได้เท่าไร ลากจุดยอดดู', el => el.append(mgSumSim())),
+    T('ตัวอย่างทีละขั้น: <b>กำหนดด้านสามด้าน</b>', 'ตัวอย่างทีละขั้น กำหนดด้านสามด้าน', mgDemo(mgT.tri('sss', { c: 6, b: 4, a: 5 }))),
+    T('<b>ลองสร้างเอง</b>: กำหนดด้านสองด้านและมุมในระหว่าง — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง กำหนดด้านสองด้านและมุมในระหว่าง', mgTry(mgT.tri('sas', { c: 6, b: 4, A: 50 }))),
+    T('ตัวอย่างทีละขั้น: <b>สร้างส่วนสูง</b>ของรูปสามเหลี่ยม', 'ตัวอย่างทีละขั้น สร้างส่วนสูงของรูปสามเหลี่ยม', mgDemo(mgT.altitude()))
+  ], () => [mgTriSideQ(), mgTriSideQ(), mgTriAngQ(), mgTriAngQ(), mgIneqQ(), mgRangeQ(mgPick([4, 5]), mgPick([7, 9])), mgThirdQ(mgPick([35, 45]), mgPick([80, 75])), mgThirdQ(90, mgPick([35, 48])), mgExtQ(mgPick([40, 45]), mgPick([65, 70])),
+    Q.mgBuild(mgT.tri('sss', mgPick([{ c: 7, b: 5, a: 4 }, { c: 6.5, b: 4.5, a: 5.5 }])), 'สร้างรูปสามเหลี่ยมจากด้านสามด้าน'), Q.mgBuild(mgT.tri('asa', mgPick([{ c: 6, A: 50, B: 60 }, { c: 7, A: 40, B: 70 }])), 'สร้างรูปสามเหลี่ยมจากมุม ด้าน มุม'), Q.mgBuild(mgT.altitude(), 'สร้างส่วนสูงของรูปสามเหลี่ยม'),
+    Q.mgPick({ q: 'กำหนด AB = 6 ซม. AC = 4 ซม. BC = 11 ซม. สร้างรูปสามเหลี่ยม ABC ได้หรือไม่', opts: ['ไม่ได้ เพราะ 6 + 4 น้อยกว่า 11', 'ได้ เป็นรูปสามเหลี่ยมมุมป้าน', 'ได้ เป็นรูปสามเหลี่ยมมุมฉาก', 'ได้ หลายรูป'], right: 'ไม่ได้ เพราะ 6 + 4 น้อยกว่า 11', hint: 'ส่วนโค้งจาก A และ B จะไม่ตัดกัน', sig: 'tri11' }),
+    mgTF('รูปสามเหลี่ยมหนึ่งรูปมีมุมฉากได้สองมุม', false, 'ถ้ามี 90° สองมุม รวมกันก็ 180° แล้ว มุมที่สามจะเป็น 0° ไม่ได้'), mgTF('กำหนดมุมสามมุม 50°, 60°, 70° สร้างรูปสามเหลี่ยมได้เพียงขนาดเดียว', false, 'รูปมีรูปร่างเดียวกันแต่ขนาดใหญ่หรือเล็กก็ได้')]),
+  LM2(12, 'ปากน้ำสี่เหลี่ยม', 'การสร้างรูปสี่เหลี่ยมและโจทย์ประยุกต์', 'สี่เหลี่ยม·ประยุกต์', 'บอกสมบัติของรูปสี่เหลี่ยมชนิดต่าง ๆ สร้างรูปสี่เหลี่ยมผืนผ้า จัตุรัส ด้านขนาน โดยใช้เส้นตั้งฉาก เส้นขนาน และการลอกความยาว และแก้โจทย์ที่ต้องใช้การสร้างหลายขั้นตอน', [
+    T('<b>รูปสี่เหลี่ยมชนิดต่าง ๆ</b> — แตะการ์ดดูสมบัติ', 'รูปสี่เหลี่ยมชนิดต่าง ๆ แตะการ์ดดูสมบัติ', el => el.append(mgCards([['ผืนผ้า', '<b>มุมฉาก 4 มุม</b><small>ด้านตรงข้ามยาวเท่ากัน</small>'], ['จัตุรัส', '<b>มุมฉาก 4 มุม ด้านเท่ากันทุกด้าน</b>'], ['ด้านขนาน', '<b>ด้านตรงข้ามขนานและยาวเท่ากัน</b>'], ['ขนมเปียกปูน', '<b>ด้านเท่ากันทุกด้าน</b><small>เส้นทแยงมุมตั้งฉากกัน</small>'], ['รูปว่าว', '<b>ด้านประชิดยาวเท่ากัน 2 คู่</b>'], ['คางหมู', '<b>ด้านขนานกัน 1 คู่</b>']], 'mg-cards'))),
     T('ตัวอย่างทีละขั้น: <b>รูปสี่เหลี่ยมด้านขนาน ABCD</b> AB = 5 ซม. ∠A = 60° AD = 3 ซม.', 'ตัวอย่างทีละขั้น รูปสี่เหลี่ยมด้านขนาน', el => el.append(dcWalk(mgFig({ pts: { A: [0, 0], B: [5, 0], C: [6.5, 2.6], D: [1.5, 2.6] }, segs: [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'A']], angs: [['A', 'B', 'D', '60°']], fill: [[['A', 'B', 'C', 'D'], '#FFD27A']] }, { max: 300 }),
       [['① สร้างฐาน', 'AB = 5 ซม.'], ['② สร้างมุม', '∠A = 60° (วงเวียน: รูปสามเหลี่ยมด้านเท่า)'], ['③ ลอกความยาว', 'AD = 3 ซม. บนแขนของมุม'], ['④ หาจุด C', 'วงเวียนจาก D รัศมี AB และจาก B รัศมี AD ตัดกันที่ C'], ['⑤ ลากเส้น', 'BC และ DC']], '<b>ด้านตรงข้ามยาวเท่ากัน → ได้รูปสี่เหลี่ยมด้านขนาน</b>'))),
-    T('<b>ลองสร้างเอง</b>: รูปสี่เหลี่ยมด้านขนาน ABCD ให้ AB = 5 ซม. ∠A = 60° และ AD = 3 ซม.', 'ลองสร้างเอง รูปสี่เหลี่ยมด้านขนาน', el => el.append(cnsFree(cnsPara(5, 3, 60, 'รูปสี่เหลี่ยมด้านขนาน')))),
-    T('<b>ลองสร้างเอง</b>: รูปสี่เหลี่ยมผืนผ้า ABCD ให้ AB = 6 ซม. และ BC = 3.5 ซม. (มุมฉากใช้การสร้างเส้นตั้งฉาก)', 'ลองสร้างเอง รูปสี่เหลี่ยมผืนผ้า', el => el.append(cnsFree(cnsPara(6, 3.5, 90, 'รูปสี่เหลี่ยมผืนผ้า'))))
+    T('<b>ลองสร้างเอง</b>: รูปสี่เหลี่ยมผืนผ้า ABCD ให้ AB = 6 ซม. และ BC = 3.5 ซม. (มุมฉากใช้การสร้างเส้นตั้งฉาก)', 'ลองสร้างเอง รูปสี่เหลี่ยมผืนผ้า', el => el.append(cnsFree(cnsPara(6, 3.5, 90, 'รูปสี่เหลี่ยมผืนผ้า')))),
+    T('ตัวอย่างทีละขั้น: <b>รูปหกเหลี่ยมด้านเท่ามุมเท่า</b> (โจทย์หลายขั้นตอน)', 'ตัวอย่างทีละขั้น รูปหกเหลี่ยมด้านเท่ามุมเท่า', mgDemo(mgT.hexagon(3)))
   ], () => [cnsGen.para(), cnsGen.rect(), cnsGen.sq(), cnsGen.rhom(), cnsGen.kite(),
-    Q.mgPick({ q: 'การสร้างรูปสี่เหลี่ยมผืนผ้า ต้องใช้การสร้างพื้นฐานใดเพื่อให้ได้มุมฉาก', opts: ['การสร้างเส้นตั้งฉาก', 'การแบ่งครึ่งมุม 60°', 'การสร้างมุม 45°', 'การลอกความยาว'], right: 'การสร้างเส้นตั้งฉาก', hint: 'มุมฉาก = 90°' }),
-    Q.mgPick({ q: 'สร้างรูปสี่เหลี่ยมด้านขนาน ABCD เมื่อมี AB และ AD แล้ว หาจุด C อย่างไร', opts: ['วงเวียนจาก B รัศมี AD และจาก D รัศมี AB ตัดกัน', 'แบ่งครึ่ง AB', 'สร้างมุม 90° ที่ B', 'ลาก BD แล้วแบ่งครึ่ง'], right: 'วงเวียนจาก B รัศมี AD และจาก D รัศมี AB ตัดกัน', hint: 'ด้านตรงข้ามยาวเท่ากัน: BC = AD และ DC = AB' }),
-    Q.mgPick({ q: 'รูปสี่เหลี่ยมขนมเปียกปูน ABCD ที่ AB = 4 ซม. ด้าน BC ยาวกี่ ซม.', opts: ['4 ซม.', '8 ซม.', '2 ซม.', 'บอกไม่ได้'], right: '4 ซม.', hint: 'ขนมเปียกปูนมีด้านยาวเท่ากันทุกด้าน' }),
-    Q.mgNum({ q: 'รูปสี่เหลี่ยมด้านขนาน ABCD มี ∠A = 65° ∠B มีขนาดกี่องศา', fig: mgFig({ pts: { A: [0, 0], B: [5, 0], C: [6.27, 2.72], D: [1.27, 2.72] }, segs: [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'A']], angs: [['A', 'B', 'D', '65°'], ['B', 'C', 'A', '?']] }, { max: 300 }), a: 115, unit: 'องศา', hint: 'มุมที่อยู่ติดกันบนด้านเดียวกันรวมกันได้ 180°' }),
-    Q.mgPick({ q: 'รูปสี่เหลี่ยมผืนผ้า ABCD มี AB = 6 ซม. และ BC = 3.5 ซม. ด้าน CD ยาวเท่าใด', opts: ['6 ซม.', '3.5 ซม.', '9.5 ซม.', '12 ซม.'], right: '6 ซม.', hint: 'ด้านตรงข้ามของรูปสี่เหลี่ยมผืนผ้ายาวเท่ากัน' }),
-    Q.mgPick({ q: 'สร้างรูปสี่เหลี่ยมจัตุรัสที่มีเส้นทแยงมุมยาว 6 ซม. ต้องใช้สมบัติใดของเส้นทแยงมุม', opts: ['ยาวเท่ากัน แบ่งครึ่งซึ่งกันและกัน และตั้งฉากกัน', 'ยาวไม่เท่ากัน', 'ขนานกัน', 'ไม่ตัดกัน'], right: 'ยาวเท่ากัน แบ่งครึ่งซึ่งกันและกัน และตั้งฉากกัน', hint: 'เส้นทแยงมุมของจัตุรัสตัดกันเป็นมุมฉากที่จุดกึ่งกลาง' }),
-    Q.mgNum({ q: 'รูปสี่เหลี่ยมด้านขนาน ABCD มี AB = 7 ซม. และ AD = 4 ซม. ความยาวรอบรูปเท่าใด', a: 22, unit: 'ซม.', hint: '2 × (7 + 4)' }),
-    Q.mgNum({ q: 'รูปว่าว ABCD มี ∠A = 100° ∠C = 60° และ ∠B = ∠D มุม B มีขนาดกี่องศา', a: 100, unit: 'องศา', hint: 'มุมภายในของรูปสี่เหลี่ยมรวมกัน 360° → (360 − 100 − 60) ÷ 2' }),
+    Q.mgPick({ q: 'การสร้างรูปสี่เหลี่ยมผืนผ้า ต้องใช้การสร้างพื้นฐานใดเพื่อให้ได้มุมฉาก', opts: ['การสร้างเส้นตั้งฉาก', 'การแบ่งครึ่งมุม 60°', 'การสร้างมุม 45°', 'การลอกความยาว'], right: 'การสร้างเส้นตั้งฉาก', hint: 'มุมฉาก = 90°', sig: 'q4rect' }),
+    Q.mgPick({ q: 'สร้างรูปสี่เหลี่ยมด้านขนาน ABCD เมื่อมี AB และ AD แล้ว หาจุด C อย่างไร', opts: ['วงเวียนจาก B รัศมี AD และจาก D รัศมี AB ตัดกัน', 'แบ่งครึ่ง AB', 'สร้างมุม 90° ที่ B', 'ลาก BD แล้วแบ่งครึ่ง'], right: 'วงเวียนจาก B รัศมี AD และจาก D รัศมี AB ตัดกัน', hint: 'ด้านตรงข้ามยาวเท่ากัน: BC = AD และ DC = AB', sig: 'q4para' }),
+    Q.mgNum({ q: 'รูปสี่เหลี่ยมด้านขนาน ABCD มี ∠A = 65° ∠B มีขนาดกี่องศา', fig: mgFig({ pts: { A: [0, 0], B: [5, 0], C: [6.27, 2.72], D: [1.27, 2.72] }, segs: [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'A']], angs: [['A', 'B', 'D', '65°'], ['B', 'C', 'A', '?']] }, { max: 300 }), a: 115, unit: 'องศา', hint: 'AD ∥ BC จึงเป็นมุมภายในบนข้างเดียวกันของเส้นตัด รวมกัน 180°', sig: 'q4ang' }),
+    Q.mgNum({ q: 'สร้างรูปหกเหลี่ยมด้านเท่ามุมเท่าในวงกลมรัศมี 4 ซม. ด้านแต่ละด้านยาวกี่ ซม.', a: 4, unit: 'ซม.', hint: 'ก้าววงเวียนด้วยรัศมีเดิมรอบวงกลม', sig: 'hex' }),
+    Q.mgNum({ q: 'รูปสี่เหลี่ยมด้านขนาน ABCD มี AB = 7 ซม. และ AD = 4 ซม. ความยาวรอบรูปเท่าใด', a: 22, unit: 'ซม.', hint: '2 × (7 + 4)', sig: 'q4per' }),
+    Q.mgPick({ q: 'สร้างรูปสี่เหลี่ยมจัตุรัสที่มีเส้นทแยงมุมยาว 6 ซม. ต้องใช้สมบัติใดของเส้นทแยงมุม', opts: ['ยาวเท่ากัน แบ่งครึ่งซึ่งกันและกัน และตั้งฉากกัน', 'ยาวไม่เท่ากัน', 'ขนานกัน', 'ไม่ตัดกัน'], right: 'ยาวเท่ากัน แบ่งครึ่งซึ่งกันและกัน และตั้งฉากกัน', hint: 'เส้นทแยงมุมของจัตุรัสตัดกันเป็นมุมฉากที่จุดกึ่งกลาง', sig: 'q4diag' }),
+    Q.mgPick({ q: 'รูปสี่เหลี่ยมขนมเปียกปูน ABCD ที่ AB = 4 ซม. ด้าน BC ยาวกี่ ซม.', opts: ['4 ซม.', '8 ซม.', '2 ซม.', 'บอกไม่ได้'], right: '4 ซม.', hint: 'ขนมเปียกปูนมีด้านยาวเท่ากันทุกด้าน', sig: 'q4rh' }),
+    Q.mgNum({ q: 'รูปว่าว ABCD มี ∠A = 100° ∠C = 60° และ ∠B = ∠D มุม B มีขนาดกี่องศา', a: 100, unit: 'องศา', hint: 'มุมภายในของรูปสี่เหลี่ยมรวมกัน 360° → (360 − 100 − 60) ÷ 2', sig: 'q4kite' }),
+    Q.mgPick({ q: 'รูปสี่เหลี่ยมผืนผ้า ABCD มี AB = 6 ซม. และ BC = 3.5 ซม. ด้าน CD ยาวเท่าใด', opts: ['6 ซม.', '3.5 ซม.', '9.5 ซม.', '12 ซม.'], right: '6 ซม.', hint: 'ด้านตรงข้ามของรูปสี่เหลี่ยมผืนผ้ายาวเท่ากัน', sig: 'q4cd' }),
     mgTF('รูปสี่เหลี่ยมจัตุรัสสร้างได้จากการสร้างเส้นตั้งฉากและการลอกความยาว', true, ''), mgTF('กำหนดความยาวด้านทั้งสี่ด้านอย่างเดียว ก็สร้างรูปสี่เหลี่ยมได้เพียงแบบเดียว', false, 'มุมเปลี่ยนได้ รูปจึงบิดได้หลายแบบ')])
 ];
-LESSONS_M1C2.find(L => L.id === 2101).pracQ = () => mgKindQ('ray', 'KL');
-LESSONS_M1C2.find(L => L.id === 2107).pracQ = () => mgThirdQ(50, 60);
+LESSONS_M1C2.find(L => L.id === 2201).pracQ = () => mgKindQ('ray', 'KL');
+LESSONS_M1C2.find(L => L.id === 2211).pracQ = () => mgThirdQ(50, 60);
 
 /* ---------- บอส: 20 ข้อ (แต่งใหม่ทั้งหมด) ---------- */
 const mgXF = s => ({ html: s });
@@ -583,25 +827,25 @@ const EXAM_M1C2 = xrot([
   { q: 'ข้อใดกล่าว<b>ไม่ถูกต้อง</b>', opts: ['รังสีมีจุดปลายสองจุด', 'ส่วนของเส้นตรงมีจุดปลายสองจุด', 'เส้นตรงยาวไม่สิ้นสุดทั้งสองทาง', 'จุดใช้บอกตำแหน่ง'], a: 0 },
   { q: 'รูปนี้เขียนแทนด้วยสัญลักษณ์ใด' + mgNameFig('ray', 'PQ'), opts: [mgXF(mgSym('ray', 'PQ')), mgXF(mgSym('ray', 'QP')), mgXF(mgSym('seg', 'PQ')), mgXF(mgSym('line', 'PQ'))], a: 0 },
   { q: 'มุมขนาด 205° เป็นมุมชนิดใด', opts: ['มุมกลับ', 'มุมป้าน', 'มุมตรง', 'มุมแหลม'], a: 0 },
-  { q: 'จากรูป ∠ABC เป็นมุมชนิดใด' + mgAngFig(118, { rot: 10 }), opts: ['มุมป้าน', 'มุมแหลม', 'มุมฉาก', 'มุมกลับ'], a: 0 },
-  { q: 'การวัดมุมด้วยครึ่งวงกลม (โปรแทรกเตอร์) ต้องวางจุดศูนย์กลางไว้ที่ใด', opts: ['จุดยอดของมุม', 'ปลายแขนของมุม', 'กึ่งกลางแขนของมุม', 'ที่ใดก็ได้'], a: 0 },
+  { q: 'ต้องการเขียนส่วนโค้งเพื่อลอกความยาว ใช้เครื่องมือใด', opts: ['วงเวียน', 'โพรแทรกเตอร์', 'ไม้ฉาก', 'ยางลบ'], a: 0 },
+  { q: 'จุด C อยู่บนส่วนโค้งที่มีจุดศูนย์กลาง A รัศมี 5 ซม. CA ยาวเท่าใด', opts: ['5 ซม.', '10 ซม.', '2.5 ซม.', 'บอกไม่ได้'], a: 0 },
+  { q: 'AB ยาว 6 ซม. และ CD ยาว 2.5 ซม. สร้าง PQ = AB − CD ได้ PQ ยาวเท่าใด', opts: ['3.5 ซม.', '8.5 ซม.', '4 ซม.', '2.5 ซม.'], a: 0 },
   { q: 'การแบ่งครึ่ง AB ที่ยาว 8 ซม. ควรกางวงเวียนยาวเท่าใด', opts: ['5 ซม.', '3 ซม.', '4 ซม.', '2 ซม.'], a: 0 },
-  { q: 'M เป็นจุดกึ่งกลางของ AB ถ้า AM = 4.5 ซม. AB ยาวเท่าใด', opts: ['9 ซม.', '4.5 ซม.', '2.25 ซม.', '13.5 ซม.'], a: 0 },
+  { q: 'P อยู่บนเส้นตั้งฉากแบ่งครึ่ง AB และ PA = 7 ซม. PB ยาวเท่าใด', opts: ['7 ซม.', '3.5 ซม.', '14 ซม.', 'บอกไม่ได้'], a: 0 },
   { q: 'รูปนี้เป็นร่องรอยของการสร้างใด' + MG_TRACE.bisAng(), opts: ['การแบ่งครึ่งมุม', 'การแบ่งครึ่งส่วนของเส้นตรง', 'การสร้างเส้นขนาน', 'การสร้างเส้นตั้งฉากจากจุดภายนอก'], a: 0 },
-  { q: 'รูปนี้เป็นร่องรอยของการสร้างใด' + MG_TRACE.perpFrom(), opts: ['การสร้างเส้นตั้งฉากจากจุดภายนอกเส้นตรง', 'การแบ่งครึ่งมุม', 'การสร้างมุม 60°', 'การลอกส่วนของเส้นตรง'], a: 0 },
   { q: 'OC แบ่งครึ่ง ∠AOB ถ้า ∠AOC = 37° แล้ว ∠AOB มีขนาดเท่าใด', opts: ['74°', '37°', '18.5°', '53°'], a: 0 },
   { q: 'มุมในข้อใดสร้างด้วยวงเวียนและสันตรงไม่ได้', opts: ['50°', '75°', '112.5°', '165°'], a: 0 },
-  { q: 'การสร้างมุม 60° ด้วยวงเวียนและสันตรง อาศัยสมบัติของรูปใด', opts: ['รูปสามเหลี่ยมด้านเท่า', 'รูปสี่เหลี่ยมจัตุรัส', 'รูปสามเหลี่ยมมุมฉาก', 'วงกลมสองวงที่ไม่ตัดกัน'], a: 0 },
   { q: 'การสร้างมุม 135° ทำได้โดยข้อใด', opts: ['สร้างมุมฉาก แล้วต่อด้วยมุม 45°', 'แบ่งครึ่งมุม 270°', 'สร้างมุม 60° สองครั้ง', 'แบ่งครึ่งมุม 90° สองครั้ง'], a: 0 },
+  { q: 'ระยะห่างระหว่างจุด P กับเส้นตรง AB วัดอย่างไร', opts: ['วัดตามแนวที่ตั้งฉากกับ AB', 'วัดจาก P ไปจุด A', 'วัดเส้นที่ยาวที่สุดจาก P ถึง AB', 'วัดตามแนวที่ขนานกับ AB'], a: 0 },
+  { q: 'ℓ ∥ m มุมที่ระบายสีทั้งสองเป็นมุมคู่ใด' + mgTransFig(60, [['3', '', '#3D8BD9'], ['5', '', '#E5487A']]), opts: ['มุมแย้ง', 'มุมสมนัย', 'มุมภายในบนข้างเดียวกันของเส้นตัด', 'มุมตรงข้าม'], a: 0 },
+  { q: 'ℓ ∥ m มีเส้นตัด ถ้ามุมภายในบนข้างเดียวกันของเส้นตัดมุมหนึ่งเป็น 64° อีกมุมหนึ่งมีขนาดเท่าใด', opts: ['116°', '64°', '26°', '126°'], a: 0 },
+  { q: 'การสร้างเส้นผ่านจุด P ให้ขนานกับเส้นตรง ℓ ใช้การสร้างใดเป็นหลัก', opts: ['การสร้างมุมให้เท่ากับมุมที่กำหนด', 'การแบ่งครึ่งส่วนของเส้นตรง', 'การสร้างรูปสามเหลี่ยมด้านเท่า', 'การวัดด้วยไม้บรรทัด'], a: 0 },
   { q: 'ความยาวชุดใดเป็นด้านทั้งสามของรูปสามเหลี่ยมได้', opts: ['5 ซม., 6 ซม., 10 ซม.', '3 ซม., 4 ซม., 8 ซม.', '2 ซม., 5 ซม., 7 ซม.', '4 ซม., 4 ซม., 9 ซม.'], a: 0 },
   { q: 'รูปสามเหลี่ยม ABC มี ∠A = 48° และ ∠B = 67° ∠C มีขนาดเท่าใด', opts: ['65°', '115°', '75°', '55°'], a: 0 },
-  { q: 'รูปสามเหลี่ยมมีมุมภายในสองมุมเป็น 55° และ 60° มุมภายนอกที่จุดยอดที่สามมีขนาดเท่าใด', opts: ['115°', '65°', '125°', '55°'], a: 0 },
-  { q: 'ข้อมูลชุดใดสร้างรูปสามเหลี่ยมได้เพียงขนาดเดียว', opts: ['ด้านสองด้านและมุมในระหว่าง', 'มุมสามมุม', 'ด้านหนึ่งด้าน', 'มุมหนึ่งมุมกับด้านหนึ่งด้านที่ไม่ได้ติดกับมุม'], a: 0 },
-  { q: 'การสร้างเส้นผ่านจุด P ให้ขนานกับเส้นตรง ℓ ใช้การสร้างใดเป็นหลัก', opts: ['การสร้างมุมให้เท่ากับมุมที่กำหนด', 'การแบ่งครึ่งส่วนของเส้นตรง', 'การสร้างรูปสามเหลี่ยมด้านเท่า', 'การวัดด้วยไม้บรรทัด'], a: 0 },
-  { q: 'ℓ ∥ m มีเส้นตัดทำมุมแย้งคู่หนึ่ง ถ้ามุมหนึ่งเป็น 58° อีกมุมหนึ่งมีขนาดเท่าใด', opts: ['58°', '122°', '32°', '116°'], a: 0 },
+  { q: 'รูปสามเหลี่ยมที่มีด้านยาว 6 ซม., 6 ซม. และ 4 ซม. เป็นรูปสามเหลี่ยมชนิดใด', opts: ['รูปสามเหลี่ยมหน้าจั่ว', 'รูปสามเหลี่ยมด้านเท่า', 'รูปสามเหลี่ยมด้านไม่เท่า', 'รูปสามเหลี่ยมมุมฉากเสมอ'], a: 0 },
   { q: 'รูปสี่เหลี่ยมด้านขนาน ABCD มี ∠A = 72° ∠B มีขนาดเท่าใด', opts: ['108°', '72°', '18°', '288°'], a: 0 }
 ], 4);
-LESSONS_M1C2.push({ id: 2119, boss: true, place: 'วังจระเข้เรขา', title: 'ด่านบอส: ม.1 บทที่ 2 การสร้างทางเรขาคณิต', short: 'ด่านบอส · ข้อสอบ', tone: 'jade',
-  goal: 'ตอบคำถามเรื่องการสร้างทางเรขาคณิต 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะจระเข้เรขา',
+LESSONS_M1C2.push({ id: 2219, boss: true, place: 'วังจระเข้เรขา', title: 'ด่านบอส: ม.1 บทที่ 2 การสร้างทางเรขาคณิต', short: 'ด่านบอส · ข้อสอบ', tone: 'jade',
+  goal: 'ตอบคำถามเรื่องเรขาคณิตพื้นฐานและการสร้างทางเรขาคณิต 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะจระเข้เรขา',
   exam: EXAM_M1C2, pass: 16, bossName: 'จระเข้เรขา', bossPal: 'night', emblem: '∠', bossKind: 'croc',
-  winLine: 'ชนะจระเข้เรขาแล้ว! ใช้วงเวียน สันตรง และครึ่งวงกลมได้คล่องมาก', loseLine: 'จระเข้เรขายังเฝ้าวังน้ำอยู่ กลับไปฝึกสร้างอีกนิดแล้วมาสู้ใหม่นะ!' });
+  winLine: 'ชนะจระเข้เรขาแล้ว! ใช้วงเวียน สันตรง และโพรแทรกเตอร์ได้คล่องมาก', loseLine: 'จระเข้เรขายังเฝ้าวังน้ำอยู่ กลับไปฝึกสร้างอีกนิดแล้วมาสู้ใหม่นะ!' });
