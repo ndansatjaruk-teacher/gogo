@@ -4414,6 +4414,28 @@ button.m3-t{cursor:pointer;border:0}
 .m3-part.next{animation:m3Next 1.1s ease-in-out infinite alternate}
 @keyframes m3Next{from{box-shadow:0 0 0 0 rgba(255,196,0,.0)}to{box-shadow:0 0 0 5px rgba(255,196,0,.7)}}
 @media (prefers-reduced-motion:reduce){.m3-hlbox .m3-draw{animation:none;stroke-dashoffset:0}.m3-hlbox .m3-halo,.m3-part.next{animation:none}}
+/* v236 ม.1 เลขยกกำลัง ด่าน 5: จับคู่ตัวลบ + ตัวอย่างบวก/ลบ */
+.e3-pairs{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:flex-start;min-height:96px}
+.e3-pr{position:relative;display:flex;gap:4px;padding:6px 6px 30px;border-radius:14px;animation:popIn .35s var(--spring) both}
+.e3-pr::after{content:'';position:absolute;left:10px;right:10px;bottom:20px;height:10px;border:3px solid #2FB5A3;border-top:0;border-radius:0 0 10px 10px;opacity:0;animation:m3Fade .3s ease-out var(--d) forwards}
+.e3-pr i{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);min-width:28px;height:28px;border-radius:14px;background:#2FB5A3;color:#fff;font:900 22px/28px var(--font-num);font-style:normal;text-align:center;opacity:0;animation:m3Fade .3s ease-out var(--d) forwards}
+.e3-pr.one::after{border-color:#E0445A}.e3-pr.one i{background:#E0445A}
+.e3-pr.one .e3-f{background:#FDE3EC;box-shadow:0 3px 0 #E8A4BA}
+.e3-f{padding:8px 10px;border-radius:12px;background:#E3F6F1;box-shadow:0 3px 0 #9ED9C9;font:900 clamp(22px,2.6cqw,28px) var(--font-num);color:var(--ink)}
+.e3-ph{color:var(--ink-2);font-weight:700;align-self:center}
+.e3-pres{font-size:clamp(26px,3.2cqw,36px)}
+.e3-pres .neg,.e3-exa .neg{color:#D23B55}.e3-pres .pos,.e3-exa .pos{color:#1F9A6E}
+.e3-rules{display:flex;gap:14px;width:min(760px,94cqw)}
+.e3-rule{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding:8px 14px;border-radius:14px;background:#fff;box-shadow:var(--e1);min-height:48px;font:700 clamp(16px,1.9cqw,20px) var(--font-num);color:var(--ink)}
+.e3-rule.even{box-shadow:var(--e1),inset 5px 0 0 #2FB5A3}.e3-rule.odd{box-shadow:var(--e1),inset 5px 0 0 #E0445A}
+.e3-rule > b{flex-basis:100%;font-family:var(--font)}
+.e3-rx{animation:popIn .3s var(--spring) both}
+.e3-exg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:min(820px,94cqw)}
+.e3-exc{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 12px;border-radius:16px;background:#fff;box-shadow:var(--e1);min-height:140px;justify-content:center}
+.e3-exc.ok{box-shadow:var(--e1),inset 0 0 0 3px #4FB97A}
+.e3-exc .e3-big{font-size:clamp(30px,3.8cqw,42px)}
+.e3-sg{min-width:96px}.e3-sg.p{background:#E3F6F1}.e3-sg.m{background:#FDE3EC}
+.e3-exa{text-align:center;font:700 clamp(15px,1.8cqw,19px) var(--font);color:var(--ink);line-height:1.45}.e3-exa b.neg,.e3-exa b.pos{font:900 1.3em var(--font-num)}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -28983,6 +29005,32 @@ function e3SignSim() {
     if (seen.size === 6) { out.innerHTML += '<br>ฐานติดลบต้องมี<b>วงเล็บ</b> · ไม่มีวงเล็บ ฐานคือ 2 แล้วค่อยใส่เครื่องหมายลบ'; sfx.ok(); teachDone(wrap); } } }, `n = ${n}`)));
   wrap.append(h('div', { class: 'cap' }, 'แตะ n ทีละค่า เทียบ (−2)ⁿ กับ −2ⁿ'), row, tbl, out); return wrap;
 }
+/* กำลังคู่ได้บวก กำลังคี่ได้ลบ: แตะ n แล้วจับคู่ตัวลบทีละคู่ (ลบ × ลบ = บวก) ดูว่าเหลือตัวลบไหม */
+function e3PairSim(b = -4) {
+  const wrap = e3Wrap(), chips = h('div', { class: 'e3-pairs' }), res = h('div', { class: 'e3-big e3-pres' }), ev = h('div', { class: 'e3-rule even' }, h('b', null, 'เลขชี้กำลังคู่ → บวก')), od = h('div', { class: 'e3-rule odd' }, h('b', null, 'เลขชี้กำลังคี่ → ลบ')), out = fNote(), seen = new Set(), NS = [2, 3, 4, 5, 6];
+  const show = n => { const k = n >> 1; let s = '';
+    for (let i = 0; i < k; i++) s += `<span class="e3-pr" style="--d:${0.25 + i * 0.35}s"><span class="e3-f">${e3B(b)}</span><span class="e3-f">${e3B(b)}</span><i>+</i></span>`;
+    if (n % 2) s += `<span class="e3-pr one" style="--d:${0.25 + k * 0.35}s"><span class="e3-f">${e3B(b)}</span><i>−</i></span>`;
+    chips.innerHTML = s; const v = b ** n;
+    res.innerHTML = `${e3P(b, n)} = <b class="${v < 0 ? 'neg' : 'pos'}">${e3Fmt(v)}</b>`;
+    (n % 2 ? od : ev).append(h('span', { class: 'e3-rx', html: `${e3P(b, n)} = ${e3Fmt(v)}` }));
+    out.innerHTML = n % 2 ? `n = ${n} เป็น<b>จำนวนคี่</b> — จับคู่ได้ ${k} คู่ แต่<b>เหลือตัวลบ 1 ตัว</b> → ผลเป็น<b>ลบ</b>` : `n = ${n} เป็น<b>จำนวนคู่</b> — จับคู่ได้ ${k} คู่พอดี ทุกคู่เป็นบวก → ผลเป็น<b>บวก</b>`; };
+  const row = h('div', { class: 'rowstack e3-chips' }, ...NS.map(n => h('button', { class: 'btn ia e3-nb', onclick: e => { e.stopPropagation(); if (seen.has(n)) return; e.currentTarget.classList.add('on'); seen.add(n); show(n); sfx.pop(n);
+    if (seen.size === NS.length) { out.innerHTML = 'ฐานเป็นจำนวนลบ: เลขชี้กำลัง<b>คู่</b> → ตัวลบจับคู่ได้หมด ผลเป็น<b>บวก</b>&emsp;เลขชี้กำลัง<b>คี่</b> → เหลือตัวลบ 1 ตัว ผลเป็น<b>ลบ</b>'; sfx.ok(); teachDone(wrap); } } }, `n = ${n}`)));
+  wrap.append(h('div', { class: 'cap', html: `ลบ × ลบ = <b>บวก</b> — แตะ n ทีละค่า แล้วดูว่า ${e3B(b)} จับคู่กันได้หมดไหม` }), row, chips, res, h('div', { class: 'e3-rules' }, ev, od), out);
+  chips.innerHTML = '<span class="e3-ph">แตะ n ด้านบน</span>'; return wrap;
+}
+/* ตัวอย่าง: ทายว่าผลเป็นบวกหรือลบ แล้วดูเหตุผล */
+function e3SignEx(items) {
+  const wrap = e3Wrap(), grid = h('div', { class: 'e3-exg' }), out = fNote(); let got = 0;
+  items.forEach(([ex, v, why]) => { const box = h('div', { class: 'e3-exc' }), ans = h('div', { class: 'e3-exa' }), btns = h('div', { class: 'rowstack' });
+    ['บวก', 'ลบ'].forEach(t => btns.append(h('button', { class: 'btn ia e3-sg ' + (t === 'บวก' ? 'p' : 'm'), onclick: e => { e.stopPropagation(); if (box.classList.contains('ok')) return; const right = (v > 0) === (t === 'บวก');
+      if (!right) { sfx.no(); const b = e.currentTarget; b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); out.innerHTML = 'ยังไม่ใช่ — ดูวงเล็บก่อน แล้วดูว่าเลขชี้กำลังเป็นคู่หรือคี่'; return; }
+      box.classList.add('ok'); btns.remove(); ans.innerHTML = `${why}<br><b class="${v < 0 ? 'neg' : 'pos'}">= ${e3Fmt(v)}</b>`; got++; sfx.pop(got + 2); out.innerHTML = `ถูกต้อง ${got} จาก ${items.length} ข้อ`;
+      if (got === items.length) { out.innerHTML = 'ครบแล้ว ✓ ดู<b>วงเล็บ</b>ก่อนเสมอ แล้วค่อยดูว่าเลขชี้กำลังเป็นคู่หรือคี่'; sfx.ok(); teachDone(wrap); } } }, t)));
+    box.append(h('div', { class: 'e3-big', html: ex }), btns, ans); grid.append(box); });
+  wrap.append(h('div', { class: 'cap' }, 'ค่าของแต่ละข้อเป็นบวกหรือลบ แตะคำตอบ'), grid, out); return wrap;
+}
 /* ฐานเป็นเศษส่วน: คูณด้วย ½ ซ้ำ — พื้นที่ที่ระบายเหลือครึ่งหนึ่งทุกครั้ง */
 function e3HalfSim(max = 4) {
   const wrap = e3Wrap(), sq = h('div', { class: 'e3-sq' }), big = h('div', { class: 'e3-big' }), out = fNote(); let n = 0;
@@ -29153,7 +29201,9 @@ const LESSONS_M1C3 = [
     Q.e3N({ q: 'หาค่า', expr: `${e3P(2, 3)} + ${e3P(3, 2)}`, a: 17, hint: '8 + 9', sig: 'sum89', diff: 20 }), Q.e3N({ q: 'หาค่า', expr: `${e3P(5, 2)} − ${e3P(2, 4)}`, a: 9, hint: '25 − 16', sig: 'sub', diff: 22 }),
     e3TF(`${e3P(1, 100)} = 1`, true, '1 คูณกันกี่ตัวก็ได้ 1'), e3TF(`${e3P(4, 3)} = ${e3P(3, 4)}`, false, '64 กับ 81')]),
   LM3E(5, 'แก่งวงเล็บลบ', 'เลขยกกำลังที่มีฐานเป็นจำนวนลบและเครื่องหมายวงเล็บ', 'ฐานลบ·วงเล็บ', 'หาค่าเลขยกกำลังที่มีฐานเป็นจำนวนลบ บอกเครื่องหมายของผลลัพธ์จากเลขชี้กำลังคู่หรือคี่ และแยกความแตกต่างระหว่าง (−a)ⁿ กับ −aⁿ', [
+    T('<b>กำลังคู่ได้บวก กำลังคี่ได้ลบ</b> — จับคู่ตัวลบ', 'กำลังคู่ได้บวก กำลังคี่ได้ลบ จับคู่ตัวลบ', el => el.append(e3PairSim(-4))),
     T('<b>(−2)ⁿ กับ −2ⁿ</b> — แตะ n ทีละค่า', 'ลบสองทั้งหมดยกกำลังเอ็น กับ ลบของสองยกกำลังเอ็น แตะเอ็นทีละค่า', el => el.append(e3SignSim())),
+    T('ตัวอย่าง: <b>บวกหรือลบ?</b>', 'ตัวอย่าง บวกหรือลบ', el => el.append(e3SignEx([[e3P(-1, 100), 1, 'ฐาน −1, เลขชี้กำลัง 100 เป็น<b>คู่</b> → บวก'], [e3P(-5, 3), -125, 'ฐาน −5, เลขชี้กำลัง 3 เป็น<b>คี่</b> → ลบ'], [e3P(-3, 4), 81, 'ฐาน −3, เลขชี้กำลัง 4 เป็น<b>คู่</b> → บวก'], [`<span>−${e3P(6, 2)}</span>`, -36, '<b>ไม่มีวงเล็บ</b> ฐานคือ 6 → 6² = 36 แล้วใส่ลบ']]))),
     T('ตัวอย่างทีละขั้น: <b>(−3)² กับ −3²</b>', 'ตัวอย่างทีละขั้น ลบสามทั้งหมดยกกำลังสอง กับ ลบของสามยกกำลังสอง', el => el.append(dcWalk(`${e3P(-3, 2)} &emsp; กับ &emsp; −${e3P(3, 2)}`, [['① ดูฐาน', `${e3P(-3, 2)} ฐานคือ −3 · −${e3P(3, 2)} ฐานคือ 3`], ['② (−3)²', '(−3) × (−3) = 9'], ['③ −3²', '−(3 × 3) = −9']], '<b>วงเล็บเปลี่ยนคำตอบ: 9 ≠ −9</b>')))
   ], () => [E3Q.neg(), E3Q.neg(), E3Q.neg(), E3Q.neg(), E3Q.sign(), E3Q.sign(), E3Q.base(),
     Q.e3O({ q: 'ข้อใดมีค่า<b>เป็นลบ</b>', opts: [`−${e3P(4, 2)}`, e3P(-4, 2), e3P(-1, 6), e3P(-2, 4)], right: `−${e3P(4, 2)}`, hint: 'หาค่าทีละข้อ ระวังวงเล็บ', sig: 'negpick', diff: 30 }),
