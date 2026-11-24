@@ -4513,6 +4513,63 @@ body[data-world=detect] .keypad.mi-kp .btn.sym{--c:#FFF1E2;--c2:#F2C08A}
 .exam-card .xqt .xfig .s2-stem table,.exam-card .xqt .xfig .s2-ft table{font-size:18px}
 button.m3-t.used{opacity:.28;pointer-events:none}
 .s2-qrow .s2-ft table{font-size:clamp(20px,2.4cqw,26px)}
+/* v240 ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ (grades/m3/m3t.js, prefix tg) — ข้าม = ชมพู · ชิด = ฟ้า · ฉาก = ม่วง */
+.tg-fig{display:flex;justify-content:center}
+.tg-fig svg,.tg-board svg{display:block;width:100%;height:auto;overflow:visible}
+.tg-fig .tg-tri{width:min(400px,46cqw);max-height:min(40cqh,280px)}
+.tg-fig .tg-scn{width:min(460px,48cqw);max-height:min(42cqh,300px)}
+.tg-fig .tg-vt{font-size:15px}
+.colstack > .tg-fig .tg-tri{width:min(380px,60cqw);max-height:min(34cqh,240px)}
+.tg-qrow{display:flex;align-items:center;justify-content:center;gap:clamp(14px,3cqw,34px);width:100%;flex-wrap:wrap}
+.tg-qrow > .tg-fig{flex:1 1 340px;max-width:480px}
+.tg-qrow > .opts,.tg-qrow > .mi-ans{flex:0 1 auto}
+.tg-board{display:flex;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.tg-board.ia{cursor:grab}
+.tg-board .tg-tri{width:min(420px,52cqw);max-height:min(40cqh,280px)}
+.tg-board .tg-scene{width:min(560px,60cqw);max-height:min(48cqh,350px)}
+.tg-board .tg-pyth{width:min(520px,60cqw);max-height:min(52cqh,380px)}
+.tg-row{display:flex;align-items:center;justify-content:center;gap:clamp(12px,2.4cqw,28px);width:100%;flex-wrap:nowrap}
+@container (max-width: 640px){.tg-row{flex-wrap:wrap}}
+.tg-row > .tg-board{flex:0 1 auto}
+.tg-side,.tg-sidecol{flex:0 1 300px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.tg-live{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 14px;border-radius:14px;background:#fff;box-shadow:var(--e1)}
+.tg-big{font:900 clamp(22px,2.8cqw,30px) var(--font)}
+.tg-eq{display:inline-flex;align-items:center;flex-wrap:wrap;gap:.3em;font:800 clamp(18px,2.2cqw,24px) var(--font-num);color:var(--ink)}
+.tg-eq .fop{color:var(--ink-3);font-weight:800}
+.tg-f{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.04;font-family:var(--font-num);font-weight:800;margin:0 .08em}
+.tg-f > i{font-style:normal;font-size:.86em;padding:0 .14em;white-space:nowrap}
+.tg-f > i:first-child{border-bottom:.09em solid currentColor;padding-bottom:.05em}
+.tg-f > s{display:none}
+.tg-rt{white-space:nowrap}.tg-rt > span{border-top:.08em solid currentColor;padding:0 .06em;margin-left:.02em}
+.tg-mis{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.tg-mi{padding:5px 12px;border-radius:999px;background:#EEF4FB;color:var(--ink-2);font-weight:800;font-size:clamp(14px,1.7cqw,18px);box-shadow:inset 0 0 0 1.5px #CFE0F2}
+.tg-mi.ok{background:#DDF6EC;color:#1B8862;box-shadow:inset 0 0 0 2px #4FC79A}.tg-mi.ok::before{content:'✓ '}
+.tg-card{padding:10px 16px;border-radius:14px;background:#fff;box-shadow:var(--e1)}
+.tg-done{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.tg-chip2{padding:4px 10px;border-radius:10px;background:#FFF6D6;font:800 clamp(15px,1.8cqw,19px) var(--font-num);color:var(--ink);display:inline-flex;align-items:center;gap:.2em}
+.tg-steps{gap:8px;min-width:min(300px,40cqw)}
+.tg-tb{border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;box-shadow:var(--e1);background:#fff;font-size:clamp(17px,2.1cqw,23px)}
+.tg-tb th{background:#EAF4FD;padding:5px 10px;font-weight:800}.tg-tb td{padding:5px 10px;font:800 1em var(--font-num);text-align:center;color:var(--ink)}
+.tg-sp table{font-size:clamp(18px,2.2cqw,24px)}.tg-sp td{min-width:3.2em;cursor:pointer}.tg-sp td.hl{background:#FFF6D6}
+.tg-vt table{font-size:clamp(13px,1.5cqw,16px)}.tg-vt td,.tg-vt th{padding:2px 10px}.tg-vt td{cursor:pointer}.tg-vt td.hl{background:#FFE27A}
+.tg-vt.sm td{cursor:default}
+.tg-fig2{display:flex;align-items:center;gap:6px}.tg-fig2 svg{width:min(250px,26cqw);height:auto}
+.tg-two{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}.tg-two svg{width:min(320px,40cqw);height:auto;max-height:min(30cqh,220px)}
+.fbig .tg-two svg{width:min(260px,34cqw)}
+.tg-note{padding:6px 14px;border-radius:12px;background:#FFF3C4;color:#7A5A06;font-weight:800;font-size:clamp(15px,1.8cqw,19px);display:inline-flex;align-items:center;gap:.3em;flex-wrap:wrap;justify-content:center}
+.tg-opts .opt .tg-f{font-size:1.05em}
+.tg-sv{font:900 22px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round}
+.tg-vn{font:800 20px var(--font-num);fill:#2B2550;font-style:italic;paint-order:stroke;stroke:#fff;stroke-width:4px}
+.tg-ang{font:900 19px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.tg-lb{font:800 16px var(--font);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.tg-chip text{font:800 15px var(--font);fill:#fff}
+.tg-hit{cursor:pointer;pointer-events:stroke}
+.fbig > svg.tg-tri,.fbig > svg.tg-scn{width:min(440px,60cqw);height:auto;max-height:min(36cqh,280px);flex-basis:100%}
+.xfig .tg-tri,.xfig .tg-scn{width:min(320px,60cqw);height:auto;max-height:200px}
+.tg-story{max-width:min(520px,52cqw);padding:12px 16px;border-radius:14px;background:#fff;box-shadow:var(--e1);font-size:clamp(17px,2.1cqw,22px);line-height:1.55;font-weight:600;color:var(--ink);text-align:left}
+.tg-left{flex:1 1 340px;max-width:520px;align-items:center;gap:10px}
+.tg-left .tg-fig .tg-tri,.tg-left .tg-fig .tg-scn{max-height:200px}
+.tg-left > .tg-fig{width:100%}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -30723,6 +30780,704 @@ LESSONS_M2C7.push({ id: 8719, boss: true, place: 'รังจอมโจรน
   exam: EXAM_M2C7, pass: 16, bossName: 'จอมโจรนกฮูก', bossPal: 'magenta', emblem: '?', bossKind: 'owlthief',
   winLine: 'จับจอมโจรนกฮูกได้แล้ว! นักสืบข้อมูลตัวจริงเลย', loseLine: 'จอมโจรนกฮูกยังหนีไปได้ ลองทวนเรื่องค่ากลางอีกนิดแล้วมาไล่จับใหม่นะ!' });
 
+/* =========================================================
+   ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ (v240) — prefix tg
+   ไฟล์นี้: ตัวช่วยคณิต (ราก เศษส่วน ค่าตรีโกณ) รูปสามเหลี่ยมมุมฉาก หน้าลงมือ (ลาก/แตะ) และชนิดข้อ Q.tgOpt / Q.tgNum / Q.tgSide
+   บทเรียน + บอสอยู่ใน m3tl.js · โลกขั้วโลกหิมะ (engine/polar.js)
+   สีประจำด้านทั้งบท: ข้าม (ด้านตรงข้ามมุม) = ชมพู · ชิด (ด้านประชิดมุม) = ฟ้า · ฉาก (ด้านตรงข้ามมุมฉาก) = ม่วง
+   ค่าตรีโกณของมุมทั่วไปใช้ทศนิยม 3 ตำแหน่ง (แบบตารางในหนังสือ) · มุมพิเศษเขียนแบบ 1/√2 และ 1/√3
+   ========================================================= */
+const tgR = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const tgPick = a => a[Math.floor(Math.random() * a.length)];
+const tgGcd = (a, b) => b ? tgGcd(b, a % b) : Math.abs(a);
+const tgN = (x, d = 2) => { const v = Math.round(x * 10 ** d) / 10 ** d; return (Object.is(v, -0) ? 0 : v).toLocaleString('en-US', { maximumFractionDigits: d }); };
+const TG_RAD = Math.PI / 180;
+const tgV = (fn, deg) => { const r = deg * TG_RAD, s = Math.sin(r), c = Math.cos(r), v = { sin: s, cos: c, tan: s / c, cosec: 1 / s, sec: 1 / c, cot: c / s }[fn]; return Math.round(v * 1000) / 1000; }; /* ค่าจากตาราง 3 ตำแหน่ง */
+const tgV3 = (fn, deg) => tgV(fn, deg).toFixed(3);
+/* ---------- written forms ---------- */
+const tgRt = x => `<span class="tg-rt">√<span>${x}</span></span>`;
+const tgF = (n, d) => `<span class="tg-f"><i>${n}</i><s>/</s><i>${d}</i></span>`;
+const tgRad = n => { let k = 1, r = n; for (let f = 2; f * f <= r; f++) while (r % (f * f) === 0) { r /= f * f; k *= f; } return { k, r }; };
+const tgRH = ({ k, r }) => r === 1 ? String(k) : (k === 1 ? '' : k) + tgRt(r);
+const tgLen = sq => tgRH(tgRad(sq)); /* length from its square: 12 → 2√3 */
+const tgLenT = sq => tgPlain(tgLen(sq)); /* same, plain text for svg labels */
+const tgFH = (n, d) => { const g = tgGcd(n, d), a = n / g, b = d / g; return b === 1 ? String(a) : tgF(a, b); };
+const tgFS = (n, d) => { const g = tgGcd(n, d), a = n / g, b = d / g; return b === 1 ? String(a) : `${a}/${b}`; };
+/* √n2 / √d2 in simplest written form (not rationalised) */
+const tgRatioH = (n2, d2) => { const A = tgRad(n2), B = tgRad(d2); if (A.r === B.r) return tgFH(A.k, B.k); const g = tgGcd(A.k, B.k), a = { k: A.k / g, r: A.r }, b = { k: B.k / g, r: B.r }; return b.k === 1 && b.r === 1 ? tgRH(a) : tgF(tgRH(a), tgRH(b)); };
+const tgPlain = s => String(s).replace(/<s>\/<\/s>/g, '/').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const tgSpeak = s => tgPlain(s).replace(/cosec|sec|cot|cos|sin|tan/g, w => ({ sin: ' ไซน์ ', cos: ' โคไซน์ ', tan: ' แทนเจนต์ ', cosec: ' โคเซแคนต์ ', sec: ' เซแคนต์ ', cot: ' โคแทนเจนต์ ' })[w])
+  .replace(/√/g, ' รากที่สองของ ').replace(/(\d)\s*\/\s*(\d)/g, '$1 ส่วน $2').replace(/\//g, ' ส่วน ').replace(/θ/g, ' ทีตา ').replace(/°/g, ' องศา ').replace(/²/g, ' กำลังสอง ').replace(/≈/g, ' ประมาณ ').replace(/×/g, ' คูณ ').replace(/\s+/g, ' ').trim();
+const tgSay = t => miSay(tgSpeak(t));
+/* ---------- ratios ---------- */
+const TG_FN = { sin: ['opp', 'hyp'], cos: ['adj', 'hyp'], tan: ['opp', 'adj'], cosec: ['hyp', 'opp'], sec: ['hyp', 'adj'], cot: ['adj', 'opp'] };
+const TG_INV = { sin: 'cosec', cos: 'sec', tan: 'cot', cosec: 'sin', sec: 'cos', cot: 'tan' };
+const TG_TH = { opp: 'ข้าม', adj: 'ชิด', hyp: 'ฉาก' };
+const TG_LONG = { opp: 'ด้านตรงข้ามมุม', adj: 'ด้านประชิดมุม', hyp: 'ด้านตรงข้ามมุมฉาก' };
+const TG_COL = { opp: '#E5487A', adj: '#2F8FDB', hyp: '#7C5CE0' };
+const TG_SAYFN = { sin: 'ไซน์', cos: 'โคไซน์', tan: 'แทนเจนต์', cosec: 'โคเซแคนต์', sec: 'เซแคนต์', cot: 'โคแทนเจนต์' };
+const tgRole = (key, ref) => key === 'AB' ? 'hyp' : (key === 'BC') === (ref !== 'B') ? 'opp' : 'adj'; /* sides AB (hyp), BC, AC · right angle at C */
+const tgKeyOf = (role, ref) => role === 'hyp' ? 'AB' : (role === 'opp') === (ref !== 'B') ? 'BC' : 'AC';
+const tgDef = (fn, html = true) => { const [n, d] = TG_FN[fn]; return html ? tgF(TG_TH[n], TG_TH[d]) : `${TG_TH[n]}/${TG_TH[d]}`; };
+/* Pythagorean triples [opp, adj, hyp] for the angle at A */
+const TG_TRIP = [[3, 4, 5], [4, 3, 5], [5, 12, 13], [12, 5, 13], [8, 15, 17], [15, 8, 17], [7, 24, 25], [24, 7, 25], [20, 21, 29], [21, 20, 29], [9, 40, 41], [12, 35, 37], [6, 8, 10], [8, 6, 10], [9, 12, 15], [12, 9, 15]];
+const tgTrip = (skip = []) => { const pool = TG_TRIP.filter(t => !skip.some(s => s[0] === t[0] && s[1] === t[1])); return tgPick(pool.length ? pool : TG_TRIP); };
+/* the value of a ratio for a triangle given as squares of [opp, adj, hyp] */
+const tgSq = t => t.map(x => x * x);
+const tgRatioOf = (fn, sq) => { const i = { opp: 0, adj: 1, hyp: 2 }, [n, d] = TG_FN[fn]; return tgRatioH(sq[i[n]], sq[i[d]]); };
+/* special angles */
+const TG_SP = { 30: { sin: tgF(1, 2), cos: tgF(tgRt(3), 2), tan: tgF(1, tgRt(3)), cosec: '2', sec: tgF(2, tgRt(3)), cot: tgRt(3) },
+  45: { sin: tgF(1, tgRt(2)), cos: tgF(1, tgRt(2)), tan: '1', cosec: tgRt(2), sec: tgRt(2), cot: '1' },
+  60: { sin: tgF(tgRt(3), 2), cos: tgF(1, 2), tan: tgRt(3), cosec: tgF(2, tgRt(3)), sec: '2', cot: tgF(1, tgRt(3)) } };
+const TG_SPALL = [...new Set(Object.values(TG_SP).flatMap(o => Object.values(o)))];
+
+/* =========================================================
+   right-triangle figure
+   o = { o: opp length, a: adj length (shape only), rot (deg), flip, names: true | ['P','Q','R'] (A B C),
+         ref: 'A' | 'B' | null (angle with the mark), refLab: 'θ', ang: { A: '30°', B: … } (text at vertices),
+         sides: { opp|adj|hyp|AB|BC|AC: text }, roles: true (role chips), col: true (colour by role), hl: [roles],
+         tap: true (wide hit paths .tg-hit data-k), W, H, pad, cls }
+   ========================================================= */
+function tgTriSVG(o = {}) {
+  const W = o.W || 400, H = o.H || 260, pad = o.pad ?? 46, ref = o.ref === undefined ? 'A' : o.ref, oL = o.o || 3, aL = o.a || 4, nm = o.names === true ? ['A', 'B', 'C'] : o.names || null;
+  const rot = (o.rot || 0) * TG_RAD, fl = o.flip ? -1 : 1;
+  const raw = { A: [0, 0], C: [aL, 0], B: [aL, oL] }, P = {};
+  Object.entries(raw).forEach(([k, [x, y]]) => { x *= fl; P[k] = [x * Math.cos(rot) - y * Math.sin(rot), x * Math.sin(rot) + y * Math.cos(rot)]; });
+  const xs = Object.values(P).map(p => p[0]), ys = Object.values(P).map(p => p[1]), w = Math.max(...xs) - Math.min(...xs), hh = Math.max(...ys) - Math.min(...ys), s = Math.min((W - 2 * pad) / (w || 1), (H - 2 * pad) / (hh || 1));
+  const ox = (W - w * s) / 2, oy = (H - hh * s) / 2, S = {}; Object.entries(P).forEach(([k, [x, y]]) => { S[k] = [ox + (x - Math.min(...xs)) * s, oy + (Math.max(...ys) - y) * s]; });
+  const G = [(S.A[0] + S.B[0] + S.C[0]) / 3, (S.A[1] + S.B[1] + S.C[1]) / 3], u = (p, q) => { const d = Math.hypot(q[0] - p[0], q[1] - p[1]) || 1; return [(q[0] - p[0]) / d, (q[1] - p[1]) / d]; };
+  const ends = { AB: ['A', 'B'], BC: ['B', 'C'], AC: ['A', 'C'] }, roleCol = k => ref ? TG_COL[tgRole(k, ref)] : k === 'AB' ? TG_COL.hyp : '#2B2550';
+  const hl = new Set((o.hl || []).map(r => ['AB', 'BC', 'AC'].includes(r) ? r : tgKeyOf(r, ref || 'A')));
+  let g = `<path d="M${S.A} L${S.B} L${S.C} Z" fill="${o.fill || '#E8F4FD'}" stroke="none"/>`;
+  Object.entries(ends).forEach(([k, [p, q]]) => { const on = hl.has(k), c = o.col || on ? roleCol(k) : '#2B2550'; g += `<path class="tg-sd" data-k="${k}" d="M${S[p]} L${S[q]}" stroke="${c}" stroke-width="${on ? 7 : o.col ? 4.5 : 3}" stroke-linecap="round"/>`; });
+  { const a = u(S.C, S.A), b = u(S.C, S.B), q = 15; g += `<path d="M${S.C[0] + a[0] * q} ${S.C[1] + a[1] * q} l${b[0] * q} ${b[1] * q} l${-a[0] * q} ${-a[1] * q}" fill="none" stroke="#2B2550" stroke-width="2"/>`; }
+  const arc = (V, lab, col, r = 30) => { const others = ['A', 'B', 'C'].filter(k => k !== V), a = u(S[V], S[others[0]]), b = u(S[V], S[others[1]]), cr = a[0] * b[1] - a[1] * b[0], bis = u([0, 0], [a[0] + b[0], a[1] + b[1]]);
+    g += `<path d="M${S[V][0] + a[0] * r} ${S[V][1] + a[1] * r} A${r} ${r} 0 0 ${cr > 0 ? 1 : 0} ${S[V][0] + b[0] * r} ${S[V][1] + b[1] * r}" fill="${col}" fill-opacity=".18" stroke="${col}" stroke-width="2.6"/>`;
+    if (lab) g += `<text x="${S[V][0] + bis[0] * (r + 17)}" y="${S[V][1] + bis[1] * (r + 17) + 7}" text-anchor="middle" class="tg-ang" style="fill:${col}">${lab}</text>`; };
+  if (ref) arc(ref, o.refLab ?? 'θ', '#F08A24');
+  Object.entries(o.ang || {}).forEach(([V, t]) => { if (V !== ref) arc(V, t, '#5A6A8A', 24); });
+  if (nm) ['A', 'B', 'C'].forEach((k, i) => { const d = u(G, S[k]); g += `<text x="${S[k][0] + d[0] * 20}" y="${S[k][1] + d[1] * 20 + 7}" text-anchor="middle" class="tg-vn">${nm[i]}</text>`; });
+  const sideTxt = {}; Object.entries(o.sides || {}).forEach(([k, t]) => { sideTxt[['AB', 'BC', 'AC'].includes(k) ? k : tgKeyOf(k, ref || 'A')] = t; });
+  Object.entries(ends).forEach(([k, [p, q]]) => { const M = [(S[p][0] + S[q][0]) / 2, (S[p][1] + S[q][1]) / 2], d = u(G, M), role = ref ? tgRole(k, ref) : null, t = sideTxt[k];
+    if (t != null && t !== '') g += `<text x="${M[0] + d[0] * 24}" y="${M[1] + d[1] * 24 + 7}" text-anchor="middle" class="tg-sv" style="fill:${o.col || hl.has(k) ? roleCol(k) : '#2B2550'}">${t}</text>`;
+    if (o.roles && role && (o.roles === true || o.roles.includes(role))) { const off = t != null && t !== '' ? 50 : 26, x = M[0] + d[0] * off, y = M[1] + d[1] * off; g += `<g class="tg-chip"><rect x="${x - 26}" y="${y - 15}" width="52" height="28" rx="14" fill="${TG_COL[role]}"/><text x="${x}" y="${y + 6}" text-anchor="middle">${TG_TH[role]}</text></g>`; }
+    if (o.tap) g += `<path class="tg-hit" data-k="${k}" d="M${S[p]} L${S[q]}" stroke="transparent" stroke-width="34" stroke-linecap="round"/>`; });
+  return `<svg class="tg-tri ${o.cls || ''}" viewBox="0 0 ${W} ${H}" aria-hidden="true">${g}${o.extra ? o.extra(S) : ''}</svg>`;
+}
+const tgFig = html => h('div', { class: 'm3-figbox tg-fig', html });
+const tgWrap = () => h('div', { class: 'colstack no-side tg-pg' }, h6wait());
+/* a little ratio card: "sin θ = ข้าม/ฉาก = 3/5" */
+const tgEq = (...parts) => `<span class="tg-eq">${parts.join(' <b class="fop">=</b> ')}</span>`;
+
+/* =========================================================
+   missions + drag scene (one draggable thing; drag anywhere on the picture moves it)
+   ========================================================= */
+function tgMission(list, wrap) {
+  const done = new Set(), el = h('div', { class: 'tg-mis' }, ...list.map(([t]) => h('span', { class: 'tg-mi', html: t })));
+  return { el, check(st) { list.forEach(([, test], i) => { if (!done.has(i) && test(st)) { done.add(i); el.children[i].classList.add('ok'); if (done.size === list.length) { sfx.ok(); teachDone(wrap); } else sfx.pop(done.size + 3); } }); } };
+}
+/* drag anywhere on the picture: pointer → svg coordinates with getScreenCTM (zoomfix handles Safari zoom) · a tap also moves */
+function tgDrag(fig, move) { let id = null, raf = 0, last = null;
+  const pt = e => { const s = fig.querySelector('svg'), m = s.getScreenCTM().inverse(), q = s.createSVGPoint(); q.x = e.clientX; q.y = e.clientY; const r = q.matrixTransform(m); return [r.x, r.y]; };
+  fig.addEventListener('pointerdown', e => { if (id != null || !fig.querySelector('svg')) return; if (e.pointerType === 'mouse' && e.button !== 0) return; e.preventDefault(); id = e.pointerId; try { fig.setPointerCapture(id); } catch (_) { } last = pt(e); move(last); });
+  fig.addEventListener('pointermove', e => { if (e.pointerId !== id) return; if (e.pointerType === 'mouse' && !e.buttons) { id = null; return; } e.preventDefault(); last = pt(e); if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (id != null && last) move(last); }); });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => fig.addEventListener(t, e => { if (e.pointerId !== id) return; id = null; if (raf) cancelAnimationFrame(raf); raf = 0; if (t === 'pointerup' && last) move(last); last = null; })); }
+function tgScene(o) {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote(), mis = tgMission(o.missions, wrap); let st = o.st;
+  const draw = () => { fig.innerHTML = `<svg viewBox="0 0 ${o.W} ${o.H}" class="tg-scene" aria-hidden="true">${o.svg(st)}</svg>`; out.innerHTML = o.info(st); };
+  tgDrag(fig, p => { const n = o.drag(p, st); if (n != null) { st = n; draw(); mis.check(st); } });
+  draw(); wrap.append(h('div', { class: 'cap', html: o.cap }), mis.el, h('div', { class: 'tg-row' }, fig, o.side ? o.side : ''), out); return wrap;
+}
+const tgHandle = (x, y, c = '#F08A24') => `<circle cx="${x}" cy="${y}" r="20" fill="${c}" fill-opacity=".18"/><circle class="tg-h" cx="${x}" cy="${y}" r="11" fill="${c}" stroke="#fff" stroke-width="3"/>`;
+const tgArc = (V, a1, a2, r, col) => { const p = a => [V[0] + r * Math.cos(a), V[1] - r * Math.sin(a)], s = p(a1), e = p(a2); return `<path d="M${V[0]} ${V[1]} L${s[0]} ${s[1]} A${r} ${r} 0 0 ${a2 > a1 ? 0 : 1} ${e[0]} ${e[1]} Z" fill="${col}" fill-opacity=".2" stroke="${col}" stroke-width="2.4"/>`; };
+const tgTx = (x, y, t, cls = 'tg-sv', col = '#2B2550', anc = 'middle') => `<text x="${x}" y="${y}" text-anchor="${anc}" class="${cls}" style="fill:${col}">${t}</text>`;
+const tgRA = (x, y, dx, dy, q = 14) => `<path d="M${x + dx * q} ${y} v${dy * q} h${-dx * q}" fill="none" stroke="#2B2550" stroke-width="2"/>`;
+
+/* ---------- 1 ลากจุด B: เมื่อมุม C = 90° เป็นสามเหลี่ยมมุมฉาก ---------- */
+function tgSimRight() {
+  const A = [70, 236], C = [340, 236], ang = (p, q, r) => { const a = Math.atan2(p[1] - q[1], p[0] - q[0]), b = Math.atan2(r[1] - q[1], r[0] - q[0]); let d = Math.abs(a - b) * 180 / Math.PI; return d > 180 ? 360 - d : d; };
+  const info = B => { const a = Math.round(ang(B, A, C)), c = Math.round(ang(A, C, B)), b = 180 - a - c; return { a, b, c }; };
+  return tgScene({ W: 470, H: 280, st: [250, 80], cap: 'ลากจุด <b>B</b> ไปมา ดูขนาดของมุมทั้งสาม',
+    missions: [['ทำให้มุม C = 90°', B => info(B).c === 90], ['ทำสามเหลี่ยมมุมฉากอีกรูป ที่สูงต่างจากเดิม', (() => { let y0 = null; return B => { if (info(B).c !== 90) return false; if (y0 == null) { y0 = B[1]; return false; } return Math.abs(B[1] - y0) > 40; }; })()]],
+    svg: B => { const { a, b, c } = info(B), right = c === 90; let s = `<path d="M${A} L${B} L${C} Z" fill="#E8F4FD" stroke="#2B2550" stroke-width="3" stroke-linejoin="round"/>`;
+      if (right) s += `<path d="M${A} L${B}" stroke="${TG_COL.hyp}" stroke-width="7" stroke-linecap="round"/>` + tgRA(C[0], C[1], -1, -1) + tgTx((A[0] + B[0]) / 2 - 18, (A[1] + B[1]) / 2 - 14, 'ยาวที่สุด', 'tg-lb', TG_COL.hyp, 'end');
+      s += tgTx(A[0] - 14, A[1] + 30, `A ${a}°`, 'tg-vn') + tgTx(C[0] + 16, C[1] + 30, `C ${c}°`, 'tg-vn', right ? '#1B8862' : '#2B2550') + tgTx(B[0], B[1] - 26, `B ${b}°`, 'tg-vn');
+      return s + tgHandle(B[0], B[1]); },
+    drag: p => { let x = Math.max(110, Math.min(440, p[0])), y = Math.max(50, Math.min(200, p[1])); if (Math.abs(x - C[0]) < 16) x = C[0]; return [x, y]; },
+    info: B => { const { a, b, c } = info(B); return c === 90 ? `มุม C = 90° → <b>สามเหลี่ยมมุมฉาก</b>&emsp;มุม A + มุม B = ${a} + ${b} = <b>90°</b>&emsp;ด้าน AB อยู่ตรงข้ามมุมฉาก ยาวที่สุด` : `มุม A + มุม B + มุม C = ${a} + ${b} + ${c} = 180°&emsp;มุม C ${c < 90 ? 'ยังเล็กกว่า' : 'ใหญ่กว่า'} 90°`; } });
+}
+
+/* ---------- 2 แตะด้าน: ข้าม ชิด ฉาก ของมุม θ (2 รอบ: θ ที่ A แล้วย้ายไป B) ---------- */
+function tgSimSides(tri = { o: 3, a: 4 }) {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote(), asks = ['opp', 'adj', 'hyp']; let ref = 'A', k = 0; const got = [];
+  const draw = () => { const sides = {}; got.forEach(r => sides[r] = TG_TH[r]); fig.innerHTML = tgTriSVG({ ...tri, ref, names: true, tap: true, hl: got, roles: got, W: 420, H: 270 }); fig.querySelectorAll('.tg-hit').forEach(p => p.onclick = e => { e.stopPropagation(); tap(p.dataset.k); }); };
+  const ask = () => { out.innerHTML = `มุม θ อยู่ที่ <b>${ref}</b> — แตะ<b style="color:${TG_COL[asks[k]]}">${TG_LONG[asks[k]]}${asks[k] === 'hyp' ? '' : ' θ'}</b> (${TG_TH[asks[k]]})`; };
+  const tap = key => { if (k >= 3) return; const want = asks[k]; if (tgRole(key, ref) !== want) { sfx.no(); out.innerHTML = want === 'hyp' ? 'ยังไม่ใช่ — ด้านตรงข้าม<b>มุมฉาก</b> คือด้านที่ไม่ได้แตะมุมฉากเลย (ยาวที่สุด)' : want === 'opp' ? 'ยังไม่ใช่ — ด้านตรงข้ามมุม θ คือด้านที่<b>ไม่แตะ</b>มุม θ' : 'ยังไม่ใช่ — ด้านประชิดมุม θ <b>แตะมุม θ</b> แต่ไม่ใช่ด้านที่ยาวที่สุด'; return; }
+    got.push(want); k++; sfx.pop(got.length + 1); draw();
+    if (k < 3) return ask();
+    if (ref === 'A') { out.innerHTML = 'ครบแล้ว ✓ — ต่อไป <b>ย้ายมุม θ ไปที่ B</b> ด้านไหนจะเปลี่ยนชื่อ?'; setTimeout(() => { ref = 'B'; k = 0; got.length = 0; draw(); ask(); }, 1400); }
+    else { out.innerHTML = 'ย้าย θ แล้ว <b>ข้ามกับชิดสลับกัน</b> แต่<b>ฉาก</b>เป็นด้านเดิมเสมอ ✓'; sfx.ok(); teachDone(wrap); } };
+  draw(); ask(); wrap.append(h('div', { class: 'cap' }, 'แตะด้านบนรูปตามที่ถาม'), fig, out); return wrap;
+}
+
+/* ---------- 3 พีทาโกรัส: แตะสี่เหลี่ยมจัตุรัสบนแต่ละด้าน นับพื้นที่ ---------- */
+function tgSimPyth(t = [3, 4, 5]) {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote(), seen = new Set(), [o, a, c] = t, U = 38, A = [184, 276], C = [184 + a * U, 276], B = [184 + a * U, 276 - o * U];
+  const sq = (p, q, side, key, col) => { const d = [q[0] - p[0], q[1] - p[1]], n = side > 0 ? [d[1], -d[0]] : [-d[1], d[0]], P3 = [q[0] + n[0], q[1] + n[1]], P4 = [p[0] + n[0], p[1] + n[1]], L = Math.round(Math.hypot(...d) / U), on = seen.has(key);
+    let s = `<path class="tg-sq" data-k="${key}" d="M${p} L${q} L${P3} L${P4} Z" fill="${col}" fill-opacity="${on ? .45 : .14}" stroke="${col}" stroke-width="2.4"/>`;
+    if (on) for (let i = 1; i < L; i++) { const f = i / L; s += `<path d="M${p[0] + d[0] * f} ${p[1] + d[1] * f} l${n[0]} ${n[1]} M${p[0] + n[0] * f} ${p[1] + n[1] * f} l${d[0]} ${d[1]}" stroke="${col}" stroke-width=".8" opacity=".7"/>`; }
+    const M = [(p[0] + P3[0]) / 2, (p[1] + P3[1]) / 2]; s += tgTx(M[0], M[1] + 8, on ? `${L}² = ${L * L}` : 'แตะ', 'tg-lb', on ? '#2B2550' : col); return s; };
+  const draw = () => { fig.innerHTML = `<svg viewBox="0 0 520 440" class="tg-scene tg-pyth" aria-hidden="true">${sq(A, C, -1, 'adj', TG_COL.adj)}${sq(C, B, -1, 'opp', TG_COL.opp)}${sq(B, A, -1, 'hyp', TG_COL.hyp)}<path d="M${A} L${B} L${C} Z" fill="#fff" stroke="#2B2550" stroke-width="3"/>${tgRA(C[0], C[1], -1, -1)}${tgTx((A[0] + C[0]) / 2, A[1] - 8, a)}${tgTx(C[0] - 14, (C[1] + B[1]) / 2 + 7, o)}${tgTx((A[0] + B[0]) / 2 - 6, (A[1] + B[1]) / 2 + 22, c)}</svg>`;
+    fig.querySelectorAll('.tg-sq').forEach(p => p.onclick = e => { e.stopPropagation(); if (seen.has(p.dataset.k)) return; seen.add(p.dataset.k); sfx.pop(seen.size + 1); draw();
+      out.innerHTML = seen.size < 3 ? `พื้นที่สี่เหลี่ยมจัตุรัส = ด้าน × ด้าน — แตะอีก ${3 - seen.size} รูป` : `${o * o} + ${a * a} = ${c * c} → <b>${o}² + ${a}² = ${c}²</b>&emsp;กำลังสองของด้านตรงข้ามมุมฉาก = ผลบวกกำลังสองของอีกสองด้าน ✓`; if (seen.size === 3) { sfx.ok(); teachDone(wrap); } }); };
+  draw(); out.innerHTML = 'แตะสี่เหลี่ยมจัตุรัสบนแต่ละด้าน ดูพื้นที่'; wrap.append(h('div', { class: 'cap' }, 'สร้างสี่เหลี่ยมจัตุรัสบนด้านทั้งสามของสามเหลี่ยมมุมฉาก'), fig, out); return wrap;
+}
+
+/* ---------- 4 สามเหลี่ยมคล้าย: ลากขยาย มุมเท่าเดิม อัตราส่วนเท่าเดิม ---------- */
+function tgSimScale() {
+  const U = 28, A = [30, 282], used = new Set(), ks = [1, 1.5, 2, 2.5, 3];
+  const tb = k => `<table class="tg-tb"><tr><th></th><th>ด้าน</th><th>อัตราส่วน</th></tr><tr><td><span style="color:${TG_COL.opp}">ข้าม</span>/<span style="color:${TG_COL.hyp}">ฉาก</span></td><td>${tgN(3 * k)}/${tgN(5 * k)}</td><td><b>0.6</b></td></tr><tr><td><span style="color:${TG_COL.adj}">ชิด</span>/<span style="color:${TG_COL.hyp}">ฉาก</span></td><td>${tgN(4 * k)}/${tgN(5 * k)}</td><td><b>0.8</b></td></tr><tr><td><span style="color:${TG_COL.opp}">ข้าม</span>/<span style="color:${TG_COL.adj}">ชิด</span></td><td>${tgN(3 * k)}/${tgN(4 * k)}</td><td><b>0.75</b></td></tr></table>`;
+  const side = h('div', { class: 'tg-side' });
+  const W = tgScene({ W: 400, H: 300, st: 1, cap: 'ลากมุม <b>B</b> ขยายสามเหลี่ยม — มุม θ เท่าเดิมตลอด',
+    missions: [['ขนาด 1 เท่า', k => k === 1], ['ขยาย 2 เท่า', k => k === 2], ['ขยาย 3 เท่า', k => k === 3]],
+    svg: k => { const C = [A[0] + 4 * k * U, A[1]], B = [C[0], A[1] - 3 * k * U]; side.innerHTML = tb(k);
+      return `<path d="M${A} L${B} L${C} Z" fill="#E8F4FD"/><path d="M${B} L${C}" stroke="${TG_COL.opp}" stroke-width="4.5"/><path d="M${A} L${C}" stroke="${TG_COL.adj}" stroke-width="4.5"/><path d="M${A} L${B}" stroke="${TG_COL.hyp}" stroke-width="4.5"/>${tgRA(C[0], C[1], -1, -1)}${tgArc(A, 0, Math.atan2(3, 4), 30, '#F08A24')}${tgTx(A[0] + 46, A[1] - 7, 'θ', 'tg-ang', '#F08A24')}`
+        + tgTx((A[0] + C[0]) / 2, A[1] + 24, tgN(4 * k), 'tg-sv', TG_COL.adj) + tgTx(C[0] + 8, (B[1] + C[1]) / 2 + 7, tgN(3 * k), 'tg-sv', TG_COL.opp, 'start') + tgTx((A[0] + B[0]) / 2 - 10, (A[1] + B[1]) / 2 - 8, tgN(5 * k), 'tg-sv', TG_COL.hyp, 'end') + tgHandle(B[0], B[1]); },
+    drag: p => { const t = ((p[0] - A[0]) * 4 + (A[1] - p[1]) * 3) / 5 / (5 * U), k = ks.reduce((b, x) => Math.abs(x - t) < Math.abs(b - t) ? x : b, 1); used.add(k); return k; },
+    info: k => used.size >= 3 ? `ขยายแล้วด้านยาวขึ้น แต่<b>อัตราส่วนของด้านคู่เดิมเท่าเดิม</b> เพราะเป็นสามเหลี่ยมคล้ายที่มีมุม θ เท่ากัน → อัตราส่วนนี้จึงเป็น “ค่าประจำมุม θ” เรียกว่า <b>อัตราส่วนตรีโกณมิติ</b>` : `ขยาย ${tgN(k)} เท่า: ด้านยาวขึ้น ${tgN(k)} เท่า — ดูตารางอัตราส่วน`, side });
+  return W;
+}
+
+/* ---------- 5 บันไดยาว 10 เมตร: ลากปลายบน → sin θ = สูง/10 · cos θ = ห่าง/10 ---------- */
+function tgSimLadder() {
+  const F = [400, 250], L = 200, info = d => { const r = d * TG_RAD; return { h: 10 * Math.sin(r), b: 10 * Math.cos(r) }; };
+  const side = h('div', { class: 'tg-side' });
+  return tgScene({ W: 440, H: 290, st: 50, cap: 'บันไดยาว <b>10 เมตร</b> พิงกำแพงน้ำแข็ง — ลากปลายบนของบันไดขึ้นลง',
+    missions: [['ทำให้ θ = 30°', d => d === 30], ['ทำให้ θ = 60°', d => d === 60], ['หามุมที่ sin θ = cos θ', d => d === 45]],
+    svg: d => { const r = d * TG_RAD, B = [F[0], F[1] - L * Math.sin(r)], A = [F[0] - L * Math.cos(r), F[1]], { h: hh, b } = info(d);
+      side.innerHTML = `<div class="tg-live">${tgEq(`sin ${d}°`, `<span style="color:${TG_COL.opp}">ข้าม</span>/<span style="color:${TG_COL.hyp}">ฉาก</span>`, `${tgN(hh)}/10`, `<b>${tgN(hh / 10, 3)}</b>`)}${tgEq(`cos ${d}°`, `<span style="color:${TG_COL.adj}">ชิด</span>/<span style="color:${TG_COL.hyp}">ฉาก</span>`, `${tgN(b)}/10`, `<b>${tgN(b / 10, 3)}</b>`)}</div>`;
+      return `<rect x="${F[0]}" y="20" width="26" height="${F[1] - 20}" fill="#D6ECFA" stroke="#9CCBEA" stroke-width="2"/><path d="M10 ${F[1]} H430" stroke="#9CCBEA" stroke-width="4"/>`
+        + `<path d="M${A} L${B}" stroke="${TG_COL.hyp}" stroke-width="7" stroke-linecap="round"/><path d="M${B} L${F}" stroke="${TG_COL.opp}" stroke-width="4" stroke-dasharray="8 6"/><path d="M${A} L${F}" stroke="${TG_COL.adj}" stroke-width="4" stroke-dasharray="8 6"/>${tgRA(F[0], F[1], -1, -1)}${tgArc(A, 0, r, 34, '#F08A24')}`
+        + tgTx(A[0] + 52, A[1] - 10, `θ = ${d}°`, 'tg-ang', '#F08A24', 'start') + tgTx(F[0] - 10, (B[1] + F[1]) / 2 + 6, `สูง ${tgN(hh)}`, 'tg-lb', TG_COL.opp, 'end') + tgTx((A[0] + F[0]) / 2, F[1] + 26, `ห่าง ${tgN(b)}`, 'tg-lb', TG_COL.adj) + tgTx((A[0] + B[0]) / 2 - 14, (A[1] + B[1]) / 2 - 4, '10 ม.', 'tg-lb', TG_COL.hyp, 'end') + tgHandle(B[0], B[1]); },
+    drag: p => Math.max(15, Math.min(75, Math.round(Math.asin(Math.max(.2, Math.min(.98, (F[1] - p[1]) / L))) / TG_RAD / 5) * 5)), /* ทีละ 5° แตะเป้าง่ายบนไอแพด */
+    info: d => d === 45 ? 'θ = 45° → สูงเท่ากับห่าง จึงได้ <b>sin 45° = cos 45°</b>' : d === 30 ? 'θ = 30° → สูง 5 เมตร ครึ่งหนึ่งของบันได → <b>sin 30° = 0.5</b>' : d === 60 ? 'θ = 60° → ห่างจากกำแพง 5 เมตร → <b>cos 60° = 0.5</b>' : `θ ยิ่งใหญ่ → <b>sin θ เพิ่มขึ้น</b> แต่ <b>cos θ ลดลง</b>`, side });
+}
+
+/* ---------- 6 ทางลาด: ลากยอด → tan θ = สูง/ยาวตามพื้น ---------- */
+function tgSimRamp() {
+  const A = [40, 262], RUN = 10, U = 12, side = h('div', { class: 'tg-side' });
+  return tgScene({ W: 300, H: 290, st: 4, cap: 'ทางลาดสโนว์บอร์ด ยาวตามพื้น <b>10 เมตร</b> — ลากยอดทางลาดขึ้นลง',
+    missions: [['ทำให้ tan θ = 0.5', r => r === 5], ['ทำให้ tan θ = 1', r => r === 10], ['ทำให้ tan θ = 2', r => r === 20]],
+    svg: r => { const C = [A[0] + RUN * U * 2, A[1]], B = [C[0], A[1] - r * U], th = Math.atan2(r, RUN);
+      side.innerHTML = `<div class="tg-live">${tgEq('tan θ', `<span style="color:${TG_COL.opp}">ข้าม</span>/<span style="color:${TG_COL.adj}">ชิด</span>`, `${r}/10`, `<b>${tgN(r / 10)}</b>`)}<div class="cap">θ ≈ ${tgN(th / TG_RAD, 1)}°</div></div>`;
+      return `<path d="M${A} L${B} L${C} Z" fill="#F4FAFF" stroke="#9CCBEA" stroke-width="2"/><path d="M${A} L${B}" stroke="#5A6A8A" stroke-width="5" stroke-linecap="round"/><path d="M${B} L${C}" stroke="${TG_COL.opp}" stroke-width="4.5"/><path d="M${A} L${C}" stroke="${TG_COL.adj}" stroke-width="4.5"/>${tgRA(C[0], C[1], -1, -1)}${tgArc(A, 0, Math.atan2(r * U, RUN * U * 2), 30, '#F08A24')}`
+        + tgTx(A[0] + 40, A[1] - 8, 'θ', 'tg-ang', '#F08A24', 'start') + tgTx(C[0] + 8, (B[1] + C[1]) / 2 + 7, `${r} ม.`, 'tg-lb', TG_COL.opp, 'start') + tgTx((A[0] + C[0]) / 2, A[1] + 24, '10 ม.', 'tg-lb', TG_COL.adj) + tgHandle(B[0], B[1]); },
+    drag: p => Math.max(1, Math.min(20, Math.round((A[1] - p[1]) / U))),
+    info: r => r === 10 ? 'สูงเท่ากับยาวตามพื้น → θ = 45° และ <b>tan 45° = 1</b>' : r > 10 ? 'ชันกว่า 45° → <b>tan θ มากกว่า 1</b> ได้ (ต่างจาก sin และ cos ที่ไม่เกิน 1)' : 'tan θ บอก<b>ความชัน</b>: สูงขึ้นเท่าไรต่อระยะตามพื้น 1 หน่วย', side });
+}
+
+/* ---------- เงา: ลากดวงอาทิตย์ → เงาเสาธงสูง 10 เมตร = 10 ÷ tan θ ---------- */
+function tgSimShadow() {
+  const P = [330, 244], HP = 10, U = 10, side = h('div', { class: 'tg-side' });
+  return tgScene({ W: 460, H: 280, st: 40, cap: 'เสาธงสูง <b>10 เมตร</b> — ลากดวงอาทิตย์ ดูมุมเงยของดวงอาทิตย์กับความยาวเงา',
+    missions: [['มุมเงย 45°', d => d === 45], ['มุมเงย 60°', d => d === 60], ['มุมเงย 30°', d => d === 30]],
+    svg: d => { const r = d * TG_RAD, sh = HP / Math.tan(r), T = [P[0], P[1] - HP * U], E = [P[0] - sh * U, P[1]], S = [T[0] + Math.cos(r) * 112, T[1] - Math.sin(r) * 112];
+      side.innerHTML = `<div class="tg-live">${tgEq(`tan ${d}°`, `10/เงา`)}${tgEq('เงา', `10 ÷ tan ${d}°`, `<b>${tgN(sh)}</b> ม.`)}</div>`;
+      return `<path d="M0 ${P[1]} H460" stroke="#9CCBEA" stroke-width="4"/><path d="M${E} L${P}" stroke="#5A6A8A" stroke-width="9" opacity=".45"/><path d="M${S} L${E}" stroke="#F5B52E" stroke-width="2.4" stroke-dasharray="7 6"/><path d="M${P} L${T}" stroke="#B5462F" stroke-width="6"/><path d="M${T[0]} ${T[1]} h-26 l6 8 l-6 8 h26 z" fill="#E36A8C"/>${tgArc(E, 0, r, 34, '#F08A24')}`
+        + tgTx(E[0] + 44, E[1] - 8, `${d}°`, 'tg-ang', '#F08A24', 'start') + tgTx((E[0] + P[0]) / 2, P[1] + 26, `เงา ${tgN(sh)} ม.`, 'tg-lb', '#5A6A8A') + tgTx(P[0] + 12, (P[1] + T[1]) / 2, '10 ม.', 'tg-lb', '#B5462F', 'start')
+        + `<g transform="translate(${S[0]} ${S[1]})"><circle r="26" fill="#FFD45C" opacity=".35"/><circle r="17" fill="#FFC21E" stroke="#F08A24" stroke-width="2"/></g>`; },
+    drag: p => { const T = [P[0], P[1] - HP * U]; return Math.max(25, Math.min(75, Math.round(Math.atan2(T[1] - p[1], Math.max(4, p[0] - T[0])) / TG_RAD / 5) * 5)); },
+    info: d => d === 45 ? 'มุมเงย 45° → <b>เงายาวเท่ากับความสูงของเสา</b>' : `ดวงอาทิตย์ยิ่งสูง (มุมเงยโต) → เงายิ่ง<b>สั้น</b>`, side });
+}
+
+/* ---------- มุมเงย / มุมก้ม: ผู้สังเกตบนหอน้ำแข็ง ลากบอลลูนหรือเรือ ---------- */
+function tgSimElev() {
+  const E = [110, 130], side = h('div', { class: 'tg-side' });
+  const ang = p => Math.round(Math.atan2(E[1] - p[1], p[0] - E[0]) / TG_RAD);
+  return tgScene({ W: 480, H: 300, st: [360, 50], cap: 'เพนกวินยืนบนหอสังเกตการณ์ — ลากสิ่งของไปที่ต่าง ๆ ดูมุมที่สายตาทำกับแนวระดับ',
+    missions: [['มุมเงย 30°', p => ang(p) === 30], ['มุมก้ม 40°', p => ang(p) === -40], ['มุมก้ม 20°', p => ang(p) === -20]],
+    svg: p => { const a = ang(p), up = a > 0, col = up ? '#2FB5A3' : '#E36A8C', r = Math.abs(a) * TG_RAD;
+      side.innerHTML = `<div class="tg-live"><div class="tg-big" style="color:${col}">${a === 0 ? 'อยู่ในแนวระดับ' : (up ? 'มุมเงย ' : 'มุมก้ม ') + Math.abs(a) + '°'}</div><div class="cap">${up ? 'มองขึ้นจากแนวระดับ' : a < 0 ? 'มองลงจากแนวระดับ' : ''}</div></div>`;
+      return `<rect x="0" y="246" width="480" height="54" fill="#9CD3F2"/><path d="M0 246 H480" stroke="#6FB4E0" stroke-width="2"/><rect x="${E[0] - 34}" y="${E[1] + 18}" width="56" height="${246 - E[1] - 18}" fill="#EEF7FD" stroke="#9CCBEA" stroke-width="2"/>`
+        + `<path d="M${E} H470" stroke="#5A6A8A" stroke-width="2" stroke-dasharray="6 6"/>${tgTx(462, E[1] - 8, 'แนวระดับ', 'tg-lb', '#5A6A8A', 'end')}<path d="M${E} L${p}" stroke="${col}" stroke-width="3"/>`
+        + (a ? tgArc(E, 0, up ? r : -r, 54, col) + tgTx(E[0] + 66 * Math.cos(r / 2), E[1] + (up ? -1 : 1) * 66 * Math.sin(r / 2) + 6, Math.abs(a) + '°', 'tg-ang', col, 'start') : '')
+        + `<g transform="translate(${E[0] - 8} ${E[1] + 2}) scale(1.4)">${PL_PENG}</g>`
+        + (p[1] < 236 && up ? `<g transform="translate(${p[0]} ${p[1]})"><path d="M-4 18 L0 30 L4 18" stroke="#5A6A8A" stroke-width="1.5" fill="none"/><ellipse cx="0" cy="0" rx="17" ry="20" fill="#E36A8C" stroke="#B5466A" stroke-width="2"/><rect x="-6" y="28" width="12" height="9" rx="2" fill="#C99A5C"/></g>` : `<g transform="translate(${p[0]} ${p[1]})"><path d="M-22 -2 h44 l-8 12 h-28 z" fill="#E0A35C" stroke="#A86A2A" stroke-width="2"/><path d="M0 -2 V-26 l14 12 h-14" fill="#fff" stroke="#9CCBEA" stroke-width="1.6"/></g>`); },
+    drag: p => { const x = Math.max(170, Math.min(465, p[0])), y = Math.max(22, Math.min(276, p[1])), r = Math.hypot(x - E[0], y - E[1]), a = Math.round(Math.atan2(E[1] - y, x - E[0]) / TG_RAD / 5) * 5 * TG_RAD; return [E[0] + r * Math.cos(a), E[1] - r * Math.sin(a)]; }, /* มุมทีละ 5° */
+    info: p => { const a = ang(p); return a > 0 ? '<b>มุมเงย</b> = มุมที่แนวสายตาทำกับแนวระดับ เมื่อมองสิ่งที่อยู่<b>สูงกว่า</b>ระดับสายตา' : a < 0 ? '<b>มุมก้ม</b> = มุมที่แนวสายตาทำกับแนวระดับ เมื่อมองสิ่งที่อยู่<b>ต่ำกว่า</b>ระดับสายตา' : 'สิ่งของอยู่ในแนวระดับสายตาพอดี'; }, side });
+}
+
+/* ---------- เดินเข้าหาหอ: มุมเงยเปลี่ยน (โจทย์สองจุด) ---------- */
+function tgSimWalk() {
+  const T = [420, 60], G = 256, U = 4.6, HT = (G - T[1]) / U, side = h('div', { class: 'tg-side' }); let seen = {};
+  const xOf = a => T[0] - HT / Math.tan(a * TG_RAD) * U;
+  return tgScene({ W: 470, H: 290, st: 25, cap: `หอประภาคารสูง ${tgN(HT, 1)} เมตร (โดยประมาณ) — ลากเพนกวินเดินบนพื้น ดูมุมเงยถึงยอดหอ`,
+    missions: [['ยืนจุดที่มุมเงย 30°', a => a === 30], ['ยืนจุดที่มุมเงย 60°', a => a === 60]],
+    svg: a => { const x = xOf(a), d = (T[0] - x) / U; seen[a] = d;
+      side.innerHTML = `<div class="tg-live">${tgEq(`tan ${a}°`, 'สูง/ระยะ')}<div class="cap">ห่างจากหอ ${tgN(d, 1)} ม.</div></div>`;
+      return `<path d="M0 ${G} H470" stroke="#9CCBEA" stroke-width="4"/><rect x="${T[0] - 12}" y="${T[1]}" width="24" height="${G - T[1]}" fill="#fff" stroke="#E36A8C" stroke-width="2.4"/><path d="M${T[0] - 12} ${T[1] + 40} h24 M${T[0] - 12} ${T[1] + 90} h24 M${T[0] - 12} ${T[1] + 140} h24" stroke="#E36A8C" stroke-width="8"/><path d="M${T[0] - 16} ${T[1]} h32 l-6 -14 h-20 z" fill="#FFC21E" stroke="#D99A12" stroke-width="1.6"/>`
+        + `<path d="M${x} ${G} L${T[0]} ${T[1]}" stroke="#2FB5A3" stroke-width="2.6" stroke-dasharray="7 5"/>${tgArc([x, G], 0, a * TG_RAD, 30, '#2FB5A3')}${tgTx(x + 38, G - 8, a + '°', 'tg-ang', '#2FB5A3', 'start')}<g transform="translate(${x} ${G - 16}) scale(1.3)">${PL_PENG}</g>`
+        + `<path d="M${x} ${G + 16} H${T[0]}" stroke="#5A6A8A" stroke-width="1.6"/>${tgTx((x + T[0]) / 2, G + 32, `${tgN(d, 1)} ม.`, 'tg-lb', '#5A6A8A')}`; },
+    drag: p => Math.max(20, Math.min(75, Math.round(Math.atan2(HT, Math.max(1, (T[0] - Math.min(T[0] - 8, p[0])) / U)) / TG_RAD / 5) * 5)), /* ตำแหน่งตามมุม ทีละ 5° */
+    info: a => a >= 60 && seen[30] ? 'เดินเข้าใกล้หอ → <b>มุมเงยโตขึ้น</b> ระยะที่เดินได้ = ผลต่างของระยะทั้งสองจุด' : 'ยิ่งอยู่ไกล มุมเงยยิ่งเล็ก', side });
+}
+
+/* ---------- สร้างอัตราส่วน: แตะด้านตัวเศษ แล้วแตะด้านตัวส่วน (หลายรอบ) ---------- */
+/* rounds = [{ fn, tri: [opp, adj, hyp] (ตัวเลข), ref: 'A'|'B', rot, flip }] */
+function tgBuild(rounds, cap = 'แตะด้านที่เป็น<b>ตัวเศษ</b> แล้วแตะด้านที่เป็น<b>ตัวส่วน</b>') {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote(), card = h('div', { class: 'tg-card' }), list = h('div', { class: 'tg-done' }); let i = 0, pick = [];
+  const R = () => rounds[i], lenOf = (role, t) => t[{ opp: 0, adj: 1, hyp: 2 }[role]];
+  const draw = () => { const r = R(), t = r.tri, ref = r.ref || 'A', sd = { AB: t[2] }; sd[tgKeyOf('opp', ref)] = t[0]; sd[tgKeyOf('adj', ref)] = t[1];
+    const o = ref === 'A' ? t[0] : t[1], a = ref === 'A' ? t[1] : t[0];
+    fig.innerHTML = tgTriSVG({ o, a, ref, names: true, tap: true, sides: sd, hl: pick, rot: r.rot, flip: r.flip, W: 400, H: 260 });
+    fig.querySelectorAll('.tg-hit').forEach(p => p.onclick = e => { e.stopPropagation(); tap(p.dataset.k); });
+    const [n, d] = TG_FN[r.fn]; card.innerHTML = tgEq(`${r.fn} θ`, tgF(pick[0] ? `<b style="color:${TG_COL[pick[0]]}">${lenOf(pick[0], t)}</b>` : '?', pick[1] ? `<b style="color:${TG_COL[pick[1]]}">${lenOf(pick[1], t)}</b>` : '?')); };
+  const tap = key => { if (i >= rounds.length) return; const r = R(), ref = r.ref || 'A', role = tgRole(key, ref), want = TG_FN[r.fn][pick.length]; if (!want) return;
+    if (role !== want) { sfx.no(); out.innerHTML = `ยังไม่ใช่ — ${r.fn} θ = ${tgDef(r.fn)} ตอนนี้ต้องการ<b style="color:${TG_COL[want]}">${TG_LONG[want]}${want === 'hyp' ? '' : ' θ'}</b>`; return; }
+    pick.push(role); sfx.pop(pick.length + 2); draw(); if (pick.length < 2) { out.innerHTML = `ได้ตัวเศษแล้ว — ต่อไปแตะ<b>ตัวส่วน</b>`; return; }
+    const t = r.tri, v = tgFH(lenOf(pick[0], t), lenOf(pick[1], t)); list.append(h('span', { class: 'tg-chip2', html: `${r.fn} θ = ${v}` })); out.innerHTML = tgEq(`${r.fn} θ`, tgDef(r.fn), tgF(lenOf(pick[0], t), lenOf(pick[1], t)), `<b>${v}</b>`);
+    i++; if (i >= rounds.length) { out.innerHTML += '&emsp;ครบทุกข้อ ✓'; sfx.ok(); teachDone(wrap); return; }
+    setTimeout(() => { pick = []; draw(); out.innerHTML = `ข้อต่อไป: สร้าง <b>${R().fn} θ</b> = ${tgDef(R().fn)}`; }, 1500); };
+  draw(); out.innerHTML = `สร้าง <b>${R().fn} θ</b> = ${tgDef(R().fn)}`;
+  wrap.append(h('div', { class: 'cap', html: cap }), h('div', { class: 'tg-row' }, fig, h('div', { class: 'colstack tg-sidecol' }, card, list)), out); return wrap;
+}
+
+/* ---------- เลือกอัตราส่วนที่ใช้หาด้าน (รู้มุม รู้ด้านหนึ่ง หาอีกด้าน) ---------- */
+/* rounds = [{ deg, know: role, kv, find: role }] */
+function tgPickSim(rounds) {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board' }), out = fNote(), steps = h('div', { class: 'colstack tg-steps' }); let i = 0;
+  const btns = h('div', { class: 'rowstack m3-parts' }, ...['sin', 'cos', 'tan'].map(fn => h('button', { class: 'btn ia m3-part', onclick: e => { e.stopPropagation(); pickFn(fn); } }, `${fn} θ`)));
+  const fnFor = (k, f) => Object.keys(TG_FN).slice(0, 3).find(fn => { const p = TG_FN[fn]; return (p[0] === k && p[1] === f) || (p[0] === f && p[1] === k); });
+  const draw = () => { const r = rounds[i], sd = {}; sd[r.know] = `${r.kv}`; sd[r.find] = 'x'; const shape = { o: Math.sin(r.deg * TG_RAD) * 10, a: Math.cos(r.deg * TG_RAD) * 10 };
+    fig.innerHTML = tgTriSVG({ ...shape, ref: 'A', refLab: r.deg + '°', sides: sd, hl: [r.know, r.find], W: 380, H: 240 }); steps.innerHTML = ''; out.innerHTML = `รู้<b style="color:${TG_COL[r.know]}">${TG_TH[r.know]}</b> อยากรู้<b style="color:${TG_COL[r.find]}">${TG_TH[r.find]}</b> — ใช้อัตราส่วนใด?`; };
+  const pickFn = fn => { const r = rounds[i]; if (!r) return; const want = fnFor(r.know, r.find); if (fn !== want) { sfx.no(); out.innerHTML = `${fn} θ = ${tgDef(fn)} — ไม่ได้ใช้ทั้ง${TG_TH[r.know]}และ${TG_TH[r.find]} ลองใหม่`; return; }
+    const [n, d] = TG_FN[fn], v = tgV(fn, r.deg), up = n === r.find, x = up ? r.kv * v : r.kv / v;
+    steps.innerHTML = `<div>${tgEq(`${fn} ${r.deg}°`, up ? tgF('x', r.kv) : tgF(r.kv, 'x'))}</div><div>${up ? tgEq('x', `${r.kv} × ${fn} ${r.deg}°`, `${r.kv} × ${tgV3(fn, r.deg)}`, `<b>${tgN(x)}</b>`) : tgEq('x', `${r.kv} ÷ ${fn} ${r.deg}°`, `${r.kv} ÷ ${tgV3(fn, r.deg)}`, `<b>${tgN(x)}</b>`)}</div>`;
+    sfx.pop(i + 3); i++; if (i >= rounds.length) { out.innerHTML = 'ครบแล้ว ✓ — เลือกอัตราส่วนที่มี<b>ด้านที่รู้</b>กับ<b>ด้านที่ต้องการหา</b>อยู่ด้วยกัน'; sfx.ok(); teachDone(wrap); return; }
+    out.innerHTML = `ใช้ <b>${fn} θ</b> ถูกแล้ว ✓`; setTimeout(draw, 2200); };
+  draw(); wrap.append(h('div', { class: 'cap' }, 'แตะอัตราส่วนที่ใช้หาค่า x'), h('div', { class: 'tg-row' }, fig, steps), btns, out); return wrap;
+}
+
+/* ---------- มุมพิเศษ: แตะช่องตารางให้ครบ ---------- */
+function tgSpTable(fns = ['sin', 'cos', 'tan']) {
+  const wrap = tgWrap(), tb = h('div', { class: 'm3-out tg-sp' }), out = fNote(), seen = new Set(), degs = [30, 45, 60];
+  const why = (fn, d) => { const s = d === 45 ? { o: '1', a: '1', h: tgRt(2) } : d === 30 ? { o: '1', a: tgRt(3), h: '2' } : { o: tgRt(3), a: '1', h: '2' }, m = { opp: s.o, adj: s.a, hyp: s.h }, [n, dd] = TG_FN[fn]; return `${fn} ${d}° = ${tgDef(fn)} = ${tgF(m[n], m[dd])}`; };
+  const draw = () => { tb.innerHTML = `<table><tr><th></th>${degs.map(d => `<th>${d}°</th>`).join('')}</tr>${fns.map(fn => `<tr><th>${fn}</th>${degs.map(d => { const k = fn + d; return `<td class="ia ${seen.has(k) ? 'hl' : ''}" data-k="${k}">${seen.has(k) ? TG_SP[d][fn] : '?'}</td>`; }).join('')}</tr>`).join('')}</table>`;
+    tb.querySelectorAll('td[data-k]').forEach(td => td.onclick = e => { e.stopPropagation(); const k = td.dataset.k, fn = k.replace(/\d+/, ''), d = +k.replace(/\D+/, ''); if (seen.has(k)) return; seen.add(k); sfx.pop(seen.size % 7 + 1); draw();
+      out.innerHTML = why(fn, d) + (seen.size === fns.length * 3 ? '&emsp;ครบตาราง ✓' : ''); if (seen.size === fns.length * 3) { sfx.ok(); teachDone(wrap); } }); };
+  draw(); out.innerHTML = 'แตะช่อง ? ทีละช่อง'; wrap.append(h('div', { class: 'tg-row' }, h('div', { class: 'tg-fig2', html: tgSpFigs() }), tb), out); return wrap;
+}
+/* the two special triangles side by side */
+const tgSpFigs = () => tgTriSVG({ o: 1, a: Math.sqrt(3), ref: 'A', refLab: '30°', ang: { B: '60°' }, sides: { opp: '1', adj: tgPlain(tgRt(3)), hyp: '2' }, W: 300, H: 190, pad: 38 })
+  + tgTriSVG({ o: 1, a: 1, ref: 'A', refLab: '45°', ang: { B: '45°' }, sides: { opp: '1', adj: '1', hyp: tgPlain(tgRt(2)) }, W: 230, H: 190, pad: 38 });
+
+/* ---------- พับครึ่งสามเหลี่ยมด้านเท่า / ตัดครึ่งสี่เหลี่ยมจัตุรัส ---------- */
+function tgSimHalf() {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board' }), out = fNote(), seen = new Set(); let mode = 'eq';
+  const eq = cut => `<svg viewBox="0 0 300 250" class="tg-scene" aria-hidden="true"><path d="M30 220 L270 220 L150 12 Z" fill="${cut ? '#F4FAFF' : '#E8F4FD'}" stroke="#2B2550" stroke-width="3"/>${cut ? `<path d="M150 220 L270 220 L150 12 Z" fill="#E8F4FD" stroke="#2B2550" stroke-width="3"/><path d="M150 12 V220" stroke="${TG_COL.opp}" stroke-width="5"/>${tgRA(150, 220, 1, -1)}${tgTx(140, 130, tgPlain(tgRt(3)), 'tg-sv', TG_COL.opp, 'end')}${tgTx(210, 244, '1', 'tg-sv', TG_COL.adj)}${tgTx(90, 244, '1', 'tg-sv', '#9AA3B8')}${tgTx(226, 108, '2', 'tg-sv', TG_COL.hyp, 'start')}${tgTx(242, 210, '60°', 'tg-ang', '#F08A24', 'end')}${tgTx(160, 66, '30°', 'tg-ang', '#F08A24', 'start')}` : `${tgTx(150, 244, '2', 'tg-sv')}${tgTx(76, 108, '2', 'tg-sv', '#2B2550', 'end')}${tgTx(226, 108, '2', 'tg-sv', '#2B2550', 'start')}${tgTx(60, 212, '60°', 'tg-ang', '#F08A24', 'start')}${tgTx(242, 212, '60°', 'tg-ang', '#F08A24', 'end')}${tgTx(150, 54, '60°', 'tg-ang', '#F08A24')}`}</svg>`;
+  const sq = cut => `<svg viewBox="0 0 300 250" class="tg-scene" aria-hidden="true"><rect x="60" y="20" width="190" height="190" fill="${cut ? '#F4FAFF' : '#E8F4FD'}" stroke="#2B2550" stroke-width="3"/>${cut ? `<path d="M60 210 L250 210 L250 20 Z" fill="#E8F4FD" stroke="#2B2550" stroke-width="3"/><path d="M60 210 L250 20" stroke="${TG_COL.hyp}" stroke-width="5"/>${tgRA(250, 210, -1, -1)}${tgTx(140, 104, tgPlain(tgRt(2)), 'tg-sv', TG_COL.hyp, 'end')}${tgTx(102, 202, '45°', 'tg-ang', '#F08A24', 'start')}${tgTx(242, 70, '45°', 'tg-ang', '#F08A24', 'end')}` : ''}${tgTx(155, 236, '1', 'tg-sv')}${tgTx(268, 122, '1', 'tg-sv', '#2B2550', 'start')}</svg>`;
+  const steps = [['พับครึ่งสามเหลี่ยมด้านเท่า', () => { fig.innerHTML = eq(true); return 'สามเหลี่ยมด้านเท่ายาวด้านละ 2 มุมละ 60° → พับครึ่งได้สามเหลี่ยมมุมฉาก มุม 30° และ 60° ฐาน 1 ฉาก 2 สูง = √(2² − 1²) = <b>√3</b>'; }],
+    ['ตัดสี่เหลี่ยมจัตุรัสตามแนวทแยง', () => { fig.innerHTML = sq(true); return 'สี่เหลี่ยมจัตุรัสด้านละ 1 ตัดตามเส้นทแยงมุม → สามเหลี่ยมมุมฉากหน้าจั่ว มุม 45° 45° ด้านตรงข้ามมุมฉาก = √(1² + 1²) = <b>√2</b>'; }]];
+  const row = h('div', { class: 'rowstack m3-parts' }, ...steps.map(([t, fn], j) => h('button', { class: 'btn ia m3-part', style: { '--pc': S2COL[j] }, onclick: e => { e.stopPropagation(); e.currentTarget.classList.add('on'); seen.add(j); out.innerHTML = fn(); sfx.pop(seen.size + 2); if (seen.size === 2) { out.innerHTML += '&emsp;✓ จำสามเหลี่ยมสองรูปนี้ได้ ก็หาค่ามุม 30° 45° 60° ได้เอง'; sfx.ok(); teachDone(wrap); } } }, t)));
+  fig.innerHTML = eq(false); out.innerHTML = 'แตะปุ่มทีละปุ่ม'; wrap.append(h('div', { class: 'cap' }, 'สร้างสามเหลี่ยมมุมฉากที่มีมุม 30°, 45°, 60° จากรูปที่รู้จัก'), row, fig, out); return wrap;
+}
+
+/* ---------- ตารางค่าตรีโกณ: หาค่าตามที่ถาม ---------- */
+function tgTableSim(asks, lo = 25, hi = 36) {
+  const wrap = tgWrap(), tb = h('div', { class: 'm3-out tg-vt' }), out = fNote(); let i = 0;
+  const draw = hl => { tb.innerHTML = `<table><tr><th>มุม</th><th>sin</th><th>cos</th><th>tan</th></tr>${Array.from({ length: hi - lo + 1 }, (_, j) => lo + j).map(d => `<tr><th>${d}°</th>${['sin', 'cos', 'tan'].map(fn => `<td class="ia ${hl === fn + d ? 'hl' : ''}" data-f="${fn}" data-d="${d}">${tgV3(fn, d)}</td>`).join('')}</tr>`).join('')}</table>`;
+    tb.querySelectorAll('td').forEach(td => td.onclick = e => { e.stopPropagation(); if (i >= asks.length) return; const [fn, d] = asks[i]; if (td.dataset.f !== fn || +td.dataset.d !== d) { sfx.no(); out.innerHTML = `ยังไม่ใช่ — หาแถว <b>${d}°</b> แล้วดูคอลัมน์ <b>${fn}</b>`; return; }
+      i++; draw(fn + d); sfx.pop(i + 2); out.innerHTML = `${fn} ${d}° ≈ <b>${tgV3(fn, d)}</b>` + (i < asks.length ? `&emsp;ต่อไป: หา <b>${asks[i][0]} ${asks[i][1]}°</b>` : '&emsp;✓ อ่านตารางเป็นแล้ว');
+      if (i === asks.length) { sfx.ok(); teachDone(wrap); } }); };
+  draw(); out.innerHTML = `แตะค่าของ <b>${asks[0][0]} ${asks[0][1]}°</b> ในตาราง`; wrap.append(h('div', { class: 'cap' }, 'ตารางค่าอัตราส่วนตรีโกณมิติ (ทศนิยม 3 ตำแหน่ง)'), tb, out); return wrap;
+}
+
+/* =========================================================
+   question types
+   ========================================================= */
+/* story = โจทย์ยาว แสดงในกล่องเรื่องด้านซ้าย · q = คำถามสั้นบนหัว (ทั้งสองถูกอ่านออกเสียง) */
+const tgLeft = (story, fig) => story ? h('div', { class: 'colstack tg-left' }, h('div', { class: 'tg-story', html: story }), fig ? tgFig(fig) : '') : fig ? tgFig(fig) : '';
+const tgSaySt = (story, q) => tgSay((story ? story + ' ' : '') + q);
+Q.tgOpt = ({ story, q, fig, opts, right, hint, sig, base, cap, diff }) => ({ prompt: q, say: tgSaySt(story, q), __sig: 'tgo ' + (sig || q + right), ...(base ? { __base: base, __baseCap: cap || 2 } : {}), ...(diff != null ? { __diff: diff } : {}),
+  mount(bd, ctx) { const ch = choices(ctx, shuffle(opts.map(o => ({ value: String(o), label: String(o) }))), String(right), { hint }); ch.classList.add('tg-opts'); if (opts.some(o => tgPlain(o).length > 9)) ch.querySelectorAll('.opt').forEach(x => x.classList.add('txt'));
+    bd.append(h('div', { class: fig || story ? 'tg-qrow' : 'colstack' }, tgLeft(story, fig), ch)); } });
+Q.tgNum = ({ story, q, fig, a, unit, hint, sig, base, cap, diff }) => ({ prompt: q, say: tgSaySt(story, q), __sig: 'tgn ' + (sig || q), ...(base ? { __base: base, __baseCap: cap || 2 } : {}), ...(diff != null ? { __diff: diff } : {}),
+  mount(bd, ctx) { bd.append(h('div', { class: fig || story ? 'tg-qrow' : 'colstack' }, tgLeft(story, fig), miAns(ctx, a, { unit, hint }))); } });
+/* tap the side: tri = tgTriSVG options (tap is added) · ask = role or side key */
+Q.tgSide = ({ q, tri, ask, hint, sig, diff }) => ({ prompt: q, say: tgSay(q), __sig: 'tgs ' + (sig || q + JSON.stringify(tri)), ...(diff != null ? { __diff: diff } : {}),
+  mount(bd, ctx) { const ref = tri.ref === undefined ? 'A' : tri.ref, key = ['AB', 'BC', 'AC'].includes(ask) ? ask : tgKeyOf(ask, ref), fig = h('div', { class: 'm3-figbox tg-fig ia rvl' });
+    const draw = (hl, bad) => { fig.innerHTML = tgTriSVG({ ...tri, tap: true, hl: hl ? [hl] : [] }); if (bad) { const p = fig.querySelector(`.tg-sd[data-k="${bad}"]`); if (p) p.setAttribute('stroke', '#E0445A'); }
+      fig.querySelectorAll('.tg-hit').forEach(p => p.onclick = e => { e.stopPropagation(); if (fig.classList.contains('done')) return; const k = p.dataset.k, ok = k === key; if (ok) { fig.classList.add('done'); draw(k); } else draw(null, k); ctx.check(ok, hint); }); };
+    fig.reveal = () => { fig.classList.add('done'); draw(key); }; fig.ansText = 'ด้าน ' + key; draw(); bd.append(h('div', { class: 'colstack' }, fig)); } });
+const tgTF = (text, ok, why) => Q.hTF({ text, ok: !!ok, why });
+/* choices for a ratio of a Pythagorean triangle: right + the usual mix-ups */
+const tgRatioOpts = (fn, t) => { const v = (n, d) => tgFH(n, d), m = { opp: t[0], adj: t[1], hyp: t[2] }, [n, d] = TG_FN[fn], other = ['opp', 'adj', 'hyp'].find(r => r !== n && r !== d);
+  return { right: v(m[n], m[d]), opts: [v(m[n], m[d]), v(m[d], m[n]), v(m[other], m[d]), v(m[n], m[other])] }; };
+
+/* =========================================================
+   story scenes (สัดส่วนตามมุมจริง ไม่บอกคำตอบ) — tgScn(kind, o)
+   o = { deg, deg2, d, hgt, L, eye, top } ป้ายเป็นข้อความ ('?' = สิ่งที่ถาม)
+   ========================================================= */
+function tgScn(kind, o = {}) {
+  const W = 440, H = 270, G = 230, r = (o.deg || 40) * TG_RAD, lb = (x, y, t, c = '#2B2550', a = 'middle') => t == null || t === '' ? '' : tgTx(x, y, t, 'tg-lb', c, a);
+  const ground = `<path d="M10 ${G} H430" stroke="#9CCBEA" stroke-width="4"/>`, eyeC = '#2FB5A3', depC = '#E36A8C';
+  let s = '';
+  if (kind === 'tower' || kind === 'tree') { const ex = 70, ey = G - (o.eye ? 26 : 0), X = Math.min(380, ex + Math.max(120, 150 / Math.tan(r) * 1.0)), top = Math.max(26, ey - (X - ex) * Math.tan(r));
+    s += ground + (kind === 'tree' ? `<path d="M${X} ${G} V${top + 30}" stroke="#8B5A2B" stroke-width="10"/><ellipse cx="${X}" cy="${top + 30}" rx="30" ry="34" fill="#9FD47A" stroke="#5FA336" stroke-width="2"/>` : `<rect x="${X - 14}" y="${top}" width="28" height="${G - top}" fill="#EEF7FD" stroke="#6FB4E0" stroke-width="2.4"/><path d="M${X - 18} ${top} h36 l-6 -12 h-24 z" fill="#E36A8C"/>`);
+    s += `<path d="M${ex} ${ey} L${X} ${top}" stroke="${eyeC}" stroke-width="2.6" stroke-dasharray="7 5"/><path d="M${ex} ${ey} H${X}" stroke="#5A6A8A" stroke-width="1.6" stroke-dasharray="5 5"/>${tgArc([ex, ey], 0, Math.atan2(ey - top, X - ex), 34, eyeC)}${lb(ex + 44, ey - 8, o.degT ?? (o.deg + '°'), eyeC, 'start')}`;
+    s += `<g transform="translate(${ex - 4} ${G - 14}) scale(1.25)">${PL_PENG}</g>` + lb((ex + X) / 2, G + 26, o.d) + lb(X + 22, (ey + top) / 2, o.hgt, '#B5462F', 'start') + (o.eye ? lb(ex - 22, G - 6, o.eye, '#5A6A8A', 'end') : '');
+    if (o.eye) s += `<path d="M${X + 14} ${ey} V${G}" stroke="#5A6A8A" stroke-width="1.6"/>`; }
+  else if (kind === 'cliff' || kind === 'boats') { const tx = 80, ty = 48, d1 = Math.min(330, (G - ty) / Math.tan(r)), B1 = [tx + d1, G], r2 = (o.deg2 || 30) * TG_RAD, B2 = [tx + Math.min(350, (G - ty) / Math.tan(r2)), G];
+    s += `<rect x="0" y="${G}" width="440" height="40" fill="#9CD3F2"/><path d="M0 ${G} H440" stroke="#6FB4E0" stroke-width="2"/><path d="M20 ${G} V${ty} H${tx} V${G} Z" fill="#EEF7FD" stroke="#9CCBEA" stroke-width="2.4"/><g transform="translate(${tx - 10} ${ty - 14}) scale(1.25)">${PL_PENG}</g>`;
+    s += `<path d="M${tx} ${ty} H430" stroke="#5A6A8A" stroke-width="1.6" stroke-dasharray="5 5"/>`;
+    const boat = ([x, y]) => `<g transform="translate(${x} ${y})"><path d="M-20 -4 h40 l-7 10 h-26 z" fill="#E0A35C" stroke="#A86A2A" stroke-width="1.6"/><path d="M0 -4 V-24 l12 10 h-12" fill="#fff" stroke="#9CCBEA" stroke-width="1.4"/></g>`;
+    s += `<path d="M${tx} ${ty} L${B1[0]} ${B1[1] - 6}" stroke="${depC}" stroke-width="2.6" stroke-dasharray="7 5"/>${tgArc([tx, ty], 0, -Math.atan2(G - 6 - ty, B1[0] - tx), 60, depC)}${(() => { const a1 = Math.atan2(G - 6 - ty, B1[0] - tx), m = kind === 'boats' ? (a1 + Math.atan2(G - 6 - ty, B2[0] - tx)) / 2 + .12 : a1 / 2; return lb(tx + 76 * Math.cos(m), ty + 76 * Math.sin(m) + 6, o.degT ?? (o.deg + '°'), depC, 'start'); })()}${boat(B1)}`;
+    if (kind === 'boats') s += `<path d="M${tx} ${ty} L${B2[0]} ${B2[1] - 6}" stroke="#7C5CE0" stroke-width="2.4" stroke-dasharray="7 5"/>${tgArc([tx, ty], 0, -Math.atan2(G - 6 - ty, B2[0] - tx), 118, '#7C5CE0')}${(() => { const m = Math.atan2(G - 6 - ty, B2[0] - tx) / 2; return lb(tx + 134 * Math.cos(m), ty + 134 * Math.sin(m) + 6, o.deg2 + '°', '#7C5CE0', 'start'); })()}${boat(B2)}${lb((B1[0] + B2[0]) / 2, G + 30, o.d2)}`;
+    s += lb(10, (ty + G) / 2, o.hgt, '#B5462F', 'start') + lb((tx + B1[0]) / 2, G + 30, o.d); }
+  else if (kind === 'kite') { const A = [90, G - 20], L = 240, K = [A[0] + L * Math.cos(r), A[1] - L * Math.sin(r)];
+    s += ground + `<g transform="translate(${A[0] - 6} ${A[1] + 4}) scale(1.25)">${PL_PENG}</g><path d="M${A} L${K}" stroke="#5A6A8A" stroke-width="2"/><path d="M${K[0]} ${K[1]} V${A[1]}" stroke="#B5462F" stroke-width="2" stroke-dasharray="6 5"/><path d="M${A} H${K[0]}" stroke="#5A6A8A" stroke-width="1.4" stroke-dasharray="5 5"/>${tgArc(A, 0, r, 34, eyeC)}${lb(A[0] + 44, A[1] - 8, o.degT ?? (o.deg + '°'), eyeC, 'start')}`;
+    s += `<g transform="translate(${K[0]} ${K[1]})"><path d="M0 -20 L14 0 L0 20 L-14 0 Z" fill="#E36A8C" stroke="#B5466A" stroke-width="2"/><path d="M0 20 q6 10 -2 18 q-6 8 2 14" stroke="#B5466A" fill="none" stroke-width="1.6"/></g>` + lb((A[0] + K[0]) / 2 - 14, (A[1] + K[1]) / 2 - 8, o.L, '#5A6A8A', 'end') + lb(K[0] + 12, (K[1] + A[1]) / 2, o.hgt, '#B5462F', 'start') + lb((A[0] + K[0]) / 2, A[1] + 30, o.d); }
+  else if (kind === 'ladder' || kind === 'ramp') { const F = [330, G], L = 210, A = [F[0] - L * Math.cos(r), G], B = [F[0], G - L * Math.sin(r)];
+    s += ground + (kind === 'ladder' ? `<rect x="${F[0]}" y="20" width="24" height="${G - 20}" fill="#D6ECFA" stroke="#9CCBEA" stroke-width="2"/><path d="M${A} L${B}" stroke="#B5462F" stroke-width="7" stroke-linecap="round"/>` : `<path d="M${A} L${B} L${F} Z" fill="#F4FAFF" stroke="#9CCBEA" stroke-width="2"/><path d="M${A} L${B}" stroke="#5A6A8A" stroke-width="6" stroke-linecap="round"/>`);
+    s += `${tgRA(F[0], F[1], -1, -1)}${tgArc(A, 0, r, 34, '#F08A24')}${lb(A[0] + 44, A[1] - 8, o.degT ?? (o.deg + '°'), '#F08A24', 'start')}` + lb((A[0] + B[0]) / 2 - 12, (A[1] + B[1]) / 2 - 6, o.L, '#B5462F', 'end') + lb(F[0] - 10, (B[1] + G) / 2, o.hgt, '#2B2550', 'end') + lb((A[0] + F[0]) / 2, G + 28, o.d); }
+  else if (kind === 'two') { const T = [380, 40], r2 = (o.deg2 || 60) * TG_RAD, HT = G - T[1], x1 = T[0] - HT / Math.tan(r), x2 = T[0] - HT / Math.tan(r2);
+    s += ground + `<rect x="${T[0] - 12}" y="${T[1]}" width="24" height="${HT}" fill="#EEF7FD" stroke="#6FB4E0" stroke-width="2.4"/><path d="M${T[0] - 16} ${T[1]} h32 l-6 -12 h-20 z" fill="#E36A8C"/>`;
+    s += `<path d="M${x1} ${G} L${T}" stroke="${eyeC}" stroke-width="2.4" stroke-dasharray="7 5"/><path d="M${x2} ${G} L${T}" stroke="#7C5CE0" stroke-width="2.4" stroke-dasharray="7 5"/>${tgArc([x1, G], 0, r, 30, eyeC)}${tgArc([x2, G], 0, r2, 26, '#7C5CE0')}${lb(x1 + 36, G - 8, o.deg + '°', eyeC, 'start')}${lb(x2 + 30, G - 10, o.deg2 + '°', '#7C5CE0', 'start')}`;
+    s += `<circle cx="${x1}" cy="${G}" r="5" fill="${eyeC}"/><circle cx="${x2}" cy="${G}" r="5" fill="#7C5CE0"/>${lb(x1, G + 24, 'A')}${lb(x2, G + 24, 'B')}` + lb((x1 + x2) / 2, G + 30, o.d) + lb(T[0] - 22, (T[1] + G) / 2, o.hgt, '#B5462F', 'end') + lb((x2 + T[0]) / 2, G + 30, o.d2); }
+  return `<svg class="tg-scn" viewBox="0 0 ${W} ${H + 12}" aria-hidden="true">${s}</svg>`;
+}
+
+/* =========================================================
+   ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ — บทเรียน 4101–4118 + บอส 4119 (v240) — prefix tg
+   ลำดับตามแผนของผู้ใช้ 18 ด่าน: พื้นฐานสามเหลี่ยมมุมฉาก (1–3) → ความหมาย sin cos tan (4–7)
+   → เนื้อหาเสริม cosec sec cot (8–11) → อัตราส่วนของมุมแหลม (12–14) → การประยุกต์ (15–18)
+   ตัวช่วย/รูป/หน้าลงมืออยู่ใน m3t.js · แต่งโจทย์ใหม่ทั้งหมด · ตัวอย่างในหน้าสอนไม่ซ้ำกับเกมของด่านเดียวกัน
+   ========================================================= */
+const LT3 = (no, place, title, short, goal, teach, game, x = {}) => ({ id: 4100 + no, no, place, title, short, tone: TONES5[(no + 3) % 6], goal, teach, game, gameN: 8, ...x });
+const TG_NM = [['A', 'B', 'C'], ['P', 'Q', 'R'], ['D', 'E', 'F'], ['K', 'L', 'M'], ['X', 'Y', 'Z']];
+const tgRot = () => ({ rot: tgPick([0, 0, 90, 180, 270]), flip: Math.random() < .5 });
+const TG_IX = { opp: 0, adj: 1, hyp: 2 };
+/* triangle from [opp, adj, hyp] of the reference angle (or their squares with sq: true)
+   o = { ref: 'A'|'B', names, mark: false (no arc), refLab, txt: { role: text }, hide: [roles], rot, flip } */
+const tgFigT = (t, o = {}) => { const ref = o.ref || 'A', L = o.sq ? t.map(Math.sqrt) : t, sides = {};
+  ['opp', 'adj', 'hyp'].forEach(r => { sides[tgKeyOf(r, ref)] = o.txt && o.txt[r] != null ? o.txt[r] : (o.hide || []).includes(r) ? '' : o.sq ? tgLenT(t[TG_IX[r]]) : String(t[TG_IX[r]]); });
+  const R = o.rot != null ? { rot: o.rot, flip: o.flip } : tgRot();
+  return tgTriSVG({ o: ref === 'B' ? L[1] : L[0], a: ref === 'B' ? L[0] : L[1], ref: o.mark === false ? null : ref, refLab: o.refLab, names: o.names || null, sides, ...R, W: o.W || 380, H: o.H || 250 }); };
+const tgAng = (N, ref) => N ? N[ref === 'B' ? 1 : 0] : 'θ';
+const tgHint = (fn, ang = 'θ') => { const [n, d] = TG_FN[fn]; return `${fn} ${ang} = ${TG_LONG[n]}${n === 'hyp' ? '' : ' ' + ang} ÷ ${TG_LONG[d]}${d === 'hyp' ? '' : ' ' + ang}`; };
+/* "จากรูป sin θ = ?" — typed answer */
+const tgQnum = (fn, t, o = {}) => { const N = o.names ? tgPick(TG_NM) : null, ref = o.ref || 'A', a = tgAng(N, ref), [n, d] = TG_FN[fn];
+  return Q.tgNum({ q: o.q || `จากรูป <b>${fn} ${a}</b> เท่ากับเท่าใด`, fig: tgFigT(t, { ref, names: N, mark: !N, hide: o.hide, txt: o.txt }), a: tgFS(t[TG_IX[n]], t[TG_IX[d]]), hint: o.hint || tgHint(fn, a), sig: 'qn ' + fn + t + ref + (o.hide || ''), base: o.base, diff: o.diff ?? 10 }); };
+/* same with choices (the usual mix-ups) */
+const tgQopt = (fn, t, o = {}) => { const N = o.names ? tgPick(TG_NM) : null, ref = o.ref || 'A', a = tgAng(N, ref), R = tgRatioOpts(fn, t);
+  return Q.tgOpt({ q: o.q || `จากรูป <b>${fn} ${a}</b> เท่ากับข้อใด`, fig: tgFigT(t, { ref, names: N, mark: !N }), opts: R.opts, right: R.right, hint: tgHint(fn, a), sig: 'qo ' + fn + t + ref, base: o.base, diff: o.diff ?? 8 }); };
+/* radical triangles: squares [opp², adj², hyp²] */
+const TG_RT = [[4, 5, 9], [5, 4, 9], [1, 3, 4], [3, 1, 4], [1, 4, 5], [4, 1, 5], [4, 9, 13], [9, 4, 13], [1, 9, 10], [9, 1, 10], [7, 9, 16], [9, 7, 16], [2, 7, 9], [7, 2, 9], [3, 6, 9], [6, 3, 9], [5, 11, 16]];
+const tgQrad = (fn, o = {}) => { const s = tgPick(TG_RT.filter(x => !(o.skip || []).some(k => k + '' === x + ''))), [n, d] = TG_FN[fn], other = ['opp', 'adj', 'hyp'].find(r => r !== n && r !== d), m = { opp: s[0], adj: s[1], hyp: s[2] };
+  return Q.tgOpt({ q: `จากรูป <b>${fn} θ</b> เท่ากับข้อใด`, fig: tgFigT(s, { sq: true, hide: o.hide }), opts: [tgRatioH(m[n], m[d]), tgRatioH(m[d], m[n]), tgRatioH(m[other], m[d]), tgRatioH(m[n], m[other])], right: tgRatioH(m[n], m[d]), hint: tgHint(fn) + (o.hide ? ' (หาด้านที่ไม่รู้ด้วยทฤษฎีบทพีทาโกรัสก่อน)' : ''), sig: 'qr ' + fn + s + (o.hide || ''), base: o.base || 'tgrad', diff: o.diff ?? 16 }); };
+const tgDefQ = (fn, diff = 4) => { const all = ['opp', 'adj', 'hyp'], pairs = []; all.forEach(a => all.forEach(b => { if (a !== b) pairs.push(tgDef(Object.keys(TG_FN).find(f => TG_FN[f][0] === a && TG_FN[f][1] === b))); }));
+  const right = tgDef(fn); return Q.tgOpt({ q: `<b>${fn} θ</b> เท่ากับข้อใด`, opts: [right, ...shuffle(pairs.filter(p => p !== right)).slice(0, 3)], right, hint: 'ข้าม = ด้านตรงข้ามมุม θ · ชิด = ด้านประชิดมุม θ · ฉาก = ด้านตรงข้ามมุมฉาก', sig: 'def ' + fn, base: 'tgdef', cap: 1, diff }); };
+const tgDecTrip = [[3, 4, 5, 10], [4, 3, 5, 10], [6, 8, 10, 1], [8, 6, 10, 1], [12, 16, 20, 1], [16, 12, 20, 1], [24, 7, 25, 4], [7, 24, 25, 4]];
+
+const LESSONS_M3C11 = [
+  /* ---------- 1 ---------- */
+  LT3(1, 'ลานน้ำแข็งมุมฉาก', 'ทบทวนสามเหลี่ยมมุมฉาก', 'มุมฉาก', 'บอกได้ว่าสามเหลี่ยมใดเป็นสามเหลี่ยมมุมฉาก ระบุมุมฉาก ด้านตรงข้ามมุมฉาก และหาขนาดของมุมแหลมที่เหลือ', [
+    T('<b>ลากจุด B</b> — ทำให้เป็นสามเหลี่ยมมุมฉาก', 'ลากจุด B ทำให้เป็นสามเหลี่ยมมุมฉาก', el => el.append(tgSimRight())),
+    T('<b>ส่วนประกอบของสามเหลี่ยมมุมฉาก</b> — แตะการ์ดทีละใบ', 'ส่วนประกอบของสามเหลี่ยมมุมฉาก แตะการ์ดทีละใบ', el => el.append(h('div', { class: 'colstack' }, tgFig(tgTriSVG({ o: 3, a: 4, ref: null, names: true, hl: ['AB'], W: 360, H: 220 })),
+      miCards([['มุมฉาก', '<b>มุม C = 90°</b><small>มีเครื่องหมาย ∟ กำกับ สามเหลี่ยมมีมุมฉากได้มุมเดียว</small>'], ['ด้านตรงข้ามมุมฉาก', '<b>ด้าน AB</b><small>อยู่ตรงข้ามมุมฉาก ไม่แตะมุม C และยาวที่สุดเสมอ</small>'], ['มุมแหลมสองมุม', '<b>มุม A + มุม B = 90°</b><small>เพราะมุมทั้งสามรวมกัน 180° และมุมฉากใช้ไปแล้ว 90°</small>']])))),
+    T('ตัวอย่างทีละขั้น: <b>หาขนาดมุมที่เหลือ</b>', 'ตัวอย่างทีละขั้น หาขนาดมุมที่เหลือ', el => el.append(dcWalk(tgTriSVG({ o: 2.8, a: 4, ref: null, names: true, ang: { A: '35°', B: '?' }, W: 360, H: 220 }),
+      [['① มุมใดเป็นมุมฉาก', 'มุม C มีเครื่องหมาย ∟ → มุม C = 90°'], ['② มุมทั้งสามรวมกัน', 'มุม A + มุม B + มุม C = 180°'], ['③ แทนค่า', '35° + มุม B + 90° = 180°'], ['④ หามุม B', 'มุม B = 180° − 125° = <b>55°</b>']],
+      'ทางลัด: มุมแหลมสองมุมของสามเหลี่ยมมุมฉากรวมกัน 90° → 90° − 35° = 55°', 'ทางลัด มุมแหลมสองมุมรวมกันเก้าสิบองศา')))
+  ], () => { const x = tgPick([22, 28, 32, 38, 41, 47, 52, 58, 63, 67, 72]), y = tgPick([24, 33, 44, 53, 61, 66].filter(v => v !== x)), N = tgPick(TG_NM.slice(1)), p = tgPick([25, 30, 40, 50, 65]), rr = tgPick([[1, 2], [1, 4], [2, 3], [1, 5], [4, 5]]);
+    const kind = tgPick(['r', 'o', 'a']), a2 = kind === 'r' ? tgPick([34, 48, 57]) : kind === 'o' ? tgPick([25, 31, 28]) : tgPick([62, 55, 71]), b2 = kind === 'r' ? 90 - a2 : kind === 'o' ? tgPick([34, 40, 45]) : tgPick([58, 64, 49]);
+    return [Q.tgOpt({ q: 'สามเหลี่ยมที่มีมุมหนึ่งเป็น<b>มุมฉาก</b> เรียกว่าสามเหลี่ยมชนิดใด', opts: ['สามเหลี่ยมมุมฉาก', 'สามเหลี่ยมมุมแหลม', 'สามเหลี่ยมมุมป้าน'], right: 'สามเหลี่ยมมุมฉาก', hint: 'ตั้งชื่อตามมุมที่ใหญ่ที่สุด', sig: 'r1', diff: 3 }),
+      Q.tgNum({ q: 'มุมแหลมสองมุมของสามเหลี่ยมมุมฉาก รวมกันได้กี่องศา', a: 90, unit: 'องศา', hint: 'มุมทั้งสามรวมกัน 180° และมีมุมฉากหนึ่งมุม', sig: 'r0', diff: 5 }),
+      Q.tgNum({ q: `สามเหลี่ยมมุมฉากมีมุมแหลมมุมหนึ่ง <b>${x}°</b> มุมแหลมอีกมุมมีขนาดกี่องศา`, a: 90 - x, unit: 'องศา', hint: 'มุมแหลมสองมุมรวมกันได้ 90°', sig: 'r2 ' + x, diff: 8 }),
+      Q.tgNum({ q: `จากรูป มุม ${N[0]} = ${y}° มุม ${N[1]} มีขนาดกี่องศา`, fig: tgTriSVG({ o: Math.tan(y * TG_RAD) * 4, a: 4, ref: null, names: N, ang: { A: y + '°', B: '?' }, ...tgRot(), W: 380, H: 250 }), a: 90 - y, unit: 'องศา', hint: `มุม ${N[2]} เป็นมุมฉาก`, sig: 'r3 ' + y, diff: 10 }),
+      Q.tgSide({ q: 'แตะ<b>ด้านตรงข้ามมุมฉาก</b>', tri: { o: tgPick([2, 3, 4.5]), a: tgPick([3.5, 4, 5]), ref: null, ...tgRot(), W: 380, H: 250 }, ask: 'AB', hint: 'ด้านที่ไม่แตะมุมฉากเลย', sig: 'r4', diff: 6 }),
+      Q.tgOpt({ q: `สามเหลี่ยม ${N.join('')} มีมุม ${N[1]} เป็นมุมฉาก ด้านใดเป็นด้านตรงข้ามมุมฉาก`, opts: [N[0] + N[2], N[0] + N[1], N[1] + N[2]], right: N[0] + N[2], hint: `ด้านตรงข้ามมุมฉากไม่มีจุด ${N[1]} อยู่บนด้าน`, sig: 'r5 ' + N, diff: 12 }),
+      Q.tgOpt({ q: 'สามเหลี่ยมที่มีขนาดของมุมตามข้อใด เป็นสามเหลี่ยมมุมฉาก', opts: [`${p}°, ${90 - p}°, 90°`, `${p}°, ${100 - p}°, 80°`, `${p - 5}°, ${85 - p}°, 100°`], right: `${p}°, ${90 - p}°, 90°`, hint: 'มีมุมใดเท่ากับ 90° ไหม', sig: 'r6 ' + p, diff: 9 }),
+      Q.tgOpt({ q: `สามเหลี่ยมรูปหนึ่งมีมุม ${a2}° และ ${b2}° เป็นสามเหลี่ยมชนิดใด`, opts: ['สามเหลี่ยมมุมฉาก', 'สามเหลี่ยมมุมแหลม', 'สามเหลี่ยมมุมป้าน'], right: { r: 'สามเหลี่ยมมุมฉาก', o: 'สามเหลี่ยมมุมป้าน', a: 'สามเหลี่ยมมุมแหลม' }[kind], hint: 'หามุมที่สามก่อน (180° − สองมุมที่รู้)', sig: 'r7 ' + a2 + b2, diff: 14 }),
+      Q.tgNum({ story: `สามเหลี่ยมมุมฉาก ABC มีมุม C เป็นมุมฉาก และ มุม A : มุม B = ${rr[0]} : ${rr[1]}`, q: 'มุม B มีขนาดกี่องศา', a: 90 * rr[1] / (rr[0] + rr[1]), unit: 'องศา', hint: `มุม A + มุม B = 90° แบ่งเป็น ${rr[0] + rr[1]} ส่วน`, sig: 'r8 ' + rr, diff: 18 }),
+      Q.tgOpt({ q: 'ด้านใดของสามเหลี่ยมมุมฉาก<b>ยาวที่สุด</b>เสมอ', opts: ['ด้านตรงข้ามมุมฉาก', 'ด้านที่อยู่ล่างสุด', 'ด้านที่ประชิดมุมฉาก'], right: 'ด้านตรงข้ามมุมฉาก', hint: 'ด้านที่อยู่ตรงข้ามมุมที่ใหญ่ที่สุด', sig: 'r9', diff: 5 }),
+      tgTF('สามเหลี่ยมมุมฉากมีมุมฉากได้เพียงมุมเดียว', true, 'ถ้ามีมุมฉากสองมุม มุมที่สามจะเหลือ 0°'), tgTF('มุมแหลมสองมุมของสามเหลี่ยมมุมฉากรวมกันได้ 180°', false, 'รวมกันได้ 90° เพราะมุมฉากใช้ไปแล้ว 90°')]; }),
+  /* ---------- 2 ---------- */
+  LT3(2, 'ทุ่งสามด้าน', 'การระบุด้านตรงข้ามมุม ด้านประชิดมุม และด้านตรงข้ามมุมฉาก', 'ข้าม·ชิด·ฉาก', 'ระบุด้านตรงข้ามมุม ด้านประชิดมุม และด้านตรงข้ามมุมฉาก เทียบกับมุมแหลมที่กำหนด แม้รูปจะหมุนหรือกลับด้าน', [
+    T('<b>ชื่อของด้าน</b> — แตะการ์ดทีละใบ', 'ชื่อของด้าน แตะการ์ดทีละใบ', el => el.append(h('div', { class: 'colstack' }, tgFig(tgTriSVG({ o: 3, a: 4, ref: 'A', col: true, roles: true, W: 380, H: 230 })),
+      miCards([['ข้าม', '<b>ด้านตรงข้ามมุม θ</b><small>ด้านที่ไม่แตะมุม θ เลย</small>'], ['ชิด', '<b>ด้านประชิดมุม θ</b><small>ด้านที่แตะมุม θ และไม่ใช่ด้านที่ยาวที่สุด</small>'], ['ฉาก', '<b>ด้านตรงข้ามมุมฉาก</b><small>ด้านที่ยาวที่สุด เป็นด้านเดิมเสมอ ไม่ว่าจะดูมุมใด</small>']])))),
+    T('<b>แตะด้าน</b> — แล้วย้ายมุม θ ไปอีกมุม', 'แตะด้านตามที่ถาม แล้วย้ายมุมทีตาไปอีกมุม', el => el.append(tgSimSides())),
+    T('ตัวอย่างทีละขั้น: <b>รูปที่หมุนอยู่</b>', 'ตัวอย่างทีละขั้น รูปที่หมุนอยู่', el => el.append(dcWalk(tgTriSVG({ o: 3, a: 4, ref: 'A', names: ['P', 'R', 'Q'], refLab: '', rot: 150, W: 360, H: 230 }),
+      [['① หามุมฉาก', 'มุม Q มีเครื่องหมาย ∟ → <b>PR</b> อยู่ตรงข้ามมุมฉาก = ฉาก'], ['② ด้านที่ไม่แตะมุม P', '<b>RQ</b> ไม่แตะจุด P → ข้าม (ด้านตรงข้ามมุม P)'], ['③ ด้านที่เหลือ', '<b>PQ</b> แตะมุม P → ชิด (ด้านประชิดมุม P)']],
+      'รูปจะหมุนหรือกลับด้านก็ได้ ให้เริ่มจากหามุมฉากก่อนเสมอ', 'เริ่มจากหามุมฉากก่อนเสมอ')))
+  ], () => { const qs = [], N = tgPick(TG_NM.slice(1)), side = tgPick(['AB', 'BC', 'AC']), ref = tgPick(['A', 'B']), role = tgRole(side, ref), nm = k => k.split('').map(c => N['ABC'.indexOf(c)]).join('');
+    ['opp', 'adj', 'hyp'].forEach((r, i) => qs.push(Q.tgSide({ q: `แตะ<b>${TG_LONG[r]}${r === 'hyp' ? '' : ' θ'}</b>`, tri: { o: tgPick([2.5, 3, 4]), a: tgPick([3, 4, 5]), ref: tgPick(['A', 'B']), ...tgRot(), W: 380, H: 250 }, ask: r, hint: r === 'opp' ? 'ด้านที่ไม่แตะมุม θ' : r === 'adj' ? 'ด้านที่แตะมุม θ แต่ไม่ใช่ด้านที่ยาวที่สุด' : 'ด้านที่ไม่แตะมุมฉาก', sig: 's1 ' + r, base: 'tgside', cap: 3, diff: 5 + i * 2 })));
+    qs.push(Q.tgOpt({ q: `จากรูป เทียบกับมุม ${N[ref === 'A' ? 0 : 1]} ด้าน <b>${nm(side)}</b> คือด้านใด`, fig: tgTriSVG({ o: 3, a: tgPick([4, 5]), ref: null, names: N, ...tgRot(), W: 380, H: 250 }), opts: [`ด้านตรงข้ามมุม ${N[ref === 'A' ? 0 : 1]}`, `ด้านประชิดมุม ${N[ref === 'A' ? 0 : 1]}`, 'ด้านตรงข้ามมุมฉาก'], right: role === 'hyp' ? 'ด้านตรงข้ามมุมฉาก' : `ด้าน${role === 'opp' ? 'ตรงข้าม' : 'ประชิด'}มุม ${N[ref === 'A' ? 0 : 1]}`, hint: 'ดูว่าด้านนั้นแตะมุมที่ถามหรือไม่ และแตะมุมฉากหรือไม่', sig: 's2 ' + N + side + ref, diff: 12 }));
+    qs.push(Q.tgOpt({ q: `สามเหลี่ยม ${N.join('')} มีมุม ${N[2]} เป็นมุมฉาก ด้านใดเป็น<b>ด้านประชิดมุม ${N[0]}</b>`, opts: [N[0] + N[2], N[1] + N[2], N[0] + N[1]], right: N[0] + N[2], hint: `แตะมุม ${N[0]} และไม่ใช่ด้านตรงข้ามมุมฉาก`, sig: 's3 ' + N, diff: 14 }));
+    qs.push(Q.tgOpt({ q: `สามเหลี่ยม ${N.join('')} มีมุม ${N[2]} เป็นมุมฉาก ด้านใดเป็น<b>ด้านตรงข้ามมุม ${N[1]}</b>`, opts: [N[0] + N[2], N[1] + N[2], N[0] + N[1]], right: N[0] + N[2], hint: `ด้านที่ไม่มีจุด ${N[1]}`, sig: 's4 ' + N, diff: 14 }));
+    qs.push(Q.tgOpt({ story: 'สามเหลี่ยมมุมฉาก ABC มีมุม C เป็นมุมฉาก', q: 'ด้านตรงข้ามมุม A เป็นด้านประชิดของมุมใด', opts: ['มุม B', 'มุม A', 'มุม C'], right: 'มุม B', hint: 'ด้านตรงข้ามมุม A คือด้าน BC', sig: 's5', diff: 16 }));
+    qs.push(tgTF('เมื่อเปลี่ยนมุมที่พิจารณา ด้านตรงข้ามมุมฉากยังเป็นด้านเดิม', true, ''), tgTF('ด้านประชิดมุม θ คือด้านที่ยาวที่สุดเสมอ', false, 'ด้านที่ยาวที่สุดคือด้านตรงข้ามมุมฉาก'), tgTF('ย้ายไปพิจารณามุมแหลมอีกมุม ด้านตรงข้ามกับด้านประชิดจะสลับกัน', true, ''));
+    return qs; }),
+  /* ---------- 3 ---------- */
+  LT3(3, 'บ่อพีทาโกรัส', 'ทฤษฎีบทพีทาโกรัส', 'พีทาโกรัส', 'ใช้ทฤษฎีบทพีทาโกรัสหาความยาวด้านของสามเหลี่ยมมุมฉาก และตรวจว่าสามเหลี่ยมเป็นสามเหลี่ยมมุมฉากหรือไม่', [
+    T('<b>สี่เหลี่ยมบนด้านทั้งสาม</b> — แตะทีละรูป', 'สี่เหลี่ยมบนด้านทั้งสาม แตะทีละรูป', el => el.append(tgSimPyth([3, 4, 5]))),
+    T('ตัวอย่างทีละขั้น: <b>หาด้านตรงข้ามมุมฉาก</b>', 'ตัวอย่างทีละขั้น หาด้านตรงข้ามมุมฉาก', el => el.append(dcWalk(tgFigT([6, 8, 10], { txt: { hyp: 'c' }, mark: false, rot: 0, flip: false, W: 340, H: 200 }),
+      [['① เขียนสมการ', 'c² = 6² + 8²'], ['② ยกกำลังสอง', 'c² = 36 + 64 = 100'], ['③ หาค่า c', 'c = √100 = <b>10</b>']], 'ด้านตรงข้ามมุมฉาก² = ผลบวกกำลังสองของอีกสองด้าน', 'ด้านตรงข้ามมุมฉากกำลังสอง เท่ากับผลบวกกำลังสองของอีกสองด้าน'))),
+    T('ตัวอย่างทีละขั้น: <b>หาด้านประกอบมุมฉาก</b>', 'ตัวอย่างทีละขั้น หาด้านประกอบมุมฉาก', el => el.append(dcWalk(tgFigT([5, 12, 13], { txt: { adj: 'b' }, mark: false, rot: 0, flip: true, W: 340, H: 200 }),
+      [['① ด้านใดยาวที่สุด', '13 อยู่ตรงข้ามมุมฉาก'], ['② เขียนสมการ', '13² = 5² + b²'], ['③ ย้ายข้าง', 'b² = 169 − 25 = 144'], ['④ หาค่า b', 'b = √144 = <b>12</b>']], 'หาด้านที่ไม่ใช่ด้านตรงข้ามมุมฉาก ใช้<b>ลบ</b> ไม่ใช่บวก', 'หาด้านที่ไม่ใช่ด้านตรงข้ามมุมฉาก ใช้ลบ')))
+  ], () => { const skip = [[3, 4, 5], [4, 3, 5], [6, 8, 10], [8, 6, 10], [5, 12, 13], [12, 5, 13]], t1 = tgTrip(skip), t2 = tgTrip([...skip, t1]), t3 = tgTrip([...skip, t1, t2]), lg = tgPick([[1, 2], [2, 3], [1, 3], [2, 4], [3, 5], [1, 4]]), S = lg[0] ** 2 + lg[1] ** 2;
+    const yes = Math.random() < .5, tri = yes ? tgPick([[9, 12, 15], [8, 15, 17], [20, 21, 29], [7, 24, 25]]) : tgPick([[6, 9, 11], [5, 7, 9], [8, 10, 13], [7, 9, 12]]), pole = tgPick([[12, 16, 20], [9, 40, 41], [15, 20, 25], [12, 35, 37]]), lad = tgPick([[15, 8, 17], [24, 7, 25], [21, 20, 29]]);
+    return [Q.tgNum({ q: 'จากรูป ด้านตรงข้ามมุมฉากยาวเท่าใด', fig: tgFigT(t1, { txt: { hyp: '?' }, mark: false }), a: t1[2], unit: 'หน่วย', hint: 'c² = a² + b²', sig: 'p1 ' + t1, diff: 8 }),
+      Q.tgNum({ q: 'จากรูป ด้านที่ไม่ทราบความยาวยาวเท่าใด', fig: tgFigT(t2, { txt: { opp: '?' }, mark: false }), a: t2[0], unit: 'หน่วย', hint: 'ด้านประกอบมุมฉาก² = ฉาก² − อีกด้าน²', sig: 'p2 ' + t2, diff: 11 }),
+      Q.tgNum({ q: 'จากรูป ด้านที่ไม่ทราบความยาวยาวเท่าใด', fig: tgFigT(t3, { txt: { adj: '?' }, mark: false }), a: t3[1], unit: 'หน่วย', hint: 'ใช้ลบ: ฉาก² − อีกด้าน²', sig: 'p3 ' + t3, diff: 12 }),
+      Q.tgOpt({ story: `สามเหลี่ยมมุมฉากมีด้านประกอบมุมฉากยาว ${lg[0]} และ ${lg[1]} หน่วย`, q: 'ด้านตรงข้ามมุมฉากยาวเท่าใด', opts: [tgLen(S), String(lg[0] + lg[1]), String(S), tgLen(lg[1] ** 2 - lg[0] ** 2)], right: tgLen(S), hint: 'ยกกำลังสองแล้วบวก จากนั้นถอดราก', sig: 'p4 ' + lg, diff: 14 }),
+      Q.tgOpt({ q: `ด้านยาว ${tri.join(', ')} หน่วย เป็นสามเหลี่ยมมุมฉากหรือไม่`, opts: [`เป็น เพราะ ${tri[0]}² + ${tri[1]}² = ${tri[2]}²`, `ไม่เป็น เพราะ ${tri[0]}² + ${tri[1]}² ≠ ${tri[2]}²`, `ไม่เป็น เพราะ ${tri[0]} + ${tri[1]} ≠ ${tri[2]}`], right: yes ? `เป็น เพราะ ${tri[0]}² + ${tri[1]}² = ${tri[2]}²` : `ไม่เป็น เพราะ ${tri[0]}² + ${tri[1]}² ≠ ${tri[2]}²`, hint: `ลองคำนวณ ${tri[0]}² + ${tri[1]}² แล้วเทียบกับ ${tri[2]}²`, sig: 'p5 ' + tri, diff: 13 }),
+      Q.tgNum({ story: `เสาธงสูง ${pole[0]} เมตร ขึงลวดจากยอดเสาไปยึดกับพื้นห่างจากโคนเสา ${pole[1]} เมตร`, q: 'ลวดยาวกี่เมตร', a: pole[2], unit: 'เมตร', hint: 'ลวดคือด้านตรงข้ามมุมฉาก', sig: 'p6 ' + pole, diff: 15 }),
+      Q.tgNum({ story: `บันไดยาว ${lad[2]} เมตร พิงกำแพง เชิงบันไดห่างจากกำแพง ${lad[1]} เมตร`, q: 'ปลายบันไดสูงจากพื้นกี่เมตร', a: lad[0], unit: 'เมตร', hint: 'บันไดคือด้านตรงข้ามมุมฉาก หาอีกด้านด้วยการลบ', sig: 'p7 ' + lad, diff: 16 }),
+      Q.tgNum({ q: `สี่เหลี่ยมผืนผ้ากว้าง ${t1[0] * 2} ซม. ยาว ${t1[1] * 2} ซม. เส้นทแยงมุมยาวกี่เซนติเมตร`, a: t1[2] * 2, unit: 'ซม.', hint: 'เส้นทแยงมุมแบ่งเป็นสามเหลี่ยมมุมฉาก', sig: 'p8 ' + t1, diff: 17 }),
+      tgTF('a² + b² = c² ใช้ได้กับสามเหลี่ยมทุกชนิด', false, 'ใช้ได้กับสามเหลี่ยมมุมฉากเท่านั้น'), tgTF('ด้านตรงข้ามมุมฉากยาวกว่าด้านอื่นทุกด้าน', true, '')]; }),
+  /* ---------- 4 ---------- */
+  LT3(4, 'เนินสามเหลี่ยมคล้าย', 'แนวคิดเรื่องอัตราส่วนตรีโกณมิติ', 'แนวคิด', 'อธิบายได้ว่าสามเหลี่ยมมุมฉากที่มีมุมแหลมเท่ากันเป็นรูปคล้าย อัตราส่วนของด้านคู่เดียวกันจึงเท่ากันเสมอ และขึ้นกับขนาดของมุมเท่านั้น', [
+    T('<b>ขยายสามเหลี่ยม</b> — ลากมุม B', 'ขยายสามเหลี่ยม ลากมุม B', el => el.append(tgSimScale())),
+    T('<b>มุมต่างกัน อัตราส่วนต่างกัน</b> — แตะทีละมุม', 'มุมต่างกัน อัตราส่วนต่างกัน แตะทีละมุม', el => el.append(s2Explore([20, 40, 70].map(d => [`θ = ${d}°`, () => ({ fig: tgTriSVG({ o: 10 * Math.sin(d * TG_RAD), a: 10 * Math.cos(d * TG_RAD), ref: 'A', refLab: d + '°', col: true, sides: { hyp: '10', opp: tgN(10 * Math.sin(d * TG_RAD)) }, W: 400, H: 240 }),
+      txt: `ข้าม/ฉาก = ${tgN(10 * Math.sin(d * TG_RAD))}/10 ≈ <b>${tgN(Math.sin(d * TG_RAD), 3)}</b>` })]), 'ด้านตรงข้ามมุมฉากยาว 10 เท่ากันทุกรูป — แตะดูทีละมุม', 'มุมต่างกัน อัตราส่วนก็ต่างกัน → อัตราส่วนบอกขนาดของมุมได้').wrap)),
+    T('ตัวอย่างทีละขั้น: <b>สามเหลี่ยมคล้ายสองรูป</b>', 'ตัวอย่างทีละขั้น สามเหลี่ยมคล้ายสองรูป', el => el.append(dcWalk(`<div class="tg-two">${tgFigT([6, 8, 10], { rot: 0, flip: false, W: 260, H: 180 })}${tgFigT([9, 12, 15], { rot: 0, flip: false, W: 300, H: 200 })}</div>`,
+      [['① มุม θ เท่ากัน', 'มุมฉากเท่ากัน มุม θ เท่ากัน → สามเหลี่ยมคล้ายกัน'], ['② ข้าม/ฉาก', '6/10 = 0.6 และ 9/15 = 0.6'], ['③ ชิด/ฉาก', '8/10 = 0.8 และ 12/15 = 0.8'], ['④ ข้าม/ชิด', '6/8 = 0.75 และ 9/12 = 0.75']],
+      'มุม θ เท่ากัน → อัตราส่วนของด้านคู่เดียวกัน<b>เท่ากันเสมอ</b> ไม่ว่ารูปจะใหญ่หรือเล็ก', 'มุมทีตาเท่ากัน อัตราส่วนของด้านคู่เดียวกันเท่ากันเสมอ')))
+  ], () => { const skip = [[3, 4, 5], [4, 3, 5], [6, 8, 10], [8, 6, 10], [9, 12, 15], [12, 9, 15]], t = tgTrip(skip), k = tgPick([2, 3, 4]), t2 = tgTrip([...skip, t]), hh = tgPick([25, 35, 45, 55]), t3 = tgTrip([...skip, t, t2]), k3 = tgPick([2, 3, 5]);
+    return [Q.tgOpt({ story: 'สามเหลี่ยมมุมฉากสองรูปมีมุม θ เท่ากัน แต่รูปหนึ่งใหญ่กว่า', q: 'อัตราส่วน ข้าม/ฉาก ของสองรูปเป็นอย่างไร', opts: ['เท่ากัน', 'รูปใหญ่มากกว่า', 'รูปเล็กมากกว่า'], right: 'เท่ากัน', hint: 'สามเหลี่ยมคล้าย ด้านขยายเท่ากันทุกด้าน', sig: 'c1', diff: 5 }),
+      Q.tgNum({ q: 'จากรูป <b>ข้าม/ฉาก</b> ของมุม θ เท่ากับเท่าใด', fig: tgFigT(t), a: tgFS(t[0], t[2]), hint: 'ข้าม ÷ ฉาก', sig: 'c2 ' + t, diff: 8 }),
+      Q.tgNum({ q: 'จากรูป <b>ข้าม/ชิด</b> ของมุม θ เท่ากับเท่าใด', fig: tgFigT(t2), a: tgFS(t2[0], t2[1]), hint: 'ข้าม ÷ ชิด', sig: 'c3 ' + t2, diff: 9 }),
+      Q.tgNum({ story: `สามเหลี่ยมมุมฉากสองรูปมีมุม θ เท่ากัน<br>รูปเล็ก: ข้าม ${t[0]} ชิด ${t[1]} ฉาก ${t[2]} หน่วย<br>รูปใหญ่: ข้าม ${t[0] * k} หน่วย`, q: 'ด้านตรงข้ามมุมฉากของรูปใหญ่ยาวเท่าใด', a: t[2] * k, unit: 'หน่วย', hint: 'ข้าม/ฉาก ของสองรูปเท่ากัน', sig: 'c4 ' + t + k, diff: 14 }),
+      Q.tgNum({ story: `มุม θ มีอัตราส่วน ข้าม/ฉาก = 0.6<br>สามเหลี่ยมมุมฉากรูปหนึ่งมีมุม θ และฉากยาว ${hh} ซม.`, q: 'ด้านตรงข้ามมุม θ ยาวกี่เซนติเมตร', a: 0.6 * hh, unit: 'ซม.', hint: 'ข้าม = 0.6 × ฉาก', sig: 'c5 ' + hh, diff: 15 }),
+      Q.tgNum({ story: `มุม θ มีอัตราส่วน ข้าม/ชิด = ${tgFH(t3[0], t3[1])}<br>สามเหลี่ยมมุมฉากรูปหนึ่งมีมุม θ และชิดยาว ${t3[1] * k3} หน่วย`, q: 'ด้านตรงข้ามมุม θ ยาวเท่าใด', a: t3[0] * k3, unit: 'หน่วย', hint: 'ข้าม = อัตราส่วน × ชิด', sig: 'c6 ' + t3 + k3, diff: 17 }),
+      Q.tgOpt({ story: `สามเหลี่ยมมุมฉากรูปหนึ่งมีด้าน ${t2.join(', ')}`, q: 'สามเหลี่ยมในข้อใดคล้ายกับรูปนี้', opts: [t2.map(v => v * 2).join(', '), t2.map(v => v + 2).join(', '), [t2[0], t2[1], t2[2] * 2].join(', ')], right: t2.map(v => v * 2).join(', '), hint: 'รูปคล้ายกัน ด้านทุกด้านคูณด้วยจำนวนเดียวกัน', sig: 'c7 ' + t2, diff: 12 }),
+      tgTF('อัตราส่วนของด้านในสามเหลี่ยมมุมฉากขึ้นกับขนาดของมุม ไม่ขึ้นกับขนาดของรูป', true, ''), tgTF('ขยายสามเหลี่ยมเป็น 2 เท่า อัตราส่วน ข้าม/ฉาก จะเพิ่มเป็น 2 เท่า', false, 'ทั้งตัวเศษและตัวส่วนเพิ่ม 2 เท่า อัตราส่วนจึงเท่าเดิม')]; }),
+  /* ---------- 5 ---------- */
+  LT3(5, 'บันไดหิมะ', 'ความหมายของ sin และ cos', 'sin · cos', 'บอกความหมายของไซน์ (sin) และโคไซน์ (cos) ของมุมแหลม และหาค่า sin cos จากความยาวด้านของสามเหลี่ยมมุมฉาก', [
+    T('<b>บันไดพิงกำแพง</b> — ลากปลายบันได', 'บันไดพิงกำแพง ลากปลายบันได', el => el.append(tgSimLadder())),
+    T('<b>สร้าง sin และ cos</b> — แตะด้านตัวเศษ แล้วตัวส่วน', 'สร้างไซน์และโคไซน์ แตะด้านตัวเศษ แล้วตัวส่วน', el => el.append(tgBuild([{ fn: 'sin', tri: [8, 15, 17] }, { fn: 'cos', tri: [8, 15, 17] }, { fn: 'sin', tri: [15, 8, 17], ref: 'B' }, { fn: 'cos', tri: [15, 8, 17], ref: 'B', rot: 180 }]))),
+    T('ตัวอย่างทีละขั้น: <b>หา sin และ cos ของมุมทั้งสอง</b>', 'ตัวอย่างทีละขั้น หาไซน์และโคไซน์ของมุมทั้งสอง', el => el.append(dcWalk(tgTriSVG({ o: 5, a: 12, ref: null, names: true, sides: { BC: '5', AC: '12', AB: '13' }, W: 380, H: 200 }),
+      [['① มุม A', 'ข้าม = BC = 5 · ชิด = AC = 12 · ฉาก = 13'], ['② sin A, cos A', 'sin A = [5/13] · cos A = [12/13]'], ['③ มุม B', 'ข้าม = AC = 12 · ชิด = BC = 5'], ['④ sin B, cos B', 'sin B = [12/13] · cos B = [5/13]']],
+      'สังเกต: <b>sin A = cos B</b> และ <b>cos A = sin B</b> เพราะ ข้ามของมุมหนึ่ง คือ ชิดของอีกมุม', 'สังเกต ไซน์เอ เท่ากับ โคไซน์บี')))
+  ], () => { const skip = [[8, 15, 17], [15, 8, 17], [5, 12, 13], [12, 5, 13]], t1 = tgTrip(skip), t2 = tgTrip([...skip, t1]), t3 = tgTrip([...skip, t1, t2]), t4 = tgTrip([...skip, t1, t2, t3]), dt = tgPick(tgDecTrip.filter(x => x[0] % 2 === 0 || x[3] === 10)), lad = tgPick([[6, 10], [8, 10], [12, 20], [9, 15]]);
+    return [tgDefQ('sin', 4), tgDefQ('cos', 5), tgQnum('sin', t1, { diff: 8 }), tgQnum('cos', t2, { names: true, ref: 'B', diff: 12 }), tgQopt('sin', t3, { names: true, ref: tgPick(['A', 'B']), diff: 10 }), tgQopt('cos', t4, { diff: 9 }),
+      Q.tgNum({ q: `จากรูป sin θ เท่ากับเท่าใด (ตอบเป็นทศนิยม)`, fig: tgFigT(dt.slice(0, 3), { hide: ['adj'] }), a: dt[0] / dt[2], hint: 'ข้าม ÷ ฉาก แล้วทำเป็นทศนิยม', sig: 'sd ' + dt, diff: 11 }),
+      Q.tgNum({ story: `บันไดยาว ${lad[1]} เมตร พิงกำแพง ปลายบันไดสูงจากพื้น ${lad[0]} เมตร บันไดทำมุม θ กับพื้น`, q: '<b>sin θ</b> เท่ากับเท่าใด', fig: tgScn('ladder', { deg: Math.asin(lad[0] / lad[1]) / TG_RAD, degT: 'θ', L: lad[1] + ' ม.', hgt: lad[0] + ' ม.' }), a: tgFS(lad[0], lad[1]), hint: 'ความสูงอยู่ตรงข้ามมุม θ บันไดอยู่ตรงข้ามมุมฉาก', sig: 'sl ' + lad, diff: 14 }),
+      tgQrad('sin', { diff: 16 }), tgQrad('cos', { diff: 17 }),
+      tgTF('sin ของมุมแหลมมีค่าน้อยกว่า 1 เสมอ', true, 'ตัวส่วนคือด้านตรงข้ามมุมฉากซึ่งยาวที่สุด'), tgTF('cos θ = ด้านตรงข้ามมุม θ ÷ ด้านตรงข้ามมุมฉาก', false, 'cos θ = ด้านประชิดมุม θ ÷ ด้านตรงข้ามมุมฉาก')]; }),
+  /* ---------- 6 ---------- */
+  LT3(6, 'ทางลาดสโนว์บอร์ด', 'ความหมายของ tan', 'tan', 'บอกความหมายของแทนเจนต์ (tan) ของมุมแหลม หาค่า tan จากความยาวด้าน และใช้ tan บอกความชัน', [
+    T('<b>ทางลาดสโนว์บอร์ด</b> — ลากยอดทางลาด', 'ทางลาดสโนว์บอร์ด ลากยอดทางลาด', el => el.append(tgSimRamp())),
+    T('<b>สร้าง tan</b> — แตะด้านตัวเศษ แล้วตัวส่วน', 'สร้างแทนเจนต์ แตะด้านตัวเศษ แล้วตัวส่วน', el => el.append(tgBuild([{ fn: 'tan', tri: [20, 21, 29] }, { fn: 'tan', tri: [21, 20, 29], ref: 'B', rot: 90 }, { fn: 'tan', tri: [20, 21, 29], flip: true }]))),
+    T('ตัวอย่างทีละขั้น: <b>tan ของมุมทั้งสอง</b>', 'ตัวอย่างทีละขั้น แทนเจนต์ของมุมทั้งสอง', el => el.append(dcWalk(tgTriSVG({ o: 7, a: 24, ref: null, names: ['D', 'E', 'F'], sides: { BC: '7', AC: '24', AB: '25' }, W: 400, H: 170 }),
+      [['① มุม D', 'ข้าม = EF = 7 · ชิด = DF = 24'], ['② tan D', 'tan D = [7/24] (ไม่ใช้ด้าน 25 เลย)'], ['③ มุม E', 'ข้าม = DF = 24 · ชิด = EF = 7'], ['④ tan E', 'tan E = [24/7] ซึ่งมากกว่า 1']],
+      'tan ใช้แค่ด้านประกอบมุมฉากสองด้าน · <b>tan D × tan E = 1</b> เมื่อ D + E = 90°', 'แทนเจนต์ใช้แค่ด้านประกอบมุมฉากสองด้าน')))
+  ], () => { const skip = [[20, 21, 29], [21, 20, 29], [7, 24, 25], [24, 7, 25]], t1 = tgTrip(skip), t2 = tgTrip([...skip, t1]), t3 = tgTrip([...skip, t1, t2]), rp = tgPick([[3, 12], [2, 10], [4, 16], [3, 15], [5, 20]]), tt = tgTrip([...skip, t1]), k = tgPick([2, 3, 4]);
+    const ramps = shuffle([[2, 8], [3, 10], [4, 12]]), best = ramps.reduce((b, r) => r[0] / r[1] > b[0] / b[1] ? r : b);
+    return [tgDefQ('tan', 4), tgQnum('tan', t1, { diff: 8 }), tgQnum('tan', t2, { names: true, ref: 'B', diff: 12 }), tgQopt('tan', t3, { names: true, ref: tgPick(['A', 'B']), diff: 10 }),
+      Q.tgNum({ story: `ทางลาดสูง ${rp[0]} เมตร ระยะตามแนวราบ ${rp[1]} เมตร ทำมุม θ กับพื้น`, q: '<b>tan θ</b> เท่ากับเท่าใด', fig: tgScn('ramp', { deg: Math.atan2(rp[0], rp[1]) / TG_RAD, degT: 'θ', hgt: rp[0] + ' ม.', d: rp[1] + ' ม.' }), a: tgFS(rp[0], rp[1]), hint: 'tan θ = สูง ÷ ระยะตามแนวราบ', sig: 'tr ' + rp, diff: 13 }),
+      Q.tgNum({ story: `tan θ = ${tgFH(tt[0], tt[1])} และด้านประชิดมุม θ ยาว ${tt[1] * k} หน่วย`, q: 'ด้านตรงข้ามมุม θ ยาวเท่าใด', a: tt[0] * k, unit: 'หน่วย', hint: 'ข้าม = tan θ × ชิด', sig: 'tk ' + tt + k, diff: 15 }),
+      Q.tgOpt({ q: `ทางลาดสามแบบ (สูง, ระยะตามแนวราบ) เป็นเมตร ทางลาดใด<b>ชันที่สุด</b>`, opts: ramps.map(r => `สูง ${r[0]} ระยะ ${r[1]}`), right: `สูง ${best[0]} ระยะ ${best[1]}`, hint: 'เทียบ tan = สูง ÷ ระยะตามแนวราบ', sig: 'tc ' + ramps, diff: 16 }),
+      tgQrad('tan', { diff: 17 }),
+      tgTF('tan θ มีค่ามากกว่า 1 ได้', true, 'เมื่อด้านตรงข้ามยาวกว่าด้านประชิด (มุมเกิน 45°)'), tgTF('tan θ = ด้านประชิดมุม θ ÷ ด้านตรงข้ามมุม θ', false, 'tan θ = ข้าม ÷ ชิด'), tgTF('ทางลาดที่ชันกว่ามีค่า tan ของมุมที่ทำกับพื้นมากกว่า', true, '')]; }),
+  /* ---------- 7 ---------- */
+  LT3(7, 'สะพานสามพี่น้อง', 'ความสัมพันธ์ระหว่าง sin, cos และ tan', 'sin cos tan', 'ใช้ความสัมพันธ์ tan θ = sin θ ÷ cos θ, sin²θ + cos²θ = 1 และ sin θ = cos (90° − θ) หาค่าอัตราส่วนที่ไม่รู้', [
+    T('<b>ความสัมพันธ์</b> — แตะปุ่มทีละปุ่ม', 'ความสัมพันธ์ แตะปุ่มทีละปุ่ม', el => { const t = [8, 15, 17], f = tgTriSVG({ o: 8, a: 15, ref: 'A', names: true, col: true, sides: { opp: '8', adj: '15', hyp: '17' }, W: 400, H: 190 });
+      el.append(s2Explore([['sin A ÷ cos A', () => ({ fig: f, txt: `${tgF(8, 17)} ÷ ${tgF(15, 17)} = ${tgF(8, 15)} = <b>tan A</b>` })], ['sin²A + cos²A', () => ({ fig: f, txt: `${tgF(64, 289)} + ${tgF(225, 289)} = ${tgF(289, 289)} = <b>1</b> (เพราะ 8² + 15² = 17²)` })], ['sin A กับ cos B', () => ({ fig: f, txt: `sin A = BC/AB = ${tgF(8, 17)} และ cos B = BC/AB = ${tgF(8, 17)} → <b>sin A = cos B</b> (B = 90° − A)` })]], 'สามเหลี่ยม ABC มุม C เป็นมุมฉาก', 'สามความสัมพันธ์ใช้ได้กับมุมแหลมทุกมุม', f).wrap); }),
+    T('<b>สรุปสามสูตร</b> — แตะการ์ดทีละใบ', 'สรุปสามสูตร แตะการ์ดทีละใบ', el => el.append(miCards([['tan θ = ?', `<b>tan θ = ${tgF('sin θ', 'cos θ')}</b><small>ฉากตัดกันหมด เหลือ ข้าม/ชิด</small>`], ['sin²θ + cos²θ = ?', '<b>sin²θ + cos²θ = 1</b><small>มาจากทฤษฎีบทพีทาโกรัส</small>'], ['sin θ กับ cos (90° − θ)', '<b>sin θ = cos (90° − θ)</b><small>มุมแหลมสองมุมของสามเหลี่ยมมุมฉากรวมกัน 90°</small>']]))),
+    T('ตัวอย่างทีละขั้น: <b>รู้ sin หา cos และ tan</b>', 'ตัวอย่างทีละขั้น รู้ไซน์ หาโคไซน์และแทนเจนต์', el => el.append(dcWalk(FX('sin θ = [5/13] เมื่อ θ เป็นมุมแหลม'),
+      [['① วาดสามเหลี่ยม', 'ข้าม = 5 · ฉาก = 13'], ['② หาด้านชิด', 'ชิด = √(13² − 5²) = √144 = 12'], ['③ cos θ', 'cos θ = [12/13]'], ['④ tan θ', 'tan θ = [5/12] (หรือ sin ÷ cos = [5/13] ÷ [12/13])']], 'รู้อัตราส่วนเดียว → วาดสามเหลี่ยม → หาด้านที่สามด้วยพีทาโกรัส → ได้อัตราส่วนอื่นทั้งหมด', 'รู้อัตราส่วนเดียว วาดสามเหลี่ยม หาด้านที่สาม')))
+  ], () => { const skip = [[5, 12, 13], [12, 5, 13], [8, 15, 17], [15, 8, 17]], t1 = tgTrip(skip), t2 = tgTrip([...skip, t1]), t3 = tgTrip([...skip, t1, t2]), x = tgPick([20, 25, 35, 40, 50, 55, 70]), y = tgPick([18, 27, 36, 62, 73]), dv = tgPick([[0.8, 0.6, '4/3'], [0.6, 0.8, '3/4'], [0.28, 0.96, '7/24']]), sv = tgPick(['0.28', '0.42', '0.73', '0.65']);
+    return [Q.tgNum({ q: `sin θ = ${tgFH(t1[0], t1[2])} เมื่อ θ เป็นมุมแหลม cos θ เท่ากับเท่าใด`, a: tgFS(t1[1], t1[2]), hint: 'วาดสามเหลี่ยม หาด้านประชิดด้วยพีทาโกรัส', sig: 'y1 ' + t1, diff: 14 }),
+      Q.tgNum({ q: `sin θ = ${tgFH(t2[0], t2[2])} และ cos θ = ${tgFH(t2[1], t2[2])} tan θ เท่ากับเท่าใด`, a: tgFS(t2[0], t2[1]), hint: 'tan θ = sin θ ÷ cos θ', sig: 'y2 ' + t2, diff: 11 }),
+      Q.tgNum({ q: `จากรูป ค่าของ sin²θ + cos²θ เท่ากับเท่าใด`, fig: tgFigT(t3), a: 1, hint: 'ยกกำลังสองแล้วบวก ใช้ ข้าม² + ชิด² = ฉาก²', sig: 'y3 ' + t3, diff: 9 }),
+      Q.tgNum({ q: `sin ${x}° = cos ? องศา`, a: 90 - x, unit: 'องศา', hint: 'sin θ = cos (90° − θ)', sig: 'y4 ' + x, diff: 8 }),
+      Q.tgNum({ q: `ถ้า sin A = cos ${y}° และ A เป็นมุมแหลม A มีขนาดกี่องศา`, a: 90 - y, unit: 'องศา', hint: 'มุมสองมุมที่ sin ของมุมหนึ่ง = cos ของอีกมุม รวมกัน 90°', sig: 'y5 ' + y, diff: 12 }),
+      Q.tgNum({ q: `sin θ = ${dv[0]} และ cos θ = ${dv[1]} tan θ เท่ากับเท่าใด (ตอบเป็นเศษส่วน)`, a: dv[2], hint: 'tan θ = sin θ ÷ cos θ', sig: 'y6 ' + dv, diff: 13 }),
+      Q.tgNum({ story: `สามเหลี่ยม ABC มีมุม C เป็นมุมฉาก และ sin A = ${sv}`, q: '<b>cos B</b> เท่ากับเท่าใด', a: +sv, hint: 'ด้านตรงข้ามมุม A คือด้านประชิดมุม B', sig: 'y7 ' + sv, diff: 15 }),
+      Q.tgOpt({ q: 'ข้อใดถูกต้อง', opts: [`tan θ = ${tgF('sin θ', 'cos θ')}`, `tan θ = ${tgF('cos θ', 'sin θ')}`, 'tan θ = sin θ × cos θ', 'tan θ = sin θ + cos θ'], right: `tan θ = ${tgF('sin θ', 'cos θ')}`, hint: 'ข้าม/ฉาก ÷ ชิด/ฉาก', sig: 'y8', diff: 6 }),
+      tgTF('sin²θ + cos²θ = 1 ใช้ได้กับมุมแหลม θ ทุกมุม', true, ''), tgTF('sin 30° = cos 30°', false, 'sin 30° = cos 60°')]; }),
+  /* ---------- 8–10 เนื้อหาเสริม: cosec sec cot ---------- */
+  ...['cosec', 'sec', 'cot'].map((fn, j) => { const base = TG_INV[fn], [n, d] = TG_FN[fn], names = { cosec: 'โคซีแคนต์ (cosecant)', sec: 'ซีแคนต์ (secant)', cot: 'โคแทนเจนต์ (cotangent)' }[fn];
+    const build = [[[3, 4, 5], [12, 5, 13], [20, 21, 29]], [[8, 15, 17], [7, 24, 25], [9, 40, 41]], [[12, 35, 37], [15, 8, 17], [4, 3, 5]]][j], ex = [[2, 7], [3, 8], [4, 9]][j];
+    return LT3(8 + j, ['ถ้ำส่วนกลับ', 'หุบเขาซีแคนต์', 'ธารโคแทนเจนต์'][j], `ความหมายของ ${fn} (เนื้อหาเสริม)`, `${fn} · เสริม`, `บอกความหมายของ${names} เป็นส่วนกลับของ ${base} และหาค่า ${fn} จากรูปหรือจากค่า ${base} (เนื้อหาเสริมสำหรับเตรียมเรียน ม.ปลาย)`, [
+      T(`<b>${fn} คือส่วนกลับของ ${base}</b> — แตะการ์ดพลิกดู`, `${TG_SAYFN[fn]} คือส่วนกลับของ${TG_SAYFN[base]} แตะการ์ดพลิกดู`, el => el.append(h('div', { class: 'colstack' }, h('div', { class: 'tg-note', html: `เนื้อหาเสริม — ${fn} θ = ${tgF(1, base + ' θ')} = ${tgDef(fn)}` }),
+        miCards(build.map(t => [`${base} θ = ${tgFH(t[TG_IX[TG_FN[base][0]]], t[TG_IX[TG_FN[base][1]]])}`, `<b>${fn} θ = ${tgFH(t[TG_IX[n]], t[TG_IX[d]])}</b><small>กลับเศษเป็นส่วน · ${base} θ × ${fn} θ = 1</small>`, `${base} θ = ${tgFH(t[TG_IX[TG_FN[base][0]]], t[TG_IX[TG_FN[base][1]]])}`]))))),
+      T(`<b>สร้าง ${fn}</b> — แตะด้านตัวเศษ แล้วตัวส่วน`, `สร้าง${TG_SAYFN[fn]} แตะด้านตัวเศษ แล้วตัวส่วน`, el => el.append(tgBuild(build.map((t, i) => ({ fn: i === 1 ? base : fn, tri: t, rot: [0, 90, 180][i], flip: i === 2 }))))),
+      T(`ตัวอย่างทีละขั้น: <b>รู้ ${base} หา ${fn}</b>`, `ตัวอย่างทีละขั้น รู้${TG_SAYFN[base]} หา${TG_SAYFN[fn]}`, el => el.append(dcWalk(FX(`${base} θ = [${ex[0]}/${ex[1]}]`), [['① ส่วนกลับ', `${fn} θ = 1 ÷ ${base} θ`], ['② กลับเศษเป็นส่วน', `${fn} θ = [${ex[1]}/${ex[0]}]`], ['③ ตรวจ', `[${ex[0]}/${ex[1]}] × [${ex[1]}/${ex[0]}] = 1 ✓`]].concat(fn === 'cot' ? [['④ อีกวิธี', 'cot θ = cos θ ÷ sin θ']] : []),
+        `${base} θ × ${fn} θ = 1 เสมอ`, `${TG_SAYFN[base]} คูณ ${TG_SAYFN[fn]} เท่ากับหนึ่ง`)))
+    ], () => { const t1 = tgTrip(build), t2 = tgTrip([...build, t1]), t3 = tgTrip([...build, t1, t2]), fr = tgPick([[3, 7], [5, 9], [2, 5], [4, 11], [5, 8], [3, 10]].filter(f => f + '' !== ex + '')), dv = tgPick([['0.25', 4], ['0.4', 2.5], ['0.5', 2], ['0.8', 1.25], ['0.2', 5]]);
+      const sp = { cosec: [30, '1/2', 2], sec: [60, '1/2', 2], cot: [45, '1', 1] }[fn], ratio = fn === 'cot' ? tgPick([[0.6, 0.8], [0.8, 0.6], [0.96, 0.28]]) : null;
+      const qs = [tgDefQ(fn, 4), tgQnum(fn, t1, { diff: 9 }), tgQnum(fn, t2, { names: true, ref: 'B', diff: 13 }), tgQopt(fn, t3, { names: true, ref: tgPick(['A', 'B']), diff: 11 }),
+        Q.tgNum({ q: `${base} θ = ${tgFH(fr[0], fr[1])} ${fn} θ เท่ากับเท่าใด`, a: tgFS(fr[1], fr[0]), hint: `${fn} θ = 1 ÷ ${base} θ`, sig: 'rc1 ' + fr, diff: 6 }),
+        Q.tgNum({ q: `${base} θ = ${dv[0]} ${fn} θ เท่ากับเท่าใด`, a: dv[1], hint: `${fn} θ = 1 ÷ ${base} θ`, sig: 'rc2 ' + dv, diff: 10 }),
+        Q.tgNum({ q: `${base} θ × ${fn} θ เท่ากับเท่าใด`, a: 1, hint: 'เป็นส่วนกลับของกันและกัน', sig: 'rc3', diff: 5 }),
+        Q.tgNum({ q: `${base} ${sp[0]}° = ${sp[1]} ดังนั้น ${fn} ${sp[0]}° เท่ากับเท่าใด`, a: sp[2], hint: 'กลับเศษเป็นส่วน', sig: 'rc4', diff: 8 }),
+        Q.tgOpt({ q: `${fn} θ เป็นส่วนกลับของข้อใด`, opts: ['sin θ', 'cos θ', 'tan θ'].map(x => x), right: base + ' θ', hint: `${fn} θ = ${tgDef(fn, false)}`, sig: 'rc5', diff: 5 }),
+        tgQrad(fn, { diff: 17 }),
+        fn === 'cot' ? Q.tgNum({ q: `cos θ = ${ratio[0]} และ sin θ = ${ratio[1]} cot θ เท่ากับเท่าใด (ตอบเป็นเศษส่วน)`, a: tgFS(Math.round(ratio[0] * 100), Math.round(ratio[1] * 100)), hint: 'cot θ = cos θ ÷ sin θ', sig: 'rc6 ' + ratio, diff: 14 })
+          : tgTF(`${fn} θ ของมุมแหลมมีค่ามากกว่า 1 เสมอ`, true, `ตัวเศษคือด้านตรงข้ามมุมฉากซึ่งยาวที่สุด`),
+        tgTF(`${fn} θ = 1 − ${base} θ`, false, `${fn} θ = 1 ÷ ${base} θ`)];
+      return qs; }); }),
+  /* ---------- 11 ---------- */
+  LT3(11, 'วงหกอัตราส่วน', 'ความสัมพันธ์ของอัตราส่วนตรีโกณมิติทั้ง 6 ตัว (เนื้อหาเสริม)', 'ครบ 6 ตัว · เสริม', 'จำแนกคู่ส่วนกลับ (sin–cosec, cos–sec, tan–cot) และหาอัตราส่วนตรีโกณมิติทั้งหกเมื่อรู้อัตราส่วนเพียงตัวเดียว (เนื้อหาเสริม)', [
+    T('<b>ครบทั้ง 6 อัตราส่วน</b> — แตะด้านตัวเศษ แล้วตัวส่วน', 'ครบทั้งหกอัตราส่วน แตะด้านตัวเศษ แล้วตัวส่วน', el => el.append(tgBuild(['sin', 'cosec', 'cos', 'sec', 'tan', 'cot'].map(fn => ({ fn, tri: [20, 21, 29] }))))),
+    T('<b>คู่ส่วนกลับ</b> — แตะการ์ดทีละใบ', 'คู่ส่วนกลับ แตะการ์ดทีละใบ', el => el.append(h('div', { class: 'colstack' }, h('div', { class: 'tg-note', html: 'เนื้อหาเสริม — ตัวที่ขึ้นต้นด้วย <b>co</b> จับคู่กับตัวที่<b>ไม่มี</b> co (ยกเว้น cos จับคู่ sec)' }),
+      miCards([['sin ↔ ?', `<b>cosec θ = ${tgF(1, 'sin θ')}</b><small>ฉาก/ข้าม</small>`], ['cos ↔ ?', `<b>sec θ = ${tgF(1, 'cos θ')}</b><small>ฉาก/ชิด</small>`], ['tan ↔ ?', `<b>cot θ = ${tgF(1, 'tan θ')}</b><small>ชิด/ข้าม = cos θ ÷ sin θ</small>`]])))),
+    T('ตัวอย่างทีละขั้น: <b>รู้ tan หาครบ 6 ตัว</b>', 'ตัวอย่างทีละขั้น รู้แทนเจนต์ หาครบหกตัว', el => el.append(dcWalk(FX('tan θ = [8/15] เมื่อ θ เป็นมุมแหลม'), [['① วาดสามเหลี่ยม', 'ข้าม = 8 · ชิด = 15'], ['② หาฉาก', 'ฉาก = √(8² + 15²) = √289 = 17'], ['③ sin cos tan', 'sin θ = [8/17] · cos θ = [15/17] · tan θ = [8/15]'], ['④ กลับเศษเป็นส่วน', 'cosec θ = [17/8] · sec θ = [17/15] · cot θ = [15/8]']],
+      'รู้ตัวเดียว ได้ครบทั้งหก — สามตัวหลังเป็นส่วนกลับของสามตัวแรก', 'รู้ตัวเดียว ได้ครบทั้งหก')))
+  ], () => { const skip = [[8, 15, 17], [15, 8, 17], [20, 21, 29], [21, 20, 29]], fns = Object.keys(TG_FN), t1 = tgTrip(skip), t2 = tgTrip([...skip, t1]), t3 = tgTrip([...skip, t1, t2]), f1 = tgPick(fns), f2 = tgPick(fns.filter(f => f !== f1 && f !== TG_INV[f1])), f3 = tgPick(fns), f4 = tgPick(fns.filter(f => f !== f3)), f5 = tgPick(fns.slice(3));
+    const val = (fn, t) => { const [n, d] = TG_FN[fn]; return [t[TG_IX[n]], t[TG_IX[d]]]; }, v1 = val(f1, t1), v3 = val(f3, t3), cv = tgPick([['0.5', 2], ['0.25', 4], ['2', '1/2'], ['4', '1/4']]);
+    return [Q.tgOpt({ q: 'ข้อใดเป็น<b>ส่วนกลับ</b>ของกันและกัน', opts: ['sin θ กับ cosec θ', 'sin θ กับ sec θ', 'cos θ กับ cosec θ', 'tan θ กับ sec θ'], right: 'sin θ กับ cosec θ', hint: 'sin = ข้าม/ฉาก กลับเป็น ฉาก/ข้าม', sig: 'x1', base: 'x1', cap: 1, diff: 5 }),
+      Q.tgOpt({ q: 'ข้อใดเป็น<b>ส่วนกลับ</b>ของกันและกัน', opts: ['cos θ กับ sec θ', 'cos θ กับ cosec θ', 'cos θ กับ cot θ', 'sin θ กับ cot θ'], right: 'cos θ กับ sec θ', hint: 'cos = ชิด/ฉาก กลับเป็น ฉาก/ชิด', sig: 'x2', base: 'x1', cap: 1, diff: 5 }),
+      Q.tgNum({ q: `${f5} θ × ${TG_INV[f5]} θ เท่ากับเท่าใด`, a: 1, hint: 'คู่ส่วนกลับคูณกัน', sig: 'x3 ' + f5, diff: 6 }),
+      Q.tgNum({ q: `${f1} θ = ${tgFH(...v1)} เมื่อ θ เป็นมุมแหลม <b>${f2} θ</b> เท่ากับเท่าใด`, a: tgFS(...val(f2, t1)), hint: 'วาดสามเหลี่ยมจากค่าที่รู้ หาด้านที่สามด้วยพีทาโกรัส', sig: 'x4 ' + f1 + f2 + t1, diff: 16 }),
+      Q.tgNum({ q: `จากรูป <b>${f4} θ</b> เท่ากับเท่าใด`, fig: tgFigT(t2), a: tgFS(...val(f4, t2)), hint: `${f4} θ = ${tgDef(f4, false)}`, sig: 'x5 ' + f4 + t2, diff: 10 }),
+      Q.tgNum({ q: `${f3} θ = ${tgFH(...v3)} ${TG_INV[f3]} θ เท่ากับเท่าใด`, a: tgFS(v3[1], v3[0]), hint: 'กลับเศษเป็นส่วน', sig: 'x6 ' + f3 + t3, diff: 8 }),
+      Q.tgNum({ q: `cot θ = ${cv[0]} tan θ เท่ากับเท่าใด`, a: cv[1], hint: 'tan θ = 1 ÷ cot θ', sig: 'x7 ' + cv, diff: 9 }),
+      Q.tgOpt({ q: 'cot θ เท่ากับข้อใด', opts: [tgF('cos θ', 'sin θ'), tgF('sin θ', 'cos θ'), tgF(1, 'cos θ'), tgF(1, 'sin θ')], right: tgF('cos θ', 'sin θ'), hint: 'cot = ชิด/ข้าม', sig: 'x8', diff: 12 }),
+      tgTF('sec θ เป็นส่วนกลับของ sin θ', false, 'sec θ เป็นส่วนกลับของ cos θ'), tgTF('ถ้ารู้อัตราส่วนตรีโกณมิติหนึ่งตัวของมุมแหลม จะหาอีกห้าตัวได้', true, '')]; }),
+  /* ---------- 12 ---------- */
+  LT3(12, 'โรงคำนวณน้ำแข็ง', 'การคำนวณค่า sin, cos และ tan จากความยาวด้าน', 'คำนวณจากด้าน', 'หาค่า sin cos tan ของมุมแหลมจากความยาวด้าน รวมถึงกรณีที่ต้องหาความยาวด้านที่สามด้วยทฤษฎีบทพีทาโกรัสก่อน', [
+    T('<b>คำนวณจากด้าน</b> — แตะด้านตัวเศษ แล้วตัวส่วน', 'คำนวณจากด้าน แตะด้านตัวเศษ แล้วตัวส่วน', el => el.append(tgBuild([{ fn: 'cos', tri: [21, 20, 29], rot: 270 }, { fn: 'tan', tri: [20, 21, 29], ref: 'B', flip: true }, { fn: 'sin', tri: [21, 20, 29], rot: 90 }]))),
+    T('ตัวอย่างทีละขั้น: <b>ต้องหาด้านที่สามก่อน</b>', 'ตัวอย่างทีละขั้น ต้องหาด้านที่สามก่อน', el => el.append(dcWalk(tgFigT([9, 40, 41], { txt: { hyp: '?' }, rot: 0, flip: false, W: 380, H: 150 }),
+      [['① หาฉาก', '√(9² + 40²) = √1681 = 41'], ['② sin θ', 'ข้าม/ฉาก = [9/41]'], ['③ cos θ', 'ชิด/ฉาก = [40/41]'], ['④ tan θ', 'ข้าม/ชิด = [9/40]']], 'ด้านไม่ครบ → ใช้ทฤษฎีบทพีทาโกรัสหาก่อน แล้วจึงหาอัตราส่วน', 'ด้านไม่ครบ ใช้ทฤษฎีบทพีทาโกรัสหาก่อน'))),
+    T('ตัวอย่างทีละขั้น: <b>คำตอบติดราก</b>', 'ตัวอย่างทีละขั้น คำตอบติดราก', el => el.append(dcWalk(tgFigT([4, 5, 9], { sq: true, txt: { adj: '?' }, rot: 0, flip: false, W: 340, H: 210 }),
+      [['① หาชิด', '√(3² − 2²) = √5'], ['② sin θ', `ข้าม/ฉาก = ${tgF(2, 3)}`], ['③ cos θ', `ชิด/ฉาก = ${tgF(tgRt(5), 3)}`], ['④ tan θ', `ข้าม/ชิด = ${tgF(2, tgRt(5))}`]], 'ด้านที่หาได้อาจติดราก ก็ใช้ค่านั้นในอัตราส่วนได้เลย', 'ด้านที่หาได้อาจติดราก')))
+  ], () => { const skip = [[20, 21, 29], [21, 20, 29], [9, 40, 41]], t1 = tgTrip(skip), t2 = tgTrip([...skip, t1]), t3 = tgTrip([...skip, t1, t2]), t4 = tgTrip([...skip, t1, t2, t3]), f = () => tgPick(['sin', 'cos', 'tan']), F1 = f(), F2 = f(), F3 = f(), rc = tgTrip([...skip, t1]);
+    return [tgQnum(F1, t1, { hide: ['hyp'], q: `จากรูป <b>${F1} θ</b> เท่ากับเท่าใด`, hint: 'หาด้านตรงข้ามมุมฉากด้วยพีทาโกรัสก่อน', diff: 13 }),
+      tgQnum(F2, t2, { hide: [tgPick(['opp', 'adj'])], hint: 'หาด้านที่ไม่รู้ด้วยพีทาโกรัสก่อน (ใช้ลบ)', diff: 15 }),
+      tgQnum(F3, t3, { names: true, ref: tgPick(['A', 'B']), diff: 10 }), tgQopt(f(), t4, { names: true, ref: 'B', diff: 9 }),
+      tgQrad(f(), { hide: [tgPick(['opp', 'adj', 'hyp'])], skip: [[4, 5, 9]], diff: 18, base: 'tgrad2' }), tgQrad(f(), { diff: 15 }),
+      Q.tgNum({ story: `สี่เหลี่ยมผืนผ้ากว้าง ${rc[0]} ซม. ยาว ${rc[1]} ซม. เส้นทแยงมุมทำมุม θ กับด้านยาว`, q: '<b>sin θ</b> เท่ากับเท่าใด', a: tgFS(rc[0], rc[2]), hint: 'ด้านกว้างอยู่ตรงข้ามมุม θ หาเส้นทแยงมุมด้วยพีทาโกรัส', sig: 'k1 ' + rc, diff: 17 }),
+      Q.tgNum({ story: `สามเหลี่ยม ABC มีมุม C เป็นมุมฉาก AC = ${t1[1]} ซม. BC = ${t1[0]} ซม.`, q: '<b>tan B</b> เท่ากับเท่าใด', a: tgFS(t1[1], t1[0]), hint: 'ด้านตรงข้ามมุม B คือ AC', sig: 'k2 ' + t1, diff: 14 }),
+      tgTF('ต้องรู้ความยาวด้านครบทั้งสามด้าน จึงจะหา tan θ ได้', false, 'tan θ ใช้แค่ข้ามกับชิด')]; }),
+  /* ---------- 13 ---------- */
+  LT3(13, 'หอมุมพิเศษ', 'การหาค่าอัตราส่วนตรีโกณมิติจากมุมที่กำหนด', '30° 45° 60°', 'หาค่า sin cos tan ของมุม 30° 45° 60° จากสามเหลี่ยมพิเศษ ใช้ค่าเหล่านี้คำนวณ และอ่านค่าของมุมอื่นจากตาราง', [
+    T('<b>สามเหลี่ยมพิเศษ</b> — แตะปุ่มทีละปุ่ม', 'สามเหลี่ยมพิเศษ แตะปุ่มทีละปุ่ม', el => el.append(tgSimHalf())),
+    T('<b>ตารางมุมพิเศษ</b> — แตะช่องให้ครบ', 'ตารางมุมพิเศษ แตะช่องให้ครบ', el => el.append(tgSpTable())),
+    T('<b>มุมอื่นใช้ตาราง</b> — หาค่าตามที่ถาม', 'มุมอื่นใช้ตาราง หาค่าตามที่ถาม', el => el.append(tgTableSim([['sin', 27], ['cos', 32], ['tan', 35]]))),
+    T('ตัวอย่างทีละขั้น: <b>แทนค่ามุมพิเศษ</b>', 'ตัวอย่างทีละขั้น แทนค่ามุมพิเศษ', el => el.append(dcWalk('sin 30° + cos 60° = ?', [['① sin 30°', '= [1/2]'], ['② cos 60°', '= [1/2]'], ['③ รวม', '[1/2] + [1/2] = <b>1</b>']], 'แทนค่าจากตารางมุมพิเศษ แล้วคิดเลขตามปกติ', 'แทนค่าจากตารางมุมพิเศษ')))
+  ], () => { const fn = tgPick(['sin', 'cos', 'tan']), dg = tgPick([30, 45, 60]), others = [30, 45, 60].filter(x => x !== dg).map(x => TG_SP[x][fn]), right = TG_SP[dg][fn];
+    const E = shuffle([['2 sin 30° + tan 45°', 2], ['tan² 60° − tan 45°', 2], ['4 cos² 30° − 1', 2], ['sin² 45° + cos² 45°', 1], ['sin 30° × cos 60°', '1/4'], ['tan 45° − sin² 30°', '3/4'], ['cos² 30° − sin² 30°', '1/2'], ['2 sin² 60° − 1', '1/2'], ['tan² 30° + 1', '4/3'], ['sin 60° × tan 60°', '3/2'], ['cos 30° × tan 30°', '1/2']]);
+    const inv = tgPick([['sin θ = 1/2', 30], ['cos θ = 1/2', 60], ['tan θ = 1', 45], ['sin θ = cos θ', 45]]), lo = tgPick([40, 50, 60]), tf = tgPick(['sin', 'cos', 'tan']), td = lo + tgR(0, 4);
+    const mini = `<div class="m3-out tg-vt sm"><table><tr><th>มุม</th><th>sin</th><th>cos</th><th>tan</th></tr>${[0, 1, 2, 3, 4].map(i => `<tr><th>${lo + i}°</th>${['sin', 'cos', 'tan'].map(f => `<td>${tgV3(f, lo + i)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+    return [Q.tgOpt({ q: `<b>${fn} ${dg}°</b> เท่ากับข้อใด`, opts: [right, ...others, tgPick(TG_SPALL.filter(v => v !== right && !others.includes(v)))], right, hint: dg === 45 ? 'ใช้สามเหลี่ยมมุมฉากหน้าจั่ว ด้าน 1, 1, √2' : 'ใช้สามเหลี่ยมมุม 30°–60° ด้าน 1, √3, 2', sig: 'sp1 ' + fn + dg, base: 'sp1', cap: 2, diff: 6 }),
+      ...E.slice(0, 3).map(([e, v], i) => Q.tgNum({ q: `<b>${e}</b> เท่ากับเท่าใด`, a: v, hint: 'แทนค่ามุมพิเศษ แล้วคำนวณ (กำลังสองยกทั้งค่า)', sig: 'sp2 ' + e, base: 'sp2', cap: 2, diff: 12 + i })),
+      Q.tgNum({ q: `${inv[0].replace('1/2', tgF(1, 2))} เมื่อ θ เป็นมุมแหลม θ มีขนาดกี่องศา`, a: inv[1], unit: 'องศา', hint: 'ดูตารางมุมพิเศษย้อนกลับ', sig: 'sp3 ' + inv[0], diff: 10 }),
+      Q.tgOpt({ q: `cos θ = ${tgF(tgRt(3), 2)} เมื่อ θ เป็นมุมแหลม θ มีขนาดกี่องศา`, opts: ['30°', '45°', '60°'], right: '30°', hint: 'ในสามเหลี่ยม 1, √3, 2 ชิดของมุมใดยาว √3', sig: 'sp4', diff: 11 }),
+      Q.tgNum({ q: `จากตาราง <b>${tf} ${td}°</b> มีค่าประมาณเท่าใด`, fig: mini, a: tgV(tf, td), hint: `หาแถว ${td}° แล้วดูคอลัมน์ ${tf}`, sig: 'sp5 ' + tf + td, diff: 7 }),
+      Q.tgOpt({ q: 'ค่าใดมากกว่า', opts: ['sin 50°', 'sin 40°', 'เท่ากัน'], right: 'sin 50°', hint: 'มุมแหลมยิ่งโต sin ยิ่งมาก', sig: 'sp6', diff: 9 }),
+      tgTF('sin 45° = cos 45°', true, ''), tgTF('tan 60° = 2 × tan 30°', false, `tan 60° = √3 แต่ 2 × tan 30° = ${tgPlain(tgF(2, tgRt(3)))}`)]; }),
+  /* ---------- 14 ---------- */
+  LT3(14, 'ลานวัดระยะ', 'การหาความยาวด้านโดยใช้อัตราส่วนตรีโกณมิติ', 'หาความยาวด้าน', 'เลือกอัตราส่วนตรีโกณมิติที่มีด้านที่รู้และด้านที่ต้องการหา แล้วคำนวณความยาวด้านของสามเหลี่ยมมุมฉาก', [
+    T('<b>เลือกอัตราส่วน</b> — แตะ sin cos หรือ tan', 'เลือกอัตราส่วน แตะไซน์ โคไซน์ หรือแทนเจนต์', el => el.append(tgPickSim([{ deg: 40, know: 'hyp', kv: 20, find: 'opp' }, { deg: 35, know: 'adj', kv: 10, find: 'opp' }, { deg: 50, know: 'hyp', kv: 10, find: 'adj' }]))),
+    T('ตัวอย่างทีละขั้น: <b>มุมพิเศษ</b>', 'ตัวอย่างทีละขั้น มุมพิเศษ', el => el.append(dcWalk(tgFigT([1, Math.sqrt(3), 2], { refLab: '30°', txt: { hyp: '12', opp: 'x', adj: 'y' }, rot: 0, flip: false, W: 380, H: 200 }),
+      [['① หา x (ข้าม)', 'sin 30° = x/12 → x = 12 × [1/2] = <b>6</b>'], ['② หา y (ชิด)', `cos 30° = y/12 → y = 12 × ${tgF(tgRt(3), 2)} = <b>6√3</b>`], ['③ ตรวจ', '6² + (6√3)² = 36 + 108 = 144 = 12² ✓']], 'รู้ฉาก → ใช้ sin หาข้าม ใช้ cos หาชิด', 'รู้ฉาก ใช้ไซน์หาข้าม ใช้โคไซน์หาชิด'))),
+    T('ตัวอย่างทีละขั้น: <b>ใช้ค่าจากตาราง</b>', 'ตัวอย่างทีละขั้น ใช้ค่าจากตาราง', el => el.append(dcWalk(tgFigT([0.466, 1, 1.1], { refLab: '25°', txt: { adj: '20', opp: 'x', hyp: '' }, rot: 0, flip: false, W: 380, H: 160 }),
+      [['① รู้ชิด หาข้าม', 'ใช้ tan'], ['② ตั้งสมการ', 'tan 25° = x/20'], ['③ แทนค่าจากตาราง', `x = 20 × ${tgV3('tan', 25)} = <b>${tgN(20 * tgV('tan', 25))}</b>`]], 'ตัวไม่รู้อยู่ตัวเศษ → คูณ', 'ตัวไม่รู้อยู่ตัวเศษ คูณ')))
+  ], () => { const k = tgPick([3, 5, 7, 8, 9, 11]), k2 = tgPick([4, 5, 7, 10]), a45 = tgPick([6, 9, 13, 15]), kv = tgPick([10, 20, 30, 40, 50]), d1 = tgPick([22, 28, 33, 38, 44, 52, 58, 63]), kv2 = tgPick([10, 20, 30, 40]), d2 = tgPick([18, 24, 31, 42, 47, 56]), kv3 = tgPick([10, 20, 30]), d3 = tgPick([16, 23, 37, 48, 54]);
+    const pk = tgPick([['adj', 'opp', 'tan'], ['hyp', 'opp', 'sin'], ['hyp', 'adj', 'cos'], ['opp', 'hyp', 'sin'], ['adj', 'hyp', 'cos']]);
+    return [Q.tgOpt({ q: `รู้<b>${TG_LONG[pk[0]]}${pk[0] === 'hyp' ? '' : ' θ'}</b> ต้องการหา<b>${TG_LONG[pk[1]]}${pk[1] === 'hyp' ? '' : ' θ'}</b> ควรใช้อัตราส่วนใด`, opts: ['sin θ', 'cos θ', 'tan θ'], right: pk[2] + ' θ', hint: 'เลือกอัตราส่วนที่มีทั้งด้านที่รู้และด้านที่ต้องการหา', sig: 'h1 ' + pk, diff: 6 }),
+      Q.tgNum({ q: 'จากรูป x ยาวเท่าใด', fig: tgFigT([1, Math.sqrt(3), 2], { refLab: '30°', txt: { hyp: String(2 * k), opp: 'x', adj: '' } }), a: k, unit: 'หน่วย', hint: 'sin 30° = x ÷ ด้านตรงข้ามมุมฉาก', sig: 'h2 ' + k, diff: 9 }),
+      Q.tgNum({ q: 'จากรูป x ยาวเท่าใด', fig: tgFigT([Math.sqrt(3), 1, 2], { refLab: '60°', txt: { hyp: String(2 * k2), adj: 'x', opp: '' } }), a: k2, unit: 'หน่วย', hint: 'cos 60° = x ÷ ด้านตรงข้ามมุมฉาก', sig: 'h3 ' + k2, diff: 10 }),
+      Q.tgNum({ q: 'จากรูป x ยาวเท่าใด', fig: tgFigT([1, 1, Math.SQRT2], { refLab: '45°', txt: { adj: String(a45), opp: 'x', hyp: '' } }), a: a45, unit: 'หน่วย', hint: 'tan 45° = x ÷ ด้านประชิด', sig: 'h4 ' + a45, diff: 9 }),
+      Q.tgOpt({ q: 'จากรูป x ยาวเท่าใด', fig: tgFigT([Math.sqrt(3), 1, 2], { refLab: '60°', txt: { hyp: String(2 * k), opp: 'x', adj: '' } }), opts: [`${k}${tgRt(3)}`, String(k), String(2 * k), `${k}${tgRt(2)}`], right: `${k}${tgRt(3)}`, hint: 'sin 60° = x ÷ ฉาก', sig: 'h5 ' + k, diff: 14 }),
+      Q.tgNum({ q: `จากรูป x ยาวเท่าใด (sin ${d1}° ≈ ${tgV3('sin', d1)})`, fig: tgFigT([Math.sin(d1 * TG_RAD), Math.cos(d1 * TG_RAD), 1], { refLab: d1 + '°', txt: { hyp: String(kv), opp: 'x', adj: '' } }), a: Math.round(kv * tgV('sin', d1) * 100) / 100, unit: 'หน่วย', hint: 'x = ฉาก × sin', sig: 'h6 ' + kv + d1, diff: 13 }),
+      Q.tgNum({ q: `จากรูป x ยาวเท่าใด (tan ${d2}° ≈ ${tgV3('tan', d2)})`, fig: tgFigT([Math.tan(d2 * TG_RAD), 1, 1 / Math.cos(d2 * TG_RAD)], { refLab: d2 + '°', txt: { adj: String(kv2), opp: 'x', hyp: '' } }), a: Math.round(kv2 * tgV('tan', d2) * 100) / 100, unit: 'หน่วย', hint: 'x = ชิด × tan', sig: 'h7 ' + kv2 + d2, diff: 15 }),
+      Q.tgNum({ q: `จากรูป x ยาวเท่าใด (cos ${d3}° ≈ ${tgV3('cos', d3)})`, fig: tgFigT([Math.sin(d3 * TG_RAD), Math.cos(d3 * TG_RAD), 1], { refLab: d3 + '°', txt: { hyp: String(kv3), adj: 'x', opp: '' } }), a: Math.round(kv3 * tgV('cos', d3) * 100) / 100, unit: 'หน่วย', hint: 'x = ฉาก × cos', sig: 'h8 ' + kv3 + d3, diff: 15 }),
+      Q.tgNum({ q: 'จากรูป ด้านตรงข้ามมุมฉาก x ยาวเท่าใด', fig: tgFigT([1, Math.sqrt(3), 2], { refLab: '30°', txt: { opp: String(k2), hyp: 'x', adj: '' } }), a: 2 * k2, unit: 'หน่วย', hint: 'sin 30° = ข้าม ÷ x', sig: 'h9 ' + k2, diff: 16 })]; }),
+  /* ---------- 15 ---------- */
+  LT3(15, 'ค่ายแก้โจทย์', 'การแก้โจทย์ปัญหาด้วยตรีโกณมิติ', 'โจทย์ปัญหา', 'เขียนรูปสามเหลี่ยมมุมฉากจากโจทย์ปัญหา (ว่าว บันได ทางลาด) เลือกอัตราส่วนที่เหมาะสม แล้วคำนวณคำตอบ', [
+    T('<b>จากเรื่องเป็นรูป</b> — แตะทีละเรื่อง', 'จากเรื่องเป็นรูป แตะทีละเรื่อง', el => el.append(s2Explore([['ว่าว', () => ({ fig: tgScn('kite', { deg: 35, L: 'สายว่าว', hgt: 'ความสูง' }), txt: 'สายว่าว = <b>ฉาก</b> · ความสูงของว่าว = <b>ข้าม</b> ของมุมที่สายว่าวทำกับพื้น' })],
+      ['บันได', () => ({ fig: tgScn('ladder', { deg: 65, L: 'บันได', hgt: 'ความสูง', d: 'ระยะจากกำแพง' }), txt: 'บันได = <b>ฉาก</b> · ความสูงบนกำแพง = <b>ข้าม</b> · ระยะเชิงบันไดถึงกำแพง = <b>ชิด</b>' })],
+      ['ทางลาด', () => ({ fig: tgScn('ramp', { deg: 20, L: 'ทางลาด', hgt: 'ความสูง', d: 'ระยะแนวราบ' }), txt: 'ทางลาด = <b>ฉาก</b> · ความสูง = <b>ข้าม</b> · ระยะตามแนวราบ = <b>ชิด</b>' })]], 'วาดรูป ใส่สิ่งที่รู้ ใส่สิ่งที่ถาม แล้วดูว่าเป็นด้านใดของมุม', 'ทุกเรื่องกลายเป็นสามเหลี่ยมมุมฉาก').wrap)),
+    T('ตัวอย่างทีละขั้น: <b>ว่าว</b>', 'ตัวอย่างทีละขั้น ว่าว', el => el.append(dcWalk(tgScn('kite', { deg: 30, L: '50 ม.', hgt: 'h' }), [['① วาดรูป', 'สายว่าว 50 ม. = ฉาก · ความสูง h = ข้าม · มุม 30°'], ['② เลือกอัตราส่วน', 'ข้ามกับฉาก → sin'], ['③ คำนวณ', 'sin 30° = h/50 → h = 50 × [1/2] = <b>25 เมตร</b>']], 'ว่าวอยู่สูงจากระดับมือ 25 เมตร', 'ว่าวอยู่สูงจากระดับมือยี่สิบห้าเมตร'))),
+    T('ตัวอย่างทีละขั้น: <b>ทางลาด</b>', 'ตัวอย่างทีละขั้น ทางลาด', el => el.append(dcWalk(tgScn('ramp', { deg: 20, L: '4 ม.', hgt: 'h' }), [['① วาดรูป', 'ทางลาดยาว 4 ม. = ฉาก · ความสูง h = ข้าม · มุม 20°'], ['② ตั้งสมการ', 'sin 20° = h/4'], ['③ แทนค่า', `h = 4 × ${tgV3('sin', 20)} = <b>${tgN(4 * tgV('sin', 20), 3)} เมตร</b>`]], 'ใช้ค่าจากตาราง ได้คำตอบโดยประมาณ', 'ใช้ค่าจากตาราง ได้คำตอบโดยประมาณ')))
+  ], () => { const L1 = tgPick([30, 70, 90, 110]), L2 = tgPick([6, 8, 12, 14]), L3 = tgPick([10, 20, 30]), d3 = tgPick([8, 12, 15, 18]), h4 = tgPick([3, 5, 7, 9]), L5 = tgPick([4, 6, 8, 10]), d6 = tgPick([3, 4, 6, 7]), d7 = tgPick([22, 36, 41]);
+    return [Q.tgOpt({ story: 'รู้ความยาวสายว่าว และมุมที่สายว่าวทำกับพื้น', q: 'หาความสูงของว่าว ควรใช้อัตราส่วนใด', fig: tgScn('kite', { deg: 40, L: 'รู้', hgt: '?', degT: 'รู้' }), opts: ['sin', 'cos', 'tan'], right: 'sin', hint: 'สายว่าวเป็นด้านตรงข้ามมุมฉาก ความสูงอยู่ตรงข้ามมุม', sig: 'w1', diff: 6 }),
+      Q.tgNum({ story: `ปล่อยสายว่าวยาว ${L1} เมตร สายว่าวทำมุม 30° กับแนวระดับ`, q: 'ว่าวอยู่สูงจากระดับมือกี่เมตร', fig: tgScn('kite', { deg: 30, L: L1 + ' ม.', hgt: '?' }), a: L1 / 2, unit: 'เมตร', hint: 'sin 30° = ความสูง ÷ สายว่าว', sig: 'w2 ' + L1, diff: 10 }),
+      Q.tgNum({ story: `บันไดยาว ${L2} เมตร พิงกำแพง ทำมุม 60° กับพื้น`, q: 'เชิงบันไดห่างจากกำแพงกี่เมตร', fig: tgScn('ladder', { deg: 60, L: L2 + ' ม.', d: '?' }), a: L2 / 2, unit: 'เมตร', hint: 'cos 60° = ระยะจากกำแพง ÷ บันได', sig: 'w3 ' + L2, diff: 11 }),
+      Q.tgNum({ story: `ทางลาดยาว ${L3} เมตร ทำมุม ${d3}° กับพื้น (sin ${d3}° ≈ ${tgV3('sin', d3)})`, q: 'ปลายทางลาดสูงจากพื้นกี่เมตร', fig: tgScn('ramp', { deg: d3, L: L3 + ' ม.', hgt: '?' }), a: Math.round(L3 * tgV('sin', d3) * 100) / 100, unit: 'เมตร', hint: 'ความสูง = ทางลาด × sin', sig: 'w4 ' + L3 + d3, diff: 14 }),
+      Q.tgOpt({ q: `กระดานลื่นสูง ${h4} เมตร ทำมุม 45° กับพื้น แผ่นกระดานลื่นยาวเท่าใด`, fig: tgScn('ramp', { deg: 45, L: '?', hgt: h4 + ' ม.' }), opts: [`${h4}${tgRt(2)} เมตร`, `${h4} เมตร`, `${2 * h4} เมตร`, `${h4}${tgRt(3)} เมตร`], right: `${h4}${tgRt(2)} เมตร`, hint: 'สามเหลี่ยมมุม 45° มีด้าน 1, 1, √2', sig: 'w5 ' + h4, diff: 16 }),
+      Q.tgOpt({ q: `ลวดยาว ${L5} เมตร ยึดจากยอดเสาถึงพื้น ทำมุม 60° กับพื้น เสาสูงเท่าใด`, opts: [`${L5 / 2}${tgRt(3)} เมตร`, `${L5 / 2} เมตร`, `${L5}${tgRt(3)} เมตร`, `${L5 / 2}${tgRt(2)} เมตร`], right: `${L5 / 2}${tgRt(3)} เมตร`, hint: 'sin 60° = ความสูง ÷ ลวด', sig: 'w6 ' + L5, diff: 16 }),
+      Q.tgNum({ story: `ถนนชันทำมุม ${d6}° กับแนวราบ เดินขึ้นไปได้ระยะตามแนวราบ 100 เมตร (tan ${d6}° ≈ ${tgV3('tan', d6)})`, q: 'จะสูงขึ้นกี่เมตร', a: Math.round(100 * tgV('tan', d6) * 100) / 100, unit: 'เมตร', hint: 'ความสูง = ระยะแนวราบ × tan', sig: 'w7 ' + d6, diff: 13 }),
+      Q.tgNum({ story: `สายเคเบิลยาว 20 เมตร ยึดยอดเสา ทำมุม ${d7}° กับพื้น (cos ${d7}° ≈ ${tgV3('cos', d7)})`, q: 'จุดยึดที่พื้นห่างจากโคนเสากี่เมตร', a: Math.round(20 * tgV('cos', d7) * 100) / 100, unit: 'เมตร', hint: 'ระยะบนพื้น = สายเคเบิล × cos', sig: 'w8 ' + d7, diff: 15 }),
+      tgTF('การแก้โจทย์ปัญหา ควรวาดรูปและระบุว่าสิ่งที่รู้กับสิ่งที่ถามเป็นด้านใดของมุม', true, '')]; }),
+  /* ---------- 16 ---------- */
+  LT3(16, 'หอสังเกตการณ์', 'มุมเงยและมุมก้ม', 'มุมเงย·มุมก้ม', 'บอกความหมายของมุมเงยและมุมก้ม ระบุมุมเงยหรือมุมก้มในรูป และใช้ tan หาความสูงหรือระยะทาง', [
+    T('<b>มองขึ้น มองลง</b> — ลากสิ่งของ', 'มองขึ้น มองลง ลากสิ่งของ', el => el.append(tgSimElev())),
+    T('<b>มุมเงย กับ มุมก้ม</b> — แตะการ์ดทีละใบ', 'มุมเงยกับมุมก้ม แตะการ์ดทีละใบ', el => el.append(h('div', { class: 'colstack' }, h('div', { class: 'tg-two', html: tgScn('tower', { deg: 35 }) + tgScn('cliff', { deg: 35 }) }),
+      miCards([['มุมเงย', '<b>มองขึ้น</b><small>มุมระหว่างแนวสายตากับแนวระดับ เมื่อมองสิ่งที่อยู่สูงกว่าระดับสายตา</small>'], ['มุมก้ม', '<b>มองลง</b><small>มุมระหว่างแนวสายตากับแนวระดับ เมื่อมองสิ่งที่อยู่ต่ำกว่าระดับสายตา</small>'], ['มุมก้ม = มุมเงย', '<b>เท่ากัน</b><small>มุมก้มจากบนลงล่าง เท่ากับมุมเงยจากล่างขึ้นบน (มุมแย้งของเส้นขนาน)</small>']])))),
+    T('ตัวอย่างทีละขั้น: <b>หาความสูงของหอ</b>', 'ตัวอย่างทีละขั้น หาความสูงของหอ', el => el.append(dcWalk(tgScn('tower', { deg: 60, d: '30 ม.', hgt: 'h' }), [['① วาดรูป', 'ระยะถึงหอ 30 ม. = ชิด · ความสูง h = ข้าม · มุมเงย 60°'], ['② เลือก tan', 'tan 60° = h/30'], ['③ คำนวณ', 'h = 30 × √3 = <b>30√3</b> ≈ 30 × 1.732 = <b>51.96 เมตร</b>']], 'รู้ระยะบนพื้น หาความสูง → ใช้ tan', 'รู้ระยะบนพื้น หาความสูง ใช้แทนเจนต์')))
+  ], () => { const d1 = tgPick([12, 25, 40, 55]), d2 = tgPick([10, 20, 40, 50]), dd = tgPick([20, 30, 40, 50]), dg = tgPick([24, 33, 38, 52]), dep = tgPick([23, 37, 48, 64]), hh = tgPick([15, 35, 60, 75]);
+    return [Q.tgOpt({ q: 'มุมที่ทำเครื่องหมายในรูปเรียกว่ามุมอะไร', fig: tgScn('tower', { deg: tgPick([25, 40, 55]), degT: '' }), opts: ['มุมเงย', 'มุมก้ม', 'มุมฉาก'], right: 'มุมเงย', hint: 'ผู้สังเกตมองขึ้นหรือมองลง', sig: 'e1', diff: 4 }),
+      Q.tgOpt({ q: 'มุมที่ทำเครื่องหมายในรูปเรียกว่ามุมอะไร', fig: tgScn('cliff', { deg: tgPick([25, 35, 45]), degT: '' }), opts: ['มุมก้ม', 'มุมเงย', 'มุมฉาก'], right: 'มุมก้ม', hint: 'ผู้สังเกตมองขึ้นหรือมองลง', sig: 'e2', diff: 4 }),
+      Q.tgNum({ story: `จากยอดหอมองเห็นเรือเป็นมุมก้ม ${dep}°`, q: 'คนบนเรือมองเห็นยอดหอเป็นมุมเงยกี่องศา', a: dep, unit: 'องศา', hint: 'มุมก้มกับมุมเงยระหว่างสองจุดเดียวกันเท่ากัน', sig: 'e3 ' + dep, diff: 8 }),
+      Q.tgNum({ story: `ยืนห่างจากต้นไม้ ${d1} เมตร มองเห็นยอดต้นไม้เป็นมุมเงย 45° (ไม่คิดความสูงของผู้สังเกต)`, q: 'ต้นไม้สูงกี่เมตร', fig: tgScn('tree', { deg: 45, d: d1 + ' ม.', hgt: '?' }), a: d1, unit: 'เมตร', hint: 'tan 45° = 1', sig: 'e4 ' + d1, diff: 10 }),
+      Q.tgOpt({ story: `ยืนห่างจากหอ ${d2} เมตร มองเห็นยอดหอเป็นมุมเงย 60°`, q: 'หอสูงเท่าใด', fig: tgScn('tower', { deg: 60, d: d2 + ' ม.', hgt: '?' }), opts: [`${d2}${tgRt(3)} เมตร`, `${d2} เมตร`, `${d2 / 2} เมตร`, `${d2}${tgRt(2)} เมตร`], right: `${d2}${tgRt(3)} เมตร`, hint: 'tan 60° = ความสูง ÷ ระยะ', sig: 'e5 ' + d2, diff: 13 }),
+      Q.tgNum({ story: `ยืนห่างจากเสา ${dd} เมตร มองเห็นยอดเสาเป็นมุมเงย ${dg}° (tan ${dg}° ≈ ${tgV3('tan', dg)})`, q: 'เสาสูงกี่เมตร', fig: tgScn('tower', { deg: dg, d: dd + ' ม.', hgt: '?' }), a: Math.round(dd * tgV('tan', dg) * 100) / 100, unit: 'เมตร', hint: 'ความสูง = ระยะ × tan', sig: 'e6 ' + dd + dg, diff: 14 }),
+      Q.tgNum({ story: `จากยอดหน้าผาสูง ${hh} เมตร มองเห็นเรือเป็นมุมก้ม 45°`, q: 'เรืออยู่ห่างจากเชิงหน้าผากี่เมตร', fig: tgScn('cliff', { deg: 45, hgt: hh + ' ม.', d: '?' }), a: hh, unit: 'เมตร', hint: 'มุมก้ม 45° → ระยะเท่ากับความสูง', sig: 'e7 ' + hh, diff: 12 }),
+      tgTF('มุมเงยวัดจากแนวดิ่งขึ้นไปหาแนวสายตา', false, 'วัดจากแนวระดับ'), tgTF('มุมก้มจากจุด A ไปจุด B เท่ากับมุมเงยจากจุด B ไปจุด A', true, '')]; }),
+  /* ---------- 17 ---------- */
+  LT3(17, 'ประภาคารน้ำแข็ง', 'การประยุกต์หาความสูงและระยะทาง', 'ความสูง·ระยะทาง', 'หาความสูงและระยะทางจากมุมเงยและมุมก้ม โดยคิดความสูงของระดับสายตา และใช้ความยาวของเงา', [
+    T('<b>เงาของเสาธง</b> — ลากดวงอาทิตย์', 'เงาของเสาธง ลากดวงอาทิตย์', el => el.append(tgSimShadow())),
+    T('ตัวอย่างทีละขั้น: <b>อย่าลืมความสูงของตา</b>', 'ตัวอย่างทีละขั้น อย่าลืมความสูงของตา', el => el.append(dcWalk(tgScn('tree', { deg: 45, d: '20 ม.', hgt: 'h', eye: '1.5 ม.' }), [['① ส่วนเหนือระดับตา', 'tan 45° = h/20 → h = 20 เมตร'], ['② บวกความสูงของตา', '20 + 1.5 = <b>21.5 เมตร</b>']], 'มุมเงยวัดจาก<b>ระดับสายตา</b> ต้องบวกความสูงของตาด้วย', 'มุมเงยวัดจากระดับสายตา ต้องบวกความสูงของตา'))),
+    T('ตัวอย่างทีละขั้น: <b>มุมก้มจากประภาคาร</b>', 'ตัวอย่างทีละขั้น มุมก้มจากประภาคาร', el => el.append(dcWalk(tgScn('cliff', { deg: 30, hgt: '40 ม.', d: 'x' }), [['① มุมก้ม = มุมเงยที่เรือ', 'มุมที่เรือ = 30°'], ['② tan 30°', `tan 30° = 40/x → x = 40 ÷ ${tgF(1, tgRt(3))}`], ['③ คำนวณ', 'x = 40√3 ≈ 40 × 1.732 = <b>69.28 เมตร</b>']], 'ตัวไม่รู้อยู่ตัวส่วน → หาร', 'ตัวไม่รู้อยู่ตัวส่วน หาร')))
+  ], () => { const e = tgPick([1.2, 1.4, 1.6]), d = tgPick([12, 18, 25, 32]), e2 = tgPick([1.3, 1.5]), d2 = tgPick([10, 20, 30]), g2 = tgPick([26, 34, 41, 53]), ph = tgPick([6, 9, 12, 15]), h3 = tgPick([10, 20, 30, 50]), h4 = tgPick([9, 18, 27]), d5 = tgPick([15, 25, 35]);
+    return [Q.tgNum({ story: `ตาของนักสำรวจสูงจากพื้น ${e} เมตร ยืนห่างจากเสา ${d} เมตร มองเห็นยอดเสาเป็นมุมเงย 45°`, q: 'เสาสูงกี่เมตร', fig: tgScn('tower', { deg: 45, d: d + ' ม.', hgt: '?', eye: e + ' ม.' }), a: Math.round((d + e) * 10) / 10, unit: 'เมตร', hint: 'หาส่วนเหนือระดับตา แล้วบวกความสูงของตา', sig: 'f1 ' + e + d, diff: 12 }),
+      Q.tgNum({ story: `ตาของภูผาสูงจากพื้น ${e2} เมตร ยืนห่างจากต้นไม้ ${d2} เมตร มองเห็นยอดต้นไม้เป็นมุมเงย ${g2}° (tan ${g2}° ≈ ${tgV3('tan', g2)})`, q: 'ต้นไม้สูงกี่เมตร', fig: tgScn('tree', { deg: g2, d: d2 + ' ม.', hgt: '?', eye: e2 + ' ม.' }), a: Math.round((d2 * tgV('tan', g2) + e2) * 100) / 100, unit: 'เมตร', hint: 'ระยะ × tan แล้วบวกความสูงของตา', sig: 'f2 ' + e2 + d2 + g2, diff: 16 }),
+      Q.tgNum({ story: `เสาสูง ${ph} เมตร ขณะดวงอาทิตย์ทำมุมเงย 45°`, q: 'เงาของเสายาวกี่เมตร', a: ph, unit: 'เมตร', hint: 'tan 45° = ความสูง ÷ ความยาวเงา', sig: 'f3 ' + ph, diff: 9 }),
+      Q.tgOpt({ story: `เสาสูง ${ph} เมตร ขณะดวงอาทิตย์ทำมุมเงย 30°`, q: 'เงาของเสายาวเท่าใด', opts: [`${ph}${tgRt(3)} เมตร`, `${ph} เมตร`, `${2 * ph} เมตร`, `${ph / 3}${tgRt(3)} เมตร`], right: `${ph}${tgRt(3)} เมตร`, hint: 'tan 30° = ความสูง ÷ เงา', sig: 'f4 ' + ph, diff: 14 }),
+      Q.tgNum({ story: `จากยอดประภาคารสูง ${h3} เมตร มองเห็นเรือเป็นมุมก้ม 30° (√3 ≈ 1.732)`, q: 'เรืออยู่ห่างจากฐานประภาคารประมาณกี่เมตร', fig: tgScn('cliff', { deg: 30, hgt: h3 + ' ม.', d: '?' }), a: Math.round(h3 * 1.732 * 100) / 100, unit: 'เมตร', hint: 'tan 30° = ความสูง ÷ ระยะ', sig: 'f5 ' + h3, diff: 15 }),
+      Q.tgOpt({ story: `จากยอดหอสูง ${h4} เมตร มองเห็นรถเป็นมุมก้ม 60°`, q: 'รถอยู่ห่างจากฐานหอเท่าใด', opts: [`${h4 / 3}${tgRt(3)} เมตร`, `${h4}${tgRt(3)} เมตร`, `${h4 / 2} เมตร`, `${h4} เมตร`], right: `${h4 / 3}${tgRt(3)} เมตร`, hint: `tan 60° = ${h4} ÷ ระยะ แล้วทำตัวส่วนไม่ให้ติดราก`, sig: 'f6 ' + h4, diff: 17 }),
+      Q.tgNum({ story: `ใบเตยยืนห่างจากตึก ${d5} เมตร มองเห็นยอดตึกเป็นมุมเงย 45° ตาของใบเตยสูงจากพื้น 1.5 เมตร`, q: 'ตึกสูงกี่เมตร', a: d5 + 1.5, unit: 'เมตร', hint: 'ส่วนเหนือระดับตา + ความสูงของตา', sig: 'f7 ' + d5, diff: 11 }),
+      tgTF('ดวงอาทิตย์ยิ่งสูง (มุมเงยยิ่งโต) เงาของเสายิ่งยาว', false, 'มุมเงยโตขึ้น เงายิ่งสั้น')]; }),
+  /* ---------- 18 ---------- */
+  LT3(18, 'ยอดเขาหลายขั้น', 'โจทย์ประยุกต์หลายขั้นตอน', 'หลายขั้นตอน', 'แก้โจทย์ที่ต้องใช้สามเหลี่ยมมุมฉากมากกว่าหนึ่งรูป เช่น มุมเงยจากสองจุด มุมก้มไปยังวัตถุสองชิ้น', [
+    T('<b>เดินเข้าหาประภาคาร</b> — ลากเพนกวิน', 'เดินเข้าหาประภาคาร ลากเพนกวิน', el => el.append(tgSimWalk())),
+    T('ตัวอย่างทีละขั้น: <b>มุมเงยจากสองจุด</b>', 'ตัวอย่างทีละขั้น มุมเงยจากสองจุด', el => el.append(dcWalk(tgScn('two', { deg: 30, deg2: 60, d: '20 ม.', hgt: 'h' }), [['① จุด B (60°)', 'ระยะ B ถึงหอ = x → h = x√3'], ['② จุด A (30°)', `ระยะ A ถึงหอ = x + 20 → h = (x + 20) × ${tgF(1, tgRt(3))}`], ['③ ตั้งสมการ', 'x√3 = (x + 20) ÷ √3 → 3x = x + 20 → x = 10'], ['④ ความสูง', 'h = 10√3 ≈ <b>17.32 เมตร</b>']], 'สองจุด สองสามเหลี่ยม ใช้ด้านร่วม (ความสูง) เชื่อมกัน', 'สองจุด สองสามเหลี่ยม ใช้ความสูงที่เป็นด้านร่วมเชื่อมกัน'))),
+    T('ตัวอย่างทีละขั้น: <b>เรือสองลำ</b>', 'ตัวอย่างทีละขั้น เรือสองลำ', el => el.append(dcWalk(tgScn('boats', { deg: 60, deg2: 30, hgt: '30 ม.', d2: '?' }), [['① เรือใกล้ (60°)', `ระยะ = 30 ÷ √3 = 10√3`], ['② เรือไกล (30°)', 'ระยะ = 30 × √3 = 30√3'], ['③ ห่างกัน', '30√3 − 10√3 = <b>20√3</b> ≈ 34.64 เมตร']], 'หาระยะของแต่ละลำจากเชิงหน้าผา แล้วนำมาลบกัน', 'หาระยะของแต่ละลำ แล้วนำมาลบกัน')))
+  ], () => { const d1 = tgPick([8, 12, 16, 24]), h2 = tgPick([15, 45, 60, 90]), d3 = tgPick([10, 30, 40, 50]), L4 = tgPick([10, 20, 30]), d5 = tgPick([6, 14, 18, 22]), h6 = tgPick([12, 18, 24]);
+    return [Q.tgOpt({ story: `จากจุด A มองยอดหอเป็นมุมเงย 30° เดินตรงเข้าหาหออีก ${d1} เมตรถึงจุด B มองเป็นมุมเงย 60°`, q: 'หอสูงเท่าใด', fig: tgScn('two', { deg: 30, deg2: 60, d: d1 + ' ม.', hgt: '?' }), opts: [`${d1 / 2}${tgRt(3)} เมตร`, `${d1}${tgRt(3)} เมตร`, `${d1 / 2} เมตร`, `${d1} เมตร`], right: `${d1 / 2}${tgRt(3)} เมตร`, hint: 'ระยะ B ถึงหอ = x → x√3 = (x + AB) ÷ √3', sig: 'm1 ' + d1, diff: 17 }),
+      Q.tgNum({ story: `จากจุด A มองยอดหอเป็นมุมเงย 30° เดินตรงเข้าหาหออีก ${d5} เมตรถึงจุด B มองเป็นมุมเงย 60°`, q: 'จุด B ห่างจากฐานหอกี่เมตร', fig: tgScn('two', { deg: 30, deg2: 60, d: d5 + ' ม.' }), a: d5 / 2, unit: 'เมตร', hint: 'x√3 = (x + AB) ÷ √3 → 3x = x + AB', sig: 'm2 ' + d5, diff: 15 }),
+      Q.tgOpt({ story: `จากยอดหน้าผาสูง ${h2} เมตร มองเห็นเรือสองลำอยู่ฝั่งเดียวกัน เป็นมุมก้ม 60° และ 30°`, q: 'เรือสองลำห่างกันเท่าใด', fig: tgScn('boats', { deg: 60, deg2: 30, hgt: h2 + ' ม.', d2: '?' }), opts: [`${2 * h2 / 3}${tgRt(3)} เมตร`, `${h2}${tgRt(3)} เมตร`, `${h2 / 3}${tgRt(3)} เมตร`, `${2 * h2} เมตร`], right: `${2 * h2 / 3}${tgRt(3)} เมตร`, hint: 'ระยะเรือไกล − ระยะเรือใกล้', sig: 'm3 ' + h2, diff: 18 }),
+      Q.tgNum({ story: `ยืนห่างจากตึก ${d3} เมตร มองเห็นหลังคาตึกเป็นมุมเงย 45° และมองเห็นยอดเสาธงบนหลังคาเป็นมุมเงย 60° (√3 ≈ 1.732)`, q: 'เสาธงยาวประมาณกี่เมตร', a: Math.round(d3 * 0.732 * 100) / 100, unit: 'เมตร', hint: 'ความสูงถึงยอดเสา − ความสูงของตึก', sig: 'm4 ' + d3, diff: 18 }),
+      Q.tgNum({ story: `บันไดยาว ${L4} เมตร พิงกำแพงทำมุม 60° กับพื้น แล้วลื่นลงจนทำมุม 30° กับพื้น (√3 ≈ 1.732)`, q: 'ปลายบันไดเลื่อนลงมาประมาณกี่เมตร', a: Math.round(L4 * (0.866 - 0.5) * 100) / 100, unit: 'เมตร', hint: 'ความสูงเดิม (sin 60°) − ความสูงใหม่ (sin 30°)', sig: 'm5 ' + L4, diff: 18 }),
+      Q.tgNum({ story: `จากยอดหอสูง ${h6} เมตร มองเห็นยอดเสาต้นหนึ่งเป็นมุมก้ม 30° และมองเห็นโคนเสาต้นเดียวกันเป็นมุมก้ม 60°`, q: 'เสาสูงกี่เมตร', a: 2 * h6 / 3, unit: 'เมตร', hint: 'หาระยะถึงเสาจากมุม 60° ก่อน แล้วใช้มุม 30° หาว่ายอดเสาต่ำกว่าระดับตาเท่าใด', sig: 'm6 ' + h6, diff: 18 }),
+      Q.tgOpt({ q: 'โจทย์มุมเงยจากสองจุดบนพื้น ด้านใดเป็นด้านร่วมของสามเหลี่ยมสองรูป', opts: ['ความสูงของหอ', 'ระยะระหว่างสองจุด', 'แนวสายตาจากจุดแรก'], right: 'ความสูงของหอ', hint: 'ด้านที่อยู่ในสามเหลี่ยมทั้งสองรูป', sig: 'm7', diff: 8 }),
+      tgTF('ยิ่งเดินเข้าใกล้หอ มุมเงยถึงยอดหอยิ่งเล็กลง', false, 'เข้าใกล้ มุมเงยยิ่งโต')]; })
+];
+
+/* ---------- บอส: 20 ข้อ (แต่งใหม่ทั้งหมด) ---------- */
+const tgBX = html => `<div class="xfig">${html}</div>`;
+const EXAM_M3C11 = xrot([
+  { q: 'สามเหลี่ยม ABC มีมุม C เป็นมุมฉาก และมุม A = 38° มุม B มีขนาดกี่องศา', opts: ['52°', '62°', '38°', '142°'], a: 0 },
+  { q: 'จากรูป ด้านใดเป็นด้านประชิดมุม P' + tgBX(tgTriSVG({ o: 3, a: 4, ref: null, names: ['P', 'Q', 'R'], rot: 90, W: 300, H: 200 })), opts: ['PR', 'QR', 'PQ'], a: 0 },
+  { q: 'สามเหลี่ยมมุมฉากมีด้านประกอบมุมฉากยาว 9 และ 40 หน่วย ด้านตรงข้ามมุมฉากยาวกี่หน่วย', opts: ['41', '49', '31', '39'], a: 0 },
+  { q: 'บันไดยาว 26 เมตร พิงกำแพง เชิงบันไดห่างจากกำแพง 10 เมตร ปลายบันไดสูงจากพื้นกี่เมตร', opts: ['24', '16', '36', '28'], a: 0 },
+  { q: 'สามเหลี่ยมมุมฉากสองรูปมีมุม θ เท่ากัน ข้อใดถูกต้อง', opts: ['อัตราส่วนของด้านคู่เดียวกันเท่ากัน', 'ด้านทุกด้านยาวเท่ากัน', 'รูปใหญ่มีอัตราส่วนมากกว่า', 'อัตราส่วนเท่ากันเฉพาะเมื่อ θ = 45°'], a: 0 },
+  { q: 'จากรูป sin A เท่ากับข้อใด' + tgBX(tgTriSVG({ o: 20, a: 21, ref: null, names: true, sides: { BC: '20', AC: '21', AB: '29' }, W: 320, H: 190 })), opts: [tgF(20, 29), tgF(21, 29), tgF(20, 21), tgF(29, 20)], a: 0 },
+  { q: 'จากรูป cos B เท่ากับข้อใด' + tgBX(tgTriSVG({ o: 20, a: 21, ref: null, names: true, sides: { BC: '20', AC: '21', AB: '29' }, W: 320, H: 190 })), opts: [tgF(20, 29), tgF(21, 29), tgF(21, 20), tgF(29, 21)], a: 0 },
+  { q: 'ทางลาดสูง 2 เมตร ระยะตามแนวราบ 14 เมตร tan ของมุมที่ทางลาดทำกับพื้นเท่ากับข้อใด', opts: [tgF(1, 7), tgF(2, 7), '7', tgF(1, 14)], a: 0 },
+  { q: 'sin θ = 0.6 และ cos θ = 0.8 tan θ เท่ากับข้อใด', opts: ['0.75', '1.33', '0.48', '1.4'], a: 0 },
+  { q: 'ถ้า sin A = cos 28° และ A เป็นมุมแหลม A มีขนาดเท่าใด', opts: ['62°', '28°', '72°', '152°'], a: 0 },
+  { q: 'cos θ = 0.4 sec θ เท่ากับเท่าใด (เนื้อหาเสริม)', opts: ['2.5', '0.6', '4', '1.4'], a: 0 },
+  { q: 'tan θ = 12/35 เมื่อ θ เป็นมุมแหลม cosec θ เท่ากับข้อใด (เนื้อหาเสริม)', opts: [tgF(37, 12), tgF(37, 35), tgF(35, 12), tgF(12, 37)], a: 0 },
+  { q: 'ข้อใดเป็นส่วนกลับของกันและกัน (เนื้อหาเสริม)', opts: ['tan θ กับ cot θ', 'tan θ กับ sec θ', 'sin θ กับ sec θ', 'cos θ กับ cosec θ'], a: 0 },
+  { q: 'จากรูป tan θ เท่ากับข้อใด' + tgBX(tgFigT([1, 9, 10], { sq: true, txt: { adj: '?' }, rot: 0, flip: false, W: 300, H: 180 })), opts: [tgF(1, 3), '3', tgF(1, tgRt(10)), tgF(3, tgRt(10))], a: 0 },
+  { q: 'tan 60° − 2 sin 60° เท่ากับเท่าใด', opts: ['0', tgRt(3), '1', `2${tgRt(3)}`], a: 0 },
+  { q: '4 sin² 45° + tan 45° เท่ากับเท่าใด', opts: ['3', '2', '5', `1 + 2${tgRt(2)}`], a: 0 },
+  { q: 'สามเหลี่ยมมุมฉากมีมุม 30° และด้านตรงข้ามมุมฉากยาว 18 ซม. ด้านตรงข้ามมุม 30° ยาวเท่าใด', opts: ['9 ซม.', `9${tgRt(3)} ซม.`, '36 ซม.', '6 ซม.'], a: 0 },
+  { q: 'ยืนห่างจากเสา 60 เมตร มองเห็นยอดเสาเป็นมุมเงย 30° เสาสูงเท่าใด (ไม่คิดความสูงของผู้สังเกต)' + tgBX(tgScn('tower', { deg: 30, d: '60 ม.', hgt: '?' })), opts: [`20${tgRt(3)} เมตร`, `60${tgRt(3)} เมตร`, '30 เมตร', '20 เมตร'], a: 0 },
+  { q: 'จากยอดหน้าผาสูง 25 เมตร มองเห็นเรือเป็นมุมก้ม 45° เรืออยู่ห่างจากเชิงหน้าผากี่เมตร', opts: ['25', `25${tgRt(2)}`, '12.5', `25${tgRt(3)}`], a: 0 },
+  { q: 'จากจุด A มองยอดหอเป็นมุมเงย 30° เดินเข้าหาหอ 40 เมตรถึงจุด B มองเป็นมุมเงย 60° หอสูงเท่าใด', opts: [`20${tgRt(3)} เมตร`, `40${tgRt(3)} เมตร`, '20 เมตร', '40 เมตร'], a: 0 }
+].map(x => ({ ...x, opts: x.opts.map(tgPlain) })), 3); /* ตัวเลือกบอสแสดงเป็นข้อความ: 20/29 · √3 */
+LESSONS_M3C11.push({ id: 4119, boss: true, place: 'ปราสาทหมีขาว', title: 'ด่านบอส: ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ', short: 'ด่านบอส · ข้อสอบ', tone: 'sky',
+  goal: 'ตอบคำถามเรื่องอัตราส่วนตรีโกณมิติ มุมพิเศษ มุมเงยและมุมก้ม 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะหมีขาวตรีโกณ',
+  exam: EXAM_M3C11, pass: 16, bossName: 'หมีขาวตรีโกณ', bossPal: 'sky', emblem: 'θ', bossKind: 'pbear',
+  winLine: 'ชนะหมีขาวตรีโกณแล้ว! วัดความสูงและระยะทางได้แม่นมาก', loseLine: 'หมีขาวตรีโกณยังเฝ้าปราสาทอยู่ ลองทวนมุมพิเศษกับมุมเงยมุมก้มอีกนิดแล้วมาสู้ใหม่นะ!' });
+
 'use strict';
 /* =========================================================
    Each lesson = { id, title, goal, video, icon, color,
@@ -33684,7 +34439,10 @@ const CITIES = [
   { id: 94, grade: 8, name: 'เมืองนักสืบข้อมูล', chapter: 'บทที่ 7 สถิติ (2)', lessons: LESSONS_M2C7,
     theme: { detect: true, hills: ['#E6DDF6', '#DCD1F0', '#F2E6DA'], far: '#F1ECFA', edge: ['dtlamp', 'dthouse', 'dtboard', 'dtoffice'], small: ['dtmagnify', 'dtbook', 'dtprints', 'dthydrant', 'dtbench', 'dtbox'] } },
   { id: 93, grade: 9, name: 'ขั้วโลกสถิติ', chapter: 'บทที่ 6 สถิติ (3)', lessons: LESSONS_M3C6,
-    theme: { polar: true, hills: ['#E4F2FC', '#D6ECFA', '#EAF0FD'], far: '#F2F8FE', edge: ['igloo', 'snowman', 'iceberg', 'sled'], small: ['icecrys', 'snowpile', 'plflag', 'icecrys', 'snowpile', 'plpengs'] } }
+    theme: { polar: true, hills: ['#E4F2FC', '#D6ECFA', '#EAF0FD'], far: '#F2F8FE', edge: ['igloo', 'snowman', 'iceberg', 'sled'], small: ['icecrys', 'snowpile', 'plflag', 'icecrys', 'snowpile', 'plpengs'] } },
+  /* v240 (ผู้ใช้ขอ): ม.3 บทที่ 11 อัตราส่วนตรีโกณมิติ (หนังสือ สสวท. เล่ม 2 บทที่ 5 — ผู้ใช้นับต่อเนื่องเป็นบทที่ 11) */
+  { id: 95, grade: 9, term: 2, name: 'ภูน้ำแข็งตรีโกณ', chapter: 'บทที่ 11 อัตราส่วนตรีโกณมิติ', lessons: LESSONS_M3C11,
+    theme: { polar: true, hills: ['#E2EEFB', '#D3E6F8', '#E9EAFB'], far: '#F0F6FE', edge: ['iceberg', 'igloo', 'plflag', 'snowman'], small: ['plpengs', 'icecrys', 'seal', 'snowpile', 'fishhole', 'icecrys'] } }
 ];
 CITIES.forEach(c => { c.grade = c.grade || 1; });
 const GRADES = [{ id: 1, name: 'ป.1', world: 'เมืองตัวเลข' }, { id: 2, name: 'ป.2', world: 'ชายหาด', cls: 'beach' }, { id: 3, name: 'ป.3', world: 'ป่าดิบชื้น', cls: 'jungle' }, { id: 4, name: 'ป.4', world: 'ทะเลทราย', cls: 'desert' }, { id: 5, name: 'ป.5', world: 'ถ้ำ', cls: 'cave' }, { id: 6, name: 'ป.6', world: 'ภูเขา', cls: 'mountain' }, { id: 7, name: 'ม.1', world: 'แม่น้ำ', cls: 'river' }, { id: 8, name: 'ม.2', world: 'เมืองนักสืบ', cls: 'detect' }, { id: 9, name: 'ม.3', world: 'ขั้วโลกหิมะ', cls: 'polar' }];
