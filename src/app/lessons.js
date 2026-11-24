@@ -2954,6 +2954,8 @@ const CITIES = [
     theme: { river: true, hills: ['#C6E6A8', '#B7DE96', '#D3ECBB'], far: '#E2F2D2', edge: ['stilthouse', 'tree', 'ricebarn', 'pine'], small: ['reeds', 'paddy', 'flowers', 'reeds', 'bush', 'paddy'] } },
   { id: 91, grade: 7, name: 'ลำน้ำเรขา', chapter: 'บทที่ 2 การสร้างทางเรขาคณิต', lessons: LESSONS_M1C2,
     theme: { river: true, hills: ['#BFE3C9', '#ADD9B8', '#CFEBD7'], far: '#DDF0E3', edge: ['pier', 'tree', 'stilthouse', 'pine'], small: ['lotus', 'reeds', 'flowers', 'kayak', 'bush', 'reeds'] } },
+  { id: 92, grade: 7, name: 'ลำน้ำยกกำลัง', chapter: 'บทที่ 3 เลขยกกำลัง', lessons: LESSONS_M1C3,
+    theme: { river: true, hills: ['#C9E4B0', '#BADB9C', '#D8EDC4'], far: '#E6F3D6', edge: ['ricebarn', 'tree', 'pier', 'stilthouse'], small: ['paddy', 'duck', 'reeds', 'lotus', 'flowers', 'kayak'] } },
   { id: 93, grade: 9, name: 'ขั้วโลกสถิติ', chapter: 'บทที่ 6 สถิติ (3)', lessons: LESSONS_M3C6,
     theme: { polar: true, hills: ['#E4F2FC', '#D6ECFA', '#EAF0FD'], far: '#F2F8FE', edge: ['igloo', 'snowman', 'iceberg', 'sled'], small: ['icecrys', 'snowpile', 'plflag', 'icecrys', 'snowpile', 'plpengs'] } }
 ];

@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-451 types
+453 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -77,6 +77,8 @@
 | `Q.dvRem` | `{ n, d, e }` | [`grades/p2/p2d.js:172`](../src/grades/p2/p2d.js#L172) |
 | `Q.dvStory` | `{ text, n, d, unit, unit2, fig }` | [`grades/p2/p2d.js:192`](../src/grades/p2/p2d.js#L192) |
 | `Q.dvUnk` | `{ a, b, c, pos }` | [`grades/p2/p2d.js:183`](../src/grades/p2/p2d.js#L183) |
+| `Q.e3N` | `{ q, expr, a, unit, hint, sig, base, diff }` | [`grades/m1/m1e.js:22`](../src/grades/m1/m1e.js#L22) |
+| `Q.e3O` | `{ q, expr, opts, right, hint, sig, base, diff }` | [`grades/m1/m1e.js:25`](../src/grades/m1/m1e.js#L25) |
 | `Q.e4Col` | `{ a, b, op }` | [`grades/p4/p4e.js:100`](../src/grades/p4/p4e.js#L100) |
 | `Q.e4Exp` | `{ s }` | [`grades/p4/p4e.js:131`](../src/grades/p4/p4e.js#L131) |
 | `Q.e4Frac` | `{ s }` | [`grades/p4/p4e.js:118`](../src/grades/p4/p4e.js#L118) |

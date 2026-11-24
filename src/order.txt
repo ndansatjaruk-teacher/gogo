@@ -72,6 +72,7 @@ grades/p5/p5x.js
 grades/p6/p6x.js
 grades/m1/m1i.js
 grades/m1/m1g.js
+grades/m1/m1e.js
 grades/m3/m3s.js
 app/lessons.js
 app/learn.js

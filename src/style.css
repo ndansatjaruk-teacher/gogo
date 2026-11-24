@@ -4357,3 +4357,40 @@ button.m3-t{cursor:pointer;border:0}
 .pl-glide{animation:plGlide 6s ease-in-out infinite}
 @keyframes plGlide{0%,100%{transform:translateX(0) rotate(-6deg)}45%{transform:translateX(var(--sd)) rotate(6deg)}50%{transform:translateX(var(--sd)) rotate(0)}95%{transform:translateX(0) rotate(-6deg)}}
 @media (prefers-reduced-motion:reduce){.pl-glide{animation:none}}
+/* v233 ม.1 บทที่ 3 เลขยกกำลัง (grades/m1/m1e.js) */
+.e3p{display:inline-flex;align-items:flex-start;white-space:nowrap;font-weight:800}
+.e3p sup{font-size:.6em;line-height:1;margin-left:.06em;position:relative;top:-.15em;font-weight:900}
+.e3p .fq{font-size:.8em}
+.e3-x{display:inline-flex;align-items:center;flex-wrap:wrap;gap:.25em;font-weight:800;font-family:var(--font-num)}
+.e3-big{font:800 clamp(28px,3.6cqw,42px) var(--font-num);color:var(--ink);text-align:center;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.3em;line-height:1.4}
+.e3-big .fq{font-size:.75em}
+.e3-paper{display:flex;flex-direction:column-reverse;align-items:center;gap:2px;min-height:120px;justify-content:flex-start}
+.e3-paper i{display:block;width:calc(220px - var(--k) * 3px);height:3.4px;border-radius:2px;background:hsl(calc(200 + var(--k) * 5) 70% 62%);animation:popIn .3s var(--spring) both}
+.e3-parts{flex-wrap:wrap;gap:12px;justify-content:center}
+.e3-pcard{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px;border-radius:16px;background:#fff;box-shadow:var(--e1)}
+.e3-pb.on.b{box-shadow:inset 0 0 0 3px #3D9BE9}.e3-pb.on.e{box-shadow:inset 0 0 0 3px #E36A8C}
+.e3-chips{flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.e3-chip{min-width:56px;padding:10px 14px;border-radius:14px;border:0;font:900 clamp(22px,2.6cqw,28px) var(--font-num);cursor:pointer;color:var(--ink)}
+.e3-chip.comp{background:#FFE7C2;box-shadow:0 3px 0 #F0B060}.e3-chip.prime{background:#D5F2E1;box-shadow:0 3px 0 #7FCBA0}
+.e3-op{font:900 24px var(--font-num);color:var(--ink)}
+.e3-bars{display:flex;align-items:flex-end;gap:14px;height:170px;margin-bottom:34px}
+.e3-bar{width:64px;height:var(--h);min-height:30px;background:linear-gradient(#7FC4F5,#3D9BE9);border-radius:10px 10px 4px 4px;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;color:#fff;position:relative;animation:popIn .3s var(--spring) both}
+.e3-bar b{font:900 18px var(--font-num);margin-top:4px}.e3-bar small{position:absolute;bottom:-28px;color:var(--ink);font:800 17px var(--font-num)}
+.e3-tbl{display:flex;flex-direction:column;gap:6px;width:min(760px,94cqw)}
+.e3-tr{display:flex;justify-content:space-around;gap:12px;padding:6px 12px;border-radius:12px;background:#fff;box-shadow:var(--e1);font:700 clamp(17px,2cqw,21px) var(--font-num);color:var(--ink);animation:popIn .3s var(--spring) both}
+.e3-tr.even{box-shadow:var(--e1),inset 4px 0 0 #2FB5A3}.e3-tr.odd{box-shadow:var(--e1),inset 4px 0 0 #E36A8C}.e3-tr.zero{background:#FFF3C4}
+.e3-nb.on{box-shadow:inset 0 0 0 3px #3D9BE9}.e3-nb.no{box-shadow:inset 0 0 0 3px #E0445A;opacity:.6}
+.e3-row{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap}
+.e3-sq svg{width:170px;height:170px;display:block}
+.e3-tiles{flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+.e3-tile{position:relative;min-width:54px;padding:10px 12px;border:0;border-radius:12px;font:900 clamp(22px,2.6cqw,28px) var(--font-num);color:var(--ink);cursor:pointer}
+.e3-tile.g1{background:#DDEFFC;box-shadow:0 3px 0 #8FC3E6}.e3-tile.g2{background:#FDE3EC;box-shadow:0 3px 0 #E8A4BA}
+.e3-tile i{position:absolute;top:-10px;right:-8px;min-width:22px;height:22px;border-radius:11px;background:#2B2550;color:#fff;font:800 13px/22px var(--font-num);font-style:normal}
+.e3-tile.cut{opacity:.35;text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:#E0445A}
+.e3-frac{display:flex;flex-direction:column;align-items:center;gap:8px}.e3-fl{width:min(520px,80cqw);height:3px;background:#2B2550;border-radius:2px}
+.e3-dots{flex-direction:column;gap:10px}.e3-dots.ok .e3-eq{color:#2E8A57}
+.e3-dig{display:flex;align-items:flex-end;font:900 clamp(34px,4.4cqw,50px) var(--font-num)}.e3-dig i{font-style:normal;padding:0 2px}
+.e3-pt{color:#E0445A;font-size:1.2em;line-height:.8}
+.e3-eq{font-size:.8em}
+.e3-try{width:min(620px,92cqw)}
+.qbody .e3-big{font-size:clamp(36px,4.8cqw,54px)}
