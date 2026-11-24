@@ -22,7 +22,7 @@ const l3len = mm => `${Math.floor(mm / 10)} ซม. ${mm % 10} มม.`;
 function l3RulerDrag(it, o, onSet) { // drag the red handle: the object's right end snaps to millimetres
   const G = l3rg(o), wrap = h('div', { class: 'p2rwrap ia', html: l3RulerSVG(it, { ...o, handle: true }) }), svg = wrap.firstChild; let b = it.b;
   const draw = () => { wrap.innerHTML = l3RulerSVG({ ...it, b }, { ...o, handle: true }); bind(); };
-  const bind = () => { const g = wrap.querySelector('.l3-h'); g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { g.setPointerCapture(e.pointerId); } catch (_) {}
+  const bind = () => { const g = wrap.querySelector('.l3-h'); if (g.__bd) return; g.__bd = 1; /* v239: ผูกครั้งเดียว (dragkeep เก็บปุ่มเดิมไว้ระหว่างลาก) */ g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); try { g.setPointerCapture(e.pointerId); } catch (_) {}
     const mv = ev => { const v = Math.max(it.a + 3, Math.min(G.max * 10, Math.round((p2svgPt(wrap.firstChild, ev).x - G.x0) / G.u))); if (v !== b) { b = v; const keep = wrap.querySelector('.l3-h'); draw(); sfx.tap(); onSet && onSet(b - it.a, false); } };
     const up = () => { document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); onSet && onSet(b - it.a, true); }; document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up); }); };
   bind(); wrap.val = () => b - it.a; return wrap; }

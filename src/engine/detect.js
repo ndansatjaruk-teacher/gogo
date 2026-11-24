@@ -99,3 +99,26 @@ function dtOwlSVG(state, pal, emblem = '?') {
   </g>
 </svg>`;
 }
+
+/* ---------- ม.2 map path: a trail of shoe prints (v239) ----------
+   walks the same smooth curve as catmull(way), drops a print every DT_STEP px,
+   left / right in turn; prints up to the child's current stop are gold. */
+const DT_STEP = 34;
+function dtTrail(way, doneSeg) {
+  const pts = []; /* [x, y, angle, segment] sampled densely along the curve */
+  for (let i = 0; i < way.length - 1; i++) {
+    const p0 = way[i - 1] || way[i], p1 = way[i], p2 = way[i + 1], p3 = way[i + 2] || p2;
+    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+    for (let k = 0; k < 40; k++) { const t = k / 40, u = 1 - t;
+      const x = u * u * u * p1[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * p2[0], y = u * u * u * p1[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * p2[1];
+      pts.push([x, y, i]); } }
+  pts.push([...way[way.length - 1], way.length - 2]);
+  let s = '', acc = DT_STEP / 2, side = 1;
+  for (let j = 1; j < pts.length; j++) {
+    const a = pts[j - 1], b = pts[j], L = Math.hypot(b[0] - a[0], b[1] - a[1]); acc += L;
+    if (acc < DT_STEP) continue; acc = 0; side = -side;
+    const ang = Math.atan2(b[1] - a[1], b[0] - a[0]), nx = -Math.sin(ang) * 8 * side, ny = Math.cos(ang) * 8 * side, done = b[2] < doneSeg;
+    s += `<g transform="translate(${(b[0] + nx).toFixed(1)} ${(b[1] + ny).toFixed(1)}) rotate(${(ang * 180 / Math.PI).toFixed(0)})" fill="${done ? '#F5B52E' : '#7A6A88'}" fill-opacity="${done ? 1 : .55}"><ellipse cx="4" cy="0" rx="7.2" ry="5"/><ellipse cx="-7.5" cy="0" rx="4.2" ry="3.9"/></g>`;
+  }
+  return s;
+}

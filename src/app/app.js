@@ -341,7 +341,10 @@ function showMap(cityId) {
     hills = t;
   }
   const road = detect ? { shadow: '#4A3A2A', edge: '#A8946E', surf: '#E3D3AE', dots: true } : polar ? { shadow: '#2A5A8A', edge: '#9CCBEA', surf: '#EEF8FF', dots: true } : river ? { shadow: '#1E5A7A', edge: '#E3CF98', surf: '#6EC3EC' } : desert ? { shadow: '#6B3F14', edge: '#B97A3A', surf: '#F4D49A', dots: true } : mountain ? { shadow: '#3B2A1A', edge: '#A98A66', surf: '#E8D2AC', dots: true } : cave ? { shadow: '#000', edge: '#5B4F78', surf: '#8D80A8', seam: '#6E6290', dots: true } : beach ? { shadow: '#5A3D1A', edge: '#B98654', surf: '#E2B57F', seam: '#C69361', dots: false } : jungle ? { shadow: '#2E4A1F', edge: '#B08455', surf: '#DDB985', dots: true } : { shadow: '#2B2550', edge: '#E6D3AC', surf: '#F8ECD2', dots: true };
-  const roadSvg = river ? `
+  const roadSvg = detect ? `
+    <path d="${dAll}" fill="none" stroke="#4A3A2A" stroke-opacity=".08" stroke-width="40" stroke-linecap="round" transform="translate(0 5)" filter="url(#roadBlur)"/>
+    <path d="${dAll}" fill="none" stroke="#E9DCBC" stroke-opacity=".7" stroke-width="34" stroke-linecap="round"/>
+    ${dtTrail(way, dDone ? idxOf[lastDone] : 0)}` : river ? `
     <path d="${dAll}" fill="none" stroke="${road.shadow}" stroke-opacity=".14" stroke-width="66" stroke-linecap="round" transform="translate(0 6)" filter="url(#roadBlur)"/>
     <path d="${dAll}" fill="none" stroke="#C9B47C" stroke-width="64" stroke-linecap="round"/>
     <path d="${dAll}" fill="none" stroke="${road.edge}" stroke-width="58" stroke-linecap="round"/>

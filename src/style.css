@@ -1997,6 +1997,8 @@ button.h6-node.btn{min-height:0}
 .c8-layers .gside-r{width:min(560px,92cqw);max-width:none;flex:0 0 auto}
 /* ---------- ป.6 บทที่ 9 รูปเรขาคณิตสามมิติ ---------- */
 .s9-view{cursor:grab;touch-action:none}.s9-view:active{cursor:grabbing}
+/* iPad: the faces are rebuilt every frame while turning — let the box (never rebuilt) take the touch */
+.s9-view svg{pointer-events:none}
 .s9-svg .s9-l{paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
 .s9-netpick{grid-template-columns:repeat(3,minmax(0,150px))}
 .t6-q > .t6-board.sm:has(.s9-svg){width:min(420px,86cqw)}

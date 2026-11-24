@@ -71,7 +71,7 @@ function simStretch() {
     const k = eq ? 'circle' : 'ellipse'; made.add(k);
     out.innerHTML = eq ? '<b>วงกลม</b> — จากจุดตรงกลางไปถึงขอบ <b>ยาวเท่ากันทุกเส้น</b> (เส้นสีเขียว)' : '<b>วงรี</b> — จากจุดตรงกลางไปถึงขอบ <b>ยาวไม่เท่ากัน</b> (ยาวด้านหนึ่ง สั้นอีกด้าน)';
     if (made.size === 2 && !box.dataset.ok) { box.dataset.ok = 1; teachDone(box); }
-    wrap.querySelectorAll('.g2h').forEach(g => g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); const svg = wrap.firstChild, ax = g.dataset.h; try { g.setPointerCapture(e.pointerId); } catch (_) {}
+    wrap.querySelectorAll('.g2h').forEach(g => !g.__bd && (g.__bd = 1) && g.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); const svg = wrap.firstChild, ax = g.dataset.h; try { g.setPointerCapture(e.pointerId); } catch (_) {}
       const mv = ev => { const p = p2svgPt(svg, ev); if (ax === 'x') rx = Math.max(24, Math.min(140, Math.round(p.x - 150))); else ry = Math.max(24, Math.min(92, Math.round(100 - p.y))); if (Math.abs(rx - ry) < 4) (ax === 'x' ? rx = ry : ry = rx); draw(); };
       const up = () => { document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); sfx.tap(); }; document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up); })); };
   draw();
