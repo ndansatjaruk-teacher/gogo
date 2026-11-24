@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-442 types
+434 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -194,14 +194,6 @@
 | `Q.lIsPar` | `{ a, va, b, vb }` | [`grades/p5/p5g.js:202`](../src/grades/p5/p5g.js#L202) |
 | `Q.lName` | `{ a, b }` | [`grades/p5/p5g.js:180`](../src/grades/p5/p5g.js#L180) |
 | `Q.lTap` | `{ k, rel }` | [`grades/p5/p5g.js:171`](../src/grades/p5/p5g.js#L171) |
-| `Q.m3Build` | `data` | [`grades/m3/m3s.js:158`](../src/grades/m3/m3s.js#L158) |
-| `Q.m3Num` | `{ q, fig, a, unit, hint, sig, base }` | [`grades/m3/m3s.js:164`](../src/grades/m3/m3s.js#L164) |
-| `Q.m3Opt` | `{ q, fig, opts, right, hint, sig, base }` | [`grades/m3/m3s.js:161`](../src/grades/m3/m3s.js#L161) |
-| `Q.m3Pick` | `data` | [`grades/m3/m3s.js:153`](../src/grades/m3/m3s.js#L153) |
-| `Q.m3PickT` | `F` | [`grades/m3/m3s.js:183`](../src/grades/m3/m3s.js#L183) |
-| `Q.m3Q` | `{ data, k, sorted, ctx: tx }` | [`grades/m3/m3s.js:140`](../src/grades/m3/m3s.js#L140) |
-| `Q.m3Read` | `{ F, ask, ctx: tx }` | [`grades/m3/m3s.js:148`](../src/grades/m3/m3s.js#L148) |
-| `Q.m3Tap` | `data` | [`grades/m3/m3s.js:145`](../src/grades/m3/m3s.js#L145) |
 | `Q.makeTen` | `{ a }` | [`engine/questions.js:312`](../src/engine/questions.js#L312) |
 | `Q.makeTen20` | `{ a, b }` | [`engine/questions.js:877`](../src/engine/questions.js#L877) |
 | `Q.marbles` | `{ a, n }` | [`engine/questions.js:1063`](../src/engine/questions.js#L1063) |

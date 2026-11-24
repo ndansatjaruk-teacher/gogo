@@ -402,7 +402,6 @@ const sceneryHTML = k => `<svg viewBox="0 0 64 64" aria-hidden="true">${SCENERY[
 /* ---------- boss: original "ราชาปีศาจตัวเลข" rig, recoloured per city ---------- */
 function bossSVG(state = 'idle', pal = 'lilac', emblem = '?', kind = 'blob') {
   if (kind === 'mega') return megaBossSVG(state, emblem);
-  if (kind === 'bee') return mdBeeSVG(state, pal, emblem); /* ม.3 meadow world (engine/meadow.js) */
   if (kind === 'croc') return rvCrocSVG(state, pal, emblem); /* ม.1 river world (engine/river.js) */
   const [l, b, d, line] = PAL[pal];
   const ink = '#2B2550';

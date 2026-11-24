@@ -7,7 +7,6 @@ engine/art.js
 engine/jungle.js
 engine/life.js
 engine/river.js
-engine/meadow.js
 engine/ink.js
 engine/components.js
 engine/questions.js
@@ -72,7 +71,6 @@ grades/p5/p5x.js
 grades/p6/p6x.js
 grades/m1/m1i.js
 grades/m1/m1g.js
-grades/m3/m3s.js
 app/lessons.js
 app/learn.js
 app/wpic.js
