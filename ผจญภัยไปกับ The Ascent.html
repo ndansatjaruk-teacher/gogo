@@ -4570,6 +4570,17 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .tg-left{flex:1 1 340px;max-width:520px;align-items:center;gap:10px}
 .tg-left .tg-fig .tg-tri,.tg-left .tg-fig .tg-scn{max-height:200px}
 .tg-left > .tg-fig{width:100%}
+/* v241 (ผู้ใช้ขอ): การ์ดพลิก ม.ต้น ขยายเต็มพื้นที่ — ความสูง --fch ตั้งโดย miCardsFit · ตัวอักษรตามขนาดการ์ด */
+.mi-cards.mx{width:min(1080px,92cqw);max-width:none;gap:clamp(12px,1.6cqw,20px)}
+.mi-cards.mx .mi-card.fc{flex:1 1 0;min-width:170px;max-width:340px;width:auto;height:auto;aspect-ratio:1.3/1;max-height:var(--fch,150px);container-type:size}
+.mi-cards.mx:is([data-n="5"],[data-n="6"]) .mi-card.fc{flex:0 1 calc(33.33% - 14px);max-width:none}
+.mi-cards.mx[data-n="4"] .mi-card.fc{max-width:300px}
+.mi-cards.mx .mi-card.fc > span{font-size:clamp(17px,min(15cqh,11cqw),34px);padding:6% 7%}
+.mi-cards.mx .mi-card.fc .b{font-size:clamp(16px,min(12cqh,8.6cqw),27px)}
+.mi-cards.mx .mi-card.fc .b small{font-size:.84em;line-height:1.35}
+.mg-cards.mx .mi-card.fc .f .mg-fig,.mi-cards.mx .mi-card.fc .f .mg-fig{max-width:82cqw!important;max-height:48cqh}
+.mi-cards.mx[data-n="4"] .mi-card.fc{aspect-ratio:1.05/1}
+.mi-cards.mx:is([data-n="7"],[data-n="8"]) .mi-card.fc{flex:0 1 calc(25% - 15px);max-width:none}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -4585,6 +4596,9 @@ button.m3-t.used{opacity:.28;pointer-events:none}
    ========================================================= */
 /* product of CSS zoom from el up to <html> (each element's own zoom value) */
 function zfChain(el) { let z = 1; for (let e = el; e && e.nodeType === 1; e = e.parentElement) { const v = parseFloat(getComputedStyle(e).zoom); if (v > 0 && v !== 1) z *= v; } return z; }
+/* v241: getScreenCTM must hand back a real SVGMatrix — svgPoint.matrixTransform(m.inverse()) throws on a DOMMatrix
+   (Chrome / Safari), which silently killed every drag on engines where the patch below is active */
+function zfMat(el, a, b, c, d, e, f) { const root = el.ownerSVGElement || el, M = root.createSVGMatrix ? root.createSVGMatrix() : null; if (!M) return new DOMMatrix([a, b, c, d, e, f]); M.a = a; M.b = b; M.c = c; M.d = d; M.e = e; M.f = f; return M; }
 const ZF = (() => {
   const fx = { pos: false, size: false, ctm: false };
   try {
@@ -4598,11 +4612,37 @@ const ZF = (() => {
   if (fx.pos || fx.size) { const g = Element.prototype.getBoundingClientRect;
     Element.prototype.getBoundingClientRect = function () { const r = g.call(this), k = zfChain(this); if (k === 1) return r; const p = fx.pos ? k : 1, s = fx.size ? k : 1; return new DOMRect(r.x * p, r.y * p, r.width * s, r.height * s); }; }
   if (fx.ctm && window.SVGGraphicsElement) { const g = SVGGraphicsElement.prototype.getScreenCTM;
-    SVGGraphicsElement.prototype.getScreenCTM = function () { const m = g.call(this), k = m ? zfChain(this) : 1; if (!m || k === 1) return m; return new DOMMatrix([m.a * k, m.b * k, m.c * k, m.d * k, m.e * k, m.f * k]); }; }
+    SVGGraphicsElement.prototype.getScreenCTM = function () { const m = g.call(this), k = m ? zfChain(this) : 1; if (!m || k === 1) return m; return zfMat(this, m.a * k, m.b * k, m.c * k, m.d * k, m.e * k, m.f * k); }; }
   return fx;
 })();
 /* screen px per CSS px inside el — use to turn a mouse distance (clientX change) into style px */
 const zfScale = el => { const w = el.offsetWidth; return w ? (el.getBoundingClientRect().width / w || 1) : zfChain(el); };
+/* v241: Safari (Mac) — getScreenCTM() of an <svg> under CSS zoom is not trustworthy in WebKit (zoom left out of the
+   matrix, rect x/y divided by zoom …), so a drag could land far from the finger or not move at all.
+   On legacy-zoom engines we calibrate the matrix with the browser's own hit test, which always agrees with
+   event.clientX/Y: a transparent rect inside the svg is narrowed down (binary search) until it just covers the
+   point, for two points → scale + offset. Cached until the svg moves or changes size (checked with its rect). */
+let zfCache = new WeakMap();
+addEventListener('resize', () => { zfCache = new WeakMap(); });
+function zfHitCTM(svg) {
+  const vb = svg.viewBox && svg.viewBox.baseVal; if (!vb || !vb.width || !vb.height || !document.elementsFromPoint || !svg.isConnected) return null;
+  const R0 = svg.getBoundingClientRect(), key = [R0.left, R0.top, R0.width, R0.height, vb.x, vb.y, vb.width, vb.height].map(v => Math.round(v * 2)).join(','), c = zfCache.get(svg); if (c && c.key === key) return c.m; /* same place, same size → same matrix */
+  const NS = 'http://www.w3.org/2000/svg', r = document.createElementNS(NS, 'rect'), pe = svg.style.pointerEvents, big = 1e5;
+  r.setAttribute('fill', 'transparent'); r.style.pointerEvents = 'all'; svg.style.pointerEvents = 'auto'; svg.appendChild(r);
+  const on = (sx, sy) => document.elementsFromPoint(sx, sy).includes(r);
+  const set = (ax, a, b) => { if (ax) { r.setAttribute('x', a); r.setAttribute('width', b - a); r.setAttribute('y', -big); r.setAttribute('height', 2 * big); } else { r.setAttribute('y', a); r.setAttribute('height', b - a); r.setAttribute('x', -big); r.setAttribute('width', 2 * big); } };
+  const solve = (sx, sy, ax) => { let lo = ax ? vb.x - vb.width : vb.y - vb.height, hi = ax ? vb.x + 2 * vb.width : vb.y + 2 * vb.height; set(ax, lo, hi); if (!on(sx, sy)) return null;
+    for (let i = 0; i < 20; i++) { const mid = (lo + hi) / 2; set(ax, lo, mid); if (on(sx, sy)) hi = mid; else lo = mid; } return (lo + hi) / 2; };
+  let m = null;
+  try { const R = svg.getBoundingClientRect(), got = [];
+    for (const [fx, fy] of [[.25, .25], [.75, .75], [.3, .7], [.7, .3], [.5, .5], [.15, .85], [.85, .15]]) { const sx = R.left + R.width * fx, sy = R.top + R.height * fy, ux = solve(sx, sy, 1), uy = ux == null ? null : solve(sx, sy, 0);
+      if (ux != null && uy != null) got.push([sx, sy, ux, uy]); if (got.length === 2 && Math.abs(got[0][0] - got[1][0]) > 8 && Math.abs(got[0][1] - got[1][1]) > 8) break; if (got.length === 2) got.pop(); }
+    if (got.length === 2) { const [p, q] = got, a = (q[0] - p[0]) / (q[2] - p[2]), d = (q[1] - p[1]) / (q[3] - p[3]); if (isFinite(a) && isFinite(d) && a > 0 && d > 0) m = zfMat(svg, a, 0, 0, d, p[0] - a * p[2], p[1] - d * p[3]); } } catch (_) { m = null; }
+  r.remove(); svg.style.pointerEvents = pe;
+  zfCache.set(svg, { m, key }); return m;
+}
+if ((ZF.pos || ZF.size || ZF.ctm || window.ZF_FORCE_HIT) && window.SVGSVGElement) { const g0 = SVGGraphicsElement.prototype.getScreenCTM;
+  SVGSVGElement.prototype.getScreenCTM = function () { if (window.ZF_FORCE_HIT || zfChain(this) !== 1) { const m = zfHitCTM(this); if (m) return m; } return g0.call(this); }; }
 
 'use strict';
 /* =========================================================
@@ -28033,9 +28073,19 @@ function miSignTable() {
       if (seen === cells.length) { out.innerHTML = 'เครื่องหมาย<b>เหมือนกัน</b> ได้<b>บวก</b> และเครื่องหมาย<b>ต่างกัน</b> ได้<b>ลบ</b>'; sfx.ok(); teachDone(grid); } }; return c; }));
   return h('div', { class: 'colstack no-side' }, h6wait(), h('div', { class: 'cap' }, 'แตะทุกช่องเพื่อเปิดดู'), grid, out);
 }
+/* v241 (ผู้ใช้ขอ): การ์ดพลิกของ ม.ต้น ใช้พื้นที่ให้เต็มที่แต่ไม่แน่น — การ์ดยืดเต็มความกว้าง แล้วหาความสูงที่มากที่สุด (ไม่เกิน 250px)
+   ที่ทั้งหน้ายังพอดีกรอบ (วัดจริงหลังวางลงหน้า) · ตัวอักษรโตตามขนาดการ์ด (container query) */
+function miCardsFit(wrap) { let n = 0;
+  const go = () => { const vis = wrap.closest('.visual'); if (!vis || !wrap.isConnected || !vis.clientHeight) { if (n++ < 40) requestAnimationFrame(go); return; }
+    const unz = () => { vis.querySelectorAll('[data-gz]').forEach(c => { c.style.zoom = c.dataset.gz || ''; }); vis.classList.remove('shrunk'); };
+    const fits = () => vis.scrollHeight <= vis.clientHeight + 2 && vis.scrollWidth <= vis.clientWidth + 2;
+    let H = 260; for (; H > 120; H -= 10) { wrap.style.setProperty('--fch', H + 'px'); unz(); if (fits()) break; }
+    wrap.style.setProperty('--fch', H + 'px'); if (typeof fitShrink === 'function') fitShrink(vis); /* ยังล้นที่ 120px → ระบบย่อทั้งหน้าเหมือนเดิม */
+    if (!wrap.__ro && window.ResizeObserver) { let t = 0, w0 = vis.clientWidth, h0 = vis.clientHeight; wrap.__ro = new ResizeObserver(() => { if (vis.clientWidth === w0 && vis.clientHeight === h0) return; w0 = vis.clientWidth; h0 = vis.clientHeight; clearTimeout(t); t = setTimeout(() => { if (wrap.isConnected) go(); }, 150); }); wrap.__ro.observe(vis); } };
+  requestAnimationFrame(() => requestAnimationFrame(go)); return wrap; }
 function miCards(list) {
-  return h('div', { class: 'mi-cards' }, ...list.map(([f, b, q]) => { const c = h('button', { class: 'mi-card fc' }, h('span', { class: 'f', html: f }), h('span', { class: 'b', html: `<i class="fc-q">${q ?? f}</i>${b}` })); /* q = หัวข้อด้านหลัง (ถ้าด้านหน้ามีรูป) */ /* v226 (ผู้ใช้ขอ): ด้านหลังยังมีข้อความด้านหน้า จะได้จำได้ว่าพูดถึงอะไร */
-    c.onclick = e => { e.stopPropagation(); c.classList.toggle('flip'); sfx.pop(2); if (c.classList.contains('flip')) say(miSay(c.querySelector('.b').textContent), true); }; return c; }));
+  return miCardsFit(h('div', { class: 'mi-cards mx', 'data-n': list.length }, ...list.map(([f, b, q]) => { const c = h('button', { class: 'mi-card fc' }, h('span', { class: 'f', html: f }), h('span', { class: 'b', html: `<i class="fc-q">${q ?? f}</i>${b}` })); /* q = หัวข้อด้านหลัง (ถ้าด้านหน้ามีรูป) */ /* v226 (ผู้ใช้ขอ): ด้านหลังยังมีข้อความด้านหน้า จะได้จำได้ว่าพูดถึงอะไร */
+    c.onclick = e => { e.stopPropagation(); c.classList.toggle('flip'); sfx.pop(2); if (c.classList.contains('flip')) say(miSay(c.querySelector('.b').textContent), true); }; return c; })));
 }
 /* sharing: tap each chip to deal it to the next group */
 function miShareSim(a, n) {
@@ -29101,6 +29151,7 @@ const LESSONS_M1C2 = [
   LM2(2, 'โรงเครื่องมือริมน้ำ', 'รู้จักเครื่องมือและหลักการสร้างทางเรขาคณิต', 'เครื่องมือ·รัศมี', 'ใช้ไม้บรรทัด วงเวียน ไม้ฉาก และโพรแทรกเตอร์ได้ถูกต้อง บอกความแตกต่างระหว่างการวัดกับการสร้าง เข้าใจจุดศูนย์กลาง รัศมี และจุดตัดของส่วนโค้ง', [
     T('<b>เครื่องมือ</b> และ<b>การวัด ≠ การสร้าง</b> — แตะการ์ดดูทีละใบ', 'เครื่องมือ และการวัดไม่เหมือนการสร้าง แตะการ์ดดูทีละใบ', el => el.append(mgCards([['ไม้บรรทัด', '<b>วัดความยาว ลากเส้นตรง</b><small>มีสเกลบอกความยาว</small>'], ['สันตรง', '<b>ลากเส้นตรงเท่านั้น</b><small>ไม่ใช้สเกลวัด</small>'], ['วงเวียน', '<b>เขียนวงกลม/ส่วนโค้ง ลอกความยาว</b>'], ['ไม้ฉาก', '<b>เขียน/ตรวจมุมฉาก</b>'], ['โพรแทรกเตอร์', '<b>วัดและเขียนมุม</b><small>ในเกมนี้คือครึ่งวงกลม</small>'], ['การสร้าง', '<b>ใช้วงเวียนและสันตรง</b><small>อาศัยความยาวที่เท่ากัน ไม่กะด้วยสายตา และเห็นร่องรอยการสร้าง</small>']], 'mg-cards'))),
     T('ตัวอย่างทีละขั้น: <b>จุดศูนย์กลางและรัศมี</b> — เขียนวงกลม', 'ตัวอย่างทีละขั้น จุดศูนย์กลางและรัศมี เขียนวงกลม', mgDemo(mgT.circ(3))),
+    T('<b>ลองสร้างเอง</b>: วงกลมรัศมี 3.5 ซม. — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง เขียนวงกลมรัศมีสามจุดห้าเซนติเมตร', mgTry(mgT.circ(3.5))),
     T('<b>ลองหาเอง</b>: จุดตัดของส่วนโค้ง — ติดตรงไหนกด คำใบ้', 'ลองหาเอง จุดตัดของส่วนโค้ง', mgTry(mgT.meet(4, 3, 5))),
     T('ตัวอย่างทีละขั้น: <b>วัดมุมด้วยโพรแทรกเตอร์ (ครึ่งวงกลม)</b>', 'ตัวอย่างทีละขั้น วัดมุมด้วยโพรแทรกเตอร์', mgDemo(mgMeasDemo(65, 15)))
   ], () => [0, 1, 2, 3, 4, 5].map(mgToolQ).concat([Q.mgBuild(mgT.circ(mgPick([2.5, 3.5, 4])), 'เขียนวงกลมตามรัศมีที่กำหนด'), Q.mgBuild(mgT.meet(mgPick([4.5, 5]), mgPick([3.5, 4]), 6), 'หาจุดที่อยู่ห่างจากสองจุดตามที่กำหนด'),
@@ -29110,8 +29161,11 @@ const LESSONS_M1C2 = [
     mgTF('ทุกจุดบนวงกลมอยู่ห่างจากจุดศูนย์กลางเท่ากัน', true, 'ระยะนั้นคือรัศมี'), mgTF('จุดตัดของส่วนโค้งจาก A รัศมี 4 ซม. กับส่วนโค้งจาก B รัศมี 3 ซม. อยู่ห่างจาก A 3 ซม.', false, 'อยู่บนส่วนโค้งจาก A จึงห่างจาก A 4 ซม.')])),
   LM2(3, 'ลำธารลอกเส้น', 'การสร้างส่วนของเส้นตรงและการคัดลอกความยาว', 'สร้าง·ลอกความยาว', 'สร้างส่วนของเส้นตรงตามความยาวที่กำหนด คัดลอกความยาวด้วยวงเวียน และสร้างความยาวที่เป็นผลบวก ผลต่าง หรือหลายเท่าของความยาวที่กำหนด', [
     T('ตัวอย่างทีละขั้น: <b>สร้าง CD ให้ยาวเท่ากับ AB</b> (ลอกความยาวด้วยวงเวียน)', 'ตัวอย่างทีละขั้น สร้างซีดีให้ยาวเท่ากับเอบี', mgDemo(mgT.copySeg(4.3))),
+    T('<b>ลองสร้างเอง</b>: ลอกความยาว AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง ลอกความยาวเอบี', mgTry(mgT.copySeg(4.7))),
     T('ตัวอย่างทีละขั้น: <b>PR = AB + CD</b> (ส่วนของเส้นตรงต่อเนื่องกัน)', 'ตัวอย่างทีละขั้น พีอาร์เท่ากับเอบีบวกซีดี', mgDemo(mgT.sumSeg(3.1, 2.4))),
+    T('<b>ลองสร้างเอง</b>: PR = AB + CD — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง พีอาร์เท่ากับเอบีบวกซีดี', mgTry(mgT.sumSeg(3.3, 2.4))),
     T('ตัวอย่างทีละขั้น: <b>PR = AB − CD</b>', 'ตัวอย่างทีละขั้น พีอาร์เท่ากับเอบีลบซีดี', mgDemo(mgT.diffSeg(5.2, 2.1))),
+    T('<b>ลองสร้างเอง</b>: PR = AB − CD — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง พีอาร์เท่ากับเอบีลบซีดี', mgTry(mgT.diffSeg(5.6, 2.1))),
     T('<b>ลองสร้างเอง</b>: ยาว 3 เท่าของ AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง ยาวสามเท่าของเอบี', mgTry(mgT.kSeg(2.4, 3)))
   ], () => [Q.mgBuild(mgT.segLen(mgPick([4.5, 5.5, 6.5])), 'สร้างส่วนของเส้นตรงตามความยาวที่กำหนด'), Q.mgBuild(mgT.copySeg(mgPick([3.6, 4.7, 5.2])), 'ลอกความยาว AB ลงบนรังสี CX'), Q.mgBuild(mgT.sumSeg(mgPick([2.8, 3.3]), mgPick([2.1, 2.6])), 'สร้างผลบวกของความยาวด้วยวงเวียน'), Q.mgBuild(mgT.diffSeg(mgPick([4.6, 5.6]), mgPick([1.8, 2.3])), 'สร้างผลต่างของความยาวด้วยวงเวียน'), Q.mgBuild(mgT.kSeg(mgPick([2, 2.6]), 2), 'สร้างความยาว 2 เท่าของ AB'),
     mgTraceQ('copySeg', 'การสร้างส่วนของเส้นตรงให้ยาวเท่ากับที่กำหนด'), mgSegOpQ('add'), mgSegOpQ('sub'), mgSegOpQ('two'), mgSegOpQ('mix'),
@@ -29121,6 +29175,7 @@ const LESSONS_M1C2 = [
   LM2(4, 'สะพานจุดกึ่งกลาง', 'การแบ่งครึ่งส่วนของเส้นตรง', 'จุดกึ่งกลาง', 'บอกความหมายของจุดกึ่งกลาง แบ่งครึ่งส่วนของเส้นตรงด้วยวงเวียน สร้างเส้นตั้งฉากแบ่งครึ่ง และใช้สมบัติว่าจุดบนเส้นตั้งฉากแบ่งครึ่งอยู่ห่างจากปลายทั้งสองเท่ากัน', [
     T('<b>จุดกึ่งกลาง</b> — แตะการ์ดดูทีละใบ', 'จุดกึ่งกลาง แตะการ์ดดูทีละใบ', el => el.append(h('div', { class: 'colstack' }, h('div', { class: 'mg-figbox', html: mgFig({ pts: { A: [0, 0], M: [2.5, 0], B: [5, 0] }, segs: [['A', 'B']], ticks: [['A', 'M', 1], ['M', 'B', 1]] }, { max: 300 }) }), mgCards([['จุดกึ่งกลาง', '<b>แบ่ง AB เป็น 2 ส่วนยาวเท่ากัน</b><small>AM = MB</small>'], ['เส้นตั้งฉากแบ่งครึ่ง', '<b>ผ่านจุดกึ่งกลาง และตั้งฉากกับ AB</b>'], ['รัศมีที่ใช้', '<b>ยาวกว่าครึ่งของ AB</b><small>ส่วนโค้งจึงตัดกันสองจุด</small>']], 'mg-cards')))),
     T('ตัวอย่างทีละขั้น: <b>แบ่งครึ่ง AB</b> (เส้นตั้งฉากแบ่งครึ่ง)', 'ตัวอย่างทีละขั้น แบ่งครึ่งเอบี', mgDemo(mgT.bisSeg(7))),
+    T('<b>ลองสร้างเอง</b>: แบ่งครึ่ง AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง แบ่งครึ่งเอบี', mgTry(mgT.bisSeg(6.6))),
     T('<b>สมบัติ</b>: จุดบนเส้นตั้งฉากแบ่งครึ่ง — ลากจุด P ดู', 'สมบัติของจุดบนเส้นตั้งฉากแบ่งครึ่ง ลากจุดพีดู', el => el.append(mgEquiSim('seg'))),
     T('<b>ลองสร้างเอง</b>: แบ่ง AB เป็น 4 ส่วนเท่ากัน — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง แบ่งเอบีเป็นสี่ส่วนเท่ากัน', mgTry(mgT.quartSeg(9.6)))
   ], () => [Q.mgBuild(mgT.bisSeg(mgPick([5.6, 6.6, 7.4])), 'แบ่งครึ่ง AB ด้วยวงเวียนและสันตรง'), Q.mgBuild(mgT.quartSeg(mgPick([8.8, 10])), 'แบ่ง AB เป็น 4 ส่วนเท่ากัน'),
@@ -29132,6 +29187,7 @@ const LESSONS_M1C2 = [
     mgTF('ส่วนของเส้นตรงหนึ่งเส้นมีจุดกึ่งกลางได้เพียงจุดเดียว', true, 'จุดกึ่งกลางมีจุดเดียว'), mgTF('การแบ่งส่วนของเส้นตรงเป็น 8 ส่วนเท่ากัน ทำได้โดยแบ่งครึ่งซ้ำ 3 ครั้ง', true, '2 × 2 × 2 = 8')]),
   LM2(5, 'คุ้งลอกมุม', 'การสร้างมุมและการคัดลอกมุม', 'วัด·สร้าง·ลอกมุม', 'บอกส่วนประกอบของมุม อ่านขนาดของมุม สร้างมุมด้วยโพรแทรกเตอร์ และคัดลอกมุมให้มีขนาดเท่ากับมุมที่กำหนดด้วยวงเวียนและสันตรง', [
     T('ตัวอย่างทีละขั้น: <b>สร้างมุม 50° ด้วยโพรแทรกเตอร์</b>', 'ตัวอย่างทีละขั้น สร้างมุมห้าสิบองศาด้วยโพรแทรกเตอร์', mgDemo(mgT.protAng(50))),
+    T('<b>ลองสร้างเอง</b>: มุม 80° (โพรแทรกเตอร์) — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างมุมแปดสิบองศาด้วยโพรแทรกเตอร์', mgTry(mgT.protAng(80))),
     T('ตัวอย่างทีละขั้น: <b>ลอกมุม</b> สร้าง ∠XOY ให้เท่ากับ ∠ABC', 'ตัวอย่างทีละขั้น ลอกมุม', mgDemo(mgT.copyAng(50))),
     T('<b>ลองสร้างเอง</b>: ลอกมุม — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง ลอกมุม', mgTry(mgT.copyAng(70)))
   ], () => [mgPartQ('v'), mgPartQ('a'), Q.mgMeasure({ deg: mgPick([40, 60, 75]), rot: mgPick([0, 15]) }), Q.mgMeasure({ deg: mgPick([105, 130, 150]), rot: mgPick([0, 10]), name: 'XYZ' }),
@@ -29154,8 +29210,11 @@ const LESSONS_M1C2 = [
   LM2(7, 'แก่งมุมพิเศษ', 'การสร้างมุมขนาดต่าง ๆ', 'มุม 30° 45° 60°…', 'สร้างมุม 60° 90° 120° และมุมที่ได้จากการแบ่งครึ่งหรือนำมุมมารวมกัน เช่น 30° 45° 135° 150° ด้วยวงเวียนและสันตรง', [
     T('มุมที่สร้างได้ด้วย<b>วงเวียนและสันตรง</b> — แตะการ์ดดูว่าได้มาอย่างไร', 'มุมที่สร้างได้ด้วยวงเวียนและสันตรง แตะการ์ดดูว่าได้มาอย่างไร', el => el.append(miCards([['60°', '<b>รูปสามเหลี่ยมด้านเท่า</b><small>รัศมีเดิมตัดกัน</small>'], ['90°', '<b>เส้นตั้งฉาก</b><small>แบ่งครึ่งมุมตรง 180°</small>'], ['30°', '<b>แบ่งครึ่ง 60°</b>'], ['45°', '<b>แบ่งครึ่ง 90°</b>'], ['120°', '<b>60° + 60°</b><small>หรือ 180° − 60°</small>'], ['135°', '<b>90° + 45°</b>'], ['150°', '<b>180° − 30°</b>'], ['รวมมุม', '<b>ลอกมุมต่อกัน</b><small>เช่น 60° + 45° = 105°</small>']]))),
     T('ตัวอย่างทีละขั้น: <b>สร้างมุม 60°</b>', 'ตัวอย่างทีละขั้น สร้างมุมหกสิบองศา', mgDemo(mgT.angle(60))),
+    T('<b>ลองสร้างเอง</b>: สร้างมุม 60° — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างมุมหกสิบองศา', mgTry(mgT.angle(60))),
     T('ตัวอย่างทีละขั้น: <b>สร้างมุม 45°</b> (สร้าง 90° แล้วแบ่งครึ่ง)', 'ตัวอย่างทีละขั้น สร้างมุมสี่สิบห้าองศา', mgDemo(mgT.angle(45))),
+    T('<b>ลองสร้างเอง</b>: มุม 135° — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างมุมหนึ่งร้อยสามสิบห้าองศา', mgTry(mgT.angle(135))),
     T('ตัวอย่างทีละขั้น: <b>นำมุมมารวมกัน</b> ∠ABC + ∠DEF', 'ตัวอย่างทีละขั้น นำมุมมารวมกัน', mgDemo(mgT.sumAng(40, 35))),
+    T('<b>ลองสร้างเอง</b>: ∠ABC + ∠DEF — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง นำมุมมารวมกัน', mgTry(mgT.sumAng(45, 30))),
     T('<b>ลองสร้างเอง</b>: สร้างมุม 30° — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างมุมสามสิบองศา', mgTry(mgT.angle(30)))
   ], () => [Q.mgBuild(mgT.angle(mgPick([60, 90, 120])), 'สร้างมุมด้วยวงเวียนและสันตรง'), Q.mgBuild(mgT.angle(mgPick([45, 135, 150])), 'สร้างมุมด้วยวงเวียนและสันตรง (ใช้การแบ่งครึ่ง)'), Q.mgBuild(mgT.sumAng(mgPick([35, 45]), mgPick([30, 40])), 'สร้างมุมที่เป็นผลบวกของมุมสองมุม'),
     mgTraceQ('angle60', 'การสร้างมุม 60°'),
@@ -29169,6 +29228,7 @@ const LESSONS_M1C2 = [
     mgTF('ในการสร้างมุม 60° ใช้รัศมีเดียวกันตลอด เพราะได้รูปสามเหลี่ยมด้านเท่า', true, ''), mgTF('มุม 120° สร้างได้จากการแบ่งครึ่งมุม 60°', false, 'แบ่งครึ่ง 60° ได้ 30° — 120° คือ 60° + 60°')]),
   LM2(8, 'สะพานตั้งฉาก', 'การสร้างเส้นตั้งฉาก', 'เส้นตั้งฉาก', 'สร้างเส้นตั้งฉากผ่านจุดบนเส้นตรงและจากจุดภายนอกเส้นตรง และบอกได้ว่าระยะห่างระหว่างจุดกับเส้นตรงวัดตามแนวตั้งฉาก', [
     T('ตัวอย่างทีละขั้น: <b>เส้นตั้งฉากที่จุด P บนเส้นตรง</b>', 'ตัวอย่างทีละขั้น เส้นตั้งฉากที่จุดพีบนเส้นตรง', mgDemo(mgT.perpAt())),
+    T('<b>ลองสร้างเอง</b>: เส้นตั้งฉากที่จุด P — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง เส้นตั้งฉากที่จุดพีบนเส้นตรง', mgTry(mgT.perpAt())),
     T('ตัวอย่างทีละขั้น: <b>เส้นตั้งฉากจากจุด P ภายนอกเส้นตรง</b>', 'ตัวอย่างทีละขั้น เส้นตั้งฉากจากจุดพีภายนอกเส้นตรง', mgDemo(mgT.perpFrom())),
     T('<b>ระยะห่างระหว่างจุดกับเส้นตรง</b> — เลื่อนจุด Q หาระยะที่สั้นที่สุด', 'ระยะห่างระหว่างจุดกับเส้นตรง เลื่อนจุดคิวหาระยะที่สั้นที่สุด', el => el.append(mgDistSim())),
     T('<b>ลองสร้างเอง</b>: เส้นตั้งฉากจากจุด P มายัง AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สร้างเส้นตั้งฉากจากจุดพีมายังเอบี', mgTry(mgT.perpFrom()))
@@ -29192,6 +29252,7 @@ const LESSONS_M1C2 = [
   LM2(10, 'ทางน้ำคู่ขนาน', 'การสร้างเส้นขนาน', 'สร้างเส้นขนาน', 'สร้างเส้นตรงผ่านจุดที่กำหนดให้ขนานกับเส้นตรงที่กำหนด ด้วยการสร้างมุมที่เท่ากัน และด้วยเส้นตั้งฉากสองครั้ง และแก้โจทย์ประยุกต์', [
     T('ตัวอย่างทีละขั้น: <b>เส้นผ่าน P ขนานกับ AB</b> (สร้างมุมที่เท่ากัน)', 'ตัวอย่างทีละขั้น เส้นผ่านพีขนานกับเอบี สร้างมุมที่เท่ากัน', mgDemo(mgT.parallel())),
     T('ตัวอย่างทีละขั้น: <b>เส้นขนานโดยใช้เส้นตั้งฉาก</b>', 'ตัวอย่างทีละขั้น เส้นขนานโดยใช้เส้นตั้งฉาก', mgDemo(mgT.parPerp())),
+    T('<b>ลองสร้างเอง</b>: เส้นขนาน (ใช้เส้นตั้งฉาก) — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง เส้นขนานโดยใช้เส้นตั้งฉาก', mgTry(mgT.parPerp())),
     T('<b>ลองสร้างเอง</b>: เส้นผ่าน P ขนานกับ AB — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง เส้นผ่านพีขนานกับเอบี', mgTry(mgT.parallel()))
   ], () => [Q.mgBuild(mgT.parallel(), 'สร้างเส้นผ่าน P ให้ขนานกับ AB'), Q.mgBuild(mgT.parPerp(), 'สร้างเส้นผ่าน P ให้ขนานกับ AB โดยใช้เส้นตั้งฉาก'), mgTraceQ('parallel', 'การสร้างเส้นขนาน'),
     Q.mgPick({ q: 'การสร้างเส้นขนานผ่านจุด P โดยวิธีลอกมุม อาศัยสมบัติใด', opts: ['ถ้ามุมสมนัย (หรือมุมแย้ง) เท่ากัน เส้นตรงสองเส้นขนานกัน', 'ถ้าเส้นตรงยาวเท่ากัน จะขนานกัน', 'ถ้ามุมรวมกัน 90° จะขนานกัน', 'จุดกึ่งกลางของส่วนของเส้นตรง'], right: 'ถ้ามุมสมนัย (หรือมุมแย้ง) เท่ากัน เส้นตรงสองเส้นขนานกัน', hint: 'ลอกมุมที่เส้นตัดทำกับ AB ไปไว้ที่ P', sig: 'pprop' }),
@@ -29205,8 +29266,10 @@ const LESSONS_M1C2 = [
     T('<b>ความยาวสามด้าน</b> ประกอบเป็นรูปสามเหลี่ยมได้เสมอไหม — ลองทุกชุด', 'ความยาวสามด้านประกอบเป็นรูปสามเหลี่ยมได้เสมอไหม ลองทุกชุด', el => el.append(mgIneqSim([[4, 5, 7], [2, 3, 6], [3, 4, 7], [5, 5, 5]]))),
     T('<b>มุมภายใน</b>ของรูปสามเหลี่ยมรวมกันได้เท่าไร — ลากจุดยอดดู', 'มุมภายในของรูปสามเหลี่ยมรวมกันได้เท่าไร ลากจุดยอดดู', el => el.append(mgSumSim())),
     T('ตัวอย่างทีละขั้น: <b>กำหนดด้านสามด้าน</b>', 'ตัวอย่างทีละขั้น กำหนดด้านสามด้าน', mgDemo(mgT.tri('sss', { c: 6, b: 4, a: 5 }))),
+    T('<b>ลองสร้างเอง</b>: สามเหลี่ยมด้าน 7, 5, 4 ซม. — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง สามเหลี่ยมกำหนดด้านสามด้าน', mgTry(mgT.tri('sss', { c: 7, b: 5, a: 4 }))),
     T('<b>ลองสร้างเอง</b>: กำหนดด้านสองด้านและมุมในระหว่าง — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง กำหนดด้านสองด้านและมุมในระหว่าง', mgTry(mgT.tri('sas', { c: 6, b: 4, A: 50 }))),
-    T('ตัวอย่างทีละขั้น: <b>สร้างส่วนสูง</b>ของรูปสามเหลี่ยม', 'ตัวอย่างทีละขั้น สร้างส่วนสูงของรูปสามเหลี่ยม', mgDemo(mgT.altitude()))
+    T('ตัวอย่างทีละขั้น: <b>สร้างส่วนสูง</b>ของรูปสามเหลี่ยม', 'ตัวอย่างทีละขั้น สร้างส่วนสูงของรูปสามเหลี่ยม', mgDemo(mgT.altitude())),
+    T('<b>ลองสร้างเอง</b>: ส่วนสูงของสามเหลี่ยม — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง ส่วนสูงของรูปสามเหลี่ยม', mgTry(mgT.altitude())),
   ], () => [mgTriSideQ(), mgTriSideQ(), mgTriAngQ(), mgTriAngQ(), mgIneqQ(), mgRangeQ(mgPick([4, 5]), mgPick([7, 9])), mgThirdQ(mgPick([35, 45]), mgPick([80, 75])), mgThirdQ(90, mgPick([35, 48])), mgExtQ(mgPick([40, 45]), mgPick([65, 70])),
     Q.mgBuild(mgT.tri('sss', mgPick([{ c: 7, b: 5, a: 4 }, { c: 6.5, b: 4.5, a: 5.5 }])), 'สร้างรูปสามเหลี่ยมจากด้านสามด้าน'), Q.mgBuild(mgT.tri('asa', mgPick([{ c: 6, A: 50, B: 60 }, { c: 7, A: 40, B: 70 }])), 'สร้างรูปสามเหลี่ยมจากมุม ด้าน มุม'), Q.mgBuild(mgT.altitude(), 'สร้างส่วนสูงของรูปสามเหลี่ยม'),
     Q.mgPick({ q: 'กำหนด AB = 6 ซม. AC = 4 ซม. BC = 11 ซม. สร้างรูปสามเหลี่ยม ABC ได้หรือไม่', opts: ['ไม่ได้ เพราะ 6 + 4 น้อยกว่า 11', 'ได้ เป็นรูปสามเหลี่ยมมุมป้าน', 'ได้ เป็นรูปสามเหลี่ยมมุมฉาก', 'ได้ หลายรูป'], right: 'ไม่ได้ เพราะ 6 + 4 น้อยกว่า 11', hint: 'ส่วนโค้งจาก A และ B จะไม่ตัดกัน', sig: 'tri11' }),
@@ -29216,7 +29279,8 @@ const LESSONS_M1C2 = [
     T('ตัวอย่างทีละขั้น: <b>รูปสี่เหลี่ยมด้านขนาน ABCD</b> AB = 5 ซม. ∠A = 60° AD = 3 ซม.', 'ตัวอย่างทีละขั้น รูปสี่เหลี่ยมด้านขนาน', el => el.append(dcWalk(mgFig({ pts: { A: [0, 0], B: [5, 0], C: [6.5, 2.6], D: [1.5, 2.6] }, segs: [['A', 'B'], ['B', 'C'], ['C', 'D'], ['D', 'A']], angs: [['A', 'B', 'D', '60°']], fill: [[['A', 'B', 'C', 'D'], '#FFD27A']] }, { max: 300 }),
       [['① สร้างฐาน', 'AB = 5 ซม.'], ['② สร้างมุม', '∠A = 60° (วงเวียน: รูปสามเหลี่ยมด้านเท่า)'], ['③ ลอกความยาว', 'AD = 3 ซม. บนแขนของมุม'], ['④ หาจุด C', 'วงเวียนจาก D รัศมี AB และจาก B รัศมี AD ตัดกันที่ C'], ['⑤ ลากเส้น', 'BC และ DC']], '<b>ด้านตรงข้ามยาวเท่ากัน → ได้รูปสี่เหลี่ยมด้านขนาน</b>'))),
     T('<b>ลองสร้างเอง</b>: รูปสี่เหลี่ยมผืนผ้า ABCD ให้ AB = 6 ซม. และ BC = 3.5 ซม. (มุมฉากใช้การสร้างเส้นตั้งฉาก)', 'ลองสร้างเอง รูปสี่เหลี่ยมผืนผ้า', el => el.append(cnsFree(cnsPara(6, 3.5, 90, 'รูปสี่เหลี่ยมผืนผ้า')))),
-    T('ตัวอย่างทีละขั้น: <b>รูปหกเหลี่ยมด้านเท่ามุมเท่า</b> (โจทย์หลายขั้นตอน)', 'ตัวอย่างทีละขั้น รูปหกเหลี่ยมด้านเท่ามุมเท่า', mgDemo(mgT.hexagon(3)))
+    T('ตัวอย่างทีละขั้น: <b>รูปหกเหลี่ยมด้านเท่ามุมเท่า</b> (โจทย์หลายขั้นตอน)', 'ตัวอย่างทีละขั้น รูปหกเหลี่ยมด้านเท่ามุมเท่า', mgDemo(mgT.hexagon(3))),
+    T('<b>ลองสร้างเอง</b>: หกเหลี่ยมด้านเท่ามุมเท่า — ติดตรงไหนกด คำใบ้', 'ลองสร้างเอง รูปหกเหลี่ยมด้านเท่ามุมเท่า', mgTry(mgT.hexagon(3))),
   ], () => [cnsGen.para(), cnsGen.rect(), cnsGen.sq(), cnsGen.rhom(), cnsGen.kite(),
     Q.mgPick({ q: 'การสร้างรูปสี่เหลี่ยมผืนผ้า ต้องใช้การสร้างพื้นฐานใดเพื่อให้ได้มุมฉาก', opts: ['การสร้างเส้นตั้งฉาก', 'การแบ่งครึ่งมุม 60°', 'การสร้างมุม 45°', 'การลอกความยาว'], right: 'การสร้างเส้นตั้งฉาก', hint: 'มุมฉาก = 90°', sig: 'q4rect' }),
     Q.mgPick({ q: 'สร้างรูปสี่เหลี่ยมด้านขนาน ABCD เมื่อมี AB และ AD แล้ว หาจุด C อย่างไร', opts: ['วงเวียนจาก B รัศมี AD และจาก D รัศมี AB ตัดกัน', 'แบ่งครึ่ง AB', 'สร้างมุม 90° ที่ B', 'ลาก BD แล้วแบ่งครึ่ง'], right: 'วงเวียนจาก B รัศมี AD และจาก D รัศมี AB ตัดกัน', hint: 'ด้านตรงข้ามยาวเท่ากัน: BC = AD และ DC = AB', sig: 'q4para' }),
