@@ -875,7 +875,7 @@ function fitFigs(body) {
    unless the lesson's data pool is too small — then repeats are spread out, never back to back. */
 const GAME_N = 8, GAME_MIN = 8; // v108 (ผู้ใช้ขอ): อย่างน้อย 8 ข้อทุกด่าน
 /* v209 (ผู้ใช้ขอ): ป.1 อย่างน้อย 10 ข้อทุกเกม */
-const gameMin = L => { const g = (cityOf(L) || {}).grade; return g === 1 || g >= 7 ? 10 : GAME_MIN; }; /* ป.1 (v209) และ ม.ต้น (v222) อย่างน้อย 10 ข้อ */
+const gameMin = L => { const g = (cityOf(L) || {}).grade; return g === 9 ? 8 : g === 1 || g >= 7 ? 10 : GAME_MIN; }; /* v232 ม.3: ด่านละ 8 ข้อ (ผู้ใช้ขอ) */ /* ป.1 (v209) และ ม.ต้น (v222) อย่างน้อย 10 ข้อ */
 /* text of a mounted question with a space between every text node — option buttons used to run together ("5 ซม.ลูกบาศก์ปริซึม…"),
    so the same question with shuffled options looked new and was asked again (ผู้ใช้เจอโจทย์ซ้ำ) */
 const qText = d => { const w = document.createTreeWalker(d, NodeFilter.SHOW_TEXT), a = []; let n; while ((n = w.nextNode())) { const t = n.nodeValue.trim(); if (t) a.push(t); } return a.join(' '); };

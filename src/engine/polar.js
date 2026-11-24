@@ -48,7 +48,9 @@ function plWorldBG() {
 /* moving things for the polar world: penguins sliding along the snow, falling snowflakes */
 function plLife(W, H, bg, R) {
   let o = '';
-  for (let i = 0; i < (bg ? 3 : 2); i++) o += lfFly(PL_SLIDE, bg ? R(i, 700, 940) : R(i, 60, H - 60), W, R(i, 16, 26), R(i + 5, 0, 20), bg ? R(i, 1.8, 2.4) : 1.3, i % 2);
+  /* v232 (ผู้ใช้ขอ): เพนกวินยืนตัวตรง ไถลไปมาบนน้ำแข็ง */
+  const spots = bg ? [[260, 905, 2.4, 140], [760, 870, 2, -120], [1300, 930, 2.6, 150]] : [[W * .2, H * .32, 1.4, 60], [W * .78, H * .7, 1.4, -60]];
+  spots.forEach(([x, y, k, d], i) => { o += `<g transform="translate(${x} ${y}) scale(${k})"><g class="pl-glide" style="--sd:${d / k}px;animation-duration:${R(i + 7, 5, 8)}s;animation-delay:-${R(i + 9, 0, 5)}s"><ellipse cx="0" cy="13" rx="14" ry="2.4" fill="#BFE3F7" opacity=".8"/>${PL_PENG}</g></g>`; });
   for (let i = 0; i < (bg ? 26 : 12); i++) { const x = R(i + 60, 10, W - 10), d = R(i + 70, 9, 18), dl = R(i + 80, 0, d), r = R(i + 90, 2.4, bg ? 6 : 4.5);
     o += `<g transform="translate(${x} 0)"><g class="pl-fall" style="--fh:${H + 40}px;animation-duration:${d}s;animation-delay:-${dl}s">${i % 3 ? `<circle r="${r * .6}" fill="#fff" opacity=".9"/>` : plFlake(r)}</g></g>`; }
   return o;

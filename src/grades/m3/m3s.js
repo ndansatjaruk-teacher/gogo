@@ -249,6 +249,15 @@ const m3Walk = data => { const F = m3Five(data), n = F.n, P = m3Pos(n);
     ['③ แบ่งข้อมูลเป็น 2 ส่วน', n % 2 ? `จำนวนคี่ → ไม่นับมัธยฐาน เหลือครึ่งละ ${P.h} ตัว` : `จำนวนคู่ → ครึ่งละ ${P.h} ตัว`], ['④ Q₁ = มัธยฐานของข้อมูลที่ต่ำกว่า Q₂', `${m3PosTxt(P.q1)} = ${m3N(F.q1)}`], ['⑤ Q₃ = มัธยฐานของข้อมูลที่สูงกว่า Q₂', `${m3PosTxt(P.q3)} = ${m3N(F.q3)}`]],
     `<b>Q₁ = ${m3N(F.q1)}&emsp;Q₂ = ${m3N(F.q2)}&emsp;Q₃ = ${m3N(F.q3)}</b>`); };
 
+/* v232 (ผู้ใช้ขอ): ข้อที่ให้ข้อมูลยังไม่เรียง — ให้แตะเรียงจากน้อยไปมากก่อน แล้วข้อมูลชุดเดิมเลื่อนออกไป จึงค่อยแสดงคำถาม/ช่องตอบ */
+function m3SortFirst(data, onDone) {
+  const order = m3Sort(data), wrap = h('div', { class: 'colstack m3-sf' }), cap = h('div', { class: 'cap m3-sfcap', html: 'ข้อมูลยังไม่เรียง — <b>แตะค่าที่น้อยที่สุดที่ยังเหลือ</b> ทีละตัว เพื่อเรียงจากน้อยไปมากก่อน' }), pool = h('div', { class: 'm3-tiles m3-pool2' }), row = h('div', { class: 'm3-tiles m3-sorted' }); let k = 0;
+  data.forEach(v => { const b = h('button', { class: 'm3-t ia', html: m3N(v) }); b.onclick = e => { e.stopPropagation(); if (b.classList.contains('used') || k >= order.length) return;
+    if (v !== order[k]) { sfx.no(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); return; }
+    k++; b.classList.add('used'); row.append(h('span', { class: 'm3-t in', html: `${m3N(v)}<i>${k}</i>` })); sfx.pop(k % 8 + 1);
+    if (k === order.length) { sfx.ok(); cap.innerHTML = 'เรียงจากน้อยไปมากแล้ว ✓'; pool.classList.add('out'); setTimeout(() => { pool.remove(); cap.remove(); onDone(wrap); }, 480); } }; pool.append(b); });
+  wrap.append(cap, pool, row); return wrap;
+}
 /* =========================================================
    ข้อในเกม
    ========================================================= */
@@ -256,7 +265,9 @@ const m3Walk = data => { const F = m3Five(data), n = F.n, P = m3Pos(n);
 Q.m3Q = ({ data, k, sorted, med, ctx: tx }) => { const F = m3Five(data), show = sorted ? F.a : data, nm = med ? 'มัธยฐาน' : { q1: 'ควอร์ไทล์ที่ 1 (Q₁)', q2: 'ควอร์ไทล์ที่ 2 (Q₂)', q3: 'ควอร์ไทล์ที่ 3 (Q₃)' }[k];
   const q = `${tx ? tx + ' ' : ''}จากข้อมูล${sorted ? ' (เรียงแล้ว)' : ''} จงหา<b>${nm}</b>`;
   return { prompt: q, say: m3Say(q), __sig: `m3q ${k} ${data.join(',')}`, __base: 'm3q-' + k + (sorted ? 's' : '') + (F.n % 2), __baseCap: 2, __diff: 20 + data.length * 2 + (sorted ? 0 : 8) + (k === 'q2' ? 0 : 6),
-    mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'm3-data', html: m3Tiles(show) + `<small>n = ${F.n}</small>` }), miAns(ctx, F[k], { hint: k === 'q2' ? `${sorted ? '' : 'เรียงข้อมูลก่อน แล้ว'}หาตัวที่อยู่ตรงกลาง (ตำแหน่งที่ (n + 1) ÷ 2 · มี 2 ตัวให้หาค่าเฉลี่ย)` : `หามัธยฐานก่อน แล้วหาตัวกลางของข้อมูลที่${k === 'q1' ? 'ต่ำ' : 'สูง'}กว่ามัธยฐาน${F.n % 2 ? ' (จำนวนคี่: ไม่นับมัธยฐาน)' : ''}` }))); } }; };
+    mount(bd, ctx) { const ans = () => miAns(ctx, F[k], { hint: k === 'q2' ? 'หาตัวที่อยู่ตรงกลาง (ตำแหน่งที่ (n + 1) ÷ 2 · มี 2 ตัวให้หาค่าเฉลี่ย)' : `หามัธยฐานก่อน แล้วหาตัวกลางของข้อมูลที่${k === 'q1' ? 'ต่ำ' : 'สูง'}กว่ามัธยฐาน${F.n % 2 ? ' (จำนวนคี่: ไม่นับมัธยฐาน)' : ''}` });
+      if (sorted) { bd.append(h('div', { class: 'colstack' }, h('div', { class: 'm3-data', html: m3Tiles(show) + `<small>n = ${F.n}</small>` }), ans())); return; }
+      const col = h('div', { class: 'colstack' }); col.append(m3SortFirst(data, w => { w.append(h('small', { class: 'm3-n' }, `n = ${F.n}`)); col.append(ans()); })); bd.append(col); } }; };
 /* แตะหาตัวกลาง (ในเกม) */
 Q.m3Tap = (data, keys) => { const one = keys && keys.length === 1; return { prompt: one ? 'แตะหามัธยฐานของข้อมูล' : 'แตะหา Q₂ Q₁ และ Q₃ ตามลำดับ', say: one ? 'แตะหามัธยฐานของข้อมูล' : 'แตะหาควอร์ไทล์ที่สอง ที่หนึ่ง และที่สาม ตามลำดับ', __sig: 'm3tap ' + data.join(','), __base: 'm3tap', __baseCap: 1, __diff: one ? 22 : 34,
   mount(bd, ctx) { let bad = 0; const w = m3QuartTap(data, { game: true, keys, onDone: () => setTimeout(() => ctx.check(true), 700), onWrong: () => { if (++bad % 2 === 0) ctx.check(false, 'หาตัวกลางของช่วงที่ไม่จาง (ถ้าตัวกลางมี 2 ตัว แตะทั้งคู่)'); } }); w.classList.add('rvl'); bd.append(w); } }; };
@@ -274,19 +285,22 @@ Q.m3Pick = data => { const F = m3Five(data), ax = m3Axis(F), wrong = [{ ...F, q1
 Q.m3Build = data => ({ prompt: 'สร้างแผนภาพกล่องของข้อมูลชุดนี้', say: 'สร้างแผนภาพกล่องของข้อมูลชุดนี้ ลากจุดทั้งห้าไปวางให้ตรงค่า', __sig: 'm3b ' + data.join(','), __base: 'm3b', __baseCap: 1, __diff: 55,
   mount(bd, ctx) { bd.append(m3BoxBuild(data, { game: true, onOK: () => setTimeout(() => ctx.check(true), 600), onWrong: () => ctx.check(false, 'หาค่าต่ำสุด Q₁ Q₂ Q₃ ค่าสูงสุด จากข้อมูลให้ครบก่อน') })); } });
 /* เลือกตอบ (มีรูปหรือข้อมูลได้) */
-Q.m3Opt = ({ q, fig, tiles, opts, right, hint, sig, base, diff }) => ({ prompt: q, say: m3Say(q), __sig: 'm3o ' + (sig || q + right), ...(base ? { __base: base, __baseCap: 2 } : {}), ...(diff != null ? { __diff: diff } : {}),
-  mount(bd, ctx) { const ch = choices(ctx, shuffle(opts.map(o => ({ value: o, label: o }))), right, { hint }); if (opts.some(o => o.replace(/<[^>]+>/g, '').length > 8)) ch.querySelectorAll('.opt').forEach(x => x.classList.add('txt')); bd.append(h('div', { class: 'colstack' }, tiles ? h('div', { class: 'm3-data', html: m3Tiles(tiles) }) : '', fig ? m3Fig(fig) : '', ch)); } });
+Q.m3Opt = ({ q, fig, tiles, sortFirst, opts, right, hint, sig, base, diff }) => ({ prompt: q, say: m3Say(q), __sig: 'm3o ' + (sig || q + right), ...(base ? { __base: base, __baseCap: 2 } : {}), ...(diff != null ? { __diff: diff } : {}),
+  mount(bd, ctx) { const mk = () => { const ch = choices(ctx, shuffle(opts.map(o => ({ value: o, label: o }))), right, { hint }); if (opts.some(o => o.replace(/<[^>]+>/g, '').length > 8)) ch.querySelectorAll('.opt').forEach(x => x.classList.add('txt')); return ch; };
+    if (sortFirst) { const col = h('div', { class: 'colstack' }); col.append(m3SortFirst(sortFirst, () => col.append(mk()))); bd.append(col); return; }
+    bd.append(h('div', { class: 'colstack' }, tiles ? h('div', { class: 'm3-data', html: m3Tiles(tiles) }) : '', fig ? m3Fig(fig) : '', mk())); } });
 /* ตอบตัวเลข (มีรูปหรือข้อมูลได้) */
-Q.m3Num = ({ q, fig, tiles, a, unit, hint, sig, base, diff }) => ({ prompt: q, say: m3Say(q), __sig: 'm3n ' + (sig || q), ...(base ? { __base: base, __baseCap: 2 } : {}), ...(diff != null ? { __diff: diff } : {}),
-  mount(bd, ctx) { bd.append(h('div', { class: fig ? 'm3-qrow' : 'colstack' }, tiles ? h('div', { class: 'm3-data', html: m3Tiles(tiles) }) : '', fig ? m3Fig(fig) : '', miAns(ctx, a, { unit, hint }))); } });
+Q.m3Num = ({ q, fig, tiles, sortFirst, a, unit, hint, sig, base, diff }) => ({ prompt: q, say: m3Say(q), __sig: 'm3n ' + (sig || q), ...(base ? { __base: base, __baseCap: 2 } : {}), ...(diff != null ? { __diff: diff } : {}),
+  mount(bd, ctx) { if (sortFirst) { const col = h('div', { class: 'colstack' }); col.append(m3SortFirst(sortFirst, () => col.append(miAns(ctx, a, { unit, hint })))); bd.append(col); return; }
+    bd.append(h('div', { class: fig ? 'm3-qrow' : 'colstack' }, tiles ? h('div', { class: 'm3-data', html: m3Tiles(tiles) }) : '', fig ? m3Fig(fig) : '', miAns(ctx, a, { unit, hint }))); } });
 const m3TF = (text, ok, why) => Q.hTF({ text, ok: !!ok, why });
 /* ข้อ 1) ข้อ 2) จริงหรือไม่ */
 const M3ST = ['ข้อ 1) และข้อ 2) ถูก', 'ข้อ 1) ถูก แต่ข้อ 2) ผิด', 'ข้อ 1) ผิด แต่ข้อ 2) ถูก', 'ข้อ 1) และข้อ 2) ผิด'];
 const m3StmtQ = (fig, s1, ok1, s2, ok2, sig) => Q.m3Opt({ q: `จากรูป พิจารณาข้อความ<div class="m3-stmt">ข้อ 1) ${s1}<br>ข้อ 2) ${s2}</div>ข้อใดถูกต้อง`, fig, opts: M3ST, right: M3ST[ok1 ? (ok2 ? 0 : 1) : (ok2 ? 2 : 3)], hint: 'ตรวจทีละข้อความกับแผนภาพ', sig: 'st ' + sig, base: 'm3st', diff: 60 });
 /* จำนวนข้อมูลในครึ่งล่าง / เลือกครึ่งล่าง-บน */
 Q.m3HalfN = n => Q.m3Num({ q: `ข้อมูล ${n} ตัว เมื่อแบ่งเป็น 2 ส่วนเพื่อหา Q₁ ข้อมูลที่อยู่ต่ำกว่ามัธยฐานมีกี่ตัว`, a: n >> 1, unit: 'ตัว', hint: n % 2 ? 'จำนวนคี่: ไม่นับมัธยฐาน (n − 1) ÷ 2' : 'จำนวนคู่: n ÷ 2', sig: 'half ' + n, base: 'm3halfn' + (n % 2), diff: 14 + n / 4 });
-Q.m3HalfPick = (data, up) => { const F = m3Five(data), a = F.a, n = a.length, h0 = n >> 1, right = (up ? a.slice(n - h0) : a.slice(0, h0)).join(', '), inc = (up ? a.slice(n - h0 - (n % 2)) : a.slice(0, h0 + (n % 2))).join(', '), raw = (up ? data.slice(n - h0) : data.slice(0, h0)).join(', '), off = (up ? a.slice(n - h0 - 1, n - 1) : a.slice(1, h0 + 1)).join(', ');
-  const opts = [...new Set([right, inc, raw, off])]; return Q.m3Opt({ q: `ข้อใดคือข้อมูลที่อยู่<b>${up ? 'สูง' : 'ต่ำ'}กว่ามัธยฐาน</b> (ใช้หา ${up ? 'Q₃' : 'Q₁'})`, tiles: data, opts, right, hint: `เรียงข้อมูลก่อน หามัธยฐาน แล้วเลือกข้อมูลที่อยู่${up ? 'หลัง' : 'ก่อน'}มัธยฐาน${n % 2 ? ' (ไม่นับมัธยฐาน)' : ''}`, sig: 'hp ' + data.join(','), base: 'm3halfp' + (up ? 1 : 0), diff: 30 }); };
+Q.m3HalfPick = (data, up) => { const F = m3Five(data), a = F.a, n = a.length, h0 = n >> 1, right = (up ? a.slice(n - h0) : a.slice(0, h0)).join(', '), inc = (up ? a.slice(n - h0 - (n % 2)) : a.slice(0, h0 + (n % 2))).join(', '), raw = (up ? a.slice(0, h0) : a.slice(n - h0)).join(', '), off = (up ? a.slice(n - h0 - 1, n - 1) : a.slice(1, h0 + 1)).join(', ');
+  const opts = [...new Set([right, inc, raw, off])]; return Q.m3Opt({ q: `ข้อใดคือข้อมูลที่อยู่<b>${up ? 'สูง' : 'ต่ำ'}กว่ามัธยฐาน</b> (ใช้หา ${up ? 'Q₃' : 'Q₁'})`, sortFirst: data, opts, right, hint: `หามัธยฐาน แล้วเลือกข้อมูลที่อยู่${up ? 'หลัง' : 'ก่อน'}มัธยฐาน${n % 2 ? ' (ไม่นับมัธยฐาน)' : ''}`, sig: 'hp ' + data.join(','), base: 'm3halfp' + (up ? 1 : 0), diff: 30 }); };
 /* ตำแหน่งของ Q */
 Q.m3PosQ = (n, k) => { const P = m3Pos(n), nm = { q1: 'Q₁', q2: 'Q₂ (มัธยฐาน)', q3: 'Q₃' }[k], right = m3PosTxt(P[k]), hI = n % 2 ? (n + 1) / 2 : n / 2, inc = k === 'q1' ? (hI + 1) / 2 : k === 'q3' ? n - hI + (hI + 1) / 2 : n / 2, quart = k === 'q1' ? n / 4 : k === 'q3' ? 3 * n / 4 : n / 2;
   const tx = p => p % 1 === 0 ? `ตัวที่ ${p}` : p % 1 === .5 ? m3PosTxt(p) : `ตัวที่ ${m3N(p)}`, opts = [...new Set([right, tx(inc), tx(k === 'q2' ? quart : P[k] - 1), tx(k === 'q2' ? (n + 2) / 2 : P.q2), tx(k === 'q1' ? P.q1 + 1 : k === 'q3' ? P.q3 - 1 : P.q2 + 1)])].slice(0, 4);
@@ -306,7 +320,7 @@ Q.m3FreqQ = (pairs, key) => { const F = m3Five(m3Expand(pairs)), nm = { q1: 'Q�
     mount(bd, ctx) { bd.append(h('div', { class: 'colstack' }, h('div', { html: m3FreqHTML(pairs) }), miAns(ctx, F[key], { unit: 'คะแนน', hint: `นับสะสมจำนวนคนทีละช่อง หาว่าคนที่อยู่${m3PosTxt(m3Pos(F.n)[key]).replace('ตัวที่', 'ลำดับที่')}ได้กี่คะแนน` }))); } }; };
 const m3FreqGen = () => { for (let t = 0; t < 60; t++) { const v0 = m3R(3, 6), pairs = [0, 1, 2, 3, 4, 5].map(i => [v0 + i, m3R(1, 5)]), n = pairs.reduce((s, p) => s + p[1], 0); if (n >= 12 && n <= 22) return pairs; } return [[4, 2], [5, 3], [6, 4], [7, 3], [8, 2], [9, 1]]; };
 /* IQR จากข้อมูล */
-Q.m3IqrQ = (data, sorted) => { const F = m3Five(data); return Q.m3Num({ q: `จากข้อมูล${sorted ? ' (เรียงแล้ว)' : ''} จงหา<b>พิสัยระหว่างควอร์ไทล์ (IQR)</b>`, tiles: sorted ? F.a : data, a: F.q3 - F.q1, hint: 'หา Q₁ และ Q₃ ก่อน แล้ว IQR = Q₃ − Q₁', sig: 'iqr ' + data.join(','), base: 'm3iqr' + (sorted ? 's' : ''), diff: 40 + data.length }); };
+Q.m3IqrQ = (data, sorted) => { const F = m3Five(data); return Q.m3Num({ q: `จากข้อมูล${sorted ? ' (เรียงแล้ว)' : ''} จงหา<b>พิสัยระหว่างควอร์ไทล์ (IQR)</b>`, ...(sorted ? { tiles: F.a } : { sortFirst: data }), a: F.q3 - F.q1, hint: 'หา Q₁ และ Q₃ ก่อน แล้ว IQR = Q₃ − Q₁', sig: 'iqr ' + data.join(','), base: 'm3iqr' + (sorted ? 's' : ''), diff: 40 + data.length }); };
 /* ขอบเขตค่านอกเกณฑ์ / ค่านอกเกณฑ์ */
 const m3OutGen = (want = 1) => { for (let t = 0; t < 200; t++) { const n = m3Pick([9, 10, 11, 12]), a = m3Uniq(n - 1, 20, 50), far = m3Pick([1, -1]), v = far > 0 ? 50 + m3R(15, 30) : 20 - m3R(12, 18), d = want ? [...a, v] : [...a, m3R(20, 50)], F = m3FiveO(d);
   if (F.iqr % 2 || F.outs.length !== want || new Set(d).size !== d.length || F.lo < 0) continue; return d; } return [12, 21, 24, 25, 27, 28, 30, 31, 33, 60]; };
@@ -343,7 +357,7 @@ const m3SpreadQ = near => { const F = m3SpreadF(), L = [F.q1 - F.min, F.q2 - F.q
    บทเรียน 3601–3614 + บอส 3619
    ========================================================= */
 const M3PENG = [['ปุยฝ้าย', 58], ['ข้าวปั้น', 47], ['ลูกเกด', 63], ['มะปราง', 52], ['เมฆ', 70], ['ทองดี', 55], ['หิมะ', 61], ['ขนมปัง', 44], ['น้ำแข็ง', 66]];
-const LM3 = (no, place, title, short, goal, teach, game, x = {}) => ({ id: 3600 + no, no, place, title, short, tone: TONES5[(no + 1) % 6], goal, teach, game, ...x });
+const LM3 = (no, place, title, short, goal, teach, game, x = {}) => ({ id: 3600 + no, no, place, title, short, tone: TONES5[(no + 1) % 6], goal, teach, game, gameN: 8, ...x }); /* v232 ผู้ใช้ขอ: ด่านละ 8 ข้อ */
 const LESSONS_M3C6 = [
   LM3(1, 'ลานเพนกวิน', 'ทบทวนมัธยฐานและการเรียงลำดับข้อมูล', 'มัธยฐาน', 'เรียงข้อมูลจากน้อยไปมาก และหามัธยฐานของข้อมูลทั้งที่มีจำนวนคี่และจำนวนคู่', [
     T('<b>ความสูงของเพนกวิน 9 ตัว</b> (ข้อมูลสมมติ: เซนติเมตร) — เรียงจากน้อยไปมาก', 'ความสูงของเพนกวินเก้าตัว เรียงจากน้อยไปมาก', el => el.append(m3SortSim(M3PENG.slice(), 'เพนกวิน', 'เรียงครบแล้ว ✓ — ตัวที่ 5 อยู่ตรงกลางพอดี (ซ้าย 4 ตัว ขวา 4 ตัว) <b>มัธยฐาน = 58 เซนติเมตร</b>'))),
@@ -465,14 +479,14 @@ const LESSONS_M3C6 = [
     Q.m3Opt({ q: 'ห้อง ก มี Q₃ = 70 คะแนน นักเรียน 40 คน ข้อใดถูก', opts: ['ประมาณ 10 คนได้ตั้งแต่ 70 คะแนนขึ้นไป', 'ประมาณ 30 คนได้ตั้งแต่ 70 คะแนนขึ้นไป', 'ทุกคนได้ไม่เกิน 70 คะแนน', 'ประมาณ 20 คนได้ตั้งแต่ 70 คะแนนขึ้นไป'], right: 'ประมาณ 10 คนได้ตั้งแต่ 70 คะแนนขึ้นไป', hint: 'ตั้งแต่ Q₃ ขึ้นไปมีประมาณ 25%', sig: 'ap5', diff: 30 }),
     m3StmtQ(m3BoxSVG([{ F: { min: 20, q1: 35, q2: 45, q3: 50, max: 70 } }], { lo: 15, hi: 75, step: 5, labels: 'val' }), 'ข้อมูลประมาณ 75% มีค่าไม่เกิน 50', true, 'IQR เท่ากับ 50', false, 'ap6'),
     m3TF('ถ้า Q₂ = 30 และข้อมูลมี 100 ตัว จะมีประมาณ 50 ตัวที่มีค่าไม่เกิน 30', true, '')]),
-  LM3(14, 'สถานีวิจัยขั้วโลก', 'การนำเสนอข้อมูลด้วยเทคโนโลยีและแบบทดสอบสรุป', 'เทคโนโลยี + สรุป', 'ใช้โปรแกรมคำนวณค่าและสร้างแผนภาพกล่อง อ่านผล แปลความหมาย และทบทวนทั้งบทด้วยแบบทดสอบสรุป 15 ข้อ', [
+  LM3(14, 'สถานีวิจัยขั้วโลก', 'การนำเสนอข้อมูลด้วยเทคโนโลยีและแบบทดสอบสรุป', 'เทคโนโลยี + สรุป', 'ใช้โปรแกรมคำนวณค่าและสร้างแผนภาพกล่อง อ่านผล แปลความหมาย และทบทวนทั้งบทด้วยแบบทดสอบสรุป', [
     T('<b>โปรแกรมสร้างแผนภาพกล่อง</b> (จำลอง) — ลากจุดข้อมูลแล้วดูผล', 'โปรแกรมสร้างแผนภาพกล่อง ลากจุดข้อมูลแล้วดูผล', el => el.append(m3TechSim([34, 38, 41, 45, 47, 50, 52, 55, 57, 60, 63, 66, 70, 74, 81], 20, 100))),
     T('<b>ขั้นตอนใช้โปรแกรม</b> — แตะการ์ดดูทีละใบ', 'ขั้นตอนใช้โปรแกรม แตะการ์ดดูทีละใบ', el => el.append(miCards([['1 กรอกข้อมูล', '<b>พิมพ์ข้อมูลลงในตาราง</b><small>หนึ่งค่าต่อหนึ่งช่อง ตรวจให้ครบ</small>'], ['2 เลือกคำสั่ง', '<b>เลือกสร้างแผนภาพกล่อง</b><small>โปรแกรมเรียงข้อมูลและคำนวณให้</small>'], ['3 อ่านผล', '<b>ค่าต่ำสุด Q₁ มัธยฐาน Q₃ ค่าสูงสุด</b><small>และค่านอกเกณฑ์ (ถ้ามี)</small>'], ['4 แปลความหมาย', '<b>ค่ากลางและการกระจาย</b><small>เขียนข้อสรุปด้วยตนเอง</small>']])))
   ], () => { const F = m3GenF(); return [Q.m3Num({ q: 'จากตารางผลของโปรแกรม <b>IQR</b> ของข้อมูลเท่าใด', fig: m3OutTbl(F), a: F.q3 - F.q1, hint: 'Q₃ − Q₁', sig: 'out i', base: 'm3out', diff: 20 }), Q.m3PickT(m3GenF()),
     Q.m3Q({ data: m3Uniq(9, 10, 60), k: 'q2', sorted: true, med: true }), Q.m3Q({ data: shuffle(m3Gen(10, 20, 80)), k: 'q1' }), Q.m3Q({ data: shuffle(m3Gen(11, 20, 80)), k: 'q3' }), Q.m3PosQ(m3Pick([13, 17]), 'q3'), Q.m3HalfN(m3Pick([15, 19])),
     Q.m3XQ('q1'), Q.m3IqrQ(m3Uniq(10, 10, 60), true), Q.m3Read({ F: m3GenF5(), ask: 'q3' }), m3PctQ(m3Pick([1, 4])), m3SpreadQ(m3Pick([true, false])), m3CmpQ(m3Pick(['med', 'iqr'])), Q.m3OutPick(m3OutGen(1)), Q.m3FenceQ(m3OutGen(1), 'hi'),
     Q.m3Opt({ q: 'ข้อใดเป็นงานที่โปรแกรมช่วยทำให้ได้', opts: ['เรียงข้อมูลและคำนวณควอร์ไทล์', 'สรุปความหมายแทนเราได้ทุกครั้ง', 'แก้ข้อมูลที่กรอกผิดให้เอง', 'เลือกข้อมูลที่จะเก็บให้'], right: 'เรียงข้อมูลและคำนวณควอร์ไทล์', hint: 'โปรแกรมคำนวณได้ แต่การกรอกข้อมูลและแปลความหมายเป็นหน้าที่ของเรา', diff: 10 }),
-    m3TF('โปรแกรมต่างกันอาจใช้วิธีหาควอร์ไทล์ต่างกัน ค่าจึงอาจต่างกันเล็กน้อย', true, 'ควรรู้ว่าโปรแกรมใช้วิธีใด')]; }, { gameN: 15 })
+    m3TF('โปรแกรมต่างกันอาจใช้วิธีหาควอร์ไทล์ต่างกัน ค่าจึงอาจต่างกันเล็กน้อย', true, 'ควรรู้ว่าโปรแกรมใช้วิธีใด')]; })
 ];
 LESSONS_M3C6.find(L => L.id === 3604).pracQ = () => Q.m3Q({ data: [21, 15, 30, 18, 26, 24, 12, 28], k: 'q2' });
 
