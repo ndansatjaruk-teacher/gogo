@@ -69,7 +69,7 @@
 | `src/grades/p4/p4r.js` | 132 KB | prefix r4 · ผู้ใช้ขอ "ให้เกมสนุก เพิ่มเกมใหม่ ๆ" → mini-games that are played, not just answered: |
 | `src/grades/p4/p4g.js` | 55 KB | prefix g4 · reuses the P5 chart kit (p5c: chartSVG/dataChart/chartBuilder/gTable/simReadBar/simBuild/gWalk · Q |
 | `src/grades/m1/m1i.js` | 40 KB | ม.1 บทที่ 1 จำนวนเต็ม (โลกแม่น้ำ · เมือง 90 · ด่าน 2001–2015 · บอส 2019) — ชุดเครื่องมือจำนวนเต็ม (แป้นมีเครื่องหมายลบ เส้นจำนวน ชิปคู่ศูนย์) |
-| `src/grades/m1/m1g.js` | 115 KB | (v227, v231 สร้างใหม่ 12 ด่าน) ม.1 บทที่ 2 การสร้างทางเรขาคณิต: กระดานสร้างรูป `mgBoard` (สันตรง วงเวียน ครึ่งวงกลม จุด · ตัวอย่างเคลื่อนไหว · ดูเฉลย · ตรวจ) · รูปนิ่ง `mgFig` · งานสร้าง `mgT.*` · หน้าลาก `mgAngTypeSim/mgEquiSim/mgDistSim/mgTransSim` · ข้อ `Q.mg*` · ด่าน 2201–2212 + บอส 2219 |
+| `src/grades/m1/m1g.js` | 205 KB | (v227, v231 สร้างใหม่ 12 ด่าน) ม.1 บทที่ 2 การสร้างทางเรขาคณิต: กระดานสร้างรูป `mgBoard` (สันตรง วงเวียน ครึ่งวงกลม จุด · ตัวอย่างเคลื่อนไหว · ดูเฉลย · ตรวจ) · รูปนิ่ง `mgFig` · งานสร้าง `mgT.*` · หน้าลาก `mgAngTypeSim/mgEquiSim/mgDistSim/mgTransSim` · ข้อ `Q.mg*` · ด่าน 2201–2212 + บอส 2219 |
 | `src/grades/m3/m3s.js` | 128 KB | (v230) ม.3 บทที่ 6 สถิติ (3): มัธยฐาน ควอร์ไทล์ (ไม่นับมัธยฐานเมื่อ n คี่) `m3Five` · IQR · ค่านอกเกณฑ์ `m3FiveO` · แผนภาพกล่อง `m3BoxSVG`/`m3VBoxSVG` · หน้าลงมือ 12 แบบ · ข้อ `Q.m3*` · ด่าน 3601–3614 + บอส 3619 |
 | `src/app/lessons.js` | 477 KB | ด่าน ป.1 + ทะเบียนเมืองทั้งหมด (CITIES, GRADES, LESSONS) |
 | `src/app/learn.js` | 50 KB | หน้า “รู้จักก่อน” |
