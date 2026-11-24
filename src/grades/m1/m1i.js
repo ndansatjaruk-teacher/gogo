@@ -274,9 +274,19 @@ function miSignTable() {
       if (seen === cells.length) { out.innerHTML = 'เครื่องหมาย<b>เหมือนกัน</b> ได้<b>บวก</b> และเครื่องหมาย<b>ต่างกัน</b> ได้<b>ลบ</b>'; sfx.ok(); teachDone(grid); } }; return c; }));
   return h('div', { class: 'colstack no-side' }, h6wait(), h('div', { class: 'cap' }, 'แตะทุกช่องเพื่อเปิดดู'), grid, out);
 }
+/* v241 (ผู้ใช้ขอ): การ์ดพลิกของ ม.ต้น ใช้พื้นที่ให้เต็มที่แต่ไม่แน่น — การ์ดยืดเต็มความกว้าง แล้วหาความสูงที่มากที่สุด (ไม่เกิน 250px)
+   ที่ทั้งหน้ายังพอดีกรอบ (วัดจริงหลังวางลงหน้า) · ตัวอักษรโตตามขนาดการ์ด (container query) */
+function miCardsFit(wrap) { let n = 0;
+  const go = () => { const vis = wrap.closest('.visual'); if (!vis || !wrap.isConnected || !vis.clientHeight) { if (n++ < 40) requestAnimationFrame(go); return; }
+    const unz = () => { vis.querySelectorAll('[data-gz]').forEach(c => { c.style.zoom = c.dataset.gz || ''; }); vis.classList.remove('shrunk'); };
+    const fits = () => vis.scrollHeight <= vis.clientHeight + 2 && vis.scrollWidth <= vis.clientWidth + 2;
+    let H = 260; for (; H > 120; H -= 10) { wrap.style.setProperty('--fch', H + 'px'); unz(); if (fits()) break; }
+    wrap.style.setProperty('--fch', H + 'px'); if (typeof fitShrink === 'function') fitShrink(vis); /* ยังล้นที่ 120px → ระบบย่อทั้งหน้าเหมือนเดิม */
+    if (!wrap.__ro && window.ResizeObserver) { let t = 0, w0 = vis.clientWidth, h0 = vis.clientHeight; wrap.__ro = new ResizeObserver(() => { if (vis.clientWidth === w0 && vis.clientHeight === h0) return; w0 = vis.clientWidth; h0 = vis.clientHeight; clearTimeout(t); t = setTimeout(() => { if (wrap.isConnected) go(); }, 150); }); wrap.__ro.observe(vis); } };
+  requestAnimationFrame(() => requestAnimationFrame(go)); return wrap; }
 function miCards(list) {
-  return h('div', { class: 'mi-cards' }, ...list.map(([f, b, q]) => { const c = h('button', { class: 'mi-card fc' }, h('span', { class: 'f', html: f }), h('span', { class: 'b', html: `<i class="fc-q">${q ?? f}</i>${b}` })); /* q = หัวข้อด้านหลัง (ถ้าด้านหน้ามีรูป) */ /* v226 (ผู้ใช้ขอ): ด้านหลังยังมีข้อความด้านหน้า จะได้จำได้ว่าพูดถึงอะไร */
-    c.onclick = e => { e.stopPropagation(); c.classList.toggle('flip'); sfx.pop(2); if (c.classList.contains('flip')) say(miSay(c.querySelector('.b').textContent), true); }; return c; }));
+  return miCardsFit(h('div', { class: 'mi-cards mx', 'data-n': list.length }, ...list.map(([f, b, q]) => { const c = h('button', { class: 'mi-card fc' }, h('span', { class: 'f', html: f }), h('span', { class: 'b', html: `<i class="fc-q">${q ?? f}</i>${b}` })); /* q = หัวข้อด้านหลัง (ถ้าด้านหน้ามีรูป) */ /* v226 (ผู้ใช้ขอ): ด้านหลังยังมีข้อความด้านหน้า จะได้จำได้ว่าพูดถึงอะไร */
+    c.onclick = e => { e.stopPropagation(); c.classList.toggle('flip'); sfx.pop(2); if (c.classList.contains('flip')) say(miSay(c.querySelector('.b').textContent), true); }; return c; })));
 }
 /* sharing: tap each chip to deal it to the next group */
 function miShareSim(a, n) {

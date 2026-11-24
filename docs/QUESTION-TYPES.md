@@ -227,23 +227,23 @@
 | `Q.mgMeasure` | `{ deg, rot` | [`grades/m1/geo/mg-quest.js:8`](../src/grades/m1/geo/mg-quest.js#L8) |
 | `Q.mgNum` | `{ q, fig, a, unit, hint, sig }` | [`grades/m1/geo/mg-quest.js:18`](../src/grades/m1/geo/mg-quest.js#L18) |
 | `Q.mgPick` | `{ q, fig, opts, right, hint, sig }` | [`grades/m1/geo/mg-quest.js:12`](../src/grades/m1/geo/mg-quest.js#L12) |
-| `Q.miAvg` | `{ text, nums, unit }` | [`grades/m1/m1i.js:376`](../src/grades/m1/m1i.js#L376) |
-| `Q.miCalc` | `{ expr, hint, fig, q, unit }` | [`grades/m1/m1i.js:355`](../src/grades/m1/m1i.js#L355) |
-| `Q.miChipQ` | `{ a, b }` | [`grades/m1/m1i.js:398`](../src/grades/m1/m1i.js#L398) |
-| `Q.miCmp` | `{ a, b, la, lb }` | [`grades/m1/m1i.js:331`](../src/grades/m1/m1i.js#L331) |
-| `Q.miCtx` | `{ text, a }` | [`grades/m1/m1i.js:315`](../src/grades/m1/m1i.js#L315) |
-| `Q.miExt` | `{ nums, max = true, ctx: what }` | [`grades/m1/m1i.js:337`](../src/grades/m1/m1i.js#L337) |
-| `Q.miGapQ` | `{ a, b, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:390`](../src/grades/m1/m1i.js#L390) |
-| `Q.miHopQ` | `{ a, b }` | [`grades/m1/m1i.js:370`](../src/grades/m1/m1i.js#L370) |
-| `Q.miKind` | `{ n, lab }` | [`grades/m1/m1i.js:309`](../src/grades/m1/m1i.js#L309) |
-| `Q.miMiss` | `{ expr, a, hint }` | [`grades/m1/m1i.js:409`](../src/grades/m1/m1i.js#L409) |
-| `Q.miOpp` | `{ n }` | [`grades/m1/m1i.js:352`](../src/grades/m1/m1i.js#L352) |
-| `Q.miOrder` | `{ nums, asc = true }` | [`grades/m1/m1i.js:343`](../src/grades/m1/m1i.js#L343) |
-| `Q.miPick` | `{ q, opts, right, hint }` | [`grades/m1/m1i.js:404`](../src/grades/m1/m1i.js#L404) |
-| `Q.miPlace` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:325`](../src/grades/m1/m1i.js#L325) |
-| `Q.miRead` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:320`](../src/grades/m1/m1i.js#L320) |
-| `Q.miSignQ` | `{ expr }` | [`grades/m1/m1i.js:414`](../src/grades/m1/m1i.js#L414) |
-| `Q.miStory` | `{ text, expr, wrong, unit, hint }` | [`grades/m1/m1i.js:361`](../src/grades/m1/m1i.js#L361) |
+| `Q.miAvg` | `{ text, nums, unit }` | [`grades/m1/m1i.js:386`](../src/grades/m1/m1i.js#L386) |
+| `Q.miCalc` | `{ expr, hint, fig, q, unit }` | [`grades/m1/m1i.js:365`](../src/grades/m1/m1i.js#L365) |
+| `Q.miChipQ` | `{ a, b }` | [`grades/m1/m1i.js:408`](../src/grades/m1/m1i.js#L408) |
+| `Q.miCmp` | `{ a, b, la, lb }` | [`grades/m1/m1i.js:341`](../src/grades/m1/m1i.js#L341) |
+| `Q.miCtx` | `{ text, a }` | [`grades/m1/m1i.js:325`](../src/grades/m1/m1i.js#L325) |
+| `Q.miExt` | `{ nums, max = true, ctx: what }` | [`grades/m1/m1i.js:347`](../src/grades/m1/m1i.js#L347) |
+| `Q.miGapQ` | `{ a, b, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:400`](../src/grades/m1/m1i.js#L400) |
+| `Q.miHopQ` | `{ a, b }` | [`grades/m1/m1i.js:380`](../src/grades/m1/m1i.js#L380) |
+| `Q.miKind` | `{ n, lab }` | [`grades/m1/m1i.js:319`](../src/grades/m1/m1i.js#L319) |
+| `Q.miMiss` | `{ expr, a, hint }` | [`grades/m1/m1i.js:419`](../src/grades/m1/m1i.js#L419) |
+| `Q.miOpp` | `{ n }` | [`grades/m1/m1i.js:362`](../src/grades/m1/m1i.js#L362) |
+| `Q.miOrder` | `{ nums, asc = true }` | [`grades/m1/m1i.js:353`](../src/grades/m1/m1i.js#L353) |
+| `Q.miPick` | `{ q, opts, right, hint }` | [`grades/m1/m1i.js:414`](../src/grades/m1/m1i.js#L414) |
+| `Q.miPlace` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:335`](../src/grades/m1/m1i.js#L335) |
+| `Q.miRead` | `{ n, lo = -10, hi = 10 }` | [`grades/m1/m1i.js:330`](../src/grades/m1/m1i.js#L330) |
+| `Q.miSignQ` | `{ expr }` | [`grades/m1/m1i.js:424`](../src/grades/m1/m1i.js#L424) |
+| `Q.miStory` | `{ text, expr, wrong, unit, hint }` | [`grades/m1/m1i.js:371`](../src/grades/m1/m1i.js#L371) |
 | `Q.mJudge` | `{ e, name, cm, ori }` | [`app/lessons.js:1804`](../src/app/lessons.js#L1804) |
 | `Q.mnCount` | `{ list }` | [`grades/p3/p3m.js:66`](../src/grades/p3/p3m.js#L66) |
 | `Q.mnExch` | `{ text, a, unit, fig }` | [`grades/p3/p3m.js:85`](../src/grades/p3/p3m.js#L85) |
