@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-434 types
+451 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -194,6 +194,23 @@
 | `Q.lIsPar` | `{ a, va, b, vb }` | [`grades/p5/p5g.js:202`](../src/grades/p5/p5g.js#L202) |
 | `Q.lName` | `{ a, b }` | [`grades/p5/p5g.js:180`](../src/grades/p5/p5g.js#L180) |
 | `Q.lTap` | `{ k, rel }` | [`grades/p5/p5g.js:171`](../src/grades/p5/p5g.js#L171) |
+| `Q.m3Build` | `data` | [`grades/m3/m3s.js:274`](../src/grades/m3/m3s.js#L274) |
+| `Q.m3FenceQ` | `data, side` | [`grades/m3/m3s.js:313`](../src/grades/m3/m3s.js#L313) |
+| `Q.m3FreqQ` | `pairs, key` | [`grades/m3/m3s.js:304`](../src/grades/m3/m3s.js#L304) |
+| `Q.m3HalfN` | `n` | [`grades/m3/m3s.js:287`](../src/grades/m3/m3s.js#L287) |
+| `Q.m3HalfPick` | `data, up` | [`grades/m3/m3s.js:288`](../src/grades/m3/m3s.js#L288) |
+| `Q.m3IqrQ` | `data, sorted` | [`grades/m3/m3s.js:309`](../src/grades/m3/m3s.js#L309) |
+| `Q.m3Num` | `{ q, fig, tiles, a, unit, hint, sig, base, diff }` | [`grades/m3/m3s.js:280`](../src/grades/m3/m3s.js#L280) |
+| `Q.m3Opt` | `{ q, fig, tiles, opts, right, hint, sig, base, diff }` | [`grades/m3/m3s.js:277`](../src/grades/m3/m3s.js#L277) |
+| `Q.m3OutPick` | `data` | [`grades/m3/m3s.js:315`](../src/grades/m3/m3s.js#L315) |
+| `Q.m3Pick` | `data` | [`grades/m3/m3s.js:269`](../src/grades/m3/m3s.js#L269) |
+| `Q.m3PickT` | `F` | [`grades/m3/m3s.js:333`](../src/grades/m3/m3s.js#L333) |
+| `Q.m3PosQ` | `n, k` | [`grades/m3/m3s.js:291`](../src/grades/m3/m3s.js#L291) |
+| `Q.m3Q` | `{ data, k, sorted, med, ctx: tx }` | [`grades/m3/m3s.js:256`](../src/grades/m3/m3s.js#L256) |
+| `Q.m3Read` | `{ F, ask, ctx: tx, vert }` | [`grades/m3/m3s.js:264`](../src/grades/m3/m3s.js#L264) |
+| `Q.m3StemQ` | `data, key` | [`grades/m3/m3s.js:301`](../src/grades/m3/m3s.js#L301) |
+| `Q.m3Tap` | `data, keys` | [`grades/m3/m3s.js:261`](../src/grades/m3/m3s.js#L261) |
+| `Q.m3XQ` | `key` | [`grades/m3/m3s.js:297`](../src/grades/m3/m3s.js#L297) |
 | `Q.makeTen` | `{ a }` | [`engine/questions.js:312`](../src/engine/questions.js#L312) |
 | `Q.makeTen20` | `{ a, b }` | [`engine/questions.js:877`](../src/engine/questions.js#L877) |
 | `Q.marbles` | `{ a, n }` | [`engine/questions.js:1063`](../src/engine/questions.js#L1063) |

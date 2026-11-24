@@ -1233,7 +1233,8 @@ const CVN_TH = {
   mountain: { who: 'แพะภูเขา', go: 'ปีน', by: 'ก้อน', to: 'ยอดเขา', walker: () => SCENERY.goat, goal: () => SCENERY.sumflag, hop: 18 },
   cave: { who: 'ค้างคาว', go: 'บิน', by: 'ก้อน', to: 'คริสตัล', walker: () => SCENERY.bat, goal: () => SCENERY.crystal, hop: 26 },
   city: { who: 'ลูกเจี๊ยบ', go: 'เดิน', by: 'ก้อน', to: 'บ้าน', walker: () => ART.chick, goal: () => SCENERY.house, hop: 10 },
-  river: { who: 'เรือ', go: 'พาย', by: 'ทุ่น', to: 'ท่าน้ำ', walker: () => SCENERY.kayak, goal: () => SCENERY.pier, hop: 6 }
+  river: { who: 'เรือ', go: 'พาย', by: 'ทุ่น', to: 'ท่าน้ำ', walker: () => SCENERY.kayak, goal: () => SCENERY.pier, hop: 6 },
+  polar: { who: 'เพนกวิน', go: 'ไถล', by: 'ก้อน', to: 'อิกลู', walker: () => SCENERY.plpeng, goal: () => SCENERY.igloo, hop: 12 }
 };
 const cvnTheme = () => { const w = document.body.dataset.world; return Object.assign({ key: CVN_TH[w] ? w : 'desert' }, CVN_TH[w] || CVN_TH.desert); };
 const cvnHint = () => { const t = cvnTheme(); return `${t.who}จะ${t.go}ไปทีละ${t.by}จนถึง${t.to}`; };
