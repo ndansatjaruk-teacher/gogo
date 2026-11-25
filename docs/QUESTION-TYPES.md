@@ -320,20 +320,20 @@
 | `Q.ppNum` | `{ D, q, a, hint, unit }` | [`grades/p2/p2c.js:54`](../src/grades/p2/p2c.js#L54) |
 | `Q.ppRead` | `{ D, i, q }` | [`grades/p2/p2c.js:49`](../src/grades/p2/p2c.js#L49) |
 | `Q.ppTap` | `{ D, ask }` | [`grades/p2/p2c.js:59`](../src/grades/p2/p2c.js#L59) |
-| `Q.r4Build` | `{ kind, w, hh, nm }` | [`grades/p4/p4r.js:224`](../src/grades/p4/p4r.js#L224) |
-| `Q.r4Count` | `{ cells, unit, W, H }` | [`grades/p4/p4r.js:319`](../src/grades/p4/p4r.js#L319) |
-| `Q.r4Cut` | `{ k, Wd, Hd, a, b, c, u }` | [`grades/p4/p4r.js:349`](../src/grades/p4/p4r.js#L349) |
-| `Q.r4DiagNum` | `{ nm, d, ask }` | [`grades/p4/p4r.js:215`](../src/grades/p4/p4r.js#L215) |
-| `Q.r4DrawDiag` | `{ k, nm }` | [`grades/p4/p4r.js:196`](../src/grades/p4/p4r.js#L196) |
-| `Q.r4Duel` | `{ a, b, ask }` | [`grades/p4/p4r.js:345`](../src/grades/p4/p4r.js#L345) |
-| `Q.r4Est` | `{ W, H, c }` | [`grades/p4/p4r.js:339`](../src/grades/p4/p4r.js#L339) |
-| `Q.r4Fence` | `{ P, A, u = 'ม.', place = '' }` | [`grades/p4/p4r.js:305`](../src/grades/p4/p4r.js#L305) |
-| `Q.r4Geo` | `{ kind, w, hh, nm }` | [`grades/p4/p4r.js:272`](../src/grades/p4/p4r.js#L272) |
-| `Q.r4Kind` | `{ k, nm, w, hh }` | [`grades/p4/p4r.js:183`](../src/grades/p4/p4r.js#L183) |
-| `Q.r4Paint` | `{ n, rect }` | [`grades/p4/p4r.js:326`](../src/grades/p4/p4r.js#L326) |
-| `Q.r4Pick` | `{ ks, want }` | [`grades/p4/p4r.js:172`](../src/grades/p4/p4r.js#L172) |
-| `Q.r4TapDiag` | `{ k, nm }` | [`grades/p4/p4r.js:188`](../src/grades/p4/p4r.js#L188) |
-| `Q.r4Walk` | `{ U, L, u, sig }` | [`grades/p4/p4r.js:290`](../src/grades/p4/p4r.js#L290) |
+| `Q.r4Build` | `{ kind, w, hh, nm }` | [`grades/p4/p4r.js:171`](../src/grades/p4/p4r.js#L171) |
+| `Q.r4Count` | `{ cells, unit, W, H }` | [`grades/p4/p4r.js:266`](../src/grades/p4/p4r.js#L266) |
+| `Q.r4Cut` | `{ k, Wd, Hd, a, b, c, u }` | [`grades/p4/p4r.js:296`](../src/grades/p4/p4r.js#L296) |
+| `Q.r4DiagNum` | `{ nm, d, ask }` | [`grades/p4/p4r.js:162`](../src/grades/p4/p4r.js#L162) |
+| `Q.r4DrawDiag` | `{ k, nm }` | [`grades/p4/p4r.js:143`](../src/grades/p4/p4r.js#L143) |
+| `Q.r4Duel` | `{ a, b, ask }` | [`grades/p4/p4r.js:292`](../src/grades/p4/p4r.js#L292) |
+| `Q.r4Est` | `{ W, H, c }` | [`grades/p4/p4r.js:286`](../src/grades/p4/p4r.js#L286) |
+| `Q.r4Fence` | `{ P, A, u = 'ม.', place = '' }` | [`grades/p4/p4r.js:252`](../src/grades/p4/p4r.js#L252) |
+| `Q.r4Geo` | `{ kind, w, hh, nm }` | [`grades/p4/p4r.js:219`](../src/grades/p4/p4r.js#L219) |
+| `Q.r4Kind` | `{ k, nm, w, hh }` | [`grades/p4/p4r.js:130`](../src/grades/p4/p4r.js#L130) |
+| `Q.r4Paint` | `{ n, rect }` | [`grades/p4/p4r.js:273`](../src/grades/p4/p4r.js#L273) |
+| `Q.r4Pick` | `{ ks, want }` | [`grades/p4/p4r.js:119`](../src/grades/p4/p4r.js#L119) |
+| `Q.r4TapDiag` | `{ k, nm }` | [`grades/p4/p4r.js:135`](../src/grades/p4/p4r.js#L135) |
+| `Q.r4Walk` | `{ U, L, u, sig }` | [`grades/p4/p4r.js:237`](../src/grades/p4/p4r.js#L237) |
 | `Q.raceAsk` | `{ racers, ask, k, who }` | [`engine/questions.js:1141`](../src/engine/questions.js#L1141) |
 | `Q.rankAsk` | `{ items, unit, ask, k, who, pic }` | [`engine/questions.js:1154`](../src/engine/questions.js#L1154) |
 | `Q.readScale` | `{ a, v, unit = 'kg', col }` | [`engine/questions.js:1075`](../src/engine/questions.js#L1075) |

@@ -2913,6 +2913,13 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .r4-svg .r4-lab.q{fill:#E5487A;font-size:18px}
 .r4-svg .r4-nm{font:800 16px var(--font-num);fill:#3A2F6B}
 .r4-svg .r4-mk{font:800 13px var(--font-num);fill:#2B2550;pointer-events:none}
+/* v249 ป.4 บทที่ 9 หน้าสอนแบบ ม.ต้น (p4rm.js): ตัวอักษรในฉากลาก (tg-scene) และรูปในตัวอย่างทีละขั้น */
+.tg-scene .r4-lab{font:800 19px var(--font-num);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.tg-scene .r4-nm{font:800 21px var(--font-num);fill:#3A2F6B}
+.tg-scene .r4-mk{font:800 17px var(--font-num);fill:#2B2550;pointer-events:none}
+.r4v-fig{display:flex;justify-content:center}
+.r4v-fig svg{display:block;width:auto;max-width:100%;height:auto;max-height:min(30cqh,200px)}
+.r4v-two{gap:14px;justify-content:center}
 .r4-svg .r4-rowno{font:700 11px var(--font-num);fill:#9A6406}
 .r4-handle,.r4-peg{cursor:grab}
 .r4-seg,.r4-cell,.r4-ec,.r4-sh{cursor:pointer}

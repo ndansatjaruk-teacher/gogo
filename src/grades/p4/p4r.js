@@ -76,56 +76,8 @@ const r4camel = () => `<g class="r4-walker"><ellipse cx="0" cy="-7" rx="11" ry="
 const r4grass = (x, y, w, h, id) => `<defs><pattern id="${id}" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#A8DC8E"/><path d="M3 11 l2 -5 l2 5 M9 7 l1.5 -4 l1.5 4" stroke="#5FA845" stroke-width="1.3" fill="none"/></pattern></defs><rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${id})" stroke="#4E8A3A" stroke-width="2.5"/>`;
 
 /* =========================================================
-   TEACHING SIMULATIONS
+   TEACHING HELPERS (v249: หน้าสอนแบบ ม.ต้น และ sim ใหม่อยู่ใน p4rm.js)
    ========================================================= */
-/* drag the corner of a rectangle on the grid: mode kind | diag | tiles | formula */
-function simR4Rect(mode) { const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'r4-board ia' }), out = fNote(); let w = 5, hh = 3, drag = false, seen = new Set(), moves = 0; const x0 = 30, y0 = 24, N = 10, M = 6, g = R4G;
-  const draw = () => { const X = x0 + w * g, Y = y0 + hh * g, P = [[x0, y0], [X, y0], [X, Y], [x0, Y]]; let s = r4gridS(x0, y0, N, M, g);
-    if (mode === 'tiles' || mode === 'formula') { for (let j = 0; j < hh; j++) for (let i = 0; i < w; i++) s += `<rect x="${x0 + i * g + 1.5}" y="${y0 + j * g + 1.5}" width="${g - 3}" height="${g - 3}" rx="3" fill="${(i + j) % 2 ? '#FFD27A' : '#FFC24C'}" class="r4-tile" style="animation-delay:${(j * w + i) * 12}ms"/>`; if (mode === 'formula') for (let j = 0; j < hh; j++) s += `<text x="${x0 - 8}" y="${y0 + j * g + g / 2 + 5}" class="r4-rowno" text-anchor="end">${j + 1}</text>`; }
-    s += r4PolyS(P, { fill: mode === 'tiles' || mode === 'formula' ? 'none' : '#FFE7A8', names: 'ABCD', labs: [`${w}`, `${hh}`, mode === 'kind' ? `${w}` : '', mode === 'kind' ? `${hh}` : ''] });
-    if (mode === 'diag') { const O = r4mid(P[0], P[2]), d = Math.hypot(w, hh); s += `<path d="M${P[0].join(' ')} L${P[2].join(' ')}" stroke="#3C8DDB" stroke-width="3"/><path d="M${P[1].join(' ')} L${P[3].join(' ')}" stroke="#1B8862" stroke-width="3"/><circle cx="${O[0]}" cy="${O[1]}" r="4.5" fill="#E5487A"/><text x="${O[0]}" y="${O[1] - 9}" class="r4-nm" text-anchor="middle">O</text>`;
-      out.innerHTML = `เส้นทแยงมุม AC ยาว ≈ ${a4n(d)} หน่วย · BD ยาว ≈ ${a4n(d)} หน่วย → <b>ยาวเท่ากัน</b><br>AO = OC และ BO = OD → <b>แบ่งครึ่งซึ่งกันและกัน</b>` + (w === hh ? '<br>รูปจัตุรัส: เส้นทแยงมุม<b>ตั้งฉากกัน</b> (ตัดกันเป็นมุมฉาก)' : ''); }
-    s += `<circle class="r4-handle" cx="${X}" cy="${Y}" r="13" fill="rgba(229,72,122,.2)" stroke="#E5487A" stroke-width="2"/>`;
-    fig.innerHTML = r4svg(x0 * 2 + N * g, y0 * 2 + M * g, s);
-    const sq = w === hh; seen.add(sq ? 'sq' : 'rect');
-    if (mode === 'kind') out.innerHTML = sq ? `<b>รูปสี่เหลี่ยมจัตุรัส</b> · มุมทุกมุมเป็นมุมฉาก · ด้านทั้งสี่ยาวเท่ากัน (${w} หน่วย)` : `<b>รูปสี่เหลี่ยมผืนผ้า</b> · มุมทุกมุมเป็นมุมฉาก · ด้านตรงข้ามยาวเท่ากัน (${w} กับ ${w} · ${hh} กับ ${hh})`;
-    if (mode === 'tiles') out.innerHTML = `นับรูปสี่เหลี่ยมจัตุรัสหน่วย (กระเบื้อง) ได้ <b>${w * hh}</b> ช่อง → พื้นที่ <b>${w * hh} ตารางหน่วย</b>`;
-    if (mode === 'formula') out.innerHTML = `${hh} แถว แถวละ ${w} ช่อง → ${hh} × ${w} = <b>${w * hh}</b> ตารางหน่วย<br>พื้นที่ = ความกว้าง × ความยาว`;
-    if (mode === 'kind' ? seen.size >= 2 : ++moves > 4) teachDone(box); };
-  a4Drag(fig, { down: (p, e) => { if (!e.target.closest('.r4-handle') && Math.hypot(p[0] - x0 - w * g, p[1] - y0 - hh * g) > 30) return false; drag = true; }, up: () => { drag = false; },
-    move: ([x, y]) => { if (!drag) return; const nw = Math.max(1, Math.min(N, Math.round((x - x0) / g))), nh = Math.max(1, Math.min(M, Math.round((y - y0) / g))); if (nw !== w || nh !== hh) { w = nw; hh = nh; sfx.tap(); draw(); } } });
-  box.append(h('div', { class: 'cap' }, 'ลากจุดสีชมพูที่มุม C เพื่อเปลี่ยนขนาด'), fig, out); draw(); moves = 0; return box; }
-/* camel walks around a rectangle / rectilinear shape, side by side */
-function simR4Walk(list) { let idx = 0; const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'r4-board' }), out = fNote(), ctl = h('div', { class: 'rowstack' });
-  const run = () => { const S = list[idx], F = r4Fit(S.P, 360, 230, 48), P = F.P, n = P.length; let k = 0, sum = [];
-    const draw = () => { const at = P[k % n]; fig.innerHTML = r4svg(360, 230, r4PolyS(P, { labs: S.L, fill: '#FFF1CC' }) + P.slice(0, k + 1).map((p, i) => i ? `<path d="M${P[i - 1].join(' ')} L${p.join(' ')}" stroke="#E5487A" stroke-width="5" stroke-linecap="round" opacity=".55"/>` : '').join('') + (k >= n ? `<path d="M${P[n - 1].join(' ')} L${P[0].join(' ')}" stroke="#E5487A" stroke-width="5" opacity=".55"/>` : '') + `<g style="transform:translate(${a4n(at[0])}px,${a4n(at[1])}px);transition:transform .45s">${r4camel()}</g>`); };
-    const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); sum.push(S.v[k]); k++; sfx.pop(k); draw(); out.innerHTML = `เดินแล้ว ${sum.join(' + ')} = <b>${sum.reduce((a, b) => a + b, 0)}</b> ${S.u}`;
-      if (k >= n) { btn.remove(); out.innerHTML += `<br>ครบรอบ → ความยาวรอบรูป = <b>${sum.reduce((a, b) => a + b, 0)} ${S.u}</b>`; teachDone(box); } } }, icon('right'), 'เดินด้านต่อไป');
-    ctl.innerHTML = ''; ctl.append(btn, p4more(() => { idx = (idx + 1) % list.length; run(); }, 'รูปใหม่')); out.innerHTML = 'กดให้อูฐเดินรอบรูปทีละด้าน'; draw(); };
-  box.append(fig, out, ctl); run(); return box; }
-/* push the dents of a staircase shape outward: same perimeter as the big rectangle */
-function simR4Push() { const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'r4-board' }), out = fNote(); let st = 0; const U = [[0, 0], [3, 0], [3, 1], [5, 1], [5, 3], [7, 3], [7, 5], [0, 5]];
-  const draw = () => { const F = r4Fit([[0, 0], [7, 0], [7, 5], [0, 5]], 360, 230, 44), k = F.k, map = P => P.map(([x, y]) => [F.ox + x * k, F.oy + y * k]), Pin = map(U), R = map([[0, 0], [7, 0], [7, 5], [0, 5]]);
-    fig.innerHTML = r4svg(360, 230, (st ? r4PolyS(R, { fill: 'none', stroke: '#3C8DDB', sw: 3, labs: ['7 ม.', '5 ม.', '', ''], rm: false }) : '') + r4PolyS(Pin, { fill: st ? 'rgba(255,231,168,.6)' : '#FFE7A8', labs: ['3', '1', '2', '2', '2', '2', '7', '5'].map(t => t + ' ม.'), rm: false }) +
-      (st ? `<path d="M${Pin[1].join(' ')} V${R[1][1]} H${R[1][0]} V${Pin[6][1]}" fill="none" stroke="#E5487A" stroke-width="3" stroke-dasharray="6 5"/>` : ''));
-    out.innerHTML = st ? 'ดันขั้นบันไดออกไปทางขวาและขึ้นบน: ด้านตั้งรวมกัน 1 + 2 + 2 = 5 ม. · ด้านนอนรวมกัน 3 + 2 + 2 = 7 ม.<br>ความยาวรอบรูป = 7 + 5 + 7 + 5 = <b>24 ม.</b> เท่ากับรูปสี่เหลี่ยมผืนผ้าที่ล้อมรอบ' : 'รูปขั้นบันได: ความยาวรอบรูปเท่ากับเท่าไร? ลองกดดันขั้นบันไดออก'; };
-  box.append(fig, out, h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); st = 1; sfx.pop(4); draw(); e.currentTarget.remove(); teachDone(box); } }, icon('right'), 'ดันขั้นบันไดออก')); draw(); return box; }
-/* fixed fence: change the width, the length follows — area changes */
-function simR4Fence(P = 20) { const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'r4-board' }), out = fNote(); let w = 2, moves = 0; const g = 26, x0 = 20, y0 = 16;
-  const draw = () => { const l = P / 2 - w; fig.innerHTML = r4svg(x0 * 2 + 10 * g, y0 * 2 + 9 * g, r4gridS(x0, y0, 10, 9, g, '#EEE9F7') + r4grass(x0, y0, l * g, w * g, 'r4gf') + `<text x="${x0 + l * g / 2}" y="${y0 - 3}" class="r4-lab" text-anchor="middle">${l} ม.</text><text x="${x0 + l * g + 6}" y="${y0 + w * g / 2 + 5}" class="r4-lab">${w} ม.</text>`);
-    out.innerHTML = `รั้วยาว ${P} ม. เท่าเดิม: กว้าง ${w} ม. ยาว ${l} ม. → พื้นที่ ${w} × ${l} = <b>${w * l} ตร.ม.</b>` + (w === l ? '<br>เป็นรูปจัตุรัส ได้พื้นที่<b>มากที่สุด</b>' : ''); if (++moves > 3) teachDone(box); };
-  box.append(fig, out, h('div', { class: 'rowstack' }, stepper('ความกว้าง (ม.)', () => w, x => w = x, () => 1, () => P / 2 - 1 > 9 ? 9 : P / 2 - 1, draw))); draw(); moves = 0; return box; }
-/* cut an L-shape: two ways to split, or big rectangle minus the missing corner */
-function simR4Cut() { const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'r4-board' }), out = fNote(), seg = h('div', { class: 'seg' }); let way = 0; const seen = new Set();
-  const U = R4SH.L(8, 6, 3, 2), F = r4Fit(U, 360, 240, 46), k = F.k, mp = ([x, y]) => [F.ox + x * k, F.oy + y * k], P = U.map(mp);
-  const LB = ['5 ม.', '2 ม.', '3 ม.', '4 ม.', '8 ม.', '6 ม.'];
-  const draw = () => { let s = ''; if (way === 0) { s += r4PolyS(P, { fill: 'none', stroke: '#C9C1DE', sw: 2, labs: LB, rm: false }) + r4PiecesSVG(U, r4Pieces(U, [[[5, 2], [5, 6]]]), mp, k, { gap: 0 }); out.innerHTML = 'ตัดตามแนวตั้ง: 5 × 6 = 30 และ 3 × 4 = 12 → รวม <b>42 ตร.ม.</b>'; }
-    else if (way === 1) { s += r4PolyS(P, { fill: 'none', stroke: '#C9C1DE', sw: 2, labs: LB, rm: false }) + r4PiecesSVG(U, r4Pieces(U, [[[0, 2], [5, 2]]]), mp, k, { gap: 0 }); out.innerHTML = 'ตัดตามแนวนอน: 5 × 2 = 10 และ 8 × 4 = 32 → รวม <b>42 ตร.ม.</b>'; }
-    else { const big = [[0, 0], [8, 0], [8, 6], [0, 6]]; s += r4PolyS(big.map(mp), { fill: '#FFD27A', rm: false, stroke: '#3C8DDB', labs: ['8 ม.', '6 ม.', '', ''] }) + `<g class="r4-piece r4-still">` + r4PolyS([[5, 0], [8, 0], [8, 2], [5, 2]].map(mp), { fill: '#fff', stroke: '#E5487A', rm: false, labs: ['3 ม.', '2 ม.', '', ''] }) + '</g>'; out.innerHTML = 'สี่เหลี่ยมใหญ่ลบส่วนที่ขาด: 8 × 6 = 48 ลบ 3 × 2 = 6 → <b>42 ตร.ม.</b>'; }
-    fig.innerHTML = r4svg(360, 240, s); seen.add(way); if (seen.size >= 2) teachDone(box); };
-  ['ตัดแนวตั้ง', 'ตัดแนวนอน', 'ใหญ่ลบเล็ก'].forEach((t, i) => seg.append(h('button', { class: i ? '' : 'on', onclick: e => { e.stopPropagation(); way = i; seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === e.currentTarget)); sfx.tap(); draw(); } }, t)));
-  box.append(seg, fig, out); draw(); return box; }
-/* estimate: tap the cells of a pond to mark full (1) / half (½) */
 function r4EstShape(seed) { // cells: [x, y, kind] kind 'f' full · 'h' half-triangle (corner tri) with dir
   const S = [
     { W: 7, H: 5, cells: [[1, 0, 'h', 3], [2, 0, 'f'], [3, 0, 'f'], [4, 0, 'h', 0], [0, 1, 'h', 3], [1, 1, 'f'], [2, 1, 'f'], [3, 1, 'f'], [4, 1, 'f'], [5, 1, 'h', 0], [0, 2, 'f'], [1, 2, 'f'], [2, 2, 'f'], [3, 2, 'f'], [4, 2, 'f'], [5, 2, 'f'], [0, 3, 'h', 2], [1, 3, 'f'], [2, 3, 'f'], [3, 3, 'f'], [4, 3, 'f'], [5, 3, 'h', 1], [1, 4, 'h', 2], [2, 4, 'f'], [3, 4, 'f'], [4, 4, 'h', 1]] },
@@ -150,11 +102,6 @@ function r4EstSVG(S, marks = {}, o = {}) { const g = o.g || 32, x0 = 24, y0 = 20
     s += k === 'f' ? `<rect x="${X}" y="${Y}" width="${g}" height="${g}" fill="${col}" stroke="#4C83B8" stroke-width=".8" class="r4-ec" data-i="${i}"/>` : `<path d="M${r4triPts(X, Y, g, d).map(p => p.join(' ')).join(' L')}Z" fill="${col}" stroke="#4C83B8" stroke-width=".8" class="r4-ec" data-i="${i}"/><rect x="${X}" y="${Y}" width="${g}" height="${g}" fill="transparent" class="r4-ec" data-i="${i}"/>`;
     if (marks[i]) s += `<text x="${X + g / 2}" y="${Y + g / 2 + 5}" class="r4-mk" text-anchor="middle">${k === 'f' ? '1' : '½'}</text>`; });
   return r4svg(x0 * 2 + S.W * g, y0 * 2 + S.H * g, s); }
-function simR4Est() { const box = h('div', { class: 'colstack' }, h6wait()), fig = h('div', { class: 'r4-board ia' }), out = fNote(); let S = r4EstShape(rnd(0, 5)), marks = {};
-  const draw = () => { fig.innerHTML = r4EstSVG(S, marks); const f = S.cells.filter((c, i) => marks[i] && c[2] === 'f').length, hh = S.cells.filter((c, i) => marks[i] && c[2] === 'h').length, all = r4estVal(S);
-    out.innerHTML = `เต็มช่อง ${f} ช่อง · ครึ่งช่อง ${hh} ชิ้น (2 ชิ้น = 1 ช่อง)<br>พื้นที่โดยประมาณ ≈ ${f} + ${hh} ÷ 2 = <b>${f + hh / 2}</b> ตารางหน่วย` + (f === all.f && hh === all.hf ? ' ✓ ครบแล้ว' : ''); if (f === all.f && hh === all.hf) teachDone(box); };
-  fig.addEventListener('click', e => { e.stopPropagation(); const c = e.target.closest('.r4-ec'); if (!c) return; const i = +c.dataset.i; marks[i] = !marks[i]; sfx.tap(); draw(); });
-  box.append(h('div', { class: 'cap' }, 'แตะทุกชิ้นของสระน้ำ: ช่องเต็มนับ 1 · ครึ่งช่องนับ ½'), fig, out); draw(); return box; }
 
 /* =========================================================
    QUESTION TYPES / MINI-GAMES
@@ -434,114 +381,47 @@ const r4N = (k, f) => Array.from({ length: k }, f);
 const r4ex = (U, labs, o = {}) => { const F = r4Fit(U, o.W || 320, o.H || 200, o.pad || 44); return r4svg(o.W || 320, o.H || 200, r4PolyS(F.P, { labs, fill: o.fill, names: o.names, rm: o.rm }) + (o.extra ? o.extra(F) : '')); };
 const LESSONS_P4C9 = [
   L4R(1, 'โอเอซิสมุมฉาก', 'ชนิดของรูปสี่เหลี่ยมมุมฉาก', 'ชนิดของรูปสี่เหลี่ยมมุมฉาก', 'บอกชนิดและสมบัติของรูปสี่เหลี่ยมผืนผ้าและรูปสี่เหลี่ยมจัตุรัส',
-    [...learnStep('ยินดีต้อนรับสู่ <b>ทะเลทรายสี่เหลี่ยม</b>!', 'ยินดีต้อนรับสู่ทะเลทรายสี่เหลี่ยม', [
-      { fig: r4ex([[0, 0], [6, 0], [6, 3.4], [0, 3.4]], ['6 ซม.', '3 ซม.', '6 ซม.', '3 ซม.'], { names: 'ABCD' }), name: 'รูปสี่เหลี่ยมผืนผ้า', text: 'มีมุมฉาก 4 มุม ด้านตรงข้ามยาวเท่ากัน' },
-      { fig: r4ex([[0, 0], [4, 0], [4, 4], [0, 4]], ['4 ซม.', '4 ซม.', '4 ซม.', '4 ซม.'], { names: 'PQRS' }), name: 'รูปสี่เหลี่ยมจัตุรัส', text: 'มีมุมฉาก 4 มุม ด้านทั้งสี่ยาวเท่ากัน' },
-      { fig: r4svg(320, 200, r4PolyS(R4Q.para().map(([x, y]) => [80 + x * 2.2, 40 + y * 2.2]), { fill: '#E9E4F5' })), name: 'ไม่ใช่รูปสี่เหลี่ยมมุมฉาก', text: 'มีมุมที่ไม่ใช่มุมฉาก แม้ด้านตรงข้ามจะยาวเท่ากัน' }], 'สี่เหลี่ยมมุมฉาก = มุมฉากครบ 4 มุม'),
-     pexStep('ตัวอย่างทีละขั้น: เป็นรูปสี่เหลี่ยมชนิดใด', 'ตัวอย่างทีละขั้น', [['① ดูมุม', 'มีมุมฉากครบ 4 มุม → เป็นรูปสี่เหลี่ยมมุมฉาก', r4ex([[0, 0], [5, 0], [5, 5], [0, 5]], ['', '', '', ''], { names: 'กขคง' })], ['② ดูด้าน', 'ยาว 5 ซม. ทุกด้าน', r4ex([[0, 0], [5, 0], [5, 5], [0, 5]], ['5 ซม.', '5 ซม.', '5 ซม.', '5 ซม.'], { names: 'กขคง' })]], 'กขคง เป็น<b>รูปสี่เหลี่ยมจัตุรัส</b>'),
-     T('ลองลากเปลี่ยนขนาด', 'ลองลากเปลี่ยนขนาด', el => el.append(simR4Rect('kind')))],
-    () => [Q.r4Pick({ ks: r4qkSet('rect'), want: 'rect' }), Q.r4Pick({ ks: r4qkSet('sq'), want: 'sq' }), ...r4N(2, () => { const k = pick(['sq', 'rect', 'para']), w = rnd(3, 8); return Q.r4Kind({ k, nm: r4nm(), w, hh: k === 'sq' ? w : rnd(2, w - 1) || 2 }); }), r4TF(R4_PROP, 'p')]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(2, 'เนินเส้นทแยง', 'เส้นทแยงมุมของรูปสี่เหลี่ยม', 'เส้นทแยงมุม', 'บอกเส้นทแยงมุมของรูปสี่เหลี่ยม และสมบัติเส้นทแยงมุมของรูปสี่เหลี่ยมมุมฉาก',
-    [...learnStep('<b>เส้นทแยงมุม</b>', 'เส้นทแยงมุม', [
-      { fig: r4Rect(7, 4, { labs: ['', '', '', ''], names: 'ABCD', diag: 1 }), name: 'เส้นทแยงมุม', text: 'ส่วนของเส้นตรงที่ลากเชื่อมจุดยอดที่ไม่อยู่ติดกัน · รูปสี่เหลี่ยมมี 2 เส้น คือ AC และ BD' },
-      { fig: r4Rect(7, 4, { labs: ['', '', '', ''], names: 'ABCD', diag: 1, extra: '<circle cx="170" cy="105" r="4.5" fill="#E5487A"/>' }), name: 'ของรูปสี่เหลี่ยมผืนผ้า', text: 'ยาวเท่ากัน และแบ่งครึ่งซึ่งกันและกัน' },
-      { fig: r4Rect(5, 5, { labs: ['', '', '', ''], names: 'PQRS', diag: 1 }), name: 'ของรูปสี่เหลี่ยมจัตุรัส', text: 'ยาวเท่ากัน แบ่งครึ่งซึ่งกันและกัน และตั้งฉากกัน' }], 'เส้นทแยงมุมเชื่อมจุดยอดที่ไม่ติดกัน'),
-     pexStep('ตัวอย่างทีละขั้น: หาเส้นทแยงมุมของ กขคง', 'ตัวอย่างทีละขั้น', [['① เริ่มที่จุด ก', 'จุดที่ไม่อยู่ติดกับ ก คือ ค → ลาก กค', r4Rect(7, 4, { labs: ['', '', '', ''], names: 'กขคง', extra: '<path d="M55 39.5 L285 170.5" stroke="#3C8DDB" stroke-width="2.6"/>' })], ['② เริ่มที่จุด ข', 'จุดที่ไม่อยู่ติดกับ ข คือ ง → ลาก ขง', r4Rect(7, 4, { labs: ['', '', '', ''], names: 'กขคง', diag: 1 })]], 'เส้นทแยงมุม คือ <b>กค และ ขง</b>'),
-     T('ลองสร้างเส้นทแยงมุม', 'ลองสร้างเส้นทแยงมุม แตะจุดยอด แล้วแตะจุดยอดที่ไม่อยู่ติดกัน', el => el.append(qSim(Q.r4DrawDiag({ k: 'rect', nm: 'ABCD' }), 'ถูกต้อง! เส้นทแยงมุม AC และ BD'))),
-     T('ลองลากดูเส้นทแยงมุม', 'ลองลากดูเส้นทแยงมุม', el => el.append(simR4Rect('diag')))],
-    () => [Q.r4DrawDiag({ k: pick(['rect', 'sq']), nm: r4nm() }), Q.r4DrawDiag({ k: pick(['para', 'trap', 'kite']), nm: r4nm() }), Q.r4TapDiag({ k: pick(['rect', 'sq', 'para', 'trap', 'kite']), nm: r4nm() }), ...r4N(2, () => Q.r4DiagNum({ nm: pick(['ABCD', 'PQRS', 'KLMN', 'EFGH', 'WXYZ']), d: rnd(5, 30) * 2, ask: pick(['other', 'half', 'full']) })), r4TF(R4_DPROP, 'd')]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(3, 'ลานหมุดทราย', 'การสร้างรูปสี่เหลี่ยมจัตุรัส และรูปสี่เหลี่ยมผืนผ้า', 'สร้างรูปสี่เหลี่ยม', 'สร้างรูปสี่เหลี่ยมจัตุรัสและรูปสี่เหลี่ยมผืนผ้าเมื่อกำหนดความยาวของด้าน',
-    [...learnStep('<b>สร้างรูปสี่เหลี่ยมผืนผ้า</b>', 'สร้างรูปสี่เหลี่ยมผืนผ้า', [
-      { fig: a4SVG({ vb: [340, 200], pts: { A: [70, 170], B: [270, 170] }, lines: [{ a: 'A', b: 'B', k: 'seg' }], lab: { A: 225, B: 315 } }), name: '① ลากด้านแรก', text: 'ลาก AB ยาว 5 ซม.' },
-      { fig: a4SVG({ vb: [340, 200], pts: { A: [70, 170], B: [270, 170] }, lines: [{ a: 'A', b: 'B', k: 'seg' }], prot: { c: [270, 170], rot: 0, R: 90, mark: 90 }, lab: { A: 225, B: 315 } }), name: '② สร้างมุมฉาก', text: 'ใช้ไม้โพรแทรกเตอร์สร้างมุม 90° ที่จุด A และจุด B' },
-      { fig: r4Rect(5, 3, { unit: 'ซม.', names: 'ABCD', all: true }), name: '③ วัดแล้วลากเชื่อม', text: 'วัดด้านที่ตั้งฉากยาว 3 ซม. ทำจุด D และ C แล้วลากเชื่อม' }], 'ด้านแรก → มุมฉาก → วัด → ลากเชื่อม'),
-     pexStep('ตัวอย่างทีละขั้น: สร้างรูปจัตุรัสด้านละ 4 หน่วยบนกระดานหมุด', 'ตัวอย่างทีละขั้น', [
-       ['① ด้านแรก 4 ช่อง', 'นับ 4 ช่องตามแนวนอน', r4svg(260, 200, r4dots(30, 20, 6, 5, 32) + '<path d="M62 52 H190" stroke="#2B2550" stroke-width="3"/>')],
-       ['② ด้านตั้งฉาก 4 ช่อง', 'ลงมาตรง ๆ 4 ช่องทั้งสองข้าง', r4svg(260, 200, r4dots(30, 20, 6, 5, 32) + '<path d="M62 180 V52 H190 V180" stroke="#2B2550" stroke-width="3" fill="none"/>')],
-       ['③ ลากปิดรูป', 'ได้มุมฉากครบ ด้านยาว 4 เท่ากัน', r4svg(260, 200, r4dots(30, 20, 6, 5, 32) + r4PolyS([[62, 52], [190, 52], [190, 180], [62, 180]], { labs: ['4', '4', '4', '4'], fill: 'rgba(255,194,76,.45)' }))]], 'ได้<b>รูปสี่เหลี่ยมจัตุรัส</b>'),
-     T('ลองสร้างรูปเองตั้งแต่ด้านแรก', 'ลองสร้างรูปเองตั้งแต่ด้านแรก แตะหมุดทีละจุดเพื่อลากด้าน', el => el.append(qSim(Q.r4Build({ kind: 'rect', w: 5, hh: 3, nm: 'ABCD' }), 'ถูกต้อง!')))],
-    /* ผู้ใช้ขอ: the game must be BUILDING from scratch (draw every side), easy → hard; the old drag-the-pegs shape only near the end */
-    () => [Q.r4Build({ kind: 'sq', w: rnd(2, 3), nm: r4nm() }), (() => { const w = rnd(3, 5); return Q.r4Build({ kind: 'rect', w, hh: rnd(2, w - 1), nm: r4nm() }); })(), Q.r4Build({ kind: 'sq', w: rnd(4, 6), nm: r4nm() }),
-      (() => { const w = rnd(6, 8); return Q.r4Build({ kind: 'rect', w, hh: rnd(3, Math.min(6, w - 1)), nm: r4nm() }); })(), { ...r4SeqQ(), __diff: 25 },
-      { ...Q.r4Pick({ ks: r4qkSet('rect'), want: 'rect' }), __diff: 27 }, (() => { const sq = Math.random() < .45, w = rnd(3, 7); return { ...Q.r4Geo({ kind: sq ? 'sq' : 'rect', w: sq ? Math.min(w, 5) : w, hh: sq ? Math.min(w, 5) : rnd(1, Math.min(5, w - 1)) || 1, nm: r4nm() }), __diff: 30 }; })()]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(4, 'สนามอูฐเดินรอบ', 'การหาความยาวรอบรูปของรูปสี่เหลี่ยมมุมฉาก', 'ความยาวรอบรูป', 'หาความยาวรอบรูปของรูปสี่เหลี่ยมผืนผ้าและรูปสี่เหลี่ยมจัตุรัส',
-    [T('ยินดีต้อนรับสู่ <b>สนามอูฐเดินรอบ</b>! ให้อูฐเดินรอบแปลงทีละด้าน', 'ให้อูฐเดินรอบแปลงทีละด้าน แล้วรวมระยะทาง', el => el.append(simR4Walk([{ P: [[0, 0], [4, 0], [4, 3], [0, 3]], L: ['4 ม.', '3 ม.', '4 ม.', '3 ม.'], v: [4, 3, 4, 3], u: 'ม.' }, { P: [[0, 0], [3, 0], [3, 3], [0, 3]], L: ['3 ม.', '3 ม.', '3 ม.', '3 ม.'], v: [3, 3, 3, 3], u: 'ม.' }]))),
-     ...learnStep('<b>ความยาวรอบรูป</b>', 'ความยาวรอบรูป', [
-      { fig: r4Rect(4, 3, { unit: 'ม.', all: true }), name: 'ระยะที่อูฐเดินครบรอบ', text: 'อูฐเดิน 4 + 3 + 4 + 3 = 14 เมตร · ระยะรอบรูปนี้เรียกว่า <b>ความยาวรอบรูป</b>', sum: 'ความยาวรอบรูป = ผลรวมความยาวของทุกด้าน' },
-      { fig: r4Rect(4, 3, { unit: 'ม.', all: true }), name: 'สูตรรูปสี่เหลี่ยมผืนผ้า', text: 'ด้านยาว 2 ด้าน และด้านกว้าง 2 ด้าน → (4 + 3) + (4 + 3) = 2 × (4 + 3) = 14 เมตร', sum: 'ผืนผ้า: ความยาวรอบรูป = 2 × (กว้าง + ยาว)' },
-      { fig: r4Rect(3, 3, { unit: 'ม.', all: true, sq: true }), name: 'สูตรรูปสี่เหลี่ยมจัตุรัส', text: 'ด้านยาวเท่ากันทั้ง 4 ด้าน → 3 + 3 + 3 + 3 = 4 × 3 = 12 เมตร', sum: 'จัตุรัส: ความยาวรอบรูป = 4 × ความยาวด้าน' }]),
-     pexStep('ตัวอย่างทีละขั้น: ผืนผ้ากว้าง 2 ซม. ยาว 5 ซม.', 'ตัวอย่างทีละขั้น ผืนผ้ากว้าง 2 ยาว 5', [['① เติมด้านที่ไม่ได้เขียน', 'ด้านตรงข้ามยาวเท่ากัน: 5, 2, 5, 2', r4Rect(5, 2, { unit: 'ซม.', all: true })], ['② ใช้สูตร', 'กว้าง + ยาว = 2 + 5 = 7 → 2 × 7 = 14', p4big('2 × (2 + 5) = 14')]], 'ความยาวรอบรูป <b>14 ซม.</b>'),
-     pexStep('ตัวอย่างทีละขั้น: จัตุรัสยาวด้านละ 4 ซม.', 'ตัวอย่างทีละขั้น จัตุรัสด้านละ 4', [['① ด้านเท่ากันทั้ง 4 ด้าน', '4, 4, 4, 4', r4Rect(4, 4, { unit: 'ซม.', all: true, sq: true })], ['② ใช้สูตร', '4 × ความยาวด้าน = 4 × 4', p4big('4 × 4 = 16')]], 'ความยาวรอบรูป <b>16 ซม.</b>')],
-    () => [...r4N(2, r4walkRect), ...r4N(2, r4perFormula), r4duelQ('per')]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(5, 'ผาบันไดทราย', 'การหาความยาวรอบรูปของรูปหลายเหลี่ยมที่สามารถแบ่งหรือต่อเป็นรูปสี่เหลี่ยมมุมฉาก', 'รอบรูปหลายเหลี่ยม', 'หาความยาวรอบรูปของรูปหลายเหลี่ยมที่แบ่งหรือต่อเป็นรูปสี่เหลี่ยมมุมฉากได้',
-    [...learnStep('<b>รอบรูปหลายเหลี่ยม</b>', 'รอบรูปหลายเหลี่ยม', [
-      { fig: r4ex(R4SH.L(8, 6, 3, 2), ['5 ม.', '2 ม.', '3 ม.', '4 ม.', '8 ม.', '6 ม.']), name: 'บวกทุกด้าน', text: '5 + 2 + 3 + 4 + 8 + 6 = 28 ม.' },
-      { fig: r4ex(R4SH.L(8, 6, 3, 2), ['5 ม.', '?', '3 ม.', '4 ม.', '8 ม.', '6 ม.']), name: 'ด้านที่ไม่บอก', text: 'ด้านตั้งฝั่งขวารวมกัน = ด้านตั้งฝั่งซ้าย → ? = 6 − 4 = 2 ม.' }], 'ด้านที่หายไปหาจากด้านที่ขนานกัน'),
-     pexStep('ตัวอย่างทีละขั้น: รูปตัว U', 'ตัวอย่างทีละขั้น', [['① หาด้านที่ไม่บอก', 'ด้านบนขวา = 9 − 2 − 3 = 4 ม.', r4ex(R4SH.U(9, 5, 3, 2, 2), ['2 ม.', '2 ม.', '3 ม.', '2 ม.', '?', '5 ม.', '9 ม.', '5 ม.'])], ['② บวกทุกด้าน', '2 + 2 + 3 + 2 + 4 + 5 + 9 + 5 = 32', r4ex(R4SH.U(9, 5, 3, 2, 2), ['2 ม.', '2 ม.', '3 ม.', '2 ม.', '4 ม.', '5 ม.', '9 ม.', '5 ม.'])]], 'ความยาวรอบรูป <b>32 ม.</b>'),
-     T('ลองดันขั้นบันได', 'ลองดันขั้นบันได', el => el.append(simR4Push()))],
-    () => r4N(5, r4walkPoly)),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(6, 'ลานกระเบื้อง', 'การหาพื้นที่โดยการนับตาราง', 'พื้นที่โดยนับตาราง', 'หาพื้นที่โดยนับรูปสี่เหลี่ยมจัตุรัสหน่วย (ตารางหน่วย)',
-    [...learnStep('<b>พื้นที่</b>', 'พื้นที่', [
-      { fig: r4svg(300, 180, r4gridS(60, 30, 6, 4, 30) + r4PolyS([[60, 30], [90, 30], [90, 60], [60, 60]], { fill: '#FFC24C', rm: false })), name: 'ตารางหน่วย', text: 'รูปสี่เหลี่ยมจัตุรัส 1 ช่อง มีพื้นที่ 1 ตารางหน่วย' },
-      { fig: r4svg(300, 180, r4gridS(60, 30, 6, 4, 30) + Array.from({ length: 8 }, (_, i) => `<rect x="${90 + (i % 4) * 30}" y="${60 + Math.floor(i / 4) * 30}" width="30" height="30" fill="#9FD0F0" stroke="#4C83B8"/>`).join('')), name: 'นับช่อง', text: 'รูปนี้มี 8 ช่อง → พื้นที่ 8 ตารางหน่วย' }], 'พื้นที่ = จำนวนตารางหน่วยที่อยู่ภายในรูป'),
-     pexStep('ตัวอย่างทีละขั้น: นับพื้นที่รูปตัว L', 'ตัวอย่างทีละขั้น', [['① นับแถวบน', '2 ช่อง', r4svg(300, 180, r4gridS(60, 20, 6, 5, 28) + [[1, 0], [1, 1], [1, 2], [1, 3], [2, 3], [3, 3]].map(([x, y], i) => `<rect x="${60 + x * 28}" y="${20 + y * 28}" width="28" height="28" fill="${i < 1 ? '#FFC24C' : '#9FD0F0'}" stroke="#4C83B8"/>`).join(''))], ['② นับต่อทีละช่อง', '1, 2, 3, … ได้ 6 ช่อง', r4svg(300, 180, r4gridS(60, 20, 6, 5, 28) + [[1, 0], [1, 1], [1, 2], [1, 3], [2, 3], [3, 3]].map(([x, y], i) => `<rect x="${60 + x * 28}" y="${20 + y * 28}" width="28" height="28" fill="#FFC24C" stroke="#4C83B8"/><text x="${74 + x * 28}" y="${39 + y * 28}" class="r4-mk" text-anchor="middle">${i + 1}</text>`).join(''))]], 'พื้นที่ <b>6 ตารางหน่วย</b>'),
-     T('ลองลากขยายแปลงกระเบื้อง', 'ลองลากขยายแปลงกระเบื้อง', el => el.append(simR4Rect('tiles')))],
-    () => [...r4N(2, () => { const c = r4cells(); return Q.r4Count({ ...c, unit: 'ตารางหน่วย' }); }), Q.r4Paint({ n: rnd(5, 14), rect: false }), Q.r4Paint({ n: pick([6, 8, 10, 12, 15, 16, 18, 20, 9, 14]), rect: true }), r4duelQ('area')]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(7, 'ตลาดตารางวา', 'การหาพื้นที่ของรูปเรขาคณิตโดยการนับตารางเป็นตารางเซนติเมตร ตารางเมตร ตารางวา', 'ตร.ซม. ตร.ม. ตารางวา', 'หาพื้นที่โดยการนับตารางในหน่วยตารางเซนติเมตร ตารางเมตร และตารางวา',
-    [...learnStep('<b>หน่วยของพื้นที่</b>', 'หน่วยของพื้นที่', [
-      { fig: r4svg(300, 170, `<rect x="130" y="55" width="40" height="40" fill="#FFC24C" stroke="#2B2550" stroke-width="2"/><text x="150" y="122" class="r4-lab" text-anchor="middle">ยาวด้านละ 1 ซม.</text>`), name: '1 ตารางเซนติเมตร (ตร.ซม.)', text: 'ใช้วัดของชิ้นเล็ก เช่น ปกสมุด แสตมป์' },
-      { fig: r4svg(300, 170, `<rect x="95" y="25" width="110" height="110" fill="#BFE3F7" stroke="#2B2550" stroke-width="2"/><text x="150" y="155" class="r4-lab" text-anchor="middle">ยาวด้านละ 1 ม.</text>`), name: '1 ตารางเมตร (ตร.ม.)', text: 'ใช้วัดพื้นห้อง ผนัง สนาม' },
-      { fig: r4svg(300, 170, r4gridS(100, 15, 2, 2, 60, '#7FB8E0') + `<rect x="100" y="15" width="120" height="120" fill="rgba(168,220,142,.45)" stroke="#2B2550" stroke-width="2"/><text x="160" y="160" class="r4-lab" text-anchor="middle">ยาวด้านละ 1 วา (2 ม.) = 4 ตร.ม.</text>`), name: '1 ตารางวา', text: 'ใช้วัดที่ดิน · 1 วา = 2 เมตร' }], 'ตร.ซม. ของเล็ก · ตร.ม. ห้อง · ตารางวา ที่ดิน'),
-     pexStep('ตัวอย่างทีละขั้น: แปลงที่ดิน', 'ตัวอย่างทีละขั้น', [['① อ่านหน่วย', '1 ช่อง = 1 ตารางวา', r4svg(300, 180, r4gridS(50, 20, 6, 4, 32) + [[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1], [3, 1], [0, 2], [1, 2], [2, 2], [3, 2]].map(([x, y]) => `<rect x="${50 + x * 32}" y="${20 + y * 32}" width="32" height="32" fill="#A8DC8E" stroke="#4E8A3A"/>`).join(''))], ['② นับช่อง', 'ได้ 11 ช่อง', p4big('11 ตารางวา')]], 'ที่ดินมีพื้นที่ <b>11 ตารางวา</b>')],
-    () => [...['ตารางเซนติเมตร', 'ตารางเมตร', 'ตารางวา'].map(unit => { const c = r4cells(); return Q.r4Count({ ...c, unit }); }), r4UnitQ(), Q.r4Paint({ n: rnd(6, 16), rect: Math.random() < .5 })]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(8, 'สระน้ำโอเอซิส', 'การหาพื้นที่โดยประมาณ ใช้การนับตารางของรูปที่ไม่เต็มตารางหน่วย', 'พื้นที่โดยประมาณ', 'หาพื้นที่โดยประมาณ โดยนับช่องเต็มและนำครึ่งช่องมารวมกัน',
-    [...learnStep('<b>พื้นที่โดยประมาณ</b>', 'พื้นที่โดยประมาณ', [
-      { fig: r4EstSVG(r4EstShape(3)), name: 'รูปที่ไม่เต็มช่อง', text: 'บางช่องเต็ม บางช่องมีแค่ครึ่งเดียว' },
-      { fig: r4EstSVG(r4EstShape(3), Object.fromEntries(r4EstShape(3).cells.map((_, i) => [i, 1]))), name: 'นับเต็ม + ครึ่ง', text: `เต็ม 13 ช่อง · ครึ่ง 8 ชิ้น = 4 ช่อง → ประมาณ 17 ตารางหน่วย` }], 'ครึ่งช่อง 2 ชิ้น รวมเป็น 1 ช่อง'),
-     pexStep('ตัวอย่างทีละขั้น: สระน้ำ', 'ตัวอย่างทีละขั้น', [['① นับช่องเต็ม', `เต็ม ${r4estVal(r4EstShape(1)).f} ช่อง`, r4EstSVG(r4EstShape(1), Object.fromEntries(r4EstShape(1).cells.map((c, i) => [i, c[2] === 'f'])))], ['② นับครึ่งช่อง', `ครึ่ง ${r4estVal(r4EstShape(1)).hf} ชิ้น = ${r4estVal(r4EstShape(1)).hf / 2} ช่อง`, r4EstSVG(r4EstShape(1), Object.fromEntries(r4EstShape(1).cells.map((_, i) => [i, 1])))]], `พื้นที่โดยประมาณ ${r4estVal(r4EstShape(1)).f} + ${r4estVal(r4EstShape(1)).hf / 2} = <b>${r4estVal(r4EstShape(1)).v} ตารางหน่วย</b>`),
-     T('ลองแตะนับสระน้ำ', 'ลองแตะนับสระน้ำ', el => el.append(simR4Est()))],
-    () => r4N(5, () => Q.r4Est(r4EstGen()))),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(9, 'ทุ่งสูตรผืนผ้า', 'การหาพื้นที่ของรูปสี่เหลี่ยมผืนผ้าโดยใช้สูตร', 'พื้นที่ผืนผ้า (สูตร)', 'หาพื้นที่ของรูปสี่เหลี่ยมผืนผ้าโดยใช้ ความกว้าง × ความยาว',
-    [...learnStep('<b>พื้นที่ = กว้าง × ยาว</b>', 'พื้นที่เท่ากับกว้างคูณยาว', [
-      { fig: r4svg(300, 170, r4gridS(60, 20, 6, 4, 30) + Array.from({ length: 18 }, (_, i) => `<rect x="${61 + (i % 6) * 30}" y="${21 + Math.floor(i / 6) * 30}" width="28" height="28" rx="3" fill="${(i % 6 + Math.floor(i / 6)) % 2 ? '#FFD27A' : '#FFC24C'}"/>`).join('')), name: 'จัดเป็นแถว', text: '3 แถว แถวละ 6 ช่อง → 3 × 6 = 18 ตารางหน่วย' },
-      { fig: r4Rect(9, 4, { unit: 'ซม.' }), name: 'ใช้สูตรได้เลย', text: 'กว้าง 4 ซม. ยาว 9 ซม. → 4 × 9 = 36 ตร.ซม.' }], 'พื้นที่ผืนผ้า = ความกว้าง × ความยาว'),
-     pexStep('ตัวอย่างทีละขั้น: 35 ม. × 80 ม.', 'ตัวอย่างทีละขั้น', [['① ระบุกว้างและยาว', 'กว้าง 35 ม. ยาว 80 ม.', r4Rect(80, 35, { unit: 'ม.' })], ['② คูณ', '35 × 80 = 2,800', p4big('35 × 80 = 2,800')]], 'พื้นที่ <b>2,800 ตร.ม.</b>'),
-     T('ลองลากดูแถว × ช่อง', 'ลองลากดูแถว คูณ ช่อง', el => el.append(simR4Rect('formula')))],
-    () => [...r4N(3, () => r4areaFormula(false)), ...r4grassQs()]), // ผู้ใช้ขอ: ปูทุ่งหญ้า 4 ข้อ · ไม่มีปูกระเบื้อง
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */), // ผู้ใช้ขอ: ปูทุ่งหญ้า 4 ข้อ · ไม่มีปูกระเบื้อง
   L4R(10, 'ลานจัตุรัส', 'การหาพื้นที่ของรูปสี่เหลี่ยมจัตุรัสโดยใช้สูตร', 'พื้นที่จัตุรัส (สูตร)', 'หาพื้นที่ของรูปสี่เหลี่ยมจัตุรัสโดยใช้ ความยาวด้าน × ความยาวด้าน',
-    [...learnStep('<b>พื้นที่จัตุรัส</b>', 'พื้นที่จัตุรัส', [
-      { fig: r4svg(300, 190, r4gridS(90, 20, 5, 5, 30) + Array.from({ length: 25 }, (_, i) => `<rect x="${91 + (i % 5) * 30}" y="${21 + Math.floor(i / 5) * 30}" width="28" height="28" rx="3" fill="${(i % 5 + Math.floor(i / 5)) % 2 ? '#BFE3F7' : '#9FD0F0'}"/>`).join('')), name: 'ด้าน × ด้าน', text: '5 แถว แถวละ 5 ช่อง → 5 × 5 = 25 ตารางหน่วย' },
-      { fig: r4Rect(12, 12, { unit: 'ซม.', sq: true }), name: 'ใช้สูตร', text: 'ยาวด้านละ 12 ซม. → 12 × 12 = 144 ตร.ซม.' }], 'พื้นที่จัตุรัส = ด้าน × ด้าน'),
-     pexStep('ตัวอย่างทีละขั้น: จัตุรัสด้านละ 120 มม.', 'ตัวอย่างทีละขั้น', [['① ด้านยาวเท่ากันทุกด้าน', '120 มม.', r4Rect(120, 120, { unit: 'มม.', sq: true })], ['② คูณ', '120 × 120 = 14,400', p4big('120 × 120 = 14,400')]], 'พื้นที่ <b>14,400 ตร.มม.</b>'),
-     T('ลองลากดูแถว × ช่อง', 'ลองลากดูแถว คูณ ช่อง', el => el.append(simR4Rect('formula')))],
-    () => [...r4N(3, () => ({ ...r4areaFormula(true), __base: 'r4sqA', __baseCap: 3 })), ...r4N(2, () => ({ ...r4sideFromA(), __base: 'r4sqS', __baseCap: 2 })), ...r4N(2, () => ({ ...r4duelQ('area'), __base: 'r4sqD', __baseCap: 2 }))]), // ผู้ใช้ขอ: ไม่มีปูกระเบื้อง · ไม่ซ้ำแบบเดิมเกิน 3 ข้อ
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */), // ผู้ใช้ขอ: ไม่มีปูกระเบื้อง · ไม่ซ้ำแบบเดิมเกิน 3 ข้อ
   L4R(11, 'ห้องรูปตัวแอล', 'การหาพื้นที่ของรูปหลายเหลี่ยมที่สามารถแบ่งเป็นรูปสี่เหลี่ยมมุมฉากได้', 'พื้นที่หลายเหลี่ยม', 'หาพื้นที่ของรูปหลายเหลี่ยมโดยแบ่งเป็นรูปสี่เหลี่ยมมุมฉาก หรือใช้รูปใหญ่ลบส่วนที่ขาด',
-    [...learnStep('<b>แบ่งรูปเป็นรูปสี่เหลี่ยมมุมฉาก</b>', 'แบ่งรูปเป็นรูปสี่เหลี่ยมมุมฉาก', [
-      { fig: r4ex(R4SH.L(8, 6, 3, 2), ['5 ม.', '2 ม.', '3 ม.', '4 ม.', '8 ม.', '6 ม.'], { rm: false, extra: F => `<path d="M${F.ox + 5 * F.k} ${F.oy + 2 * F.k} V${F.oy + 6 * F.k}" stroke="#E5487A" stroke-width="3" stroke-dasharray="7 6"/>` }), name: 'ตัดเป็น 2 ส่วน', text: '5 × 6 = 30 และ 3 × 4 = 12 → รวม 42 ตร.ม.' },
-      { fig: r4ex(R4SH.L(8, 6, 3, 2), ['5 ม.', '2 ม.', '3 ม.', '4 ม.', '8 ม.', '6 ม.'], { rm: false, extra: F => `<rect x="${F.ox + 5 * F.k}" y="${F.oy}" width="${3 * F.k}" height="${2 * F.k}" fill="none" stroke="#3C8DDB" stroke-width="2.5" stroke-dasharray="7 6"/>` }), name: 'หรือ ใหญ่ลบเล็ก', text: '8 × 6 = 48 ลบ 3 × 2 = 6 → 42 ตร.ม.' }], 'แบ่งได้หลายวิธี คำตอบเท่ากัน'),
-     pexStep('ตัวอย่างทีละขั้น: รูปตัว T', 'ตัวอย่างทีละขั้น', [['① ตัดเป็นส่วนบนกับส่วนล่าง', 'ส่วนบน 9 × 2 = 18', r4ex(R4SH.T(9, 6, 3, 2, 3), ['9 ม.', '2 ม.', '3 ม.', '4 ม.', '3 ม.', '4 ม.', '3 ม.', '2 ม.'], { rm: false })], ['② ส่วนล่าง', '3 × 4 = 12', p4big('18 + 12 = 30')]], 'พื้นที่ทั้งหมด <b>30 ตร.ม.</b>'),
-     T('ลองตัดรูปหลายวิธี', 'ลองตัดรูปหลายวิธี', el => el.append(simR4Cut()))],
-    () => r4N(5, r4cutQ)),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(12, 'ไร่รั้วและหญ้า', 'โจทย์การหาพื้นที่และความยาวรอบรูปสี่เหลี่ยมมุมฉาก', 'พื้นที่กับรอบรูป', 'แยกความแตกต่างระหว่างพื้นที่และความยาวรอบรูป และหาทั้งสองอย่าง',
-    [...learnStep('<b>พื้นที่ ≠ ความยาวรอบรูป</b>', 'พื้นที่ไม่เท่ากับความยาวรอบรูป', [
-      { fig: r4svg(300, 170, r4grass(80, 30, 140, 90, 'r4lA') + '<rect x="80" y="30" width="140" height="90" fill="none" stroke="#8A5A1E" stroke-width="5" stroke-dasharray="3 5"/>'), name: 'รั้ว = ความยาวรอบรูป', text: 'ล้อมรั้ว ติดไฟรอบป้าย วิ่งรอบสนาม' },
-      { fig: r4svg(300, 170, r4grass(80, 30, 140, 90, 'r4lB')), name: 'หญ้า = พื้นที่', text: 'ปูหญ้า ปูพรม ทาสีผนัง' },
-      { fig: p4big('รั้ว 20 ม. → 1 × 9 = 9 · 5 × 5 = 25'), name: 'รั้วยาวเท่ากัน พื้นที่อาจไม่เท่ากัน', text: 'รูปจัตุรัสได้พื้นที่มากที่สุด' }], 'รอบรูป = เส้นรอบ · พื้นที่ = ผิวข้างใน'),
-     pexStep('ตัวอย่างทีละขั้น: แปลงผัก 4 ม. × 6 ม.', 'ตัวอย่างทีละขั้น', [['① รั้ว', '2 × (4 + 6) = 20 ม.', r4Rect(6, 4, { unit: 'ม.' })], ['② หญ้า', '4 × 6 = 24 ตร.ม.', r4svg(300, 170, r4grass(70, 40, 160, 100, 'r4lC'))]], 'ใช้รั้ว <b>20 ม.</b> · ปูหญ้า <b>24 ตร.ม.</b>'),
-     T('ลองเปลี่ยนความกว้างเมื่อรั้วยาวเท่าเดิม', 'ลองเปลี่ยนความกว้างเมื่อรั้วยาวเท่าเดิม', el => el.append(simR4Fence(20)))],
-    () => [r4WhichQ(), r4fenceQ('P'), r4fenceQ('PA'), r4duelQ(pick(['area', 'per'])), r4perFormula()]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(13, 'ถนนรั้วทะเลทราย', 'การแก้โจทย์ปัญหาเกี่ยวกับความยาวรอบรูปของรูปสี่เหลี่ยมมุมฉาก', 'โจทย์รอบรูป', 'วิเคราะห์และแสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับความยาวรอบรูป',
-    [...learnStep('<b>โจทย์ความยาวรอบรูป</b>', 'โจทย์ความยาวรอบรูป', [
-      { fig: `<div class="storybox">สวนกว้าง 12 เมตร ยาว 18 เมตร ล้อมรั้วรอบสวนต้องใช้รั้วกี่เมตร</div>`, name: 'คำว่า "รอบ"', text: 'รั้ว กรอบ เทป วิ่งรอบ → ความยาวรอบรูป' },
-      { fig: p4big('2 × (12 + 18) = 60'), name: 'วาดรูป แล้วเขียนประโยคสัญลักษณ์', text: 'ตอบ 60 เมตร' }], 'อ่านโจทย์ → วาดรูป → ประโยคสัญลักษณ์ → ตอบ'),
-     pexStep('ตัวอย่างทีละขั้น: หาความกว้างจากรอบรูป', 'ตัวอย่างทีละขั้น', [['① วาดรูป', 'โต๊ะยาว 150 ซม. รอบรูป 500 ซม.', r4Rect(150, 100, { unit: 'ซม.', labs: ['150 ซม.', '? ซม.', '', ''] })], ['② ครึ่งหนึ่งของรอบรูป', '500 ÷ 2 = 250 = ยาว + กว้าง', p4big('500 ÷ 2 = 250')], ['③ ลบความยาว', '250 − 150 = 100', p4big('250 − 150 = 100')]], 'โต๊ะกว้าง <b>100 ซม.</b>')],
-    () => [...r4ps(R4_PS, 3), r4sideFromP(), r4walkRect()]),
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */),
   L4R(14, 'ร้านพรมแมงป่อง', 'การแก้โจทย์ปัญหาเกี่ยวกับพื้นที่ของรูปสี่เหลี่ยมมุมฉาก', 'โจทย์พื้นที่', 'วิเคราะห์และแสดงวิธีหาคำตอบของโจทย์ปัญหาเกี่ยวกับพื้นที่ รวมโจทย์ 2 ขั้นตอน',
-    [...learnStep('<b>โจทย์พื้นที่</b>', 'โจทย์พื้นที่', [
-      { fig: `<div class="storybox">ห้องกว้าง 5 เมตร ยาว 8 เมตร ปูพรมตารางเมตรละ 200 บาท ต้องจ่ายกี่บาท</div>`, name: 'ขั้นที่ 1 หาพื้นที่', text: '5 × 8 = 40 ตร.ม.' },
-      { fig: p4big('40 × 200 = 8,000'), name: 'ขั้นที่ 2 หาราคา', text: 'ตอบ 8,000 บาท' }], 'ปู ทา คลุมเต็มผิว → พื้นที่'),
-     pexStep('ตัวอย่างทีละขั้น: เว้นที่ปลูกต้นไม้', 'ตัวอย่างทีละขั้น', [['① พื้นที่ลานทั้งหมด', '12 × 9 = 108 ตร.ม.', r4Rect(12, 9, { unit: 'ม.', extra: '<rect x="210" y="72" width="34" height="34" fill="#A8DC8E" stroke="#4E8A3A" stroke-width="2"/>' })], ['② พื้นที่ที่เว้นไว้', '2 × 2 = 4 ตร.ม.', p4big('2 × 2 = 4')], ['③ ลบออก', '108 − 4 = 104', p4big('108 − 4 = 104')]], 'ลานที่เหลือ <b>104 ตร.ม.</b>')],
-    () => [...r4ps(R4_AS, 4), r4cutQ()])
+    [] /* v249: หน้าสอนแบบ ม.ต้น อยู่ใน p4rm.js (R4V_TEACH) */,
+    () => [] /* v249: เกม 10 ข้อ ง่าย → ยาก อยู่ใน p4rm.js (R4V_GAME) */)
 ];
 
 /* ---------- boss ---------- */

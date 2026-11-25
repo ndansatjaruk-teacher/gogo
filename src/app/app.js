@@ -581,7 +581,8 @@ function lessonTop(L, phase) {
 const teachDone = el => el && el.dispatchEvent(new CustomEvent('teachdone', { bubbles: true }));
 const SEQ_BTN = b => b.matches('button.btn') && /\b(info|accent|primary)\b/.test(b.className) && !b.classList.contains('icon') && !b.classList.contains('sm') && !b.closest('.fstep,.keypad,.palette,.fnav,.restart');
 /* v211 (ผู้ใช้ขอ: หน้าที่ให้แตะ ต้องแตะครบทุกอัน — ทุกชั้น): แถวแผนภูมิรูปภาพ การ์ดสูตรคูณ/การ์ดเดือน ของบนเครื่องชั่ง แถวตาราง รูปทรงในฉาก เลขโดด ฯลฯ — EXP_SEL2 นับแม้ไม่ได้ใช้ onclick */
-const EXP_SEL2 = '.mi-card.fc, .pc-row.tapr, .mtcard, .tkmc, .tray-it, .tapscene .sc-it, .scene.room .sc-it, .k7-cards:not(.s9-netpick) .k7-card, .p4c .p4d, .g2fl, .s9o-card, .w2cvc, .pzhs, .p4seg button';
+/* v249 (ผู้ใช้เจอ: ป.4 อ่านจำนวนหลักล้าน กดครบแล้วไปต่อไม่ได้): ช่องตัวเลขในตารางหลัก (.p4d) ต้องแตะเฉพาะเมื่อแตะได้จริง (.ia) — ตารางที่ใช้แค่แสดงผลไม่ต้องแตะ */
+const EXP_SEL2 = '.mi-card.fc, .pc-row.tapr, .mtcard, .tkmc, .tray-it, .tapscene .sc-it, .scene.room .sc-it, .k7-cards:not(.s9-netpick) .k7-card, .p4c .p4d.ia, .g2fl, .s9o-card, .w2cvc, .pzhs, .p4seg button';
 const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb, .objcard, .solidbtn, .flipcard, .g2cell, tr, ' + EXP_SEL2; /* v206 (ผู้ใช้เจอ: แตะ 2 อันก็ไปต่อได้) — การ์ดสิ่งของ รูปทรง การ์ดพลิก การ์ดของ */ /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
 const STEP_RE = /ขั้นต่อไป|ขั้นถัดไป|หลักต่อไป|ข้อต่อไป|รอบต่อไป|ภาพต่อไป|ด้านต่อไป|ประโยคถัดไป/;
 const ONCE_RE = /เพิ่มอีก|ขีดเพิ่ม|ใส่ลูกแก้ว|เพิ่มไม้|หมุน|ไล่ลง|หาสูงที่สุด|ดูวิธีวาด|ลองวาด/;
