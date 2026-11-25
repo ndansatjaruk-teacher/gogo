@@ -4595,6 +4595,57 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .cns-board.mg-ok{box-shadow:var(--e1),inset 0 0 0 4px #3DBE8B}
 @keyframes mgPop{0%{transform:scale(.92);opacity:.4}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
 .mg-qrow > .mgb.mg-meas .mg-banner{display:none}
+/* v244 ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ (prefix rp) */
+.rp-r{white-space:nowrap}
+.rp-lab{font-size:15px;font-weight:800;fill:var(--ink,#2B2550)}
+.rp-sv{font-size:17px;font-weight:800;fill:var(--ink,#2B2550)}
+.rp-sm{font-size:13.5px;font-weight:700;fill:var(--ink-2,#5C587A)}
+.rp-fr{font-size:28px;font-weight:800;fill:var(--ink,#2B2550)}
+.tg-fig .rp-pic{width:auto;max-width:100%;max-height:min(36cqh,250px)}
+.tg-left .tg-fig .rp-pic{max-height:min(30cqh,210px)}
+.tg-fig .rp-grid{width:min(270px,30cqw)}
+.rp-tb{border-collapse:separate;border-spacing:0;background:#fff;border-radius:12px;box-shadow:var(--e1);overflow:hidden;font-size:clamp(16px,1.9cqw,20px);font-weight:700}
+.rp-tb th,.rp-tb td{padding:7px 16px;text-align:center;border-bottom:1px solid #ECE7F6;border-right:1px solid #ECE7F6}
+.rp-tb th{background:#EEF4FB;color:var(--ink)}.rp-tb td{color:var(--ink)}
+.rp-tb tr:last-child>*{border-bottom:0}.rp-tb tr>*:last-child{border-right:0}
+.rp-ans .rp-slot{min-width:6.5em;letter-spacing:.02em}
+.rp-pre{font-weight:700}
+.keypad.rp-kp .btn.ok2{grid-column:span 3}
+.tg-board .rp-fish{width:min(520px,58cqw)}
+.rp-tap .rp-hit{cursor:pointer}
+.rp-grps{display:flex;gap:clamp(12px,2cqw,22px);justify-content:center;flex-wrap:wrap}
+.rp-grp{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border-radius:16px;background:#fff;box-shadow:var(--e1);border:0;min-width:170px;min-height:110px;font:inherit;font-weight:800;font-size:clamp(15px,1.8cqw,18px);color:var(--ink);cursor:pointer}
+.rp-grp svg{width:min(250px,26cqw);height:auto}
+.rp-grp.on1{box-shadow:inset 0 0 0 3px #F08A24;background:#FFF6EC}.rp-grp.on2{box-shadow:inset 0 0 0 3px #2F8FDB;background:#EEF6FE}
+.rp-big{font-size:clamp(32px,4cqw,46px);line-height:1}
+.rp-pcap{max-width:min(900px,94cqw)}
+.rp-chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.rp-chip.on{background:#EEE9FB;box-shadow:inset 0 0 0 2.5px #7E6ED6}
+.rp-gbox{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:min(900px,94cqw)}
+.rp-gp{background:#fff;border-radius:12px;box-shadow:var(--e1);padding:6px 8px}
+.rp-gp svg{display:block;height:clamp(56px,13cqh,120px);width:auto}
+.rp-deal{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:12px;width:min(900px,94cqw)}
+.rp-bin,.rp-pool{background:#fff;border-radius:14px;box-shadow:var(--e1);padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:clamp(96px,17cqh,150px);font-size:clamp(15px,1.8cqw,18px)}
+.rp-bin svg,.rp-pool svg{width:100%;max-width:190px;height:auto}
+.rp-crow{gap:clamp(14px,3cqw,32px)}
+.rp-frc{display:flex;flex-direction:column;align-items:center;gap:6px}
+.rp-frc>i{display:block;width:96px;height:4px;background:var(--ink,#2B2550);border-radius:2px}
+.rp-tile{min-width:88px;height:74px;padding:0 12px;border-radius:14px;border:0;background:#fff;box-shadow:var(--e1);font:inherit;font-size:34px;font-weight:800;color:var(--ink);cursor:pointer}
+.rp-tile.x{color:#E5487A}.rp-tile.sel{box-shadow:inset 0 0 0 3px #7E6ED6}
+.rp-tile.d0{background:#FFF1E2;box-shadow:inset 0 0 0 3px #F08A24}.rp-tile.d1{background:#E6F2FD;box-shadow:inset 0 0 0 3px #2F8FDB}
+.rp-eqs{font-size:clamp(20px,2.4cqw,26px);font-weight:700;line-height:1.7;min-width:230px;text-align:left}
+.rp-eqs-op{font-size:36px}
+.rp-deck{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:min(980px,96cqw)}
+.rp-card{padding:8px 12px;border-radius:12px;border:0;background:#fff;box-shadow:var(--e1);font:inherit;font-size:clamp(14px,1.7cqw,17px);font-weight:600;color:var(--ink);max-width:310px;cursor:pointer;text-align:left;line-height:1.4}
+.rp-card.sel{box-shadow:inset 0 0 0 3px #7E6ED6;background:#F4F1FD}
+.rp-bins{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(980px,96cqw)}
+.rp-bins[data-n="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}.rp-bins[data-n="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+.rp-binx{border:0;border-radius:16px;background:#F6F3FC;box-shadow:inset 0 0 0 2px #D9D1EE;padding:8px;min-height:clamp(84px,15cqh,130px);display:flex;flex-direction:column;gap:6px;align-items:stretch;font:inherit;color:var(--ink);cursor:pointer}
+.rp-binx b{font-size:clamp(16px,1.9cqw,20px)}
+.rp-in{display:flex;flex-direction:column;gap:4px}
+.rp-mini{font-size:12.5px;background:#fff;border-radius:8px;padding:3px 7px;text-align:left;line-height:1.35}
+.rp-binx.shake{animation:h6shake .45s}
+.rp-sep{display:inline-block;width:1.4em;text-align:center}.rp-sep::before{content:"•";color:var(--ink-2,#5C587A)}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -31563,6 +31614,806 @@ LESSONS_M3C11.push({ id: 4119, boss: true, place: 'ปราสาทหมี�
   exam: EXAM_M3C11, pass: 16, bossName: 'หมีขาวตรีโกณ', bossPal: 'sky', emblem: 'θ', bossKind: 'pbear',
   winLine: 'ชนะหมีขาวตรีโกณแล้ว! วัดความสูงและระยะทางได้แม่นมาก', loseLine: 'หมีขาวตรีโกณยังเฝ้าปราสาทอยู่ ลองทวนมุมพิเศษกับมุมเงยมุมก้มอีกนิดแล้วมาสู้ใหม่นะ!' });
 
+/* =========================================================
+   ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ (v244) — prefix rp<span class="rp-sep"></span>ตัวช่วย รูป ชนิดคำถาม และหน้าลงมือทำ
+   บทเรียนอยู่ใน m1rl.js (ด่าน 1–10) และ m1rl2.js (ด่าน 11–20 + บอส)
+   ใช้ tgScene / tgDrag / tgMission / tgLeft จาก m3t.js (หน้าลาก + ภารกิจ) จึงวางหลัง m3tl.js ใน order.txt
+   ทุกหน้าสอน: เด็กลาก/แตะเอง ภาพ ตัวเลข และอัตราส่วนเปลี่ยนพร้อมกัน<span class="rp-sep"></span>ไม่มีปุ่มเพิ่ม/ลด (stepper) หรือ slider
+   ========================================================= */
+const rpR = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const rpPick = a => a[Math.floor(Math.random() * a.length)];
+const rpGcd = (a, b) => b ? rpGcd(b, a % b) : Math.abs(a);
+const rpLcm = (a, b) => a / rpGcd(a, b) * b;
+const rpN = (x, d = 2) => { const v = Math.round(x * 10 ** d) / 10 ** d; return (Object.is(v, -0) ? 0 : v).toLocaleString('en-US', { maximumFractionDigits: d }); };
+const rpRat = (...a) => `<span class="num rp-r">${a.map(x => typeof x === 'number' ? rpN(x) : x).join(' : ')}</span>`; /* "3 : 5" */
+const rpRT = (...a) => a.map(x => typeof x === 'number' ? rpN(x) : x).join(' : '); /* plain text (choices, boss) */
+const rpFq = (n, d) => fqHTML(n, d);
+const rpFrac = (n, d) => { const g = rpGcd(n, d), a = n / g, b = d / g; return b === 1 ? String(a) : fqHTML(a, b); }; /* simplified n/d as html */
+const rpFracT = (n, d) => { const g = rpGcd(n, d), a = n / g, b = d / g; return b === 1 ? String(a) : `${a}/${b}`; };
+const rpSimp = (...a) => { const g = a.reduce((x, y) => rpGcd(x, y)); return a.map(x => x / g); };
+const rpNm = (k = 1) => shuffle(MI_NM).slice(0, k);
+const rpSay = t => miSay(String(t).replace(/<span class="fq"><i>([^<]*)<\/i><i>([^<]*)<\/i><\/span>/g, ' เศษ $1 ส่วน $2 ').replace(/<[^>]+>/g, ' ').replace(/(\d)\s*:\s*(?=\d)/g, '$1 ต่อ ').replace(/%/g, ' เปอร์เซ็นต์ ').replace(/(\d)\/(\d)/g, '$1 ส่วน $2'));
+const rpTF = (text, ok, why) => Q.hTF({ text, ok: !!ok, why });
+const RP_C = { o: '#F08A24', b: '#2F8FDB', p: '#E5487A', g: '#2FAF7C', v: '#7C5CE0', y: '#F3C548', ink: '#2B2550' };
+
+/* ---------- icons (svg) ---------- */
+const rpIcon = (k, x, y, s = 30, c = RP_C.o) => {
+  if (k === 'fish') return `<g transform="translate(${x} ${y}) scale(${s / 30})"><path d="M-13 0 Q-2 -10 9 0 Q-2 10 -13 0 Z" fill="${c}"/><path d="M8 0 L15 -7 L15 7 Z" fill="${c}"/><circle cx="-7" cy="-2" r="1.8" fill="#2B2550"/></g>`;
+  if (k === 'fruit') return `<g transform="translate(${x} ${y}) scale(${s / 30})"><circle r="11" cy="2" fill="${c}"/><path d="M0 -9 q5 -6 10 -4 q-4 5 -10 4z" fill="#4CAF50"/><path d="M0 -9 v-4" stroke="#6B4A2B" stroke-width="2"/></g>`;
+  if (k === 'box') return `<g transform="translate(${x} ${y}) scale(${s / 30})"><rect x="-12" y="-11" width="24" height="22" rx="3" fill="${c}"/><path d="M-12 -3 h24 M-4 -11 v8" stroke="#fff" stroke-opacity=".6" stroke-width="2"/></g>`;
+  if (k === 'cup') return `<g transform="translate(${x} ${y}) scale(${s / 30})"><path d="M-10 -11 h20 l-3 22 h-14 z" fill="${c}"/><path d="M-10 -11 h20" stroke="#fff" stroke-opacity=".7" stroke-width="2"/></g>`;
+  if (k === 'pen') return `<g transform="translate(${x} ${y}) scale(${s / 30}) rotate(-35)"><rect x="-3.5" y="-13" width="7" height="21" rx="1.5" fill="${c}"/><path d="M-3.5 8 L0 15 L3.5 8 Z" fill="#F6D7A7"/><path d="M-1 13 L0 15 L1 13 Z" fill="#2B2550"/></g>`;
+  if (k === 'book') return `<g transform="translate(${x} ${y}) scale(${s / 30})"><rect x="-10" y="-12" width="20" height="24" rx="2" fill="${c}"/><rect x="-7" y="-12" width="3" height="24" fill="#fff" fill-opacity=".45"/></g>`;
+  if (k === 'person') return `<g transform="translate(${x} ${y}) scale(${s / 30})"><circle cy="-7" r="6" fill="${c}"/><path d="M-10 13 q0 -13 10 -13 q10 0 10 13 z" fill="${c}"/></g>`;
+  return `<circle cx="${x}" cy="${y}" r="${s * .36}" fill="${c}"/>`; };
+/* rows of icons: groups = [{ n, k, c, lab }] (lab on the left, black numbers are not shown — counting is part of the task) */
+const rpPic = (groups, o = {}) => { const per = o.per || 10, S = o.s || 32, L = o.lab === false ? 10 : 96; let y = 26, s = '';
+  groups.forEach(g => { const rows = Math.ceil(g.n / per); if (o.lab !== false) s += `<text x="8" y="${y + 6 + (rows - 1) * S / 2}" class="rp-lab">${g.lab || ''}</text>`;
+    for (let i = 0; i < g.n; i++) s += rpIcon(g.k, L + (i % per) * (S + 4) + S / 2, y + Math.floor(i / per) * (S + 4), S, g.c); y += rows * (S + 4) + 10; });
+  return `<svg viewBox="0 0 ${L + per * (S + 4) + 6} ${y}" class="rp-pic" aria-hidden="true">${s}</svg>`; };
+/* 10×10 grid with n squares shaded (row by row) */
+const rpGrid = (n, c = RP_C.b, sz = 270) => { let s = ''; for (let i = 0; i < 100; i++) s += `<rect x="${(i % 10) * 20 + 1}" y="${Math.floor(i / 10) * 20 + 1}" width="18" height="18" rx="2" fill="${i < n ? c : '#F1EEF8'}"/>`;
+  return `<svg viewBox="0 0 202 202" class="rp-grid" style="max-width:${sz}px" aria-hidden="true">${s}</svg>`; };
+/* simple html table for game figures: head = [..], rows = [[..], ..] (teach pages avoid <tr>: teachGate treats rows as explore items) */
+const rpTbl = (head, rows, o = {}) => `<table class="rp-tb${o.tr ? ' tr' : ''}">${head ? `<tr>${head.map(x => `<th>${x}</th>`).join('')}</tr>` : ''}${rows.map(r => `<tr>${r.map((x, i) => i === 0 && o.th ? `<th>${x}</th>` : `<td>${typeof x === 'number' ? rpN(x) : x}</td>`).join('')}</tr>`).join('')}</table>`;
+/* transposed table (x row / y row) for direct / inverse proportion */
+const rpXY = (xl, yl, xs, ys) => rpTbl(null, [[xl, ...xs], [yl, ...ys]], { th: true, tr: true });
+
+/* ---------- answer pad for ratios "a : b" or "a : b : c" ----------
+   want = [a, b(, c)]<span class="rp-sep"></span>mode 'eq' = any equal ratio is right<span class="rp-sep"></span>'low' = must be in lowest terms<span class="rp-sep"></span>'exact' = these numbers exactly */
+function rpAns(ctx, want, o = {}) {
+  const mode = o.mode || 'exact', n = want.length; let val = '';
+  const slot = h('div', { class: 'ans-slot num rp-slot' }, '?'), msg = h('div', { class: 'pad-msg' });
+  const show = () => { slot.textContent = val === '' ? '?' : val.replace(/:/g, ' : '); slot.classList.toggle('filled', val !== ''); };
+  const put = k => { msg.textContent = '';
+    if (k === ':') { if (!/\d$/.test(val) || (val.match(/:/g) || []).length >= n - 1) { msg.textContent = n === 3 ? 'ใส่ตัวเลข แล้วกด : คั่น (สามจำนวน)' : 'ใส่จำนวนแรก กด : แล้วใส่จำนวนหลัง'; return; } val += ':'; }
+    else if (k === '.') { const part = val.split(':').pop(); if (!/\d$/.test(val) || part.includes('.')) { msg.textContent = 'ใส่ . หลังตัวเลข'; return; } val += '.'; }
+    else { if (val.replace(/\D/g, '').length >= 9) return; val += k; }
+    sfx.tap(); show(); };
+  const submit = () => { if (wrap.classList.contains('done')) return; const p = val.split(':');
+    if (p.length !== n || p.some(x => !/^\d+(\.\d+)?$/.test(x))) { msg.textContent = n === 3 ? 'ตอบให้ครบสามจำนวน เช่น 2 : 3 : 5' : 'ตอบให้ครบสองจำนวน เช่น 2 : 3'; return; }
+    const v = p.map(Number), prop = v.every((x, i) => Math.abs(x * want[0] - want[i] * v[0]) < 1e-9) && v.every(x => x > 0), lowest = v.every(Number.isInteger) && v.reduce((a, b) => rpGcd(a, b)) === 1;
+    const ok = mode === 'eq' ? prop : mode === 'low' ? prop && lowest : v.every((x, i) => Math.abs(x - want[i]) < 1e-9);
+    const rev = !ok && n === 2 && want[0] !== want[1] && Math.abs(v[0] * want[0] - v[1] * want[1]) < 1e-9; /* ตอบกลับลำดับ (b : a) */
+    const why = rev ? `<b>ลำดับสลับกัน</b> — จำนวนแรกคือสิ่งที่พูดถึงก่อนคำว่า "ต่อ"${o.hint ? '<span class="rp-sep"></span>' + o.hint : ''}` : !ok && prop && mode === 'low' ? `เท่ากันแล้ว แต่<b>ยังไม่เป็นอัตราส่วนอย่างต่ำ</b> — หารต่อได้อีก` : !ok && prop && mode === 'exact' ? `อัตราส่วนเท่ากันแล้ว แต่โจทย์ถามจำนวนตามที่กำหนด${o.hint ? '<span class="rp-sep"></span>' + o.hint : ''}` : o.hint;
+    if (ok) wrap.classList.add('done'); msg.textContent = ''; ctx.check(ok, why); if (!ok && !wrap.classList.contains('revealed')) { val = ''; show(); } };
+  const key = (lab, k, cls = '') => h('button', { class: 'btn ' + cls, 'aria-label': k === ':' ? 'ต่อ' : k === '.' ? 'จุดทศนิยม' : String(lab), onclick: e => { e.stopPropagation(); put(k); } }, lab);
+  const kp = h('div', { class: 'keypad mi-kp rp-kp' }, key(1, '1'), key(2, '2'), key(3, '3'), h('button', { class: 'btn', 'aria-label': 'ลบตัวเลข', onclick: e => { e.stopPropagation(); sfx.tap(); val = val.slice(0, -1); msg.textContent = ''; show(); } }, icon('left')),
+    key(4, '4'), key(5, '5'), key(6, '6'), key(':', ':', 'sym'), key(7, '7'), key(8, '8'), key(9, '9'), key('.', '.', 'sym'), key(0, '0'), h('button', { class: 'btn primary ok2', 'aria-label': 'ส่งคำตอบ', onclick: e => { e.stopPropagation(); submit(); } }, icon('check')));
+  const wrap = h('div', { class: 'ans ia mi-ans rp-ans' }, h('div', { class: 'mi-ansrow' }, o.pre ? h('span', { class: 'cap rp-pre', html: o.pre }) : null, slot), kp, msg);
+  wrap.reveal = () => { val = want.map(x => rpN(x)).join(':').replace(/,/g, ''); show(); wrap.classList.add('done', 'revealed'); };
+  wrap.ansText = rpRT(...want); return wrap;
+}
+
+/* ---------- question types (story + picture on the left, answer on the right — like tgOpt/tgNum) ---------- */
+const rpSaySt = (story, q) => rpSay((story ? story + ' ' : '') + q);
+const rpMeta = (pre, { sig, q, base, cap, diff }) => ({ __sig: pre + ' ' + (sig || q), ...(base ? { __base: base, __baseCap: cap || 2 } : {}), ...(diff != null ? { __diff: diff } : {}) });
+Q.rpOpt = ({ story, q, fig, opts, right, hint, sig, base, cap, diff }) => ({ prompt: q, say: rpSaySt(story, q), ...rpMeta('rpo', { sig: sig || q + right, q, base, cap, diff }),
+  mount(bd, ctx) { const ch = choices(ctx, shuffle(opts.map(o => ({ value: String(o), label: String(o) }))), String(right), { hint }); ch.classList.add('tg-opts', 'rp-opts'); if (opts.some(o => String(o).replace(/<[^>]+>/g, '').length > 9)) ch.querySelectorAll('.opt').forEach(x => x.classList.add('txt'));
+    bd.append(h('div', { class: fig || story ? 'tg-qrow' : 'colstack' }, tgLeft(story, fig), ch)); } });
+Q.rpNum = ({ story, q, fig, a, unit, hint, sig, base, cap, diff }) => ({ prompt: q, say: rpSaySt(story, q), ...rpMeta('rpn', { sig, q, base, cap, diff }),
+  mount(bd, ctx) { bd.append(h('div', { class: fig || story ? 'tg-qrow' : 'colstack' }, tgLeft(story, fig), miAns(ctx, a, { unit, hint }))); } });
+Q.rpRat = ({ story, q, fig, a, mode, pre, hint, sig, base, cap, diff }) => ({ prompt: q, say: rpSaySt(story, q), ...rpMeta('rpr', { sig, q, base, cap, diff }),
+  mount(bd, ctx) { bd.append(h('div', { class: fig || story ? 'tg-qrow' : 'colstack' }, tgLeft(story, fig), rpAns(ctx, a, { mode, pre, hint }))); } });
+/* wrong choices for a number answer: the usual slips, never equal to the answer */
+const rpWrong = (a, cands, k = 3) => { const out = []; cands.forEach(c => { const v = Math.round(c * 100) / 100; if (v > 0 && Math.abs(v - a) > 1e-9 && !out.some(o => Math.abs(o - v) < 1e-9)) out.push(v); }); let d = 1; while (out.length < k) { const v = a + d * (out.length % 2 ? -1 : 1) * Math.max(1, Math.round(a / 10)); if (v > 0 && !out.includes(v) && v !== a) out.push(v); d++; } return out.slice(0, k); };
+const rpNumOpts = (a, cands, unit = '') => [a, ...rpWrong(a, cands)].map(v => rpN(v) + unit);
+
+/* =========================================================
+   หน้าลงมือทำ (teach)
+   ========================================================= */
+/* 1 · compare two stacks: subtract (more by) vs divide (times) */
+function rpSimCmp(a = 4) {
+  const W = 560, H = 330, B = 300, U = 22;
+  const stack = (x, n, c, lab) => { let s = ''; for (let i = 0; i < n; i++) s += rpIcon('box', x, B - U / 2 - i * U, 24, c); return s + `<text x="${x}" y="${B + 22}" class="rp-sv" text-anchor="middle">${lab}</text>`; };
+  return tgScene({ W, H, st: { b: 6 }, cap: '<b>ลากกองลังสีส้มขึ้น–ลง</b> แล้วเทียบกับกองสีฟ้า 2 แบบ: <b>ลบ</b> (มากกว่ากี่ลัง) กับ <b>หาร</b> (เป็นกี่เท่า)',
+    missions: [['ส้มมากกว่าฟ้า 4 ลัง', s => s.b === a + 4], ['ส้มเป็น 3 เท่าของฟ้า', s => s.b === a * 3], ['ส้มเป็นครึ่งหนึ่งของฟ้า', s => s.b * 2 === a]],
+    svg: s => `<rect x="20" y="${B}" width="${W - 40}" height="4" rx="2" fill="#CFC7E6"/>${stack(170, a, RP_C.b, `ฟ้า ${a} ลัง`)}${stack(390, s.b, RP_C.o, `ส้ม ${s.b} ลัง`)}${tgHandle(390, B - s.b * U - 6, RP_C.o)}`,
+    drag: p => ({ b: Math.max(1, Math.min(12, Math.round((B - p[1]) / U))) }),
+    info: s => { const d = s.b - a; return `ลบ: ${d === 0 ? 'เท่ากันพอดี' : d > 0 ? `ส้ม<b>มากกว่า</b>ฟ้า <b class="num">${d}</b> ลัง` : `ส้ม<b>น้อยกว่า</b>ฟ้า <b class="num">${-d}</b> ลัง`}<span class="rp-sep"></span>หาร: ส้มเป็น <b class="num">${rpFrac(s.b, a)}</b> เท่าของฟ้า`; } });
+}
+/* 2 · tap fish to colour them: order of a ratio + part : whole */
+function rpSimFish() {
+  const N = 12, wrap = tgWrap(), fig = h('div', { class: 'tg-board rp-tap ia' }), out = fNote2(), col = Array.from({ length: N }, (_, i) => i < 6);
+  const mis = tgMission([['ส้ม : ฟ้า = 5 : 7', s => s.a === 5], ['ฟ้า : ส้ม = 3 : 9', s => s.a === 9], ['ส้ม : ทั้งหมด = 4 : 12', s => s.a === 4]], wrap);
+  const draw = () => { const a = col.filter(Boolean).length; let s = ''; col.forEach((o, i) => { s += `<g class="rp-hit" data-i="${i}"><rect x="${(i % 4) * 120 + 8}" y="${Math.floor(i / 4) * 70 + 6}" width="112" height="62" rx="14" fill="${o ? '#FFF1E2' : '#E6F2FD'}"/>${rpIcon('fish', (i % 4) * 120 + 64, Math.floor(i / 4) * 70 + 37, 56, o ? RP_C.o : RP_C.b)}</g>`; });
+    fig.innerHTML = `<svg viewBox="0 0 488 220" class="tg-scene rp-fish" aria-hidden="true">${s}</svg>`;
+    fig.querySelectorAll('.rp-hit').forEach(g => g.onclick = e => { e.stopPropagation(); col[+g.dataset.i] = !col[+g.dataset.i]; sfx.pop(2); draw(); });
+    out.innerHTML = `ส้ม : ฟ้า = ${rpRat(a, N - a)} <span class="rp-sep"></span> ฟ้า : ส้ม = ${rpRat(N - a, a)} <span class="rp-sep"></span> ส้ม : ทั้งหมด = ${rpRat(a, N)}`; mis.check({ a }); };
+  draw(); wrap.append(h('div', { class: 'cap', html: '<b>แตะปลาเพื่อเปลี่ยนสี</b> (ส้ม ↔ ฟ้า) — สังเกตว่าอัตราส่วนเปลี่ยนตามลำดับที่พูด' }), mis.el, fig, out); return wrap;
+}
+/* 3 · build a ratio by tapping the first quantity, then the second (rounds) */
+function rpSimPick(rounds) {
+  const wrap = tgWrap(), cap = h('div', { class: 'cap rp-pcap' }), box = h('div', { class: 'rp-grps' }), out = fNote2(), dots = h('div', { class: 'tg-mis' }, ...rounds.map((_, i) => h('span', { class: 'tg-mi' }, 'ข้อ ' + (i + 1)))); let r = 0, first = null;
+  const show = () => { const R = rounds[r]; first = null; cap.innerHTML = `แตะ<b>จำนวนแรก</b> แล้วแตะ<b>จำนวนหลัง</b>: ${R.q}`; box.innerHTML = ''; out.innerHTML = `${rpRat('?', '?')}`;
+    R.g.forEach((g, i) => { const b = h('button', { class: 'rp-grp ia', html: (g.pic || `<b class="num rp-big">${rpN(g.n)}</b>`) + `<span>${g.lab}</span>` });
+      b.onclick = e => { e.stopPropagation(); if (box.classList.contains('busy')) return;
+        if (first == null) { if (i !== R.a) { sfx.no(); out.innerHTML = `ยังไม่ใช่ — จำนวนแรกคือสิ่งที่อยู่<b>ก่อนคำว่า "ต่อ"</b>`; return; } first = i; b.classList.add('on1'); sfx.pop(2); out.innerHTML = `${rpRat(R.g[i].n, '?')}`; return; }
+        if (i !== R.b) { sfx.no(); out.innerHTML = `${rpRat(R.g[first].n, '?')} — จำนวนหลังคือสิ่งที่อยู่<b>หลังคำว่า "ต่อ"</b>`; return; }
+        b.classList.add('on2'); sfx.ok(); dots.children[r].classList.add('ok'); out.innerHTML = `${R.say || ''} ${rpRat(R.g[R.a].n, R.g[R.b].n)}${R.note ? '<span class="rp-sep"></span>' + R.note : ''}`; box.classList.add('busy');
+        setTimeout(() => { box.classList.remove('busy'); r++; if (r < rounds.length) show(); else { cap.innerHTML = '<b>ครบทุกข้อแล้ว</b> — อัตราส่วนเขียนตามลำดับที่โจทย์พูดเสมอ'; teachDone(wrap); } }, 1500); };
+      box.append(b); }); };
+  show(); wrap.append(cap, dots, box, out); return wrap;
+}
+/* 4 · drink recipe: drag the syrup column and the water column — equal ratios give the same colour */
+function rpSimMix(a = 2, b = 3) {
+  const W = 600, H = 360, B = 330, U = 25, mix = (s, w) => { const f = s / (s + w), c1 = [229, 72, 122], c0 = [207, 239, 255]; return `rgb(${c0.map((v, i) => Math.round(v + (c1[i] - v) * Math.min(1, f * 1.6))).join(',')})`; };
+  const col = (x, n, c, lab) => { let s = ''; for (let i = 0; i < n; i++) s += rpIcon('cup', x, B - U / 2 - i * U, 30, c); return s + `<text x="${x}" y="${B + 24}" class="rp-sv" text-anchor="middle">${lab}</text>`; };
+  const jug = (x, c, lab) => `<path d="M${x - 46} 150 h92 l-8 150 h-76 z" fill="${c}" stroke="#2B2550" stroke-width="3"/><path d="M${x + 46} 170 q22 0 22 30 q0 30 -26 32" fill="none" stroke="#2B2550" stroke-width="3"/><text x="${x}" y="${B + 24}" class="rp-sv" text-anchor="middle">${lab}</text>`;
+  return tgScene({ W, H, st: { s: a, w: b }, cap: `สูตรน้ำหวาน <b>น้ำหวาน : น้ำ = ${a} : ${b}</b> — <b>ลากกองแก้วสีชมพู</b> (น้ำหวาน) และ <b>กองแก้วสีฟ้า</b> (น้ำ) ขึ้น–ลง แล้วดูสีในเหยือก`,
+    missions: [[`ผสม ${2 * a} : ${2 * b}`, s => s.s === 2 * a && s.w === 2 * b], [`ผสม ${3 * a} : ${3 * b}`, s => s.s === 3 * a && s.w === 3 * b], [`ผสม ${4 * a} : ${4 * b}`, s => s.s === 4 * a && s.w === 4 * b]],
+    svg: s => `<rect x="10" y="${B}" width="${W - 20}" height="4" rx="2" fill="#CFC7E6"/>${col(70, s.s, RP_C.p, 'น้ำหวาน')}${col(170, s.w, '#7FC4F5', 'น้ำ')}${tgHandle(70, B - s.s * U - 8, RP_C.p)}${tgHandle(170, B - s.w * U - 8, RP_C.b)}${jug(330, mix(a, b), `สูตร ${a} : ${b}`)}${jug(500, mix(s.s, s.w), 'ของเรา')}`,
+    drag: (p, s) => { const n = Math.max(1, Math.min(12, Math.round((B - p[1]) / U))); return p[0] < 120 ? { ...s, s: Math.min(n, 8) } : p[0] < 240 ? { ...s, w: n } : null; },
+    info: s => { const eq = s.s * b === s.w * a; return `น้ำหวาน : น้ำ = ${rpRat(s.s, s.w)} ${eq ? `= ${rpRat(a, b)} ✓ <b>สีเท่าสูตรเดิม</b> (คูณ/หารทั้งสองจำนวนด้วย ${rpFrac(s.s, a)} เท่ากัน)` : `≠ ${rpRat(a, b)} → สี<b>${s.s * b > s.w * a ? 'เข้มกว่า' : 'อ่อนกว่า'}</b>สูตรเดิม`}`; } });
+}
+/* 5 · lowest terms: tap how many equal groups — the most groups gives the lowest terms */
+function rpSimGroup(a = 12, b = 18) {
+  const wrap = tgWrap(), box = h('div', { class: 'rp-gbox' }), out = fNote2(), st = { k: 1, bad: false };
+  const mis = tgMission([['ลองแบ่ง 4 กลุ่ม', s => s.bad], ['แบ่งได้ 2 กลุ่ม', s => s.two], ['แบ่งได้มากที่สุด', s => s.k === rpGcd(a, b)]], wrap);
+  const draw = k => { box.innerHTML = ''; for (let g = 0; g < k; g++) { const ra = a / k, rb = b / k, per = Math.min(6, Math.max(ra, rb)); let s = ''; for (let i = 0; i < ra; i++) s += `<circle cx="${10 + (i % per) * 16}" cy="${10 + Math.floor(i / per) * 16}" r="6.5" fill="${RP_C.p}"/>`;
+      const off = Math.ceil(ra / per) * 16 + 4; for (let i = 0; i < rb; i++) s += `<circle cx="${10 + (i % per) * 16}" cy="${off + 10 + Math.floor(i / per) * 16}" r="6.5" fill="${RP_C.b}"/>`;
+      box.append(h('div', { class: 'rp-gp', html: `<svg viewBox="0 0 ${per * 16 + 4} ${off + Math.ceil(rb / per) * 16 + 4}" aria-hidden="true">${s}</svg>` })); } };
+  const chips = h('div', { class: 'rp-chips' }, ...[2, 3, 4, 5, 6].map(k => h('button', { class: 'btn sm rp-chip', onclick: e => { e.stopPropagation(); chips.querySelectorAll('.rp-chip').forEach(c => c.classList.toggle('on', c === e.currentTarget));
+    if (a % k || b % k) { st.bad = true; sfx.no(); out.innerHTML = `แบ่ง ${k} กลุ่มเท่า ๆ กันไม่ได้ — ${a % k ? a : b} ÷ ${k} ไม่ลงตัว`; mis.check(st); return; }
+    st.k = k; if (k === 2) st.two = true; draw(k); sfx.pop(k); out.innerHTML = `${rpRat(a, b)} = ${rpRat(`${a} ÷ ${k}`, `${b} ÷ ${k}`)} = ${rpRat(a / k, b / k)}${k === rpGcd(a, b) ? ` ← <b>อัตราส่วนอย่างต่ำ</b> (${k} คือ ห.ร.ม. ของ ${a} กับ ${b})` : '<span class="rp-sep"></span>ยังแบ่งต่อได้อีกไหม?'}`; mis.check(st); } }, `${k} กลุ่ม`)));
+  draw(1); out.innerHTML = `ลูกปัดชมพู : ลูกปัดฟ้า = ${rpRat(a, b)}`;
+  wrap.append(h('div', { class: 'cap', html: `<b>แตะจำนวนกลุ่ม</b> เพื่อแบ่งลูกปัดเป็นกลุ่มที่เหมือนกันทุกกลุ่ม — หนึ่งกลุ่มคืออัตราส่วนที่เท่ากัน` }), mis.el, chips, box, out); return wrap;
+}
+/* 6 · two ratios a:b and b:c — drag each b-bar until the b's match → a : b : c */
+function rpSimChain(r1 = [2, 3], r2 = [4, 5]) {
+  const W = 600, H = 290, X0 = 40, U = 17, Y1 = 66, Y2 = 196, M = 8, M2 = Math.floor((W - X0 - 40) / (Math.max(...r2) * U));
+  const bar = (y, n, c, lab, hd) => `<text x="${X0 - 12}" y="${y + 15}" class="rp-sv" text-anchor="end">${lab}</text><rect x="${X0}" y="${y}" width="${n * U}" height="22" rx="5" fill="${c}"/>${Array.from({ length: n - 1 }, (_, i) => `<path d="M${X0 + (i + 1) * U} ${y} v22" stroke="#fff" stroke-opacity=".55"/>`).join('')}<text x="${X0 + n * U + 10}" y="${y + 16}" class="rp-sv">${n}</text>${hd ? tgHandle(X0 + n * U, y + 11, c) : ''}`;
+  return tgScene({ W, H, st: { k1: 1, k2: 1 }, cap: `${rpRat('a', 'b')} = ${rpRat(...r1)} และ ${rpRat('b', 'c')} = ${rpRat(...r2)} — <b>ลากปลายแถบ b ของแต่ละแถว</b> (คูณทั้งคู่ด้วยจำนวนเดียวกัน) ให้ b ยาวเท่ากัน`,
+    missions: [[`b เท่ากันเป็น ${rpLcm(r1[1], r2[0])}`, s => s.k1 * r1[1] === rpLcm(r1[1], r2[0]) && s.k2 * r2[0] === rpLcm(r1[1], r2[0])], [`b เท่ากันเป็น ${2 * rpLcm(r1[1], r2[0])}`, s => s.k1 * r1[1] === 2 * rpLcm(r1[1], r2[0]) && s.k2 * r2[0] === 2 * rpLcm(r1[1], r2[0])]],
+    svg: s => `${bar(Y1 - 30, s.k1 * r1[0], RP_C.p, 'a')}${bar(Y1, s.k1 * r1[1], RP_C.b, 'b', 1)}${bar(Y2, s.k2 * r2[0], RP_C.b, 'b', 1)}${bar(Y2 + 30, s.k2 * r2[1], RP_C.g, 'c')}<text x="${X0}" y="${Y1 + 52}" class="rp-sm">แถวที่ 1 คูณด้วย ${s.k1}</text><text x="${X0}" y="${Y2 - 12}" class="rp-sm">แถวที่ 2 คูณด้วย ${s.k2}</text>${s.k1 * r1[1] === s.k2 * r2[0] ? `<path d="M${X0 + s.k1 * r1[1] * U} ${Y1 + 26} V${Y2 - 4}" stroke="${RP_C.g}" stroke-width="3" stroke-dasharray="6 5"/>` : ''}`,
+    drag: (p, s) => p[1] < (Y1 + Y2) / 2 + 10 ? { ...s, k1: Math.max(1, Math.min(M, Math.round((p[0] - X0) / (r1[1] * U)))) } : { ...s, k2: Math.max(1, Math.min(M2, Math.round((p[0] - X0) / (r2[0] * U)))) },
+    info: s => { const A = [s.k1 * r1[0], s.k1 * r1[1]], C = [s.k2 * r2[0], s.k2 * r2[1]]; return A[1] === C[0] ? `b เท่ากันแล้ว → a : b : c = ${rpRat(A[0], A[1], C[1])}${rpGcd(rpGcd(A[0], A[1]), C[1]) > 1 ? ` = ${rpRat(...rpSimp(A[0], A[1], C[1]))}` : ''}` : `a : b = ${rpRat(...A)}<span class="rp-sep"></span>b : c = ${rpRat(...C)} → b ยังไม่เท่ากัน (${A[1]} กับ ${C[0]})`; } });
+}
+/* 7 · dealing by a ratio: each round gives a to one side and b to the other */
+function rpSimDeal(total = 35, a = 3, b = 4, la = 'พี่', lb = 'น้อง') {
+  const wrap = tgWrap(), out = fNote2(), pool = h('div', { class: 'rp-pool' }), A = h('div', { class: 'rp-bin' }), B2 = h('div', { class: 'rp-bin' }); let r = 0;
+  const dots = (n, c) => `<svg viewBox="0 0 ${Math.min(n, 10) * 18 + 4} ${Math.max(1, Math.ceil(n / 10)) * 18 + 4}" aria-hidden="true">${Array.from({ length: n }, (_, i) => `<circle cx="${11 + (i % 10) * 18}" cy="${11 + Math.floor(i / 10) * 18}" r="7.5" fill="${c}"/>`).join('')}</svg>`;
+  const draw = () => { const left = total - r * (a + b); pool.innerHTML = `<b>ขนมที่เหลือ ${left} ชิ้น</b>${left ? dots(left, RP_C.y) : ''}`; A.innerHTML = `<b>${la} ${a * r} ชิ้น</b>${r ? dots(a * r, RP_C.o) : ''}`; B2.innerHTML = `<b>${lb} ${b * r} ชิ้น</b>${r ? dots(b * r, RP_C.b) : ''}`; };
+  const btn = h('button', { class: 'btn info ia', onclick: e => { e.stopPropagation(); r++; draw(); sfx.pop(r); out.innerHTML = `รอบที่ ${r}: ${la} ${a} ชิ้น ${lb} ${b} ชิ้น (รอบละ ${a + b} ชิ้น)`;
+    if (total - r * (a + b) <= 0) { btn.remove(); sfx.ok(); out.innerHTML = `แจก <b>${r} รอบ</b> รอบละ ${a} + ${b} = ${a + b} ชิ้น → ${total} ÷ ${a + b} = ${r}<span class="rp-sep"></span>${la} ${a} × ${r} = <b>${a * r}</b><span class="rp-sep"></span>${lb} ${b} × ${r} = <b>${b * r}</b>`; teachDone(wrap); } } }, icon('right'), 'แจกรอบต่อไป');
+  draw(); out.innerHTML = `แบ่งขนม ${total} ชิ้น ให้ ${la} : ${lb} = ${rpRat(a, b)}`;
+  wrap.append(h('div', { class: 'cap', html: `แจกทีละรอบ: ทุกรอบ ${la}ได้ <b>${a}</b> ชิ้น ${lb}ได้ <b>${b}</b> ชิ้น — อัตราส่วนจึงเป็น ${a} : ${b} ตลอด` }), h('div', { class: 'rp-deal' }, A, pool, B2), btn, out); return wrap;
+}
+/* 8 · proportion balance: drag d on the number strip until a/b = c/d (cross products equal) */
+function rpSimBalance(rounds = [[3, 4, 6], [2, 5, 6], [4, 6, 10]]) {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote2(), W = 620, H = 330, X0 = 50, SX = 26, LY = 300; let r = 0, d = 3;
+  const mis = tgMission(rounds.map(([a, b, c], i) => [`${a} : ${b} = ${c} : ?`, s => s.ok > i]), wrap); let okN = 0;
+  const next = h('button', { class: 'btn sm rp-next', style: { visibility: 'hidden' }, onclick: e => { e.stopPropagation(); if (r < rounds.length - 1) { r++; d = 3; next.style.visibility = 'hidden'; draw(); } } }, 'ข้อต่อไป');
+  const draw = () => { const [a, b, c] = rounds[r], L = a / b, R = c / d, t = Math.max(-14, Math.min(14, (R - L) * 30)), cx = 310, cy = 120, dx = 160 * Math.cos(t * Math.PI / 180), dy = 160 * Math.sin(t * Math.PI / 180);
+    const pan = (x, y, n, m) => `<path d="M${x - 62} ${y + 12} h124 l-14 26 h-96 z" fill="#FFF6D6" stroke="#2B2550" stroke-width="2.5"/><text x="${x}" y="${y - 30}" class="rp-fr" text-anchor="middle">${n}</text><path d="M${x - 22} ${y - 22} h44" stroke="#2B2550" stroke-width="3"/><text x="${x}" y="${y}" class="rp-fr" text-anchor="middle">${m}</text>`;
+    let s = `<path d="M${cx} ${cy + 6} L${cx - 26} 250 h52 z" fill="#CFC7E6"/><path d="M${cx - dx} ${cy - dy} L${cx + dx} ${cy + dy}" stroke="#2B2550" stroke-width="6" stroke-linecap="round"/>${pan(cx - dx, cy - dy + 40, a, b)}${pan(cx + dx, cy + dy + 40, c, d)}`;
+    s += `<path d="M${X0} ${LY} h${SX * 20}" stroke="#2B2550" stroke-width="2"/>`; for (let i = 1; i <= 20; i++) s += `<path d="M${X0 + i * SX} ${LY - 6} v12" stroke="#2B2550" stroke-width="1.5"/>${i % 2 === 0 || i === 1 ? `<text x="${X0 + i * SX}" y="${LY + 24}" class="rp-sm" text-anchor="middle">${i}</text>` : ''}`;
+    s += tgHandle(X0 + d * SX, LY, RP_C.o); fig.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="tg-scene" aria-hidden="true">${s}</svg>`;
+    const ok = a * d === b * c; out.innerHTML = `คูณไขว้: ${a} × ${d} = <b class="num">${a * d}</b> ${ok ? '=' : '≠'} ${b} × ${c} = <b class="num">${b * c}</b> → ${ok ? `<b>สมดุล!</b> ${rpRat(a, b)} = ${rpRat(c, d)} เป็นสัดส่วน` : `ยังไม่เป็นสัดส่วน (ตาชั่งเอียง)`}`;
+    if (ok && okN <= r) { okN = r + 1; sfx.ok(); mis.check({ ok: okN }); if (r < rounds.length - 1) next.style.visibility = 'visible'; } };
+  tgDrag(fig, p => { const n = Math.max(1, Math.min(20, Math.round((p[0] - X0) / SX))); if (n !== d) { d = n; draw(); } });
+  draw(); wrap.append(h('div', { class: 'cap', html: '<b>ลากจุดสีส้มบนเส้นจำนวน</b> เพื่อเลือกตัวส่วนของจานขวา — ตาชั่งจะสมดุลเมื่ออัตราส่วนทั้งสองเท่ากัน' }), mis.el, h('div', { class: 'tg-row' }, fig, next), out); return wrap;
+}
+/* 9 · cross multiplication: tap the two numbers on each diagonal */
+function rpSimCross(a = 'x', b = 12, c = 5, d = 4) {
+  const wrap = tgWrap(), out = fNote2(), eq = h('div', { class: 'rp-eqs' }), vals = [a, b, c, d], pairs = [[0, 3], [1, 2]], got = new Set(); let sel = null;
+  const tiles = vals.map((v, i) => h('button', { class: 'rp-tile ia' + (v === 'x' ? ' x' : ''), html: `<b class="num">${v}</b>` }));
+  const fr = (i, j) => h('div', { class: 'rp-frc' }, tiles[i], h('i'), tiles[j]);
+  tiles.forEach((t, i) => t.onclick = e => { e.stopPropagation(); if (got.size === 2) return; if (sel == null) { sel = i; t.classList.add('sel'); sfx.tap(); return; }
+    const p = [sel, i].sort(), k = pairs.findIndex(q => q[0] === p[0] && q[1] === p[1]); tiles[sel].classList.remove('sel');
+    if (k < 0) { sfx.no(); out.innerHTML = sel === i ? 'แตะอีกตัวหนึ่ง' : 'ยังไม่ใช่ — คูณ<b>ไขว้</b> คือคูณตัวเลขที่อยู่<b>แนวทแยง</b> (ตัวเศษข้างหนึ่ง กับตัวส่วนอีกข้างหนึ่ง)'; sel = null; return; }
+    sel = null; if (got.has(k)) return; got.add(k); p.forEach(j => tiles[j].classList.add('d' + k)); sfx.pop(got.size + 2);
+    out.innerHTML = `ทแยงที่ ${got.size}: ${vals[pairs[k][0]]} × ${vals[pairs[k][1]]}`;
+    if (got.size === 2) { const L = `${d} × x`, R = `${b} × ${c}`; eq.innerHTML = `<div>${L} = ${R}</div><div>${d}x = ${b * c}</div><div>x = ${b * c} ÷ ${d} = <b>${b * c / d}</b></div>`; out.innerHTML = `ผลคูณไขว้เท่ากันเสมอในสัดส่วน → แก้สมการได้ <b>x = ${b * c / d}</b><span class="rp-sep"></span>ตรวจ: ${rpRat(b * c / d, b)} = ${rpRat(c, d)} ✓`; sfx.ok(); teachDone(wrap); } });
+  out.innerHTML = 'แตะตัวเลขสองตัวที่อยู่<b>แนวทแยง</b>เดียวกัน';
+  wrap.append(h('div', { class: 'cap', html: `สัดส่วน ${fqHTML('x', b)} = ${fqHTML(c, d)} — <b>แตะเป็นคู่ตามแนวทแยง</b> ทั้งสองแนว` }), h('div', { class: 'tg-row rp-crow' }, fr(0, 1), h('b', { class: 'rp-eqs-op' }, '='), fr(2, 3), eq), out); return wrap;
+}
+/* 10 · direct proportion: drag the number of pens — table and straight-line graph build together */
+function rpSimDirect(k = 12) {
+  const W = 620, H = 330, X0 = 60, Y0 = 290, SX = 27, SY = 2.1;
+  return tgScene({ W, H, st: { n: 1, seen: [1] }, cap: `ปากกาด้ามละ ${k} บาท — <b>ลากจุดบนกราฟ</b> ไปทางซ้าย–ขวา เพื่อเปลี่ยนจำนวนปากกา`,
+    missions: [['ซื้อ 3 ด้าม', s => s.seen.includes(3)], ['ซื้อเพิ่มเป็น 2 เท่า (6 ด้าม)', s => s.seen.includes(3) && s.seen.includes(6)], ['ซื้อ 10 ด้าม', s => s.seen.includes(10)]],
+    svg: s => { let g = `<path d="M${X0} ${Y0} h${SX * 10 + 20} M${X0} ${Y0} v-${k * 10 * SY + 20}" stroke="#2B2550" stroke-width="2"/>`;
+      for (let i = 1; i <= 10; i++) g += `<text x="${X0 + i * SX}" y="${Y0 + 20}" class="rp-sm" text-anchor="middle">${i}</text>`; for (let v = 20; v <= k * 10; v += 20) g += `<text x="${X0 - 8}" y="${Y0 - v * SY + 5}" class="rp-sm" text-anchor="end">${v}</text><path d="M${X0} ${Y0 - v * SY} h${SX * 10}" stroke="#E8E2F3"/>`;
+      g += `<path d="M${X0} ${Y0} L${X0 + SX * 10} ${Y0 - k * 10 * SY}" stroke="${RP_C.g}" stroke-width="2.5" stroke-dasharray="7 6"/><text x="${X0 + SX * 10 + 14}" y="${Y0 + 6}" class="rp-sm">ด้าม</text><text x="${X0}" y="${Y0 - k * 10 * SY - 26}" class="rp-sm" text-anchor="middle">บาท</text>`;
+      s.seen.forEach(n => { g += `<circle cx="${X0 + n * SX}" cy="${Y0 - n * k * SY}" r="5" fill="${RP_C.b}"/>`; }); g += tgHandle(X0 + s.n * SX, Y0 - s.n * k * SY, RP_C.o);
+      const rows = [...s.seen].sort((a, b) => a - b).slice(-6); g += `<g transform="translate(400 30)"><rect width="200" height="${28 + rows.length * 26}" rx="10" fill="#fff" stroke="#E2DCF0"/><text x="50" y="20" class="rp-sm" text-anchor="middle">ด้าม</text><text x="140" y="20" class="rp-sm" text-anchor="middle">บาท</text>${rows.map((n, i) => `<text x="50" y="${46 + i * 26}" class="rp-sv" text-anchor="middle">${n}</text><text x="140" y="${46 + i * 26}" class="rp-sv" text-anchor="middle">${n * k}</text>`).join('')}</g>`; return g; },
+    drag: (p, s) => { const n = Math.max(1, Math.min(10, Math.round((p[0] - X0) / SX))); return { n, seen: s.seen.includes(n) ? s.seen : [...s.seen, n] }; },
+    info: s => `${s.n} ด้าม ราคา ${s.n * k} บาท<span class="rp-sep"></span><b>ราคา ÷ จำนวน = ${s.n * k} ÷ ${s.n} = ${k}</b> เท่าเดิมเสมอ → เป็น<b>สัดส่วนตรง</b> กราฟเป็นเส้นตรงผ่านจุด (0, 0)` });
+}
+/* 11 · inverse proportion: drag the corner of the work rectangle (คน × วัน = คงที่) */
+function rpSimInverse(P = 24) {
+  const W = 620, H = 330, X0 = 60, Y0 = 290, SX = 24, SY = 10.5, ok = [1, 2, 3, 4, 6, 8, 12].filter(x => P % x === 0);
+  return tgScene({ W, H, st: { n: 2, seen: [2] }, cap: `งานหนึ่งใช้แรงงานทั้งหมด ${P} คน·วัน — <b>ลากมุมของสี่เหลี่ยม</b> เพื่อเปลี่ยนจำนวนคน แล้วดูจำนวนวัน`,
+    missions: [['ใช้ 3 คน', s => s.seen.includes(3)], ['เพิ่มคนเป็น 2 เท่า (6 คน)', s => s.seen.includes(3) && s.seen.includes(6)], ['ใช้ 12 คน', s => s.seen.includes(12)]],
+    svg: s => { const d = P / s.n; let g = `<rect x="${X0}" y="${Y0 - d * SY}" width="${s.n * SX}" height="${d * SY}" fill="${RP_C.b}" fill-opacity=".18" stroke="${RP_C.b}" stroke-width="2"/>`;
+      g += `<path d="M${X0} ${Y0} h${SX * 12 + 16} M${X0} ${Y0} v-${P * SY + 10}" stroke="#2B2550" stroke-width="2"/>`; for (let i = 2; i <= 12; i += 2) g += `<text x="${X0 + i * SX}" y="${Y0 + 20}" class="rp-sm" text-anchor="middle">${i}</text>`; for (let v = 4; v <= P; v += 4) g += `<text x="${X0 - 8}" y="${Y0 - v * SY + 5}" class="rp-sm" text-anchor="end">${v}</text>`;
+      let c = ''; for (let x = P / 24; x <= 12; x += .25) c += `${c ? 'L' : 'M'}${X0 + x * SX} ${Y0 - Math.min(P, P / x) * SY} `; g += `<path d="${c}" fill="none" stroke="${RP_C.g}" stroke-width="2.5" stroke-dasharray="7 6"/>`;
+      s.seen.forEach(n => { g += `<circle cx="${X0 + n * SX}" cy="${Y0 - P / n * SY}" r="5" fill="${RP_C.b}"/>`; }); g += tgHandle(X0 + s.n * SX, Y0 - d * SY, RP_C.o) + `<text x="${X0 + SX * 12 + 20}" y="${Y0 + 6}" class="rp-sm">คน</text><text x="${X0}" y="${Y0 - P * SY - 18}" class="rp-sm" text-anchor="middle">วัน</text>`;
+      const rows = [...s.seen].sort((a, b) => a - b).slice(-6); g += `<g transform="translate(400 30)"><rect width="200" height="${28 + rows.length * 26}" rx="10" fill="#fff" stroke="#E2DCF0"/><text x="50" y="20" class="rp-sm" text-anchor="middle">คน</text><text x="140" y="20" class="rp-sm" text-anchor="middle">วัน</text>${rows.map((n, i) => `<text x="50" y="${46 + i * 26}" class="rp-sv" text-anchor="middle">${n}</text><text x="140" y="${46 + i * 26}" class="rp-sv" text-anchor="middle">${P / n}</text>`).join('')}</g>`; return g; },
+    drag: (p, s) => { const x = (p[0] - X0) / SX, n = ok.reduce((m, v) => Math.abs(v - x) < Math.abs(m - x) ? v : m, ok[0]); return { n, seen: s.seen.includes(n) ? s.seen : [...s.seen, n] }; },
+    info: s => `${s.n} คน ใช้ ${P / s.n} วัน<span class="rp-sep"></span><b>คน × วัน = ${s.n} × ${P / s.n} = ${P}</b> เท่าเดิมเสมอ → เป็น<b>สัดส่วนผกผัน</b> (คนเพิ่มกี่เท่า วันลดลงเท่านั้น)` });
+}
+/* 12 · sort cards into bins (tap a card, then tap a bin) */
+function rpSort(cards, bins, cap) {
+  const wrap = tgWrap(), out = fNote2(), deck = h('div', { class: 'rp-deck' }), binEls = bins.map(b => h('button', { class: 'rp-binx ia', html: `<b>${b}</b><span class="rp-in"></span>` })); let sel = null, left = cards.length;
+  cards.forEach(c => { const el = h('button', { class: 'rp-card ia', html: c.t }); el.onclick = e => { e.stopPropagation(); if (el.classList.contains('in')) return; deck.querySelectorAll('.rp-card').forEach(x => x.classList.toggle('sel', x === el)); sel = { el, c }; sfx.tap(); out.innerHTML = 'แตะกล่องที่ใช่'; }; deck.append(el); });
+  binEls.forEach((b, i) => b.onclick = e => { e.stopPropagation(); if (!sel) { out.innerHTML = 'แตะการ์ดก่อน แล้วค่อยแตะกล่อง'; return; }
+    if (sel.c.bin !== i) { sfx.no(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); out.innerHTML = '🤔 ' + (sel.c.why || 'ลองคิดใหม่'); return; }
+    sfx.pop(3); sel.el.classList.remove('sel'); sel.el.classList.add('in'); b.querySelector('.rp-in').append(h('span', { class: 'rp-mini', html: sel.c.s || sel.c.t })); sel.el.remove(); out.innerHTML = '✓ ' + (sel.c.ok || 'ถูกต้อง'); sel = null; left--;
+    if (!left) { sfx.ok(); out.innerHTML = '<b>จัดครบทุกใบแล้ว</b> 🎉'; teachDone(wrap); } });
+  wrap.append(h('div', { class: 'cap', html: cap }), deck, h('div', { class: 'rp-bins', 'data-n': bins.length }, ...binEls), out); return wrap;
+}
+/* 13 · percent grid: drag across the 10×10 grid to shade squares */
+function rpSimGrid() {
+  const C = 26, X0 = 20, Y0 = 20;
+  return tgScene({ W: 300, H: 300, st: { n: 12 }, cap: '<b>ลากบนตาราง 100 ช่อง</b> เพื่อระบายสี — 1 ช่อง = 1 ใน 100 = 1%',
+    missions: [['ระบาย 30%', s => s.n === 30], ['ระบาย 75%', s => s.n === 75], ['ระบาย 5%', s => s.n === 5]],
+    svg: s => { let g = ''; for (let i = 0; i < 100; i++) g += `<rect x="${X0 + (i % 10) * C + 1}" y="${Y0 + Math.floor(i / 10) * C + 1}" width="${C - 2}" height="${C - 2}" rx="3" fill="${i < s.n ? RP_C.b : '#F1EEF8'}"/>`; return g; },
+    drag: p => { const c = Math.max(0, Math.min(9, Math.floor((p[0] - X0) / C))), r = Math.max(0, Math.min(9, Math.floor((p[1] - Y0) / C))); return { n: r * 10 + c + 1 }; },
+    info: s => `ระบาย ${s.n} ช่องจาก 100 ช่อง = ${fqHTML(s.n, 100)} = <b>${s.n}%</b> = <b class="num">${rpN(s.n / 100)}</b><span class="rp-sep"></span>อัตราส่วน ${rpRat(s.n, 100)}` });
+}
+/* 14 · one point, three names: fraction · decimal · percent on a 0–1 line */
+function rpSimConv() {
+  const W = 620, H = 220, X0 = 50, L = 520, Y = 120;
+  return tgScene({ W, H, st: { v: 10 }, cap: '<b>ลากจุดบนเส้น 0 ถึง 1</b> — ตำแหน่งเดียวกันเขียนได้ทั้ง<b>เศษส่วน ทศนิยม และร้อยละ</b>',
+    missions: [[`ไปที่ ${'1/4'}`, s => s.v === 5], ['ไปที่ 0.6', s => s.v === 12], ['ไปที่ 90%', s => s.v === 18]],
+    svg: s => { let g = `<rect x="${X0}" y="${Y - 30}" width="${L}" height="26" rx="6" fill="#F1EEF8"/><rect x="${X0}" y="${Y - 30}" width="${s.v / 20 * L}" height="26" rx="6" fill="${RP_C.b}" fill-opacity=".75"/><path d="M${X0} ${Y} h${L}" stroke="#2B2550" stroke-width="2"/>`;
+      for (let i = 0; i <= 20; i++) g += `<path d="M${X0 + i * L / 20} ${Y - (i % 2 ? 5 : 9)} v${i % 2 ? 10 : 18}" stroke="#2B2550" stroke-width="1.5"/>`; g += `<text x="${X0}" y="${Y + 30}" class="rp-sm" text-anchor="middle">0</text><text x="${X0 + L}" y="${Y + 30}" class="rp-sm" text-anchor="middle">1</text>`;
+      return g + tgHandle(X0 + s.v * L / 20, Y, RP_C.o); },
+    drag: p => ({ v: Math.max(0, Math.min(20, Math.round((p[0] - X0) / (L / 20)))) }),
+    info: s => `เศษส่วน <b>${s.v === 0 ? '0' : s.v === 20 ? '1' : rpFrac(s.v, 20)}</b> &nbsp;=&nbsp; ทศนิยม <b class="num">${rpN(s.v / 20)}</b> &nbsp;=&nbsp; ร้อยละ <b>${s.v * 5}%</b>` });
+}
+/* 15 · double number line: percent on top, amount below */
+function rpSimDNL(N = 80, unit = 'บาท') {
+  const W = 620, H = 220, X0 = 40, L = 540, Y1 = 70, Y2 = 150;
+  return tgScene({ W, H, st: { p: 50 }, cap: `เงินทั้งหมด ${N} ${unit} = 100% — <b>ลากเส้นสีส้ม</b> แล้วอ่านค่าบนเส้นล่าง`,
+    missions: [['10%', s => s.p === 10], ['25%', s => s.p === 25], ['75%', s => s.p === 75]],
+    svg: s => { const x = X0 + s.p / 100 * L; let g = `<path d="M${X0} ${Y1} h${L} M${X0} ${Y2} h${L}" stroke="#2B2550" stroke-width="2"/>`;
+      for (let p = 0; p <= 100; p += 10) g += `<path d="M${X0 + p / 100 * L} ${Y1 - 6} v12 M${X0 + p / 100 * L} ${Y2 - 6} v12" stroke="#2B2550" stroke-width="1.5"/>`;
+      g += `<text x="${X0}" y="${Y1 - 14}" class="rp-sm" text-anchor="middle">0%</text><text x="${X0 + L}" y="${Y1 - 14}" class="rp-sm" text-anchor="middle">100%</text><text x="${X0}" y="${Y2 + 26}" class="rp-sm" text-anchor="middle">0</text><text x="${X0 + L}" y="${Y2 + 26}" class="rp-sm" text-anchor="middle">${N}</text>`;
+      g += `<rect x="${X0}" y="${Y1 + 8}" width="${x - X0}" height="${Y2 - Y1 - 16}" fill="${RP_C.o}" fill-opacity=".12"/><path d="M${x} ${Y1 - 10} V${Y2 + 10}" stroke="${RP_C.o}" stroke-width="3"/><text x="${x}" y="${Y1 - 30}" class="rp-sv" text-anchor="middle" style="fill:${RP_C.o}">${s.p}%</text><text x="${x}" y="${Y2 + 46}" class="rp-sv" text-anchor="middle" style="fill:${RP_C.o}">${rpN(s.p / 100 * N)}</text>`;
+      return g + tgHandle(x, (Y1 + Y2) / 2, RP_C.o); },
+    drag: p => ({ p: Math.max(0, Math.min(100, Math.round((p[0] - X0) / L * 20) * 5)) }),
+    info: s => `${s.p}% ของ ${N} = ${fqHTML(s.p, 100)} × ${N} = <b class="num">${rpN(s.p / 100 * N)}</b> ${unit}` });
+}
+/* 16 · percent change: drag the new bar against the old one (old = 100%) */
+function rpSimChange(old = 80) {
+  const W = 620, H = 230, X0 = 70, U = 3.2, Y1 = 50, Y2 = 130;
+  return tgScene({ W, H, st: { p: 100 }, cap: `ราคาเดิม ${old} บาท = 100% — <b>ลากปลายแถบราคาใหม่</b> (สีส้ม) ให้ยาวขึ้นหรือสั้นลง`,
+    missions: [['เพิ่มขึ้น 25%', s => s.p === 125], ['ลดลง 20%', s => s.p === 80], ['เพิ่มขึ้น 50%', s => s.p === 150]],
+    svg: s => { let g = `<text x="${X0 - 10}" y="${Y1 + 24}" class="rp-sv" text-anchor="end">เดิม</text><rect x="${X0}" y="${Y1}" width="${100 * U}" height="36" rx="6" fill="${RP_C.b}" fill-opacity=".8"/><text x="${X0 + 100 * U - 8}" y="${Y1 + 24}" class="rp-sv" text-anchor="end" style="fill:#fff">${old}</text>`;
+      g += `<text x="${X0 - 10}" y="${Y2 + 24}" class="rp-sv" text-anchor="end">ใหม่</text><rect x="${X0}" y="${Y2}" width="${s.p * U}" height="36" rx="6" fill="${RP_C.o}" fill-opacity=".85"/><path d="M${X0 + 100 * U} ${Y1 - 8} V${Y2 + 50}" stroke="#2B2550" stroke-dasharray="5 5"/>`;
+      for (let p = 0; p <= 150; p += 25) g += `<text x="${X0 + p * U}" y="${Y2 + 70}" class="rp-sm" text-anchor="middle">${p}%</text>`; return g + tgHandle(X0 + s.p * U, Y2 + 18, RP_C.o); },
+    drag: p => ({ p: Math.max(50, Math.min(150, Math.round((p[0] - X0) / U / 5) * 5)) }),
+    info: s => { const d = s.p - 100, nw = old * s.p / 100; return d === 0 ? `ราคาใหม่ ${old} บาท เท่าเดิม` : `${d > 0 ? 'เพิ่มขึ้น' : 'ลดลง'} ${Math.abs(d)}% ของ ${old} = ${rpN(Math.abs(d) / 100 * old)} บาท → ราคาใหม่ = <b>${s.p}%</b> ของ ${old} = <b class="num">${rpN(nw)}</b> บาท`; } });
+}
+/* 17 · profit / loss: drag the selling price against the cost (cost = 100%) */
+function rpSimProfit(cost = 300) {
+  const W = 620, H = 230, X0 = 80, U = 1.1, Y1 = 50, Y2 = 130;
+  return tgScene({ W, H, st: { s: cost }, cap: `ราคาทุน ${cost} บาท — <b>ลากปลายแถบราคาขาย</b> แล้วดูว่ากำไรหรือขาดทุนกี่เปอร์เซ็นต์<b>ของทุน</b>`,
+    missions: [['กำไร 20%', s => s.s === cost * 1.2], ['ขาดทุน 10%', s => s.s === cost * .9], ['กำไร 50%', s => s.s === cost * 1.5]],
+    svg: s => { let g = `<text x="${X0 - 10}" y="${Y1 + 24}" class="rp-sv" text-anchor="end">ทุน</text><rect x="${X0}" y="${Y1}" width="${cost * U}" height="36" rx="6" fill="${RP_C.b}" fill-opacity=".8"/><text x="${X0 + cost * U - 8}" y="${Y1 + 24}" class="rp-sv" text-anchor="end" style="fill:#fff">${cost}</text>`;
+      g += `<text x="${X0 - 10}" y="${Y2 + 24}" class="rp-sv" text-anchor="end">ขาย</text><rect x="${X0}" y="${Y2}" width="${s.s * U}" height="36" rx="6" fill="${s.s >= cost ? RP_C.g : RP_C.p}" fill-opacity=".85"/><text x="${X0 + s.s * U - 8}" y="${Y2 + 24}" class="rp-sv" text-anchor="end" style="fill:#fff">${s.s}</text><path d="M${X0 + cost * U} ${Y1 - 8} V${Y2 + 48}" stroke="#2B2550" stroke-dasharray="5 5"/>`;
+      return g + tgHandle(X0 + s.s * U, Y2 + 18, RP_C.o); },
+    drag: p => ({ s: Math.max(cost * .5, Math.min(cost * 1.6, Math.round((p[0] - X0) / U / (cost * .05)) * cost * .05)) }),
+    info: s => { const d = s.s - cost; return d === 0 ? 'ขายเท่าทุน — ไม่กำไร ไม่ขาดทุน' : `${d > 0 ? 'กำไร' : 'ขาดทุน'} ${Math.abs(d)} บาท = ${fqHTML(Math.abs(d), cost)} × 100 = <b>${rpN(Math.abs(d) / cost * 100)}%</b> ของทุน`; } });
+}
+
+/* =========================================================
+   ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ — ด่าน 2701–2710 (v244) · prefix rp
+   ตามแผน 20 ด่านของผู้ใช้: ช่วงที่ 1 พื้นฐานอัตราส่วน (1–5) · ช่วงที่ 2 อัตราส่วนหลายจำนวนและสัดส่วน (6–13)
+   ช่วงที่ 3 พื้นฐานร้อยละ (14–16) · ช่วงที่ 4 โจทย์ประยุกต์ (17–20) — ด่าน 11–20 + บอสอยู่ใน m1rl2.js
+   ทุกด่าน: ลงมือทำ (ลาก/แตะ) → การ์ด/ตัวอย่างทีละขั้น → ลองทำ 1 ข้อ → เกม 10 ข้อ ง่าย → ยาก · โจทย์แต่งใหม่ทั้งหมด ข้อมูลสมมติ
+   ========================================================= */
+const LR7 = (no, place, title, short, goal, teach, game, x = {}) => ({ id: 2700 + no, no, place, title, short, tone: TONES5[(no + 4) % 6], goal, teach, game, ...x });
+const rpWalk = (head, rows, fin, say2) => dcWalk(head, rows, String(fin || '').replace(/ · /g, '<span class="rp-sep"></span>'), say2); /* fNote แยกข้อความที่ · เป็นขั้น ๆ จึงเปลี่ยนเป็นช่องว่าง */
+
+const LESSONS_M1C7 = [
+  /* ---------- 1 การเปรียบเทียบจำนวนและปริมาณ ---------- */
+  LR7(1, 'ท่าน้ำเทียบลัง', 'การเปรียบเทียบจำนวนและปริมาณ', 'เปรียบเทียบ', 'เปรียบเทียบสองปริมาณได้ทั้งแบบ "มากกว่า/น้อยกว่ากี่หน่วย" (ลบ) และแบบ "เป็นกี่เท่า" (หาร) และรู้ว่าปริมาณที่หน่วยต่างกันต้องเปลี่ยนหน่วยก่อนหรือเขียนหน่วยกำกับ', [
+    T('<b>ลากกองลัง</b> — เทียบด้วยการลบ และด้วยการหาร', 'ลากกองลัง แล้วเทียบด้วยการลบ และด้วยการหาร', el => el.append(rpSimCmp(4))),
+    T('<b>เปรียบเทียบได้ 2 แบบ</b> — แตะการ์ดทีละใบ', 'เปรียบเทียบได้สองแบบ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['เทียบด้วยการลบ', '<b>มากกว่า / น้อยกว่ากี่หน่วย</b><small>14 กับ 7 → 14 − 7 = 7 · 14 มากกว่า 7 อยู่ 7</small>'],
+      ['เทียบด้วยการหาร', '<b>เป็นกี่เท่า</b><small>14 ÷ 7 = 2 · 14 เป็น 2 เท่าของ 7 · 7 เป็น 1/2 เท่าของ 14</small>'],
+      ['หน่วยเดียวกัน', '<b>เทียบได้ทันที</b><small>เชือก 3 เมตร กับ 5 เมตร</small>'],
+      ['หน่วยต่างกัน', '<b>เปลี่ยนหน่วยก่อน หรือเขียนหน่วยกำกับ</b><small>1 เมตร กับ 40 ซม. → 100 ซม. กับ 40 ซม. · ไข่ 10 ฟอง ราคา 45 บาท (คนละชนิดกัน)</small>']]))),
+    T('ตัวอย่างทีละขั้น: <b>เปรียบเทียบความยาว</b>', 'ตัวอย่างทีละขั้น เปรียบเทียบความยาว', el => el.append(rpWalk('ไม้ไผ่ยาว <b>2 เมตร</b> ไม้บรรทัดยาว <b>40 เซนติเมตร</b>',
+      [['① หน่วยต่างกัน', 'เปลี่ยนเป็นเซนติเมตร: 2 เมตร = 200 เซนติเมตร'], ['② เทียบด้วยการลบ', '200 − 40 = 160 → ไม้ไผ่ยาวกว่า <b>160 เซนติเมตร</b>'], ['③ เทียบด้วยการหาร', '200 ÷ 40 = 5 → ไม้ไผ่ยาวเป็น <b>5 เท่า</b>ของไม้บรรทัด']],
+      'สองคำตอบนี้บอกคนละเรื่อง: "ยาวกว่ากี่เซนติเมตร" กับ "ยาวเป็นกี่เท่า"', 'สองคำตอบนี้บอกคนละเรื่อง')))
+  ], () => { const [n1, n2] = rpNm(2), a = rpPick([3, 4, 5, 6]), k = rpPick([2, 3, 4]), b = a * k, f = rpPick([3, 4, 5]), g = rpPick([2, 3]), age = rpPick([8, 9, 11, 12]), B4 = rpPick([3, 4, 5, 6]), kk = rpPick([3, 4, 5]);
+    return [
+      Q.rpNum({ story: `${n1}มีลูกแก้ว ${b} ลูก ${n2}มีลูกแก้ว ${a} ลูก`, q: `${n1}มีลูกแก้วมากกว่า${n2}กี่ลูก`, a: b - a, unit: 'ลูก', hint: 'เปรียบเทียบด้วยการลบ: จำนวนมาก − จำนวนน้อย', sig: 'c1', diff: 3 }),
+      Q.rpNum({ story: `${n1}มีลูกแก้ว ${b} ลูก ${n2}มีลูกแก้ว ${a} ลูก`, q: `ลูกแก้วของ${n1}เป็นกี่เท่าของ${n2}`, a: k, unit: 'เท่า', hint: 'เปรียบเทียบด้วยการหาร', sig: 'c2', diff: 5 }),
+      Q.rpNum({ q: 'จากรูป ปลาสีส้มมากกว่าปลาสีฟ้ากี่ตัว', fig: rpPic([{ n: f * g, k: 'fish', c: RP_C.o, lab: 'ปลาส้ม' }, { n: f, k: 'fish', c: RP_C.b, lab: 'ปลาฟ้า' }]), a: f * g - f, unit: 'ตัว', hint: 'นับปลาแต่ละสี แล้วลบกัน', sig: 'c3 ' + f + g, diff: 4 }),
+      Q.rpNum({ q: 'จากรูป ปลาสีส้มเป็นกี่เท่าของปลาสีฟ้า', fig: rpPic([{ n: f * g, k: 'fish', c: RP_C.o, lab: 'ปลาส้ม' }, { n: f, k: 'fish', c: RP_C.b, lab: 'ปลาฟ้า' }]), a: g, unit: 'เท่า', hint: 'จำนวนปลาส้ม ÷ จำนวนปลาฟ้า', sig: 'c4 ' + f + g, diff: 6 }),
+      Q.rpNum({ q: `<b>${a}</b> เป็นกี่เท่าของ <b>${b}</b> (ตอบเป็นเศษส่วน)`, a: `1/${k}`, unit: 'เท่า', hint: `${a} ÷ ${b} เขียนเป็นเศษส่วนอย่างต่ำ`, sig: 'c5', diff: 10 }),
+      Q.rpOpt({ q: 'ข้อใดเป็นการเปรียบเทียบปริมาณที่มี<b>หน่วยต่างกัน</b>', opts: ['ไข่ 10 ฟอง ราคา 45 บาท', 'นักเรียนชาย 18 คน นักเรียนหญิง 20 คน', 'เชือกเส้นแรกยาว 3 เมตร เส้นที่สองยาว 5 เมตร'], right: 'ไข่ 10 ฟอง ราคา 45 บาท', hint: 'ดูว่าสองปริมาณวัดเป็นหน่วยเดียวกันหรือไม่', sig: 'c6', diff: 5 }),
+      Q.rpOpt({ q: 'ข้อใดเป็นการเปรียบเทียบปริมาณที่มี<b>หน่วยเดียวกัน</b>', opts: ['ส้มหนัก 2 กิโลกรัม มะม่วงหนัก 3 กิโลกรัม', 'รถวิ่ง 120 กิโลเมตร ใช้เวลา 2 ชั่วโมง', 'สมุด 4 เล่ม ราคา 60 บาท'], right: 'ส้มหนัก 2 กิโลกรัม มะม่วงหนัก 3 กิโลกรัม', hint: 'หน่วยเดียวกัน เช่น กิโลกรัมกับกิโลกรัม', sig: 'c7', diff: 6 }),
+      Q.rpNum({ story: `${n1}อายุ ${age} ปี พ่ออายุ ${age * 4} ปี`, q: `พ่ออายุเป็นกี่เท่าของ${n1}`, a: 4, unit: 'เท่า', hint: 'อายุพ่อ ÷ อายุลูก', sig: 'c8 ' + age, diff: 7 }),
+      Q.rpNum({ story: 'ถุงข้าวสารหนัก 2 กิโลกรัม ถุงน้ำตาลหนัก 500 กรัม', q: 'ถุงข้าวสารหนักกว่าถุงน้ำตาลกี่กรัม', a: 1500, unit: 'กรัม', hint: 'เปลี่ยน 2 กิโลกรัมเป็นกรัมก่อน (1 กิโลกรัม = 1,000 กรัม)', sig: 'c9', diff: 12 }),
+      Q.rpNum({ story: 'โต๊ะยาว 1.5 เมตร ไม้บรรทัดยาว 30 เซนติเมตร', q: 'โต๊ะยาวเป็นกี่เท่าของไม้บรรทัด', a: 5, unit: 'เท่า', hint: 'เปลี่ยนเป็นเซนติเมตรก่อน: 1 เมตร = 100 เซนติเมตร', sig: 'c10', diff: 14 }),
+      rpTF('ถ้า A เป็น 3 เท่าของ B แสดงว่า A มากกว่า B อยู่ 3', false, 'เป็น 3 เท่า หมายถึง A = 3 × B ไม่ใช่ B + 3'),
+      rpTF('การเปรียบเทียบว่า "มากกว่ากี่หน่วย" ใช้การลบ ส่วน "เป็นกี่เท่า" ใช้การหาร', true, ''),
+      Q.rpNum({ story: `จำนวน A เป็น ${kk} เท่าของจำนวน B และ A มากกว่า B อยู่ ${B4 * (kk - 1)}`, q: 'จำนวน B เท่ากับเท่าใด', a: B4, hint: `A = ${kk} × B ดังนั้น A − B = ${kk - 1} × B`, sig: 'c11 ' + B4 + kk, diff: 18 })]; }),
+  /* ---------- 2 ความหมายของอัตราส่วน ---------- */
+  LR7(2, 'แก่งอัตราส่วน', 'ความหมายของอัตราส่วน', 'a : b', 'บอกความหมายของอัตราส่วน เขียนและอ่าน a : b ระบุจำนวนแรกและจำนวนหลัง และรู้ว่าลำดับของอัตราส่วนสำคัญ', [
+    T('<b>แตะปลาเปลี่ยนสี</b> — ทำตามภารกิจ', 'แตะปลาเพื่อเปลี่ยนสี ทำตามภารกิจ', el => el.append(rpSimFish())),
+    T('<b>อัตราส่วน a : b</b> — แตะการ์ดทีละใบ', 'อัตราส่วน เอ ต่อ บี แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['ความหมาย', '<b>การเปรียบเทียบปริมาณสองปริมาณ</b><small>อาจมีหน่วยเดียวกันหรือต่างกันก็ได้</small>'],
+      ['a : b', '<b>อ่านว่า "a ต่อ b"</b><small>a = จำนวนแรก (จำนวนที่หนึ่ง) · b = จำนวนหลัง (จำนวนที่สอง) · a, b เป็นจำนวนบวก</small>'],
+      ['ลำดับสำคัญ', '<b>2 : 3 ไม่เท่ากับ 3 : 2</b><small>เขียนตามลำดับที่โจทย์พูด สิ่งที่อยู่ก่อนคำว่า "ต่อ" เป็นจำนวนแรก</small>'],
+      ['เขียนเป็นเศษส่วน', `<b>a : b เขียนเป็น ${fqHTML('a', 'b')} ได้</b><small>2 : 3 เขียนเป็น ${fqHTML(2, 3)}</small>`]])))
+  ], () => { const o = rpR(3, 7), b = rpR(2, 8 - (o > 6 ? 2 : 0)), x = rpR(14, 19), y = rpR(12, 20), red = rpPick([6, 8, 9]), tot = red + rpPick([7, 11, 12]), r1 = rpPick([[3, 5], [4, 7], [2, 9]]);
+    const fish = rpPic([{ n: o, k: 'fish', c: RP_C.o, lab: 'ปลาส้ม' }, { n: b, k: 'fish', c: RP_C.b, lab: 'ปลาฟ้า' }]);
+    return [
+      Q.rpOpt({ q: `อัตราส่วน <b>${rpRT(...r1)}</b> อ่านว่าอย่างไร`, opts: [`${r1[0]} ต่อ ${r1[1]}`, `${r1[1]} ต่อ ${r1[0]}`, `${r1[0]} คูณ ${r1[1]}`], right: `${r1[0]} ต่อ ${r1[1]}`, hint: 'เครื่องหมาย : อ่านว่า "ต่อ"', sig: 'm1', diff: 2 }),
+      Q.rpNum({ q: `ในอัตราส่วน <b>${rpRT(r1[1] + 2, r1[0])}</b> จำนวนแรกคือจำนวนใด`, a: r1[1] + 2, hint: 'จำนวนแรกอยู่ด้านหน้าเครื่องหมาย :', sig: 'm2', diff: 3 }),
+      Q.rpNum({ q: `ในอัตราส่วน <b>${rpRT(9, r1[0] + 1)}</b> จำนวนหลังคือจำนวนใด`, a: r1[0] + 1, hint: 'จำนวนหลังอยู่ด้านหลังเครื่องหมาย :', sig: 'm3', diff: 3 }),
+      Q.rpRat({ q: 'จากรูป อัตราส่วนของจำนวน<b>ปลาสีส้ม</b>ต่อจำนวน<b>ปลาสีฟ้า</b>', fig: fish, a: [o, b], hint: 'นับปลาสีส้มก่อน แล้วจึงนับปลาสีฟ้า', sig: 'm4 ' + o + b, base: 'rpfish', diff: 6 }),
+      Q.rpRat({ q: 'จากรูป อัตราส่วนของจำนวน<b>ปลาสีฟ้า</b>ต่อจำนวน<b>ปลาทั้งหมด</b>', fig: fish, a: [b, o + b], hint: 'จำนวนหลังคือปลาทั้งหมด (ส้ม + ฟ้า)', sig: 'm5 ' + o + b, base: 'rpfish', diff: 10 }),
+      Q.rpRat({ story: `ห้องเรียนหนึ่งมีนักเรียนชาย ${x} คน นักเรียนหญิง ${y} คน`, q: 'อัตราส่วนของจำนวน<b>นักเรียนหญิง</b>ต่อจำนวน<b>นักเรียนชาย</b>', a: [y, x], hint: 'สิ่งที่อยู่ก่อนคำว่า "ต่อ" เป็นจำนวนแรก', sig: 'm6', base: 'rpcls', diff: 8 }),
+      Q.rpRat({ story: `ห้องเรียนหนึ่งมีนักเรียนชาย ${x} คน นักเรียนหญิง ${y} คน`, q: 'อัตราส่วนของจำนวน<b>นักเรียนชาย</b>ต่อจำนวน<b>นักเรียนทั้งห้อง</b>', a: [x, x + y], hint: 'นักเรียนทั้งห้อง = ชาย + หญิง', sig: 'm7', base: 'rpcls', diff: 11 }),
+      Q.rpOpt({ q: `อัตราส่วน <b>${rpRT(...r1)}</b> เขียนในรูปเศษส่วนได้ตามข้อใด`, opts: [fqHTML(r1[0], r1[1]), fqHTML(r1[1], r1[0]), fqHTML(r1[0], r1[0] + r1[1])], right: fqHTML(r1[0], r1[1]), hint: 'จำนวนแรกเป็นตัวเศษ จำนวนหลังเป็นตัวส่วน', sig: 'm8', diff: 7 }),
+      Q.rpOpt({ story: 'อัตราส่วนของจำนวนแมวต่อจำนวนสุนัขเป็น 2 : 5', q: 'ข้อใดถูกต้อง', opts: ['แมว 2 ส่วน สุนัข 5 ส่วน', 'แมว 5 ส่วน สุนัข 2 ส่วน', 'แมวมากกว่าสุนัข'], right: 'แมว 2 ส่วน สุนัข 5 ส่วน', hint: 'จำนวนแรกเป็นของสิ่งที่พูดก่อน', sig: 'm9', diff: 9 }),
+      Q.rpRat({ story: `ลูกบอลสีแดงกับสีขาวรวมกัน ${tot} ลูก เป็นสีแดง ${red} ลูก`, q: 'อัตราส่วนของจำนวนลูกบอล<b>สีขาว</b>ต่อจำนวนลูกบอล<b>สีแดง</b>', a: [tot - red, red], hint: 'หาจำนวนลูกบอลสีขาวก่อน', sig: 'm10 ' + red + tot, diff: 14 }),
+      rpTF('อัตราส่วน 2 : 3 กับ 3 : 2 เป็นอัตราส่วนเดียวกัน', false, 'ลำดับต่างกัน — 2 : 3 คือ 2 ต่อ 3 ส่วน 3 : 2 คือ 3 ต่อ 2'),
+      rpTF('อัตราส่วนของปริมาณสองปริมาณ อาจมีหน่วยต่างกันก็ได้', true, '')]; }),
+  /* ---------- 3 การเขียนอัตราส่วนจากสถานการณ์ ---------- */
+  LR7(3, 'ตลาดน้ำอัตราส่วน', 'การเขียนอัตราส่วนจากสถานการณ์', 'เขียนอัตราส่วน', 'เขียนอัตราส่วนจากรูปภาพ ข้อความ ตาราง และสถานการณ์ในชีวิตประจำวัน เขียนหน่วยกำกับเมื่อหน่วยต่างกัน และเปลี่ยนหน่วยให้เหมือนกันก่อนเมื่อเป็นปริมาณชนิดเดียวกัน', [
+    T('<b>แตะตามลำดับ</b> — จำนวนแรก แล้วจำนวนหลัง', 'แตะจำนวนแรก แล้วแตะจำนวนหลัง', el => el.append(rpSimPick([
+      { q: 'อัตราส่วนของจำนวน<b>มะม่วง</b>ต่อจำนวน<b>ส้ม</b>', g: [{ n: 4, lab: 'ส้ม', pic: rpPic([{ n: 4, k: 'fruit', c: RP_C.o }], { lab: false, per: 6, s: 26 }) }, { n: 6, lab: 'มะม่วง', pic: rpPic([{ n: 6, k: 'fruit', c: RP_C.y }], { lab: false, per: 6, s: 26 }) }], a: 1, b: 0 },
+      { q: 'ไข่ไก่ <b>10 ฟอง ราคา 42 บาท</b> — อัตราส่วนของจำนวนไข่ (ฟอง) ต่อราคา (บาท)', g: [{ n: 42, lab: 'ราคา (บาท)' }, { n: 10, lab: 'ไข่ (ฟอง)' }], a: 1, b: 0, note: 'หน่วยต่างกัน จึงเขียนหน่วยกำกับไว้ในคำอธิบาย' },
+      { q: 'จากตาราง: ห้อง 1/1 มีนักเรียนหญิง 18 คน ห้อง 1/2 มี 21 คน — อัตราส่วนของหญิงห้อง <b>1/2</b> ต่อหญิงห้อง <b>1/1</b>', g: [{ n: 18, lab: 'หญิง ห้อง 1/1' }, { n: 21, lab: 'หญิง ห้อง 1/2' }], a: 1, b: 0 },
+      { q: 'เชือกสีแดงยาว <b>2 เมตร</b> สีเขียวยาว <b>75 เซนติเมตร</b> — อัตราส่วนความยาวสีแดงต่อสีเขียว (เซนติเมตร)', g: [{ n: 75, lab: 'สีเขียว (ซม.)' }, { n: 200, lab: 'สีแดง (ซม.)' }], a: 1, b: 0, note: 'เปลี่ยน 2 เมตร เป็น 200 เซนติเมตรก่อน' }]))),
+    T('<b>อัตรา กับ อัตราส่วน</b> — แตะการ์ดทีละใบ', 'อัตรา กับ อัตราส่วน แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['หน่วยเดียวกัน', '<b>ไม่ต้องเขียนหน่วย</b><small>ชาย 15 คน หญิง 20 คน → 15 : 20</small>'],
+      ['หน่วยต่างกัน', '<b>เขียนหน่วยกำกับไว้</b><small>ไข่ 10 ฟอง ราคา 42 บาท → จำนวนไข่ (ฟอง) ต่อราคา (บาท) = 10 : 42</small>'],
+      ['ชนิดเดียวกันแต่หน่วยไม่เท่า', '<b>เปลี่ยนหน่วยให้เหมือนกันก่อน</b><small>2 เมตร : 75 ซม. → 200 : 75 · 1 ชั่วโมง : 20 นาที → 60 : 20</small>'],
+      ['อัตรา', '<b>ข้อความที่บอกการเปรียบเทียบ</b><small>"ความเร็ว 80 กิโลเมตรต่อชั่วโมง" → ระยะทาง (กม.) ต่อเวลา (ชม.) = 80 : 1</small>']])))
+  ], () => { const [n1] = rpNm(1), st = rpR(20, 35), eg = rpPick([10, 12]), pr = rpPick([42, 48, 55]), km = rpPick([150, 240, 270]), hr = rpPick([2, 3]), ap = rpR(3, 6), mg = rpR(2, 7), r11 = rpR(15, 22), r12 = rpR(13, 22), r21 = rpR(15, 22), r22 = rpR(14, 22), cm = rpPick([45, 75, 80]), ml = rpPick([250, 300, 400]), mi = rpPick([20, 40, 45]);
+    const tb = rpTbl(['ห้อง', 'ชาย', 'หญิง'], [['ม.1/1', r11, r12], ['ม.1/2', r21, r22]]);
+    return [
+      Q.rpRat({ story: `ครู 1 คน ดูแลนักเรียน ${st} คน`, q: 'อัตราส่วนของจำนวน<b>ครู</b>ต่อจำนวน<b>นักเรียน</b>', a: [1, st], hint: 'จำนวนแรกคือจำนวนครู', sig: 's1', diff: 3 }),
+      Q.rpRat({ story: `ไข่ไก่ ${eg} ฟอง ราคา ${pr} บาท`, q: 'อัตราส่วนของจำนวนไข่ (ฟอง) ต่อราคา (บาท)', a: [eg, pr], hint: 'จำนวนไข่ก่อน แล้วจึงราคา', sig: 's2', diff: 4 }),
+      Q.rpRat({ q: 'จากรูป อัตราส่วนของจำนวน<b>แอปเปิล</b>ต่อจำนวน<b>มะม่วง</b>', fig: rpPic([{ n: mg, k: 'fruit', c: RP_C.y, lab: 'มะม่วง' }, { n: ap, k: 'fruit', c: RP_C.p, lab: 'แอปเปิล' }]), a: [ap, mg], hint: 'จำนวนแรกคือแอปเปิล (สิ่งที่พูดก่อน)', sig: 's3 ' + ap + mg, diff: 5 }),
+      Q.rpRat({ story: `รถยนต์คันหนึ่งวิ่งได้ระยะทาง ${km} กิโลเมตร ในเวลา ${hr} ชั่วโมง`, q: 'อัตราส่วนของระยะทาง (กิโลเมตร) ต่อเวลา (ชั่วโมง)', a: [km, hr], hint: 'ระยะทางก่อน แล้วจึงเวลา', sig: 's4', diff: 6 }),
+      Q.rpOpt({ story: 'ค่าโดยสารรถสองแถวคนละ 15 บาท', q: 'อัตราส่วนของจำนวนคนต่อค่าโดยสาร (บาท)', opts: ['1 : 15', '15 : 1', '1 : 1'], right: '1 : 15', hint: '1 คน จ่าย 15 บาท', sig: 's5', diff: 4 }),
+      Q.rpRat({ q: 'จากตาราง อัตราส่วนของนักเรียน<b>หญิงห้อง ม.1/2</b> ต่อนักเรียน<b>หญิงห้อง ม.1/1</b>', fig: tb, a: [r22, r12], hint: 'อ่านค่าในคอลัมน์ "หญิง"', sig: 's6', base: 'rptb', diff: 8 }),
+      Q.rpRat({ q: 'จากตาราง อัตราส่วนของนักเรียน<b>ชายทั้งหมด</b>ต่อนักเรียน<b>หญิงทั้งหมด</b>', fig: tb, a: [r11 + r21, r12 + r22], hint: 'รวมนักเรียนชายสองห้อง และรวมนักเรียนหญิงสองห้อง', sig: 's7', base: 'rptb', diff: 12 }),
+      Q.rpOpt({ q: 'ข้อใด<b>ต้องเขียนหน่วยกำกับ</b>ไว้ เมื่อเขียนเป็นอัตราส่วน', opts: ['สมุด 4 เล่ม ราคา 52 บาท', 'ชาย 12 คน หญิง 15 คน', 'ส้ม 4 ผล มะม่วง 5 ผล'], right: 'สมุด 4 เล่ม ราคา 52 บาท', hint: 'ต้องเขียนหน่วยเมื่อสองปริมาณมีหน่วยต่างกัน', sig: 's8', diff: 6 }),
+      Q.rpRat({ story: `เชือกเส้นแรกยาว 2 เมตร เส้นที่สองยาว ${cm} เซนติเมตร`, q: 'อัตราส่วนของความยาวเส้นแรกต่อเส้นที่สอง (หน่วยเซนติเมตร)', a: [200, cm], hint: 'เปลี่ยน 2 เมตรเป็นเซนติเมตรก่อน', sig: 's9', diff: 13 }),
+      Q.rpRat({ story: `${n1}ผสมน้ำหวาน ${ml} มิลลิลิตร กับน้ำ 1 ลิตร`, q: 'อัตราส่วนของน้ำหวานต่อน้ำ (หน่วยมิลลิลิตร)', a: [ml, 1000], hint: '1 ลิตร = 1,000 มิลลิลิตร', sig: 's10', diff: 14 }),
+      Q.rpRat({ story: `${n1}อ่านหนังสือ 1 ชั่วโมง 30 นาที และวาดรูป ${mi} นาที`, q: 'อัตราส่วนของเวลาอ่านหนังสือต่อเวลาวาดรูป (หน่วยนาที)', a: [90, mi], hint: '1 ชั่วโมง = 60 นาที', sig: 's11', diff: 15 }),
+      rpTF('อัตราส่วนของปริมาณที่มีหน่วยต่างกัน ต้องเขียนหน่วยกำกับไว้', true, '')]; }),
+  /* ---------- 4 อัตราส่วนที่เท่ากัน ---------- */
+  LR7(4, 'โรงน้ำหวาน', 'อัตราส่วนที่เท่ากัน', 'เท่ากัน', 'หาอัตราส่วนที่เท่ากันโดยการคูณหรือการหารทั้งสองจำนวนด้วยจำนวนเดียวกัน และตรวจว่าอัตราส่วนสองอัตราส่วนเท่ากันหรือไม่ด้วยการคูณไขว้', [
+    T('<b>ผสมน้ำหวาน</b> — ลากแก้วให้สีเท่าสูตร', 'ลากแก้วผสมน้ำหวานให้สีเท่ากับสูตร', el => el.append(rpSimMix(2, 3))),
+    T('ตัวอย่างทีละขั้น: <b>คูณและหาร</b>', 'ตัวอย่างทีละขั้น คูณและหาร', el => el.append(rpWalk(`หาอัตราส่วนที่เท่ากับ ${rpRat(6, 9)} มา 2 อัตราส่วน`,
+      [['① คูณด้วย 2 ทั้งคู่', `${rpRat('6 × 2', '9 × 2')} = ${rpRat(12, 18)}`], ['② หารด้วย 3 ทั้งคู่', `${rpRat('6 ÷ 3', '9 ÷ 3')} = ${rpRat(2, 3)}`], ['③ สรุป', `${rpRat(6, 9)} = ${rpRat(12, 18)} = ${rpRat(2, 3)}`]],
+      'คูณหรือหารทั้งสองจำนวนด้วย<b>จำนวนเดียวกัน</b> (ที่ไม่ใช่ 0) ได้อัตราส่วนที่เท่ากัน — แต่<b>บวกหรือลบ</b>ไม่ได้', 'คูณหรือหารด้วยจำนวนเดียวกัน แต่บวกหรือลบไม่ได้'))),
+    T('ตัวอย่างทีละขั้น: <b>ตรวจด้วยการคูณไขว้</b>', 'ตัวอย่างทีละขั้น ตรวจด้วยการคูณไขว้', el => el.append(rpWalk(`${rpRat(4, 6)} กับ ${rpRat(10, 15)} เท่ากันหรือไม่`,
+      [['① เขียนเป็นเศษส่วน', `${fqHTML(4, 6)} กับ ${fqHTML(10, 15)}`], ['② คูณไขว้', '4 × 15 = 60 · 6 × 10 = 60'], ['③ สรุป', 'ผลคูณไขว้เท่ากัน → <b>เท่ากัน</b>']],
+      'ถ้า a × d = b × c แล้ว a : b = c : d · ถ้าไม่เท่ากัน อัตราส่วนก็ไม่เท่ากัน', 'ถ้าผลคูณไขว้เท่ากัน อัตราส่วนเท่ากัน')))
+  ], () => { const P = [[2, 5], [3, 4], [5, 7], [4, 9], [3, 8]], [a, b] = rpPick(P), k = rpPick([2, 3, 4, 5]), k2 = rpPick([3, 4, 6].filter(v => v !== k)), [c, d] = rpPick(P.filter(x => x[0] !== a)), tf = Math.random() < .5, m = rpPick([2, 3, 4]), u = rpPick([3, 4, 5]), dz = rpPick([[12, 60, 36, 180], [12, 48, 30, 120], [12, 54, 20, 90]]);
+    return [
+      Q.rpOpt({ q: `ข้อใด<b>เท่ากับ</b> ${rpRT(a, b)}`, opts: [rpRT(a * k, b * k), rpRT(a + k, b + k), rpRT(b * k, a * k)], right: rpRT(a * k, b * k), hint: 'คูณทั้งสองจำนวนด้วยจำนวนเดียวกัน', sig: 'e1 ' + a + b, diff: 4 }),
+      Q.rpNum({ q: `${rpRT(a, b)} = ${rpRT(a * k, '□')} &nbsp; □ คือจำนวนใด`, a: b * k, hint: `จำนวนแรกคูณด้วย ${k} จำนวนหลังก็ต้องคูณด้วย ${k}`, sig: 'e2', diff: 5 }),
+      Q.rpNum({ q: `${rpRT(c * k2, d * k2)} = ${rpRT('□', d)} &nbsp; □ คือจำนวนใด`, a: c, hint: `${d * k2} หารด้วยจำนวนใดได้ ${d} ใช้จำนวนนั้นหารจำนวนแรกด้วย`, sig: 'e3', diff: 6 }),
+      Q.rpRat({ q: `หาอัตราส่วนที่เท่ากับ ${rpRT(a, b)} โดยให้จำนวนแรกเป็น <b>${a * k2}</b>`, a: [a * k2, b * k2], hint: `${a} คูณด้วยจำนวนใดได้ ${a * k2}`, sig: 'e4', diff: 8 }),
+      Q.rpOpt({ q: `ข้อใด<b>ไม่เท่ากับ</b> ${rpRT(a * 2, b * 2)}`, opts: [rpRT(a + 1, b + 1), rpRT(a, b), rpRT(a * 3, b * 3)], right: rpRT(a + 1, b + 1), hint: 'ลองทำทุกข้อให้เป็นอัตราส่วนอย่างต่ำ', sig: 'e5', diff: 10 }),
+      Q.rpOpt({ q: `ใช้วิธีใดตรวจว่า ${fqHTML('a', 'b')} = ${fqHTML('c', 'd')}`, opts: ['a × d = b × c', 'a × c = b × d', 'a + d = b + c'], right: 'a × d = b × c', hint: 'คูณไขว้ — ตัวเศษข้างหนึ่งคูณตัวส่วนอีกข้างหนึ่ง', sig: 'e6', diff: 7 }),
+      tf ? rpTF(`${rpRat(a * m, b * m)} เท่ากับ ${rpRat(a * u, b * u)}`, true, '') : rpTF(`${rpRat(a * m, b * m)} เท่ากับ ${rpRat(a * u, b * u + 1)}`, false, `คูณไขว้: ${a * m} × ${b * u + 1} ≠ ${b * m} × ${a * u}`),
+      Q.rpNum({ story: `สูตรน้ำหวาน น้ำหวาน : น้ำ = ${a} : ${b}`, q: `ถ้าใช้น้ำหวาน <b>${a * k}</b> แก้ว ต้องใช้น้ำกี่แก้ว`, a: b * k, unit: 'แก้ว', hint: `น้ำหวานเพิ่มเป็น ${k} เท่า น้ำก็ต้องเพิ่มเป็นกี่เท่า`, sig: 'e7', diff: 11 }),
+      Q.rpNum({ q: `0.4 : 1 = 2 : □ &nbsp; □ คือจำนวนใด`, a: 5, hint: '0.4 คูณด้วยจำนวนใดได้ 2', sig: 'e8', diff: 12 }),
+      Q.rpNum({ q: `□ : ${d * 3} = ${c} : ${d}  □ คือจำนวนใด`, a: c * 3, hint: `${d} คูณด้วยจำนวนใดได้ ${d * 3}`, sig: 'e9', diff: 9 }),
+      Q.rpNum({ story: `ร้านค้าขายปากกาโหลละ ${dz[1]} บาท (1 โหล = 12 ด้าม)`, q: `ซื้อปากกา ${dz[2]} ด้าม ต้องจ่ายเงินกี่บาท`, a: dz[3], unit: 'บาท', hint: `${dz[0]} : ${dz[1]} = ${dz[2]} : □`, sig: 'e10 ' + dz, diff: 15 }),
+      rpTF('บวกจำนวนเดียวกันเข้าไปทั้งสองจำนวน จะได้อัตราส่วนที่เท่ากับอัตราส่วนเดิม', false, 'ต้องคูณหรือหาร ไม่ใช่บวก เช่น 1 : 2 ≠ 2 : 3')]; }),
+  /* ---------- 5 อัตราส่วนอย่างต่ำ ---------- */
+  LR7(5, 'ท่าแบ่งกลุ่ม', 'การทำอัตราส่วนให้อยู่ในรูปอย่างต่ำ', 'อย่างต่ำ', 'ทำอัตราส่วนให้เป็นอัตราส่วนอย่างต่ำโดยหารด้วย ห.ร.ม. รวมถึงอัตราส่วนของทศนิยม เศษส่วน และปริมาณที่ต้องเปลี่ยนหน่วยก่อน', [
+    T('<b>แบ่งลูกปัดเป็นกลุ่ม</b> — กลุ่มมากที่สุดได้อัตราส่วนอย่างต่ำ', 'แบ่งลูกปัดเป็นกลุ่มที่เหมือนกัน', el => el.append(rpSimGroup(12, 18))),
+    T('ตัวอย่างทีละขั้น: <b>ทศนิยมและเศษส่วน</b>', 'ตัวอย่างทีละขั้น ทศนิยมและเศษส่วน', el => el.append(rpWalk(`ทำ ${rpRat(0.6, 1.5)} และ ${rpRat(fqHTML(1, 2), fqHTML(1, 3))} ให้เป็นอัตราส่วนอย่างต่ำ`,
+      [['① ทศนิยม: คูณ 10 ทั้งคู่', `${rpRat(0.6, 1.5)} = ${rpRat(6, 15)}`], ['② หารด้วย ห.ร.ม. 3', `${rpRat(6, 15)} = ${rpRat(2, 5)}`], ['③ เศษส่วน: คูณด้วย 6 (ค.ร.น. ของตัวส่วน)', `${fqHTML(1, 2)} × 6 = 3 · ${fqHTML(1, 3)} × 6 = 2 → ${rpRat(3, 2)}`]],
+      'อัตราส่วนอย่างต่ำ: จำนวนทั้งสองเป็นจำนวนนับที่ ห.ร.ม. เป็น 1', 'อัตราส่วนอย่างต่ำ จำนวนทั้งสองมีห.ร.ม.เป็นหนึ่ง')))
+  ], () => { const L = [[2, 3], [3, 4], [2, 5], [4, 5], [3, 7], [5, 6]], [a, b] = rpPick(L), k = rpPick([4, 6, 8]), k2 = rpPick([5, 7, 9]), [c, d] = rpPick(L.filter(x => x + '' !== [a, b] + '')), bo = rpPick([[24, 30], [18, 27], [28, 35]]), g0 = rpGcd(...bo);
+    return [
+      Q.rpNum({ q: `ห.ร.ม. ของ <b>${a * k}</b> และ <b>${b * k}</b> คือจำนวนใด`, a: k, hint: 'จำนวนที่มากที่สุดที่หารทั้งสองจำนวนลงตัว', sig: 'l1', diff: 3 }),
+      Q.rpRat({ q: `ทำ <b>${rpRT(a * k, b * k)}</b> ให้เป็นอัตราส่วนอย่างต่ำ`, a: [a, b], mode: 'low', hint: 'หารทั้งสองจำนวนด้วย ห.ร.ม.', sig: 'l2', base: 'rplow', diff: 5 }),
+      Q.rpRat({ q: `ทำ <b>${rpRT(c * k2, d * k2)}</b> ให้เป็นอัตราส่วนอย่างต่ำ`, a: [c, d], mode: 'low', hint: 'หารทั้งสองจำนวนด้วย ห.ร.ม.', sig: 'l3', base: 'rplow', diff: 7 }),
+      Q.rpOpt({ q: 'ข้อใดเป็น<b>อัตราส่วนอย่างต่ำ</b>', opts: [rpRT(a, b), rpRT(4, 6), rpRT(10, 15)], right: rpRT(a, b), hint: 'ไม่มีจำนวนใด (นอกจาก 1) หารทั้งสองจำนวนลงตัว', sig: 'l4', diff: 6 }),
+      rpTF('15 : 25 เป็นอัตราส่วนอย่างต่ำ', false, '15 และ 25 หารด้วย 5 ได้อีก → 3 : 5'),
+      Q.rpOpt({ q: `${rpRT(18, 24)} หารด้วยจำนวนใด จึงได้อัตราส่วนอย่างต่ำ<b>ในขั้นเดียว</b>`, opts: ['6', '2', '3'], right: '6', hint: 'ใช้ ห.ร.ม. ของ 18 กับ 24', sig: 'l5', diff: 8 }),
+      Q.rpRat({ story: `โรงเรียนมีนักเรียนชาย ${bo[0] * 10} คน นักเรียนหญิง ${bo[1] * 10} คน`, q: 'อัตราส่วนอย่างต่ำของนักเรียนชายต่อนักเรียนหญิง', a: bo.map(x => x / g0), mode: 'low', hint: 'หารด้วย ห.ร.ม. จนหารต่อไม่ได้', sig: 'l6', diff: 9 }),
+      Q.rpRat({ q: 'ทำ <b>0.6 : 1.5</b> ให้เป็นอัตราส่วนอย่างต่ำ', a: [2, 5], mode: 'low', hint: 'คูณ 10 ทั้งคู่ให้เป็นจำนวนนับก่อน', sig: 'l7', diff: 12 }),
+      Q.rpRat({ q: `ทำ <b>${fqHTML(1, 3)} : ${fqHTML(1, 4)}</b> ให้เป็นอัตราส่วนอย่างต่ำ`, a: [4, 3], mode: 'low', hint: 'คูณทั้งคู่ด้วย ค.ร.น. ของตัวส่วน', sig: 'l8', diff: 14 }),
+      Q.rpRat({ q: 'อัตราส่วนอย่างต่ำของ <b>40 เซนติเมตร : 2 เมตร</b>', a: [1, 5], mode: 'low', hint: 'เปลี่ยนเป็นหน่วยเดียวกันก่อน', sig: 'l9', diff: 13 }),
+      Q.rpRat({ q: 'อัตราส่วนอย่างต่ำของ <b>1 ชั่วโมง : 20 นาที</b>', a: [3, 1], mode: 'low', hint: '1 ชั่วโมง = 60 นาที', sig: 'l10', diff: 14 }),
+      Q.rpRat({ q: 'อัตราส่วนอย่างต่ำของ <b>2.50 บาท : 75 สตางค์</b>', a: [10, 3], mode: 'low', hint: '1 บาท = 100 สตางค์', sig: 'l11', diff: 16 })]; }),
+  /* ---------- 6 อัตราส่วนของจำนวนหลายจำนวน ---------- */
+  LR7(6, 'เกาะสามสาย', 'อัตราส่วนของจำนวนหลายจำนวน', 'a : b : c', 'เขียนอัตราส่วน a : b : c ทำให้เป็นอย่างต่ำ และรวมอัตราส่วน a : b กับ b : c เป็น a : b : c โดยทำจำนวนที่ซ้ำกันให้เท่ากัน', [
+    T('<b>a : b : c</b> — แตะการ์ดทีละใบ', 'อัตราส่วนสามจำนวน แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['ความหมาย', '<b>เปรียบเทียบสามปริมาณพร้อมกัน</b><small>แดง 2 เขียว 3 ฟ้า 5 → แดง : เขียว : ฟ้า = 2 : 3 : 5</small>'],
+      ['แยกเป็นคู่', '<b>a : b : c = 2 : 3 : 5</b><small>→ a : b = 2 : 3 · b : c = 3 : 5 · a : c = 2 : 5</small>'],
+      ['อย่างต่ำ', '<b>หารทั้งสามจำนวนด้วย ห.ร.ม.</b><small>6 : 9 : 12 = 2 : 3 : 4</small>']]))),
+    T('<b>รวมสองอัตราส่วน</b> — ลากให้ b เท่ากัน', 'ลากแถบให้บีเท่ากัน', el => el.append(rpSimChain([2, 3], [4, 5]))),
+    T('ตัวอย่างทีละขั้น: <b>รวม a : b กับ b : c</b>', 'ตัวอย่างทีละขั้น รวมเอต่อบีกับบีต่อซี', el => el.append(rpWalk(`a : b = ${rpRat(3, 4)} และ b : c = ${rpRat(6, 7)} หา a : b : c`,
+      [['① b ไม่เท่ากัน', 'b เป็น 4 กับ 6 → ค.ร.น. ของ 4 กับ 6 คือ 12'], ['② ทำ b เป็น 12', `a : b = ${rpRat('3 × 3', '4 × 3')} = ${rpRat(9, 12)} · b : c = ${rpRat('6 × 2', '7 × 2')} = ${rpRat(12, 14)}`], ['③ เขียนรวม', `a : b : c = ${rpRat(9, 12, 14)}`]],
+      'จำนวนที่ใช้ร่วมกัน (b) ต้องเท่ากันก่อน จึงเขียนรวมกันได้', 'จำนวนที่ใช้ร่วมกันต้องเท่ากันก่อน')))
+  ], () => { const r = rpR(2, 5), g = rpR(2, 6), bl = rpR(3, 6), T3 = rpPick([[2, 5, 9], [3, 7, 8], [4, 7, 9], [5, 6, 8]]), k = rpPick([2, 3, 4]), sb = rpPick([[2, 3, 3, 4], [1, 2, 2, 5], [4, 5, 5, 6]]);
+    return [
+      Q.rpRat({ q: 'จากรูป อัตราส่วนของจำนวน<b>ผลสีแดง : สีเหลือง : สีเขียว</b>', fig: rpPic([{ n: r, k: 'fruit', c: RP_C.p, lab: 'สีแดง' }, { n: g, k: 'fruit', c: RP_C.y, lab: 'สีเหลือง' }, { n: bl, k: 'fruit', c: RP_C.g, lab: 'สีเขียว' }]), a: [r, g, bl], hint: 'นับตามลำดับ แดง เหลือง เขียว', sig: 't1 ' + r + g + bl, diff: 5 }),
+      Q.rpRat({ q: `a : b : c = ${rpRT(...T3)} อัตราส่วน <b>a : c</b> คือข้อใด`, a: [T3[0], T3[2]], hint: 'หยิบจำนวนแรกกับจำนวนที่สาม', sig: 't2', base: 'rpt3', diff: 6 }),
+      Q.rpRat({ q: `a : b : c = ${rpRT(...T3)} อัตราส่วน <b>c : b</b> คือข้อใด`, a: [T3[2], T3[1]], hint: 'ระวังลำดับ c ก่อน แล้วจึง b', sig: 't3', base: 'rpt3', diff: 8 }),
+      Q.rpRat({ q: `ทำ <b>${rpRT(...T3.map(x => x * k))}</b> ให้เป็นอัตราส่วนอย่างต่ำ`, a: T3, mode: 'low', hint: 'หารทั้งสามจำนวนด้วย ห.ร.ม.', sig: 't4', diff: 8 }),
+      Q.rpOpt({ q: `ข้อใดเท่ากับ <b>${rpRT(2, 5, 9)}</b>`, opts: [rpRT(4, 10, 18), rpRT(3, 6, 10), rpRT(4, 10, 16)], right: rpRT(4, 10, 18), hint: 'คูณทั้งสามจำนวนด้วยจำนวนเดียวกัน', sig: 't5', diff: 7 }),
+      Q.rpRat({ q: `a : b = ${rpRT(sb[0], sb[1])} และ b : c = ${rpRT(sb[2], sb[3])} จงหา a : b : c`, a: [sb[0], sb[1], sb[3]], hint: 'b ของสองอัตราส่วนเท่ากันแล้ว เขียนรวมได้เลย', sig: 't6', diff: 9 }),
+      Q.rpOpt({ q: `a : b = ${rpRT(3, 4)} และ b : c = ${rpRT(6, 5)} ข้อใดคือ a : b : c`, opts: [rpRT(9, 12, 10), rpRT(3, 4, 5), rpRT(3, 12, 5), rpRT(9, 4, 10)], right: rpRT(9, 12, 10), hint: 'ทำ b ให้เท่ากันด้วย ค.ร.น. ของ 4 กับ 6', sig: 't7', diff: 12 }),
+      Q.rpRat({ q: `a : b = ${rpRT(5, 6)} และ b : c = ${rpRT(4, 9)} จงหา a : b : c`, a: [10, 12, 27], hint: 'ทำ b ให้เป็น ค.ร.น. ของ 6 กับ 4', sig: 't8', diff: 14 }),
+      Q.rpRat({ q: `a : b = ${rpRT(1, 2)} และ b : c = ${rpRT(3, 5)} จงหา a : b : c`, a: [3, 6, 10], hint: 'ทำ b ให้เป็น ค.ร.น. ของ 2 กับ 3', sig: 't9', diff: 13 }),
+      Q.rpRat({ story: 'ในการผสมคอนกรีต ปูน : ทราย = 1 : 2 และ ทราย : หิน = 3 : 5', q: 'อัตราส่วนของ ปูน : ทราย : หิน', a: [3, 6, 10], hint: 'ทำจำนวนของทรายให้เท่ากันก่อน', sig: 't10', diff: 15 }),
+      rpTF(`ถ้า a : b = 1 : 2 และ b : c = 3 : 4 แล้ว a : b : c = 1 : 2 : 4`, false, 'b ของสองอัตราส่วนยังไม่เท่ากัน (2 กับ 3) ต้องทำให้เท่ากันก่อน'),
+      rpTF('อัตราส่วน 4 : 6 : 10 เขียนเป็นอัตราส่วนอย่างต่ำได้ 2 : 3 : 5', true, '')]; }),
+  /* ---------- 7 การหาอัตราส่วนเมื่อทราบข้อมูลบางส่วน ---------- */
+  LR7(7, 'ท่าแบ่งปัน', 'การหาจำนวนเมื่อทราบอัตราส่วน', 'แบ่งตามส่วน', 'หาจำนวนที่หายไปในอัตราส่วน แบ่งจำนวนตามอัตราส่วน หาผลรวมจากอัตราส่วน และหาแต่ละส่วนเมื่อทราบผลรวมหรือผลต่าง', [
+    T('<b>แจกขนมทีละรอบ</b> ตามอัตราส่วน 3 : 4', 'แจกขนมทีละรอบตามอัตราส่วนสามต่อสี่', el => el.append(rpSimDeal(35, 3, 4))),
+    T('ตัวอย่างทีละขั้น: <b>หาจำนวนที่หายไป</b>', 'ตัวอย่างทีละขั้น หาจำนวนที่หายไป', el => el.append(rpWalk(`อายุพี่ : อายุน้อง = ${rpRat(5, 3)} พี่อายุ 20 ปี น้องอายุกี่ปี`,
+      [['① 5 ส่วน = 20 ปี', 'ส่วนละ 20 ÷ 5 = 4 ปี'], ['② น้อง 3 ส่วน', '3 × 4 = <b>12 ปี</b>'], ['③ ตรวจ', `${rpRat(20, 12)} = ${rpRat(5, 3)} ✓`]],
+      'หา "ส่วนละเท่าไร" ก่อน แล้วคูณกับจำนวนส่วนที่ต้องการ', 'หาส่วนละเท่าไรก่อน'))),
+    T('ตัวอย่างทีละขั้น: <b>รู้ผลต่าง</b>', 'ตัวอย่างทีละขั้น รู้ผลต่าง', el => el.append(rpWalk(`เงินของ ก : ข = ${rpRat(5, 2)} ก มีมากกว่า ข อยู่ 36 บาท`,
+      [['① ผลต่างกี่ส่วน', '5 − 2 = 3 ส่วน'], ['② 3 ส่วน = 36 บาท', 'ส่วนละ 36 ÷ 3 = 12 บาท'], ['③ หาเงินแต่ละคน', 'ก = 5 × 12 = <b>60</b> บาท · ข = 2 × 12 = <b>24</b> บาท']],
+      'ผลรวม → ใช้จำนวนส่วนรวมกัน · ผลต่าง → ใช้จำนวนส่วนที่ต่างกัน', 'ผลรวมใช้ส่วนรวม ผลต่างใช้ส่วนต่าง')))
+  ], () => { const R = rpPick([[3, 5], [2, 7], [4, 5], [3, 4]]), u = rpPick([4, 6, 7, 8]), R2 = rpPick([[3, 5], [2, 3], [4, 7]].filter(x => x + '' !== R + '')), u2 = rpPick([5, 6, 9]), D = rpPick([[5, 2], [7, 3], [4, 1]]), ud = rpPick([6, 7, 8]), T3 = rpPick([[2, 3, 4], [1, 2, 3], [3, 4, 5]]), m3 = rpPick([100, 50, 30]), sh = rpPick([2, 3, 4]), ag = rpPick([[5, 3], [7, 4], [4, 3]]), ua = rpPick([2, 3]);
+    return [
+      Q.rpNum({ q: `${rpRT('a', 'b')} = ${rpRT(...R)} ถ้า a = <b>${R[0] * u}</b> แล้ว b เท่ากับเท่าใด`, a: R[1] * u, hint: `${R[0]} ส่วน = ${R[0] * u} หาส่วนละเท่าไรก่อน`, sig: 'f1', diff: 4 }),
+      Q.rpNum({ q: `${rpRT('a', 'b')} = ${rpRT(...R2)} ถ้า b = <b>${R2[1] * u2}</b> แล้ว a เท่ากับเท่าใด`, a: R2[0] * u2, hint: `${R2[1]} ส่วน = ${R2[1] * u2}`, sig: 'f2', diff: 5 }),
+      Q.rpNum({ story: `อายุพี่ : อายุน้อง = ${ag[0]} : ${ag[1]} พี่อายุ ${ag[0] * ua * 2} ปี`, q: 'น้องอายุกี่ปี', a: ag[1] * ua * 2, unit: 'ปี', hint: 'หาว่า 1 ส่วนเท่ากับกี่ปี', sig: 'f3', diff: 5 }),
+      Q.rpNum({ story: `แบ่งขนม ${(R[0] + R[1]) * u} ชิ้น ให้ ก : ข = ${R[0]} : ${R[1]}`, q: 'แบ่งเป็นส่วน ๆ ได้<b>ส่วนละกี่ชิ้น</b>', a: u, unit: 'ชิ้น', hint: `รวม ${R[0]} + ${R[1]} ส่วน`, sig: 'f4', diff: 6 }),
+      Q.rpNum({ story: `แบ่งขนม ${(R[0] + R[1]) * u} ชิ้น ให้ ก : ข = ${R[0]} : ${R[1]}`, q: '<b>ก</b> ได้ขนมกี่ชิ้น', a: R[0] * u, unit: 'ชิ้น', hint: `ทั้งหมด ${R[0] + R[1]} ส่วน`, sig: 'f5', base: 'rpshare', diff: 7 }),
+      Q.rpNum({ story: `ส้ม : มะม่วง = ${R2[0]} : ${R2[1]} มีส้ม ${R2[0] * u2} ผล`, q: 'มีผลไม้ทั้งสองชนิดรวมกันกี่ผล', a: (R2[0] + R2[1]) * u2, unit: 'ผล', hint: 'หาส่วนละเท่าไร แล้วคูณกับจำนวนส่วนทั้งหมด', sig: 'f6', diff: 9 }),
+      Q.rpNum({ story: `แบ่งเงิน ${(T3[0] + T3[1] + T3[2]) * m3} บาท ให้สามคนตามอัตราส่วน ${rpRT(...T3)}`, q: 'คนที่ได้<b>มากที่สุด</b>ได้เงินกี่บาท', a: T3[2] * m3, unit: 'บาท', hint: `ทั้งหมด ${T3[0] + T3[1] + T3[2]} ส่วน`, sig: 'f7', diff: 12 }),
+      Q.rpNum({ story: `สามเหลี่ยมรูปหนึ่งมีอัตราส่วนความยาวด้าน 2 : 5 : 6 ด้านที่สั้นที่สุดยาว ${2 * sh} เซนติเมตร`, q: 'ด้านที่ยาวที่สุดยาวกี่เซนติเมตร', a: 6 * sh, unit: 'ซม.', hint: '2 ส่วน = ด้านที่สั้นที่สุด', sig: 'f8', diff: 11 }),
+      Q.rpNum({ story: `เงินของ ก : ข = ${D[0]} : ${D[1]} ก มีมากกว่า ข อยู่ ${(D[0] - D[1]) * ud} บาท`, q: 'ก มีเงินกี่บาท', a: D[0] * ud, unit: 'บาท', hint: `ผลต่าง ${D[0]} − ${D[1]} ส่วน`, sig: 'f9', diff: 14 }),
+      Q.rpNum({ story: 'รูปสี่เหลี่ยมผืนผ้ามีความกว้าง : ความยาว = 2 : 3 และมีความยาวรอบรูป 50 เซนติเมตร', q: 'ความกว้างยาวกี่เซนติเมตร', a: 10, unit: 'ซม.', hint: 'กว้าง + ยาว = ครึ่งหนึ่งของความยาวรอบรูป', sig: 'f10', diff: 16 }),
+      rpTF(`ถ้า ก : ข = 3 : 5 และ ข ได้ 25 ชิ้น แล้ว ก ได้ 15 ชิ้น`, true, ''),
+      rpTF('แบ่งของตามอัตราส่วน 2 : 3 แปลว่าคนแรกได้ 2 ชิ้น และคนที่สองได้ 3 ชิ้นเสมอ', false, '2 : 3 คือ 2 ส่วนต่อ 3 ส่วน แต่ละส่วนอาจมีหลายชิ้น')]; }),
+  /* ---------- 8 ความหมายของสัดส่วน ---------- */
+  LR7(8, 'สะพานสัดส่วน', 'ความหมายของสัดส่วน', 'สัดส่วน', 'บอกความหมายของสัดส่วน เขียนสัดส่วนจากอัตราส่วนที่เท่ากัน และตรวจว่าสัดส่วนเป็นจริงหรือไม่ด้วยการคูณไขว้', [
+    T('<b>ตาชั่งสัดส่วน</b> — ลากให้สมดุล', 'ลากจุดบนเส้นจำนวนให้ตาชั่งสมดุล', el => el.append(rpSimBalance())),
+    T('<b>สัดส่วน</b> — แตะการ์ดทีละใบ', 'สัดส่วน แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['สัดส่วนคืออะไร', '<b>ประโยคที่บอกว่าอัตราส่วนสองอัตราส่วนเท่ากัน</b><small>2 : 3 = 8 : 12 เป็นสัดส่วน</small>'],
+      ['เขียนได้ 2 แบบ', `<b>a : b = c : d</b><small>หรือ ${fqHTML('a', 'b')} = ${fqHTML('c', 'd')}</small>`],
+      ['ตรวจด้วยคูณไขว้', '<b>a × d = b × c</b><small>3 : 4 = 9 : 12 → 3 × 12 = 36 และ 4 × 9 = 36 ✓</small>'],
+      ['ไม่เป็นสัดส่วน', '<b>ผลคูณไขว้ไม่เท่ากัน</b><small>2 : 5 = 4 : 9 → 18 ≠ 20 ✗</small>']])))
+  ], () => { const B = [[2, 3], [3, 4], [2, 5], [4, 7]], [a, b] = rpPick(B), k = rpPick([2, 3, 4, 5]), [c, d] = rpPick(B.filter(x => x[0] !== a)), k2 = rpPick([3, 4]), pr = rpPick([[3, 75, 5], [2, 46, 7], [4, 100, 6]]);
+    return [
+      Q.rpOpt({ q: '<b>สัดส่วน</b>คืออะไร', opts: ['ประโยคที่บอกว่าอัตราส่วนสองอัตราส่วนเท่ากัน', 'การเปรียบเทียบปริมาณสองปริมาณ', 'ผลคูณของจำนวนสองจำนวน'], right: 'ประโยคที่บอกว่าอัตราส่วนสองอัตราส่วนเท่ากัน', hint: 'สัดส่วนมีเครื่องหมาย = อยู่ระหว่างอัตราส่วนสองอัตราส่วน', sig: 'p1', diff: 3 }),
+      rpTF(`${rpRat(a, b)} = ${rpRat(a * k, b * k)} เป็นสัดส่วน`, true, ''),
+      rpTF(`${rpRat(c, d)} = ${rpRat(c * k2, d * k2 + 1)} เป็นสัดส่วน`, false, `คูณไขว้: ${c} × ${d * k2 + 1} = ${c * (d * k2 + 1)} แต่ ${d} × ${c * k2} = ${d * c * k2}`),
+      Q.rpNum({ q: `จากสัดส่วน ${fqHTML(a, b)} = ${fqHTML(a * k, b * k)} ผลคูณไขว้เท่ากับเท่าใด`, a: a * b * k, hint: 'คูณตัวเศษข้างหนึ่งกับตัวส่วนอีกข้างหนึ่ง', sig: 'p2', diff: 6 }),
+      Q.rpOpt({ q: 'ข้อใด<b>เป็นสัดส่วน</b>', opts: [`${rpRT(c, d)} = ${rpRT(c * 3, d * 3)}`, `${rpRT(c, d)} = ${rpRT(d * 3, c * 3)}`, `${rpRT(c, d)} = ${rpRT(c + 3, d + 3)}`], right: `${rpRT(c, d)} = ${rpRT(c * 3, d * 3)}`, hint: 'ตรวจด้วยการคูณไขว้', sig: 'p3', diff: 7 }),
+      Q.rpOpt({ q: `ถ้า ${fqHTML('a', 'b')} = ${fqHTML('c', 'd')} เป็นสัดส่วน ข้อใดถูกต้อง`, opts: ['ad = bc', 'ac = bd', 'a + d = b + c'], right: 'ad = bc', hint: 'ผลคูณไขว้ของสัดส่วนเท่ากันเสมอ', sig: 'p4', diff: 8 }),
+      Q.rpOpt({ q: `เติมจำนวนใดใน □ แล้วเป็นสัดส่วน: ${rpRT(4, 10)} = ${rpRT(6, '□')}`, opts: ['15', '12', '16'], right: '15', hint: '4 × □ ต้องเท่ากับ 10 × 6', sig: 'p5', diff: 10 }),
+      Q.rpOpt({ q: 'ข้อใด<b>ไม่เป็นสัดส่วน</b>', opts: [`${rpRT(3, 5)} = ${rpRT(9, 16)}`, `${rpRT(3, 5)} = ${rpRT(12, 20)}`, `${rpRT(3, 5)} = ${rpRT(1.5, 2.5)}`], right: `${rpRT(3, 5)} = ${rpRT(9, 16)}`, hint: 'ตรวจทุกข้อด้วยการคูณไขว้', sig: 'p6', diff: 11 }),
+      Q.rpOpt({ story: `ส้ม ${pr[0]} กิโลกรัม ราคา ${pr[1]} บาท ถ้าซื้อส้ม ${pr[2]} กิโลกรัม ราคา x บาท`, q: 'เขียนสัดส่วนได้ตามข้อใด', opts: [`${pr[0]}/${pr[1]} = ${pr[2]}/x`, `${pr[0]}/${pr[1]} = x/${pr[2]}`, `${pr[0]}/x = ${pr[2]}/${pr[1]}`], right: `${pr[0]}/${pr[1]} = ${pr[2]}/x`, hint: 'จับคู่ให้ตรงกัน: กิโลกรัมต่อบาท ทั้งสองข้าง', sig: 'p7', diff: 12 }),
+      Q.rpOpt({ q: `จากสัดส่วน ${rpRT(2, 5)} = ${rpRT(6, 15)} ข้อใดเป็นสัดส่วนด้วย`, opts: [`${rpRT(5, 2)} = ${rpRT(15, 6)}`, `${rpRT(5, 2)} = ${rpRT(6, 15)}`, `${rpRT(2, 6)} = ${rpRT(15, 5)}`], right: `${rpRT(5, 2)} = ${rpRT(15, 6)}`, hint: 'กลับทั้งสองข้างพร้อมกันได้ แต่ต้องตรวจด้วยการคูณไขว้', sig: 'p8', diff: 14 }),
+      Q.rpOpt({ story: 'ส้ม 2 ผล ต่อมะม่วง 3 ผล เท่ากับ ส้ม 6 ผล ต่อมะม่วง 9 ผล', q: 'เขียนเป็นสัดส่วนได้ตามข้อใด', opts: ['2 : 3 = 6 : 9', '2 : 6 = 9 : 3', '3 : 2 = 6 : 9'], right: '2 : 3 = 6 : 9', hint: 'อัตราส่วนส้มต่อมะม่วงทั้งสองข้าง', sig: 'p9', diff: 5 }),
+      Q.rpOpt({ q: `อัตราส่วนใดนำไปเขียนเป็นสัดส่วนกับ <b>${rpRT(5, 6)}</b> ได้`, opts: [rpRT(15, 18), rpRT(6, 5), rpRT(10, 11)], right: rpRT(15, 18), hint: 'ต้องเป็นอัตราส่วนที่เท่ากับ 5 : 6', sig: 'p10', diff: 6 }),
+      rpTF(`สัดส่วน ${fqHTML('a', 'b')} = ${fqHTML('c', 'd')} เขียนแทนด้วย a : b = c : d ได้`, true, ''),
+      rpTF('ถ้าผลคูณไขว้ไม่เท่ากัน อัตราส่วนสองอัตราส่วนนั้นก็ยังเป็นสัดส่วนได้', false, 'สัดส่วนต้องมีผลคูณไขว้เท่ากันเสมอ')]; }),
+  /* ---------- 9 การหาค่าตัวแปรในสัดส่วน ---------- */
+  LR7(9, 'ท่าคูณไขว้', 'การหาค่าตัวแปรในสัดส่วน', 'คูณไขว้', 'หาค่าตัวแปรในสัดส่วนด้วยการคูณไขว้ แก้สมการ และตรวจคำตอบ ทั้งเมื่อตัวแปรอยู่ที่ตัวเศษ ตัวส่วน หรือมีทศนิยม', [
+    T('<b>แตะคู่ทแยง</b> — คูณไขว้แล้วแก้สมการ', 'แตะคู่ทแยงเพื่อคูณไขว้ แล้วแก้สมการ', el => el.append(rpSimCross('x', 12, 5, 4))),
+    T('ตัวอย่างทีละขั้น: <b>x อยู่ที่ตัวส่วน</b>', 'ตัวอย่างทีละขั้น เอ็กซ์อยู่ที่ตัวส่วน', el => el.append(rpWalk(`หาค่า x จาก ${fqHTML(9, 'x')} = ${fqHTML(3, 7)}`,
+      [['① คูณไขว้', '3 × x = 9 × 7'], ['② คำนวณ', '3x = 63'], ['③ หารด้วย 3', 'x = 63 ÷ 3 = <b>21</b>'], ['④ ตรวจ', `${fqHTML(9, 21)} = ${fqHTML(3, 7)} ✓ (9 × 7 = 63 = 21 × 3)`]],
+      'คูณไขว้ → ได้สมการ → แก้สมการ → แทนค่ากลับเพื่อตรวจ', 'คูณไขว้ แก้สมการ แล้วตรวจ')))
+  ], () => { const A = rpPick([[3, 4, 8], [5, 2, 6], [2, 3, 9], [7, 4, 8]]), B2 = rpPick([[15, 12, 5], [12, 8, 9], [14, 21, 4]]), C = rpPick([[12, 18, 6], [10, 25, 15], [8, 20, 5]]), D = rpPick([[7, 3, 21], [5, 4, 20], [9, 2, 18]]), E = rpPick([[8, 12, 6], [6, 9, 2], [10, 15, 6]]);
+    return [
+      Q.rpNum({ q: `หาค่า x จาก ${fqHTML('x', A[2])} = ${fqHTML(A[0], A[1])}`, a: A[0] * A[2] / A[1], hint: `คูณไขว้: ${A[1]} × x = ${A[2]} × ${A[0]}`, sig: 'v1', diff: 4 }),
+      Q.rpNum({ q: `หาค่า x จาก ${fqHTML(C[0], C[1])} = ${fqHTML('x', C[2])}`, a: C[0] * C[2] / C[1], hint: `คูณไขว้: ${C[1]} × x = ${C[0]} × ${C[2]}`, sig: 'v2', diff: 6 }),
+      Q.rpNum({ q: `หาค่า x จาก ${fqHTML(B2[2], 'x')} = ${fqHTML(B2[0], B2[1])}`, a: B2[2] * B2[1] / B2[0], hint: `คูณไขว้: ${B2[0]} × x = ${B2[2]} × ${B2[1]}`, sig: 'v3', diff: 8 }),
+      Q.rpNum({ q: `หาค่า x จาก ${fqHTML(D[0], D[1])} = ${fqHTML(D[2], 'x')}`, a: D[1] * D[2] / D[0], hint: `คูณไขว้: ${D[0]} × x = ${D[1]} × ${D[2]}`, sig: 'v4', diff: 8 }),
+      Q.rpNum({ q: `หาค่า x จาก x : ${E[1]} = ${E[0]} : ${E[2]}`, a: E[0] * E[1] / E[2], hint: `เขียนเป็น ${fqHTML('x', E[1])} = ${fqHTML(E[0], E[2])} แล้วคูณไขว้`, sig: 'v5', diff: 10 }),
+      Q.rpOpt({ q: `จาก ${fqHTML(4, 'x')} = ${fqHTML(6, 9)} คูณไขว้แล้วได้สมการใด`, opts: ['6x = 36', '4x = 54', '9x = 24'], right: '6x = 36', hint: 'x คูณกับตัวเลขที่อยู่แนวทแยงกับ x', sig: 'v6', diff: 9 }),
+      Q.rpNum({ story: 'หุงข้าวใช้อัตราส่วนน้ำต่อข้าวสารเป็น 2 : 1', q: 'ถ้าใช้ข้าวสาร 3 ถ้วย ต้องใช้น้ำกี่ถ้วย', a: 6, unit: 'ถ้วย', hint: `${fqHTML(2, 1)} = ${fqHTML('x', 3)}`, sig: 'v7', diff: 5 }),
+      Q.rpNum({ q: `หาค่า x จาก ${fqHTML('x', 2.5)} = ${fqHTML(4, 5)}`, a: 2, hint: 'คูณไขว้: 5x = 2.5 × 4', sig: 'v8', diff: 12 }),
+      rpTF(`x = 10 เป็นคำตอบของ ${fqHTML('x', 4)} = ${fqHTML(15, 6)}`, true, ''),
+      Q.rpNum({ q: `หาค่า x จาก ${fqHTML('2x', 5)} = ${fqHTML(6, 3)}`, a: 5, hint: 'คูณไขว้: 3 × 2x = 5 × 6 → 6x = 30', sig: 'v9', diff: 14 }),
+      Q.rpNum({ q: `หาค่า x จาก ${fqHTML('x + 2', 6)} = ${fqHTML(3, 2)}`, a: 7, hint: 'คูณไขว้: 2(x + 2) = 18', sig: 'v10', diff: 16 }),
+      rpTF(`ในสัดส่วน ${fqHTML('x', 6)} = ${fqHTML(2, 3)} ค่าของ x คือ 9`, false, 'คูณไขว้: 3x = 12 → x = 4')]; }),
+  /* ---------- 10 สัดส่วนตรง ---------- */
+  LR7(10, 'ทุ่งแปรผันตรง', 'สัดส่วนตรง', 'สัดส่วนตรง', 'บอกได้ว่าปริมาณสองปริมาณเป็นสัดส่วนตรง (เพิ่ม/ลดเป็นกี่เท่าไปทางเดียวกัน และ y ÷ x คงที่) หาค่าคงตัว และเขียนสมการ y = kx', [
+    T('<b>ซื้อปากกา</b> — ลากจุดบนกราฟ', 'ลากจุดบนกราฟ เปลี่ยนจำนวนปากกา', el => el.append(rpSimDirect(12))),
+    T('<b>สัดส่วนตรง</b> — แตะการ์ดทีละใบ', 'สัดส่วนตรง แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['ไปทางเดียวกันเป็นเท่า', '<b>x เพิ่มเป็น 2 เท่า → y เพิ่มเป็น 2 เท่า</b><small>x ลดลงครึ่งหนึ่ง → y ก็ลดลงครึ่งหนึ่ง</small>'],
+      ['ค่าคงตัว', '<b>y ÷ x = k เท่ากันทุกคู่</b><small>ปากกา 3 ด้าม 36 บาท → 36 ÷ 3 = 12 (ราคาต่อด้าม)</small>'],
+      ['สมการ', '<b>y = kx</b><small>ราคา y บาท ของปากกา x ด้าม → y = 12x</small>'],
+      ['กราฟ', '<b>เส้นตรงผ่านจุด (0, 0)</b><small>ซื้อ 0 ด้าม จ่าย 0 บาท</small>'],
+      ['ระวัง!', '<b>เพิ่มด้วยกัน ไม่ได้แปลว่าเป็นสัดส่วนตรง</b><small>อายุเพิ่ม ส่วนสูงเพิ่ม แต่ไม่เพิ่มเป็นกี่เท่าเท่ากัน</small>']])))
+  ], () => { const k = rpPick([3, 4, 6, 7, 8]), xs = [2, 4, 6], k2 = rpPick([5, 9, 15]), y0 = rpPick([[3, 18, 7], [4, 28, 9], [5, 40, 8]]), kh = rpPick([[4, 26], [2, 7], [4, 18]]), pp = rpPick([12, 15, 20]);
+    return [
+      Q.rpOpt({ q: 'ข้อใดเป็น<b>สัดส่วนตรง</b>', opts: ['จำนวนสินค้ากับราคารวม (ราคาต่อชิ้นเท่ากัน)', 'จำนวนคนทำงานกับจำนวนวันที่ใช้', 'อายุกับส่วนสูงของเด็ก'], right: 'จำนวนสินค้ากับราคารวม (ราคาต่อชิ้นเท่ากัน)', hint: 'ปริมาณหนึ่งเพิ่มเป็น 2 เท่า อีกปริมาณก็ต้องเพิ่มเป็น 2 เท่าด้วย', sig: 'd1', diff: 4 }),
+      Q.rpNum({ q: 'จากตาราง y เป็นสัดส่วนตรงกับ x <b>ค่าคงตัว (y ÷ x)</b> เท่ากับเท่าใด', fig: rpXY('x', 'y', xs, xs.map(x => x * k)), a: k, hint: 'นำ y หารด้วย x คู่ใดก็ได้', sig: 'd2', base: 'rpdtb', diff: 6 }),
+      Q.rpNum({ q: 'จากตาราง y เป็นสัดส่วนตรงกับ x ช่อง <b>?</b> คือจำนวนใด', fig: rpXY('x', 'y', [1, 3, 5], [k2, k2 * 3, '?']), a: k2 * 5, hint: 'หาค่าคงตัว y ÷ x ก่อน', sig: 'd3', base: 'rpdtb', diff: 5 }),
+      Q.rpOpt({ q: 'ตารางคู่ x → y ข้อใดเป็นสัดส่วนตรง', opts: ['1→4, 2→8, 3→12', '1→4, 2→6, 3→8', '1→12, 2→6, 3→4'], right: '1→4, 2→8, 3→12', hint: 'y ÷ x ต้องเท่ากันทุกคู่', sig: 'd4', diff: 9 }),
+      Q.rpNum({ q: `ถ้า y = ${k}x และ x = 6 แล้ว y เท่ากับเท่าใด`, a: 6 * k, hint: `แทน x ด้วย 6`, sig: 'd5', diff: 7 }),
+      Q.rpNum({ story: `y เป็นสัดส่วนตรงกับ x และ y = ${y0[1]} เมื่อ x = ${y0[0]}`, q: `จงหาค่า y เมื่อ x = ${y0[2]}`, a: y0[1] / y0[0] * y0[2], hint: 'หาค่าคงตัว k = y ÷ x ก่อน', sig: 'd6', diff: 11 }),
+      Q.rpNum({ q: `y = kx ถ้า y = ${kh[1]} เมื่อ x = ${kh[0]} ค่าคงตัว k เท่ากับเท่าใด`, a: kh[1] / kh[0], hint: 'k = y ÷ x (ตอบเป็นทศนิยมได้)', sig: 'd7', diff: 12 }),
+      Q.rpOpt({ q: 'ถ้าซื้อสินค้าชนิดเดียวกันเพิ่มขึ้นเป็น <b>3 เท่า</b> ราคารวมจะเป็นอย่างไร', opts: ['เพิ่มขึ้นเป็น 3 เท่า', 'ลดลงเหลือ 1 ใน 3', 'เท่าเดิม'], right: 'เพิ่มขึ้นเป็น 3 เท่า', hint: 'จำนวนสินค้ากับราคารวมเป็นสัดส่วนตรง', sig: 'd8', diff: 5 }),
+      Q.rpOpt({ q: `เขียนสมการแสดงราคา y บาท ของปากกา x ด้าม ด้ามละ ${pp} บาท`, opts: [`y = ${pp}x`, `x = ${pp}y`, `y = x + ${pp}`], right: `y = ${pp}x`, hint: 'ราคารวม = ราคาต่อด้าม × จำนวนด้าม', sig: 'd9', diff: 9 }),
+      Q.rpOpt({ q: 'เมื่อรถวิ่งด้วย<b>อัตราเร็วคงที่</b> ปริมาณใดเป็นสัดส่วนตรงกับระยะทาง', opts: ['เวลาที่ใช้', 'อัตราเร็ว', 'จำนวนผู้โดยสาร'], right: 'เวลาที่ใช้', hint: 'วิ่งนานขึ้นเป็น 2 เท่า ระยะทางเป็นอย่างไร', sig: 'd10', diff: 8 }),
+      rpTF('กราฟของสัดส่วนตรงเป็นเส้นตรงที่ผ่านจุด (0, 0)', true, ''),
+      rpTF('ถ้าปริมาณหนึ่งเพิ่มแล้วอีกปริมาณก็เพิ่ม แสดงว่าเป็นสัดส่วนตรงเสมอ', false, 'ต้องเพิ่มเป็นกี่เท่าเท่ากัน เช่น อายุกับส่วนสูงไม่เป็นสัดส่วนตรง')]; })
+];
+
+/* =========================================================
+   ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ — ด่าน 2711–2720 + บอส 2721 (v244) · prefix rp
+   ด่าน 10–13 สอนสัดส่วนตรง/ผกผันด้วยกราฟ ตาราง และสถานการณ์จริงก่อนสูตร (ตามที่ผู้ใช้เน้น)
+   ========================================================= */
+const RP_DI_CARDS = [
+  { t: 'ซื้อสมุดเพิ่มขึ้น → จ่ายเงินมากขึ้น', bin: 0, why: 'สมุด 2 เท่า เงินก็ 2 เท่า' },
+  { t: 'คนทำงานมากขึ้น (งานเท่าเดิม) → เสร็จเร็วขึ้น', bin: 1, why: 'คน 2 เท่า วันลดลงครึ่งหนึ่ง' },
+  { t: 'ขับเร็วขึ้น (ระยะทางเท่าเดิม) → ใช้เวลาน้อยลง', bin: 1, why: 'อัตราเร็ว 2 เท่า เวลาลดลงครึ่งหนึ่ง' },
+  { t: 'เติมน้ำมันมากขึ้น → วิ่งได้ไกลขึ้น (สิ้นเปลืองเท่าเดิม)', bin: 0, why: 'น้ำมัน 2 เท่า วิ่งได้ไกล 2 เท่า' },
+  { t: 'แบ่งเค้กก้อนเดียวให้คนมากขึ้น → ได้ชิ้นเล็กลง', bin: 1, why: 'คน 2 เท่า ชิ้นเล็กลงครึ่งหนึ่ง' },
+  { t: 'ทำขนมมากขึ้น → ใช้แป้งมากขึ้น', bin: 0, why: 'ขนม 3 เท่า แป้งก็ 3 เท่า' }];
+LESSONS_M1C7.push(
+  /* ---------- 11 โจทย์ปัญหาสัดส่วนตรง ---------- */
+  LR7(11, 'ร้านค้าริมน้ำ', 'การแก้โจทย์ปัญหาสัดส่วนตรง', 'โจทย์ตรง', 'แก้โจทย์ปัญหาสัดส่วนตรงเรื่องราคากับจำนวนสินค้า ระยะทางกับเวลาเมื่ออัตราเร็วคงที่ และวัตถุดิบกับจำนวนชิ้นงาน โดยตั้งสัดส่วนให้หน่วยตรงกัน', [
+    T('ตัวอย่างทีละขั้น: <b>ราคากับจำนวนสินค้า</b>', 'ตัวอย่างทีละขั้น ราคากับจำนวนสินค้า', el => el.append(rpWalk('หนังสือ <b>4 เล่ม ราคา 356 บาท</b> ถ้าซื้อ <b>11 เล่ม</b> ต้องจ่ายกี่บาท',
+      [['① เป็นสัดส่วนแบบใด', 'ซื้อเพิ่มกี่เท่า ราคาก็เพิ่มเท่านั้น → <b>สัดส่วนตรง</b>'], ['② ตั้งสัดส่วน (เล่ม/บาท)', `${fqHTML(4, 356)} = ${fqHTML(11, 'x')}`], ['③ คูณไขว้', '4x = 356 × 11 = 3,916'], ['④ หาค่า x', 'x = 3,916 ÷ 4 = <b>979 บาท</b>']],
+      'วิธีลัด: 1 เล่ม = 356 ÷ 4 = 89 บาท → 11 เล่ม = 89 × 11 = 979 บาท', 'หาราคาต่อหนึ่งเล่มก่อนก็ได้'))),
+    T('ตัวอย่างทีละขั้น: <b>ระยะทางกับเวลา</b>', 'ตัวอย่างทีละขั้น ระยะทางกับเวลา', el => el.append(rpWalk('ปั่นจักรยานด้วยอัตราเร็วคงที่ <b>1.5 ชั่วโมง ได้ 24 กิโลเมตร</b> ปั่น <b>4 ชั่วโมง</b> ได้กี่กิโลเมตร',
+      [['① อัตราเร็วคงที่', 'เวลาเพิ่ม ระยะทางเพิ่มเป็นเท่าเดียวกัน → สัดส่วนตรง'], ['② ตั้งสัดส่วน (ชั่วโมง/กิโลเมตร)', `${fqHTML(1.5, 24)} = ${fqHTML(4, 'x')}`], ['③ คูณไขว้', '1.5x = 96'], ['④ หาค่า x', 'x = 96 ÷ 1.5 = <b>64 กิโลเมตร</b>']],
+      'ตั้งสัดส่วนให้หน่วยของตัวเศษตรงกัน และหน่วยของตัวส่วนตรงกันทั้งสองข้าง', 'ตั้งหน่วยให้ตรงกันทั้งสองข้าง')))
+  ], () => { const nb = rpPick([[4, 60, 7], [5, 85, 8], [3, 54, 10]]), km = rpPick([[2, 150, 5], [3, 210, 4], [2, 130, 6]]), fl = rpPick([[12, 300, 20], [8, 200, 30], [15, 450, 25]]), pp = rpPick([[15, 450, 60], [10, 350, 60], [20, 500, 60]]), pr = rpPick([[240, 8, 600], [180, 6, 450], [300, 12, 900]]), wg = rpPick([[6, 2100, 15], [5, 1750, 12], [4, 1600, 9]]), ok = rpPick([[3, 90], [4, 140], [5, 175]]);
+    return [
+      Q.rpNum({ story: `ส้ม ${ok[0]} กิโลกรัม ราคา ${ok[1]} บาท`, q: 'ส้ม 1 กิโลกรัม ราคากี่บาท', a: ok[1] / ok[0], unit: 'บาท', hint: 'แบ่งราคาเท่า ๆ กันตามจำนวนกิโลกรัม', sig: 'w1', diff: 3 }),
+      Q.rpNum({ story: `สมุด ${nb[0]} เล่ม ราคา ${nb[1]} บาท`, q: `ซื้อสมุด ${nb[2]} เล่ม ต้องจ่ายกี่บาท`, a: nb[1] / nb[0] * nb[2], unit: 'บาท', hint: `${fqHTML(nb[0], nb[1])} = ${fqHTML(nb[2], 'x')}`, sig: 'w2', diff: 4 }),
+      rpTF('ถ้าสมุด 5 เล่ม ราคา 120 บาท แล้วสมุด 10 เล่ม (ราคาต่อเล่มเท่าเดิม) ราคา 240 บาท', true, ''),
+      Q.rpNum({ story: `รถยนต์วิ่งด้วยอัตราเร็วคงที่ ${km[0]} ชั่วโมง ได้ระยะทาง ${km[1]} กิโลเมตร`, q: `ใน ${km[2]} ชั่วโมง จะวิ่งได้กี่กิโลเมตร`, a: km[1] / km[0] * km[2], unit: 'กม.', hint: 'ตั้งสัดส่วน ชั่วโมง/กิโลเมตร', sig: 'w3', diff: 6 }),
+      Q.rpOpt({ story: 'ปากกา 6 ด้าม ราคา 72 บาท ซื้อปากกา 9 ด้าม ราคา x บาท', q: 'ตั้งสัดส่วนได้ถูกต้องตามข้อใด', opts: [`6/72 = 9/x`, `6/72 = x/9`, `6/9 = x/72`], right: '6/72 = 9/x', hint: 'ด้าม/บาท ทั้งสองข้าง', sig: 'w4', diff: 7 }),
+      Q.rpNum({ story: `ทำขนม ${fl[0]} ชิ้น ใช้แป้ง ${fl[1]} กรัม`, q: `ทำขนม ${fl[2]} ชิ้น ต้องใช้แป้งกี่กรัม`, a: fl[1] / fl[0] * fl[2], unit: 'กรัม', hint: 'หาว่าขนม 1 ชิ้นใช้แป้งกี่กรัมก่อน', sig: 'w5', diff: 8 }),
+      Q.rpNum({ story: 'ชงกาแฟใช้กาแฟบด 3 ช้อนโต๊ะ ต่อน้ำร้อน 5 ถ้วย', q: 'ถ้าใช้น้ำร้อน 20 ถ้วย ต้องใช้กาแฟบดกี่ช้อนโต๊ะ', a: 12, unit: 'ช้อนโต๊ะ', hint: 'น้ำเพิ่มเป็นกี่เท่า กาแฟก็เพิ่มเท่านั้น', sig: 'w6', diff: 9 }),
+      Q.rpNum({ story: `เครื่องสูบน้ำสูบน้ำได้ ${pp[1]} ลิตร ใน ${pp[0]} นาที`, q: 'ใน 1 ชั่วโมง สูบน้ำได้กี่ลิตร', a: pp[1] / pp[0] * 60, unit: 'ลิตร', hint: '1 ชั่วโมง = 60 นาที', sig: 'w7', diff: 10 }),
+      Q.rpNum({ story: `เครื่องพิมพ์พิมพ์ได้ ${pr[0]} แผ่น ใน ${pr[1]} นาที`, q: `ต้องการพิมพ์ ${pr[2]} แผ่น ใช้เวลากี่นาที`, a: pr[2] / pr[0] * pr[1], unit: 'นาที', hint: `${fqHTML(pr[0], pr[1])} = ${fqHTML(pr[2], 'x')}`, sig: 'w8', diff: 10 }),
+      Q.rpNum({ story: 'หัวใจของนักกีฬาคนหนึ่งเต้น 6 ครั้ง ในทุก ๆ 5 วินาที', q: 'ใน 1 นาที หัวใจเต้นกี่ครั้ง', a: 72, unit: 'ครั้ง', hint: '1 นาที = 60 วินาที', sig: 'w9', diff: 11 }),
+      Q.rpNum({ story: 'แผนที่ใช้มาตราส่วน 1 เซนติเมตร : 5 กิโลเมตร ระยะบนแผนที่ระหว่างสองหมู่บ้านวัดได้ 7.5 เซนติเมตร', q: 'ระยะทางจริงกี่กิโลเมตร', a: 37.5, unit: 'กม.', hint: '1 ซม. แทน 5 กม.', sig: 'w10', diff: 12 }),
+      Q.rpNum({ story: `ช่างได้ค่าแรงวันละเท่ากัน ทำงาน ${wg[0]} วัน ได้ ${wg[1].toLocaleString('en-US')} บาท`, q: `ทำงาน ${wg[2]} วัน จะได้ค่าแรงกี่บาท`, a: wg[1] / wg[0] * wg[2], unit: 'บาท', hint: 'หาค่าแรงต่อวันก่อน', sig: 'w11', diff: 12 }),
+      Q.rpNum({ story: 'ทองเหลืองชนิดหนึ่งมีทองแดง : สังกะสี = 3 : 2 โดยน้ำหนัก', q: 'ทองเหลือง 40 กิโลกรัม มีทองแดงกี่กิโลกรัม', a: 24, unit: 'กก.', hint: 'ทั้งหมดมี 3 + 2 ส่วน', sig: 'w12', diff: 14 })]; }),
+  /* ---------- 12 สัดส่วนผกผัน ---------- */
+  LR7(12, 'เขื่อนผกผัน', 'สัดส่วนผกผัน', 'ผกผัน', 'บอกได้ว่าปริมาณสองปริมาณเป็นสัดส่วนผกผัน (ปริมาณหนึ่งเพิ่มเป็นกี่เท่า อีกปริมาณลดลงเท่านั้น และ x × y คงที่) แยกจากกรณี "เพิ่มอย่างหนึ่ง ลดอีกอย่าง" ที่ไม่ใช่ผกผัน', [
+    T('<b>คนกับวัน</b> — ลากมุมของสี่เหลี่ยม', 'ลากมุมของสี่เหลี่ยม เปลี่ยนจำนวนคน', el => el.append(rpSimInverse(24))),
+    T('<b>สัดส่วนผกผัน</b> — แตะการ์ดทีละใบ', 'สัดส่วนผกผัน แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['สวนทางกันเป็นเท่า', '<b>x เพิ่มเป็น 2 เท่า → y ลดลงเหลือครึ่งหนึ่ง</b><small>x เพิ่มเป็น 3 เท่า → y เหลือ 1 ใน 3</small>'],
+      ['ค่าคงตัว', '<b>x × y = k เท่ากันทุกคู่</b><small>2 คน × 12 วัน = 3 คน × 8 วัน = 24</small>'],
+      ['สมการ', `<b>xy = k หรือ y = ${fqHTML('k', 'x')}</b><small>คน × วัน = 24 → วัน = ${fqHTML(24, 'คน')}</small>`],
+      ['กราฟ', '<b>เส้นโค้ง ไม่ผ่านจุด (0, 0)</b><small>คนน้อยมาก วันมาก · คนมาก วันน้อย</small>'],
+      ['ระวัง!', '<b>เพิ่มหนึ่ง ลดหนึ่ง ไม่ใช่ผกผันเสมอ</b><small>มีขนม 10 ชิ้น กินไป x ชิ้น เหลือ 10 − x → ผลคูณไม่คงที่ จึงไม่ใช่</small>']])))
+  ], () => { const t1 = rpPick([[2, 3, 6, 36], [2, 4, 8, 48], [3, 4, 6, 60]]), f2 = rpPick([24, 36, 48]), p48 = rpPick([[48, 6], [60, 5], [72, 9]]), y6 = rpPick([[6, 10, 15], [4, 9, 12], [8, 6, 16]]), k3 = rpPick([[4, 4.5], [5, 3.6], [8, 2.5]]);
+    return [
+      Q.rpOpt({ q: 'ข้อใดเป็น<b>สัดส่วนผกผัน</b>', opts: ['จำนวนคนทำงานกับจำนวนวันที่ใช้ (งานเท่าเดิม)', 'จำนวนสินค้ากับราคารวม', 'ระยะทางกับเวลา (อัตราเร็วคงที่)'], right: 'จำนวนคนทำงานกับจำนวนวันที่ใช้ (งานเท่าเดิม)', hint: 'ปริมาณหนึ่งเพิ่มเป็น 2 เท่า อีกปริมาณลดเหลือครึ่งหนึ่ง', sig: 'i1', diff: 4 }),
+      Q.rpNum({ q: 'จากตาราง y เป็นสัดส่วนผกผันกับ x ช่อง <b>?</b> คือจำนวนใด', fig: rpXY('x', 'y', [1, 2, 4], [f2, f2 / 2, '?']), a: f2 / 4, hint: 'x × y ต้องเท่ากันทุกคู่', sig: 'i2', base: 'rpitb', diff: 5 }),
+      Q.rpNum({ q: 'จากตาราง y เป็นสัดส่วนผกผันกับ x <b>ค่าคงตัว (x × y)</b> เท่ากับเท่าใด', fig: rpXY('x', 'y', t1.slice(0, 3), t1.slice(0, 3).map(x => t1[3] / x)), a: t1[3], hint: 'นำ x คูณ y คู่ใดก็ได้', sig: 'i3', base: 'rpitb', diff: 6 }),
+      Q.rpOpt({ q: 'ถ้าจำนวนคนทำงานเพิ่มเป็น <b>3 เท่า</b> (งานเท่าเดิม) จำนวนวันที่ใช้จะเป็นอย่างไร', opts: ['ลดลงเหลือ 1 ใน 3', 'เพิ่มขึ้นเป็น 3 เท่า', 'เท่าเดิม'], right: 'ลดลงเหลือ 1 ใน 3', hint: 'คน × วัน คงที่', sig: 'i4', diff: 5 }),
+      Q.rpNum({ q: `ถ้า x × y = ${p48[0]} และ x = ${p48[1]} แล้ว y เท่ากับเท่าใด`, a: p48[0] / p48[1], hint: `${p48[1]} × y = ${p48[0]}`, sig: 'i5', diff: 7 }),
+      Q.rpOpt({ q: 'ตารางคู่ x → y ข้อใดเป็นสัดส่วนผกผัน', opts: ['1→12, 2→6, 3→4', '1→4, 2→8, 3→12', '1→12, 2→10, 3→8'], right: '1→12, 2→6, 3→4', hint: 'x × y ต้องเท่ากันทุกคู่', sig: 'i6', diff: 9 }),
+      Q.rpOpt({ q: 'เมื่อระยะทางเท่าเดิม ถ้าขับรถ<b>เร็วขึ้น</b> เวลาที่ใช้จะเป็นอย่างไร', opts: ['ลดลง เป็นสัดส่วนผกผันกับอัตราเร็ว', 'เพิ่มขึ้น เป็นสัดส่วนตรงกับอัตราเร็ว', 'เท่าเดิม'], right: 'ลดลง เป็นสัดส่วนผกผันกับอัตราเร็ว', hint: 'อัตราเร็ว × เวลา = ระยะทาง (คงที่)', sig: 'i7', diff: 8 }),
+      Q.rpOpt({ q: 'y เป็นสัดส่วนผกผันกับ x และ xy = 36 เขียนสมการได้ตามข้อใด', opts: [`y = 36/x`, 'y = 36x', 'y = x + 36'], right: 'y = 36/x', hint: 'ย้าย x ไปหาร', sig: 'i8', diff: 9 }),
+      Q.rpNum({ story: `y เป็นสัดส่วนผกผันกับ x และ y = ${y6[1]} เมื่อ x = ${y6[0]}`, q: `จงหาค่า y เมื่อ x = ${y6[2]}`, a: y6[0] * y6[1] / y6[2], hint: 'หาค่าคงตัว x × y ก่อน', sig: 'i9', diff: 11 }),
+      Q.rpNum({ q: `y เป็นสัดส่วนผกผันกับ x เมื่อ x = ${k3[0]} แล้ว y = ${k3[1]} ค่าคงตัวเท่ากับเท่าใด`, a: k3[0] * k3[1], hint: 'ค่าคงตัว = x × y', sig: 'i10', diff: 12 }),
+      rpTF('ถ้าปริมาณหนึ่งเพิ่มแล้วอีกปริมาณลด แสดงว่าเป็นสัดส่วนผกผันเสมอ', false, 'ต้องมีผลคูณคงที่ เช่น y = 10 − x ไม่เป็นสัดส่วนผกผัน'),
+      rpTF('กราฟของสัดส่วนผกผันเป็นเส้นตรงที่ผ่านจุด (0, 0)', false, 'กราฟสัดส่วนผกผันเป็นเส้นโค้ง ไม่ผ่านจุด (0, 0)')]; }),
+  /* ---------- 13 โจทย์ปัญหาสัดส่วนผกผัน ---------- */
+  LR7(13, 'อู่ต่อเรือ', 'การแก้โจทย์ปัญหาสัดส่วนผกผัน', 'โจทย์ผกผัน', 'แก้โจทย์ปัญหาสัดส่วนผกผันเรื่องคนกับเวลา ความเร็วกับเวลา เครื่องจักรกับเวลา และวิเคราะห์ได้ว่าโจทย์เป็นสัดส่วนตรงหรือผกผัน', [
+    T('<b>จัดการ์ด</b> — สัดส่วนตรง หรือ ผกผัน', 'จัดการ์ดลงกล่อง สัดส่วนตรง หรือ ผกผัน', el => el.append(rpSort(RP_DI_CARDS, ['สัดส่วนตรง', 'สัดส่วนผกผัน'], '<b>แตะการ์ด แล้วแตะกล่อง</b> — ถามตัวเองว่า "ถ้าอย่างแรกเพิ่มเป็น 2 เท่า อย่างที่สองเป็นอย่างไร"'))),
+    T('ตัวอย่างทีละขั้น: <b>คนกับวัน</b>', 'ตัวอย่างทีละขั้น คนกับวัน', el => el.append(rpWalk('ช่าง <b>6 คน</b> ต่อเรือเสร็จใน <b>10 วัน</b> ถ้ามีช่าง <b>4 คน</b> (ทำงานเร็วเท่ากัน) จะเสร็จในกี่วัน',
+      [['① เป็นสัดส่วนแบบใด', 'คนน้อยลง ใช้วันมากขึ้น และ คน × วัน คงที่ → <b>ผกผัน</b>'], ['② หาค่าคงตัว', '6 × 10 = 60 (งานทั้งหมด 60 คน·วัน)'], ['③ ตั้งสมการ', '4 × x = 60'], ['④ หาค่า x', 'x = 60 ÷ 4 = <b>15 วัน</b>']],
+      'สัดส่วนผกผัน: คูณกันแล้วเท่ากัน (ไม่ใช่คูณไขว้แบบสัดส่วนตรง)', 'สัดส่วนผกผัน คูณกันแล้วเท่ากัน')))
+  ], () => { const w = rpPick([[6, 10, 4], [8, 9, 6], [5, 12, 4]]), sp = rpPick([[60, 4, 80], [90, 2, 60], [50, 6, 75]]), mc = rpPick([[4, 6, 3], [6, 4, 8], [3, 8, 4]]), fd = rpPick([[20, 9, 30], [12, 10, 15], [16, 6, 24]]), pp = rpPick([[3, 40, 5], [2, 45, 3], [4, 30, 6]]);
+    return [
+      Q.rpOpt({ q: '<b>จำนวนสมุด</b> กับ <b>ราคารวม</b> (ราคาเล่มละเท่ากัน) เป็นสัดส่วนแบบใด', opts: ['สัดส่วนตรง', 'สัดส่วนผกผัน', 'ไม่เป็นสัดส่วน'], right: 'สัดส่วนตรง', hint: 'สมุด 2 เท่า ราคาเป็นอย่างไร', sig: 'q1', diff: 4 }),
+      Q.rpOpt({ q: '<b>จำนวนคนที่แบ่งพิซซาถาดเดียว</b> กับ <b>ขนาดชิ้นที่แต่ละคนได้</b> เป็นสัดส่วนแบบใด', opts: ['สัดส่วนผกผัน', 'สัดส่วนตรง', 'ไม่เป็นสัดส่วน'], right: 'สัดส่วนผกผัน', hint: 'คน 2 เท่า ชิ้นเป็นอย่างไร', sig: 'q2', diff: 6 }),
+      rpTF('งานเท่าเดิม ถ้าคนทำงานเพิ่มขึ้น จำนวนวันจะลดลง และ คน × วัน คงที่ จึงเป็นสัดส่วนผกผัน', true, ''),
+      Q.rpNum({ story: `ช่าง ${w[0]} คน ทาสีรั้วเสร็จใน ${w[1]} วัน`, q: `ถ้ามีช่าง ${w[2]} คน (ทำงานเร็วเท่ากัน) จะเสร็จในกี่วัน`, a: w[0] * w[1] / w[2], unit: 'วัน', hint: 'คน × วัน คงที่', sig: 'q3', diff: 5 }),
+      Q.rpNum({ story: `เครื่องจักรแบบเดียวกัน ${mc[0]} เครื่อง ผลิตสินค้าล็อตหนึ่งเสร็จใน ${mc[1]} ชั่วโมง`, q: `ถ้าใช้ ${mc[2]} เครื่อง จะเสร็จในกี่ชั่วโมง`, a: mc[0] * mc[1] / mc[2], unit: 'ชั่วโมง', hint: 'เครื่อง × ชั่วโมง คงที่', sig: 'q4', diff: 6 }),
+      Q.rpNum({ story: `ขับรถด้วยอัตราเร็ว ${sp[0]} กิโลเมตรต่อชั่วโมง ใช้เวลา ${sp[1]} ชั่วโมง`, q: `ถ้าขับด้วยอัตราเร็ว ${sp[2]} กิโลเมตรต่อชั่วโมง บนทางเดิม จะใช้เวลากี่ชั่วโมง`, a: sp[0] * sp[1] / sp[2], unit: 'ชั่วโมง', hint: 'อัตราเร็ว × เวลา = ระยะทาง (เท่าเดิม)', sig: 'q5', diff: 7 }),
+      Q.rpNum({ story: `ค่ายมีอาหารพอสำหรับ ${fd[0]} คน เป็นเวลา ${fd[1]} วัน`, q: `ถ้ามี ${fd[2]} คน อาหารจะพอกี่วัน`, a: fd[0] * fd[1] / fd[2], unit: 'วัน', hint: 'คน × วัน = อาหารทั้งหมด', sig: 'q6', diff: 8 }),
+      Q.rpNum({ story: `เปิดท่อน้ำขนาดเท่ากัน ${pp[0]} ท่อ เติมถังเต็มใน ${pp[1]} นาที`, q: `ถ้าเปิด ${pp[2]} ท่อ จะเต็มในกี่นาที`, a: pp[0] * pp[1] / pp[2], unit: 'นาที', hint: 'ท่อ × นาที คงที่', sig: 'q7', diff: 9 }),
+      Q.rpNum({ story: 'ช่าง 6 คน ทาสีอาคารเสร็จใน 10 วัน', q: 'ถ้าต้องการให้เสร็จใน 4 วัน ต้องใช้ช่างกี่คน', a: 15, unit: 'คน', hint: 'งานทั้งหมด = 6 × 10 คน·วัน', sig: 'q8', diff: 12 }),
+      Q.rpNum({ story: 'ขับรถด้วยอัตราเร็ว 70 กิโลเมตรต่อชั่วโมง ใช้เวลา 3 ชั่วโมง', q: 'ถ้าต้องการไปถึงใน 2.5 ชั่วโมง ต้องขับด้วยอัตราเร็วกี่กิโลเมตรต่อชั่วโมง', a: 84, unit: 'กม./ชม.', hint: 'ระยะทาง = 70 × 3', sig: 'q9', diff: 13 }),
+      Q.rpOpt({ story: 'ทำขนม 20 ชิ้น ใช้น้ำตาล 400 กรัม', q: 'โจทย์ "ทำขนม 35 ชิ้น ใช้น้ำตาลกี่กรัม" เป็นสัดส่วนแบบใด', opts: ['สัดส่วนตรง', 'สัดส่วนผกผัน', 'ไม่เป็นสัดส่วน'], right: 'สัดส่วนตรง', hint: 'ขนมมากขึ้น น้ำตาลมากขึ้นเป็นเท่าเดียวกัน', sig: 'q10', diff: 8 }),
+      Q.rpNum({ story: 'คนงาน 8 คน สร้างโรงเรือนเสร็จใน 15 วัน ทำไปได้ 5 วัน มีคนงานลาออก 3 คน', q: 'คนที่เหลือต้องทำต่ออีกกี่วันจึงจะเสร็จ', a: 16, unit: 'วัน', hint: 'งานที่เหลือ = 8 คน × 10 วัน', sig: 'q11', diff: 17 })]; }),
+  /* ---------- 14 ความหมายของร้อยละ ---------- */
+  LR7(14, 'ลานร้อยช่อง', 'ความหมายของร้อยละ', 'ร้อยละ', 'บอกความหมายของร้อยละ (ต่อร้อย) อ่านและเขียนสัญลักษณ์ % แสดงร้อยละด้วยตาราง 100 ช่อง และเขียนร้อยละเป็นอัตราส่วน a : 100', [
+    T('<b>ตาราง 100 ช่อง</b> — ลากระบายสี', 'ลากระบายสีบนตารางร้อยช่อง', el => el.append(rpSimGrid())),
+    T('<b>ร้อยละ</b> — แตะการ์ดทีละใบ', 'ร้อยละ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['ร้อยละ = ต่อร้อย', `<b>ร้อยละ 35 = 35 ใน 100 ส่วน</b><small>= ${fqHTML(35, 100)} = 35 : 100</small>`],
+      ['เปอร์เซ็นต์', '<b>ร้อยละ 35 เขียนเป็น 35%</b><small>อ่านว่า "สามสิบห้าเปอร์เซ็นต์"</small>'],
+      ['100%', '<b>ทั้งหมด</b><small>50% = ครึ่งหนึ่ง · 25% = หนึ่งในสี่</small>'],
+      ['เกิน 100% ได้', '<b>150% = 1.5 เท่า</b><small>เช่น ปีนี้ขายได้ 150% ของปีที่แล้ว</small>']])))
+  ], () => { const n1 = rpPick([23, 37, 46, 58, 64]), n2 = rpPick([15, 72, 81, 9].filter(v => v !== n1)), p = rpPick([27, 31, 43, 69]), q = rpPick([13, 17, 39]), fb = rpPick([42, 38, 57]), r25 = rpPick([[8, 25, 32], [6, 25, 24], [9, 20, 45]]);
+    return [
+      Q.rpOpt({ q: 'ร้อยละเจ็ด เขียนด้วยสัญลักษณ์ได้ตามข้อใด', opts: ['7%', '0.7%', '70%'], right: '7%', hint: 'ร้อยละ … เขียนเป็น …%', sig: 'h1', diff: 2 }),
+      Q.rpNum({ q: 'จากรูป ส่วนที่ระบายสีคิดเป็นร้อยละเท่าใด', fig: rpGrid(n1), a: n1, unit: '%', hint: 'นับช่องที่ระบาย จาก 100 ช่อง (แถวละ 10 ช่อง)', sig: 'h2 ' + n1, base: 'rpgrid', diff: 3 }),
+      Q.rpNum({ q: 'จากรูป ส่วนที่<b>ไม่ได้</b>ระบายสีคิดเป็นร้อยละเท่าใด', fig: rpGrid(n2, RP_C.o), a: 100 - n2, unit: '%', hint: 'ทั้งหมดคือ 100%', sig: 'h3 ' + n2, base: 'rpgrid', diff: 7 }),
+      Q.rpOpt({ q: '<b>ร้อยละ 35</b> หมายถึงข้อใด', opts: ['35 ส่วนใน 100 ส่วน', '35 ส่วนใน 10 ส่วน', '100 ส่วนใน 35 ส่วน'], right: '35 ส่วนใน 100 ส่วน', hint: 'ร้อยละ = ต่อร้อย', sig: 'h4', diff: 3 }),
+      Q.rpOpt({ q: '<b>100%</b> หมายถึงข้อใด', opts: ['ทั้งหมด', 'ครึ่งหนึ่ง', 'ไม่มีเลย'], right: 'ทั้งหมด', hint: '100 ส่วนใน 100 ส่วน', sig: 'h5', diff: 4 }),
+      Q.rpNum({ story: `นักเรียน 100 คน ชอบเล่นฟุตบอล ${fb} คน`, q: 'นักเรียนที่ชอบเล่นฟุตบอลคิดเป็นร้อยละเท่าใด', a: fb, unit: '%', hint: 'จาก 100 คน', sig: 'h6', diff: 4 }),
+      Q.rpRat({ q: `<b>${p}%</b> เขียนเป็นอัตราส่วนได้ตามข้อใด`, a: [p, 100], hint: 'ร้อยละ a = a : 100', sig: 'h7', diff: 5 }),
+      Q.rpNum({ q: `อัตราส่วน <b>${q} : 100</b> เขียนเป็นร้อยละได้เท่าใด`, a: q, unit: '%', hint: 'a : 100 = a%', sig: 'h8', diff: 5 }),
+      Q.rpNum({ q: 'อัตราส่วน <b>1 : 4</b> เขียนเป็นร้อยละได้เท่าใด', a: 25, unit: '%', hint: 'ทำตัวหลังให้เป็น 100', sig: 'h9', diff: 10 }),
+      Q.rpNum({ q: 'อัตราส่วน <b>3 : 20</b> เขียนเป็นร้อยละได้เท่าใด', a: 15, unit: '%', hint: '20 คูณด้วย 5 ได้ 100', sig: 'h10', diff: 11 }),
+      Q.rpNum({ q: `<b>${r25[0]} ใน ${r25[1]}</b> คิดเป็นร้อยละเท่าใด`, a: r25[2], unit: '%', hint: `ทำ ${r25[0]} : ${r25[1]} ให้ตัวหลังเป็น 100`, sig: 'h11', diff: 12 }),
+      rpTF('ร้อยละมีค่ามากกว่า 100 ได้ เช่น 150%', true, '')]; }),
+  /* ---------- 15 การแปลงเศษส่วน ทศนิยม และร้อยละ ---------- */
+  LR7(15, 'ท่าแปลงร่าง', 'การแปลงเศษส่วน ทศนิยม และร้อยละ', 'แปลงรูป', 'เปลี่ยนเศษส่วนและทศนิยมเป็นร้อยละ เปลี่ยนร้อยละเป็นเศษส่วนและทศนิยม และเปรียบเทียบค่าที่เขียนต่างรูปกัน', [
+    T('<b>จุดเดียว สามชื่อ</b> — ลากบนเส้น 0 ถึง 1', 'ลากจุดบนเส้นศูนย์ถึงหนึ่ง', el => el.append(rpSimConv())),
+    T('ตัวอย่างทีละขั้น: <b>แปลงไป–กลับ</b>', 'ตัวอย่างทีละขั้น แปลงไปกลับ', el => el.append(rpWalk('เปลี่ยนรูปจำนวนต่อไปนี้',
+      [['① เศษส่วน → ร้อยละ', `${fqHTML(3, 8)} × 100% = 300 ÷ 8 % = <b>37.5%</b>`], ['② ทศนิยม → ร้อยละ', '0.06 × 100% = <b>6%</b> (เลื่อนจุดไปทางขวา 2 ตำแหน่ง)'], ['③ ร้อยละ → เศษส่วน', `45% = ${fqHTML(45, 100)} = <b>${fqHTML(9, 20)}</b>`], ['④ ร้อยละ → ทศนิยม', '45% = 45 ÷ 100 = <b>0.45</b>']],
+      'เป็นร้อยละ: คูณ 100 · ออกจากร้อยละ: หาร 100', 'เป็นร้อยละคูณร้อย ออกจากร้อยละหารร้อย')))
+  ], () => { const f = rpPick([[3, 4, 75], [2, 5, 40], [7, 10, 70], [9, 20, 45]]), d = rpPick([[0.6, 60], [0.35, 35], [0.08, 8]]), p = rpPick([[45, '9/20'], [36, '9/25'], [15, '3/20']]), dp = rpPick([[8, 0.08], [12.5, 0.125], [3, 0.03]]);
+    return [
+      rpTF(`0.5 = 50% = ${fqHTML(1, 2)}`, true, ''),
+      Q.rpNum({ q: `เขียน <b>${fqHTML(f[0], f[1])}</b> เป็นร้อยละ`, a: f[2], unit: '%', hint: 'คูณด้วย 100%', sig: 'k1', diff: 4 }),
+      Q.rpNum({ q: `เขียน <b>${d[0]}</b> เป็นร้อยละ`, a: d[1], unit: '%', hint: 'คูณ 100 → เลื่อนจุดทศนิยมไปทางขวา 2 ตำแหน่ง', sig: 'k2', diff: 4 }),
+      Q.rpNum({ q: `เขียน <b>${fqHTML(1, 5)}</b> เป็นทศนิยม`, a: 0.2, hint: 'ทำตัวส่วนให้เป็น 10', sig: 'k3', diff: 5 }),
+      Q.rpNum({ q: `เขียน <b>${dp[0]}%</b> เป็นทศนิยม`, a: dp[1], hint: 'หาร 100 → เลื่อนจุดไปทางซ้าย 2 ตำแหน่ง', sig: 'k4', diff: 6 }),
+      Q.rpNum({ q: `เขียน <b>${p[0]}%</b> เป็นเศษส่วนอย่างต่ำ`, a: p[1], hint: `${p[0]}% = ${p[0]}/100 แล้วทำให้เป็นอย่างต่ำ`, sig: 'k5', diff: 7 }),
+      Q.rpOpt({ q: 'ข้อใด<b>ไม่เท่ากับ</b> 0.25', opts: ['2.5%', '25%', fqHTML(1, 4)], right: '2.5%', hint: 'เปลี่ยนทุกข้อเป็นทศนิยม', sig: 'k6', diff: 8 }),
+      Q.rpOpt({ q: 'ข้อใดมีค่า<b>มากที่สุด</b>', opts: ['0.7', '65%', fqHTML(3, 5)], right: '0.7', hint: 'เปลี่ยนเป็นร้อยละทั้งหมดแล้วเทียบ', sig: 'k7', diff: 9 }),
+      Q.rpNum({ q: 'เขียน <b>125%</b> เป็นทศนิยม', a: 1.25, hint: '125 ÷ 100', sig: 'k8', diff: 10 }),
+      Q.rpNum({ q: `เขียน <b>${fqHTML(2, 25)}</b> เป็นร้อยละ`, a: 8, unit: '%', hint: '25 คูณด้วย 4 ได้ 100', sig: 'k9', diff: 10 }),
+      Q.rpNum({ q: `เขียน <b>${fqHTML(3, 8)}</b> เป็นร้อยละ`, a: 37.5, unit: '%', hint: '3 ÷ 8 แล้วคูณ 100', sig: 'k10', diff: 12 }),
+      Q.rpNum({ q: 'เขียน <b>0.035</b> เป็นร้อยละ', a: 3.5, unit: '%', hint: 'คูณ 100', sig: 'k11', diff: 12 })]; }),
+  /* ---------- 16 การหาร้อยละของจำนวน ---------- */
+  LR7(16, 'แพร้อยละ', 'การหาร้อยละของจำนวน', 'ร้อยละของ', 'หาร้อยละของจำนวนด้วยการคิดในใจ (10% 25% 50%) ด้วยเศษส่วน ทศนิยม หรือบัญญัติไตรยางศ์ และเลือกวิธีที่เหมาะสม', [
+    T('<b>เส้นจำนวนคู่</b> — ลากเส้นสีส้ม', 'ลากเส้นสีส้มบนเส้นจำนวนคู่', el => el.append(rpSimDNL(80))),
+    T('<b>คิดในใจ</b> — แตะการ์ดทีละใบ', 'คิดในใจ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['50%', '<b>ครึ่งหนึ่ง → หาร 2</b><small>50% ของ 360 = 180</small>'], ['10%', '<b>หาร 10</b><small>10% ของ 360 = 36</small>'],
+      ['25%', '<b>หนึ่งในสี่ → หาร 4</b><small>25% ของ 360 = 90</small>'], ['1%', '<b>หาร 100</b><small>1% ของ 360 = 3.6</small>']]))),
+    T('ตัวอย่างทีละขั้น: <b>35% ของ 240</b>', 'ตัวอย่างทีละขั้น สามสิบห้าเปอร์เซ็นต์ของสองร้อยสี่สิบ', el => el.append(rpWalk('หา <b>35% ของ 240</b> ได้หลายวิธี',
+      [['① แยกเป็น 10% + 10% + 10% + 5%', '10% = 24 → 30% = 72 · 5% = 12 → 35% = 72 + 12 = <b>84</b>'], ['② ใช้ทศนิยม', '0.35 × 240 = <b>84</b>'], ['③ บัญญัติไตรยางศ์', `${fqHTML(35, 100)} = ${fqHTML('x', 240)} → 100x = 8,400 → x = <b>84</b>`]],
+      'ทุกวิธีได้คำตอบเดียวกัน — เลือกวิธีที่คิดง่ายที่สุด', 'ทุกวิธีได้คำตอบเดียวกัน')))
+  ], () => { const N1 = rpPick([70, 240, 350, 460]), N2 = rpPick([86, 140, 320]), N3 = rpPick([60, 120, 280]), P = rpPick([[15, 80], [35, 120], [45, 240], [60, 85]]), st = rpPick([[240, 35], [360, 15], [180, 45]]), ex = rpPick([[40, 85], [60, 75], [50, 72]]);
+    return [
+      Q.rpNum({ q: `<b>10%</b> ของ ${N1} เท่ากับเท่าใด`, a: N1 / 10, hint: '10% = หาร 10', sig: 'o1', diff: 3 }),
+      Q.rpNum({ q: `<b>50%</b> ของ ${N2} เท่ากับเท่าใด`, a: N2 / 2, hint: '50% คือครึ่งหนึ่ง', sig: 'o2', diff: 3 }),
+      Q.rpNum({ q: '<b>1%</b> ของ 600 เท่ากับเท่าใด', a: 6, hint: '1% = หาร 100', sig: 'o3', diff: 4 }),
+      Q.rpNum({ q: `<b>25%</b> ของ ${N3} เท่ากับเท่าใด`, a: N3 / 4, hint: '25% คือหนึ่งในสี่', sig: 'o4', diff: 5 }),
+      Q.rpNum({ q: '<b>40%</b> ของ 150 เท่ากับเท่าใด', a: 60, hint: '40% = 0.4', sig: 'o5', diff: 7 }),
+      Q.rpNum({ q: `<b>${P[0]}%</b> ของ ${P[1]} เท่ากับเท่าใด`, a: P[0] * P[1] / 100, hint: 'แยกเป็น 10% กับ 5% หรือคูณด้วยทศนิยม', sig: 'o6', diff: 8 }),
+      Q.rpOpt({ q: 'วิธีใดหา <b>20% ของ 350</b> ได้ถูกต้อง', opts: ['350 × 0.2', '350 ÷ 20', '350 × 20'], right: '350 × 0.2', hint: '20% = 20/100 = 0.2', sig: 'o7', diff: 8 }),
+      Q.rpNum({ story: `โรงเรียนมีนักเรียน ${st[0]} คน ใส่แว่นตา ${st[1]}%`, q: 'นักเรียนที่ใส่แว่นตามีกี่คน', a: st[0] * st[1] / 100, unit: 'คน', hint: `หา ${st[1]}% ของ ${st[0]}`, sig: 'o8', diff: 9 }),
+      Q.rpNum({ story: `ข้อสอบมี ${ex[0]} ข้อ ทำถูก ${ex[1]}%`, q: 'ทำถูกกี่ข้อ', a: ex[0] * ex[1] / 100, unit: 'ข้อ', hint: `${ex[1]}/100 × ${ex[0]}`, sig: 'o9', diff: 10 }),
+      Q.rpNum({ q: '<b>150%</b> ของ 40 เท่ากับเท่าใด', a: 60, hint: '150% = 1.5 เท่า', sig: 'o10', diff: 11 }),
+      Q.rpNum({ q: '<b>12.5%</b> ของ 64 เท่ากับเท่าใด', a: 8, hint: '12.5% = 1/8', sig: 'o11', diff: 13 }),
+      rpTF('20% ของ 50 เท่ากับ 50% ของ 20', true, '')]; }),
+  /* ---------- 17 การหาจำนวนทั้งหมดและจำนวนบางส่วน ---------- */
+  LR7(17, 'ท่าตามหาร้อย', 'การหาจำนวนทั้งหมด จำนวนบางส่วน และร้อยละ', 'สามแบบ', 'แยกโจทย์ร้อยละได้สามแบบ: หาบางส่วน · หาว่าเป็นกี่เปอร์เซ็นต์ · หาจำนวนทั้งหมด แล้วแก้ด้วยสัดส่วน ร้อยละ/100 = บางส่วน/ทั้งหมด', [
+    T('ตัวอย่างทีละขั้น: <b>โจทย์สามแบบ ใช้สัดส่วนเดียว</b>', 'ตัวอย่างทีละขั้น โจทย์สามแบบใช้สัดส่วนเดียว', el => el.append(rpWalk(`${fqHTML('ร้อยละ', 100)} = ${fqHTML('บางส่วน', 'ทั้งหมด')}`,
+      [['① หาบางส่วน', `25% ของ 60 → ${fqHTML(25, 100)} = ${fqHTML('x', 60)} → x = <b>15</b>`], ['② หาร้อยละ', `9 เป็นกี่ % ของ 45 → ${fqHTML('x', 100)} = ${fqHTML(9, 45)} → x = <b>20%</b>`], ['③ หาทั้งหมด', `8 เป็น 25% ของจำนวนใด → ${fqHTML(25, 100)} = ${fqHTML(8, 'x')} → x = <b>32</b>`]],
+      'ดูว่าโจทย์ให้อะไรมา 2 อย่าง แล้วตัวที่เหลือคือสิ่งที่ต้องหา', 'โจทย์ให้มาสองอย่าง ตัวที่เหลือคือสิ่งที่ต้องหา'))),
+    T('<b>จัดการ์ด</b> — โจทย์นี้ถามหาอะไร', 'จัดการ์ด โจทย์นี้ถามหาอะไร', el => el.append(rpSort([
+      { t: '30% ของ 80 เท่ากับเท่าใด', bin: 0 }, { t: '12 เป็นกี่เปอร์เซ็นต์ของ 60', bin: 1 }, { t: '9 เป็น 15% ของจำนวนใด', bin: 2 },
+      { t: 'สอบได้ 36 จาก 40 คะแนน คิดเป็นกี่เปอร์เซ็นต์', bin: 1 }, { t: 'ลดราคา 20% จากราคา 450 บาท ลดกี่บาท', bin: 0 }, { t: 'มัดจำ 3,000 บาท คิดเป็น 25% ของราคา ราคาเท่าไร', bin: 2 }].map(c => ({ ...c, why: 'ดูว่าโจทย์ให้อะไรมาแล้วสองอย่าง แล้วถามหาอย่างที่เหลือ', ok: ['รู้ร้อยละกับทั้งหมด → หาบางส่วน', 'รู้บางส่วนกับทั้งหมด → หาร้อยละ', 'รู้บางส่วนกับร้อยละ → หาทั้งหมด'][c.bin] })),
+      ['หาบางส่วน', 'หาร้อยละ', 'หาทั้งหมด'], '<b>แตะการ์ด แล้วแตะกล่อง</b> — โจทย์ให้อะไรมา และถามหาอะไร')))
+  ], () => { const a = rpPick([[30, 90, 27], [40, 75, 30], [15, 60, 9]]), b = rpPick([[12, 48, 25], [18, 72, 25], [14, 56, 25], [21, 35, 60]]), c = rpPick([[15, 30, 50], [12, 40, 30], [18, 45, 40]]), sc = rpPick([[42, 70, 60], [36, 80, 45], [27, 90, 30]]), sl = rpPick([[280, 25, 1120], [150, 30, 500], [240, 40, 600]]);
+    return [
+      Q.rpNum({ q: `<b>${a[0]}%</b> ของ ${a[1]} เท่ากับเท่าใด`, a: a[2], hint: 'หาบางส่วน: ร้อยละ × ทั้งหมด ÷ 100', sig: 'g1', diff: 4 }),
+      Q.rpOpt({ q: 'โจทย์ "<b>15 เป็นกี่เปอร์เซ็นต์ของ 60</b>" ถามหาอะไร', opts: ['ร้อยละ', 'จำนวนทั้งหมด', 'จำนวนบางส่วน'], right: 'ร้อยละ', hint: 'โจทย์ให้บางส่วน (15) และทั้งหมด (60) มาแล้ว', sig: 'g2', diff: 5 }),
+      Q.rpNum({ q: `<b>${b[0]}</b> เป็นกี่เปอร์เซ็นต์ของ ${b[1]}`, a: b[2], unit: '%', hint: `${fqHTML('x', 100)} = ${fqHTML(b[0], b[1])}`, sig: 'g3', diff: 6 }),
+      Q.rpNum({ story: 'ทีมฟุตบอลโรงเรียนลงแข่ง 20 นัด ชนะ 18 นัด', q: 'จำนวนนัดที่ชนะคิดเป็นร้อยละเท่าใด', a: 90, unit: '%', hint: '18 จาก 20', sig: 'g4', diff: 7 }),
+      Q.rpNum({ q: `<b>${c[0]}</b> เป็น ${c[1]}% ของจำนวนใด`, a: c[2], hint: `${fqHTML(c[1], 100)} = ${fqHTML(c[0], 'x')}`, sig: 'g5', diff: 8 }),
+      Q.rpNum({ story: 'ข้าวเปลือก 300 กิโลกรัม สีเป็นข้าวสารได้ 225 กิโลกรัม', q: 'ข้าวสารคิดเป็นกี่เปอร์เซ็นต์ของข้าวเปลือก', a: 75, unit: '%', hint: '225 จาก 300', sig: 'g6', diff: 9 }),
+      Q.rpNum({ story: 'ค่าเดินทางเดือนละ 1,200 บาท คิดเป็น 10% ของรายได้ต่อเดือน', q: 'รายได้ต่อเดือนเป็นกี่บาท', a: 12000, unit: 'บาท', hint: '10% ของรายได้ = 1,200', sig: 'g7', diff: 9 }),
+      Q.rpNum({ story: `สอบได้ ${sc[0]} คะแนน คิดเป็น ${sc[2]}% ของคะแนนเต็ม`, q: 'คะแนนเต็มคือกี่คะแนน', a: sc[0] / sc[2] * 100, unit: 'คะแนน', hint: 'หาทั้งหมด', sig: 'g8', diff: 10 }),
+      Q.rpNum({ story: `ร้านค้าขายสบู่ไป ${sl[0]} ก้อน คิดเป็น ${sl[1]}% ของสบู่ทั้งหมด`, q: 'ร้านมีสบู่ทั้งหมดกี่ก้อน', a: sl[2], unit: 'ก้อน', hint: `${sl[1]}% ↔ ${sl[0]} ก้อน`, sig: 'g9', diff: 11 }),
+      Q.rpNum({ story: 'จ่ายเงินมัดจำที่ดิน 36,000 บาท คิดเป็น 30% ของราคาที่ดิน', q: 'ที่ดินราคากี่บาท', a: 120000, unit: 'บาท', hint: '30% ↔ 36,000 บาท', sig: 'g10', diff: 12 }),
+      Q.rpNum({ story: 'โรงเรียนมีนักเรียน 800 คน เป็นนักเรียนหญิง 45%', q: 'นักเรียนชายมีกี่คน', a: 440, unit: 'คน', hint: 'นักเรียนชายคิดเป็นกี่เปอร์เซ็นต์', sig: 'g11', diff: 13 }),
+      Q.rpNum({ q: '<b>18</b> เป็น 120% ของจำนวนใด', a: 15, hint: 'ทั้งหมด (100%) น้อยกว่า 18', sig: 'g12', diff: 14 })]; }),
+  /* ---------- 18 เปอร์เซ็นต์เพิ่มขึ้นและลดลง ---------- */
+  LR7(18, 'ตลิ่งขึ้นลง', 'การคิดเปอร์เซ็นต์เพิ่มขึ้นและลดลง', 'เพิ่ม/ลด %', 'หาจำนวนที่เพิ่มขึ้นหรือลดลง ค่าใหม่หลังเพิ่มหรือลดเป็นเปอร์เซ็นต์ และหาว่าเปลี่ยนไปกี่เปอร์เซ็นต์ของค่าเดิม', [
+    T('<b>ราคาเดิม กับ ราคาใหม่</b> — ลากแถบสีส้ม', 'ลากแถบราคาใหม่', el => el.append(rpSimChange(80))),
+    T('ตัวอย่างทีละขั้น: <b>เพิ่มขึ้น 20%</b>', 'ตัวอย่างทีละขั้น เพิ่มขึ้นยี่สิบเปอร์เซ็นต์', el => el.append(rpWalk('ค่าเช่าเดิมเดือนละ <b>4,500 บาท</b> ขึ้นราคา <b>20%</b> ค่าเช่าใหม่เท่าไร',
+      [['① วิธีที่ 1: หาส่วนที่เพิ่ม', '20% ของ 4,500 = 900 บาท'], ['② บวกเข้ากับค่าเดิม', '4,500 + 900 = <b>5,400 บาท</b>'], ['③ วิธีที่ 2: ค่าใหม่เป็นกี่ %', '100% + 20% = 120% → 1.2 × 4,500 = <b>5,400 บาท</b>']],
+      'ลดลง 20% → ค่าใหม่ = 80% ของค่าเดิม', 'ลดลงยี่สิบเปอร์เซ็นต์ ค่าใหม่เท่ากับแปดสิบเปอร์เซ็นต์ของค่าเดิม'))),
+    T('ตัวอย่างทีละขั้น: <b>เปลี่ยนไปกี่ %</b>', 'ตัวอย่างทีละขั้น เปลี่ยนไปกี่เปอร์เซ็นต์', el => el.append(rpWalk('ราคาข้าวสารจาก <b>40 บาท</b> เป็น <b>46 บาท</b> เพิ่มขึ้นกี่เปอร์เซ็นต์',
+      [['① เพิ่มขึ้นเท่าไร', '46 − 40 = 6 บาท'], ['② เทียบกับค่าเดิม', `${fqHTML(6, 40)} × 100%`], ['③ คำนวณ', '= <b>15%</b>']],
+      'เปอร์เซ็นต์ที่เปลี่ยน = ส่วนที่เปลี่ยน ÷ ค่า<b>เดิม</b> × 100', 'หารด้วยค่าเดิมเสมอ')))
+  ], () => { const up = rpPick([[200, 10, 220], [350, 20, 420], [80, 25, 100]]), dn = rpPick([[500, 20, 400], [250, 40, 150], [120, 15, 102]]), ch = rpPick([[40, 50, 25], [60, 75, 25], [50, 60, 20]]), dd = rpPick([[80, 60, 25], [50, 40, 20], [120, 90, 25]]), pop = rpPick([[2500, 4, 2600], [1200, 5, 1260], [3000, 3, 3090]]);
+    return [
+      Q.rpNum({ q: `ราคาเดิม ${up[0]} บาท <b>เพิ่มขึ้น ${up[1]}%</b> ราคาใหม่เป็นกี่บาท`, a: up[2], unit: 'บาท', hint: 'หาส่วนที่เพิ่ม แล้วบวกกับราคาเดิม', sig: 'x1', diff: 4 }),
+      Q.rpNum({ q: `ราคาเดิม ${dn[0]} บาท <b>ลดลง ${dn[1]}%</b> ราคาใหม่เป็นกี่บาท`, a: dn[2], unit: 'บาท', hint: 'หาส่วนที่ลด แล้วลบออกจากราคาเดิม', sig: 'x2', diff: 5 }),
+      Q.rpNum({ q: 'ค่าเช่า 4,000 บาท ขึ้นราคา 15% ค่าเช่า<b>เพิ่มขึ้น</b>กี่บาท', a: 600, unit: 'บาท', hint: 'หา 15% ของ 4,000', sig: 'x3', diff: 5 }),
+      Q.rpNum({ q: 'ลดราคา 30% ราคาใหม่คิดเป็นกี่เปอร์เซ็นต์ของราคาเดิม', a: 70, unit: '%', hint: 'ราคาเดิม = 100%', sig: 'x4', diff: 6 }),
+      Q.rpNum({ q: 'เพิ่มขึ้น 15% ค่าใหม่คิดเป็นกี่เปอร์เซ็นต์ของค่าเดิม', a: 115, unit: '%', hint: 'ค่าเดิม = 100%', sig: 'x5', diff: 7 }),
+      Q.rpNum({ q: `จำนวนจาก <b>${ch[0]}</b> เป็น <b>${ch[1]}</b> เพิ่มขึ้นกี่เปอร์เซ็นต์`, a: ch[2], unit: '%', hint: 'ส่วนที่เพิ่ม ÷ ค่าเดิม × 100', sig: 'x6', diff: 8 }),
+      Q.rpNum({ q: `ราคาจาก <b>${dd[0]}</b> บาท เหลือ <b>${dd[1]}</b> บาท ลดลงกี่เปอร์เซ็นต์`, a: dd[2], unit: '%', hint: 'ส่วนที่ลด ÷ ราคาเดิม × 100', sig: 'x7', diff: 9 }),
+      Q.rpNum({ story: `หมู่บ้านมีประชากร ${pop[0].toLocaleString('en-US')} คน ปีต่อมาเพิ่มขึ้น ${pop[1]}%`, q: 'ปีต่อมามีประชากรกี่คน', a: pop[2], unit: 'คน', hint: `ค่าใหม่ = ${100 + pop[1]}% ของค่าเดิม`, sig: 'x8', diff: 8 }),
+      Q.rpNum({ story: 'โรงเรียนมีนักเรียน 800 คน ปีนี้มี 920 คน', q: 'จำนวนนักเรียนเพิ่มขึ้นกี่เปอร์เซ็นต์', a: 15, unit: '%', hint: 'เพิ่มขึ้นกี่คน แล้วเทียบกับ 800', sig: 'x9', diff: 10 }),
+      rpTF('ราคาเพิ่มขึ้น 10% แล้วลดลง 10% จะกลับมาเท่าราคาเดิม', false, 'เช่น 100 → 110 → 99 เพราะ 10% ครั้งหลังคิดจาก 110'),
+      Q.rpNum({ story: 'ต้นกล้าสูงขึ้น 25% จนสูง 30 เซนติเมตร', q: 'เดิมต้นกล้าสูงกี่เซนติเมตร', a: 24, unit: 'ซม.', hint: '30 ซม. คือ 125% ของความสูงเดิม', sig: 'x10', diff: 14 }),
+      Q.rpNum({ story: 'น้ำหนักกระเป๋าลดลง 8% เหลือ 46 กิโลกรัม', q: 'เดิมกระเป๋าหนักกี่กิโลกรัม', a: 50, unit: 'กก.', hint: '46 กก. คือ 92% ของน้ำหนักเดิม', sig: 'x11', diff: 15 })]; }),
+  /* ---------- 19 โจทย์ประยุกต์เกี่ยวกับร้อยละ ---------- */
+  LR7(19, 'ตลาดน้ำร้อยละ', 'โจทย์ประยุกต์เกี่ยวกับร้อยละ', 'ซื้อขาย', 'คำนวณส่วนลด กำไรและขาดทุน (คิดเป็นร้อยละของทุน) ภาษีมูลค่าเพิ่ม ค่าบริการ และดอกเบี้ยอย่างง่าย รวมถึงโจทย์หลายขั้นตอน', [
+    T('<b>ทุน กับ ราคาขาย</b> — ลากแถบราคาขาย', 'ลากแถบราคาขาย ดูกำไรขาดทุน', el => el.append(rpSimProfit(300))),
+    T('<b>คำที่ต้องรู้</b> — แตะการ์ดทีละใบ', 'คำที่ต้องรู้ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['กำไร / ขาดทุน', '<b>เทียบกับราคาทุนเสมอ</b><small>ทุน 250 ขาย 300 → กำไร 50 = 50/250 × 100 = 20%</small>'],
+      ['ส่วนลด', '<b>คิดจากราคาที่ติดไว้</b><small>ติด 800 ลด 25% → ลด 200 จ่าย 600</small>'],
+      ['ภาษีมูลค่าเพิ่ม 7%', '<b>บวกเพิ่มจากราคาสินค้า</b><small>ราคา 2,000 → จ่าย 107% = 2,140</small>'],
+      ['ดอกเบี้ยอย่างง่าย', '<b>เงินต้น × อัตรา × จำนวนปี</b><small>ฝาก 10,000 อัตรา 2% ต่อปี 3 ปี → 600 บาท</small>']]))),
+    T('ตัวอย่างทีละขั้น: <b>ลดสองต่อ</b>', 'ตัวอย่างทีละขั้น ลดสองต่อ', el => el.append(rpWalk('รองเท้าติดราคา <b>1,000 บาท</b> ลด 20% แล้วลดอีก 10% จากราคาที่ลดแล้ว',
+      [['① ลดครั้งแรก 20%', '1,000 × 80% = 800 บาท'], ['② ลดอีก 10% จาก 800', '800 × 90% = 720 บาท'], ['③ ลดไปทั้งหมด', '1,000 − 720 = 280 บาท = <b>28%</b> (ไม่ใช่ 30%)']],
+      'ลดหลายต่อ: ต่อหลังคิดจากราคาที่ลดแล้ว จึงบวกเปอร์เซ็นต์ตรง ๆ ไม่ได้', 'ต่อหลังคิดจากราคาที่ลดแล้ว')))
+  ], () => { const dc = rpPick([[600, 15, 510], [960, 25, 720], [1200, 10, 1080]]), pf = rpPick([[250, 300, 20], [400, 500, 25], [160, 200, 25]]), ls = rpPick([[400, 340, 15], [500, 450, 10], [800, 600, 25]]), sp = rpPick([[500, 30, 650], [240, 25, 300], [600, 15, 690]]), vt = rpPick([[2000, 2140], [3500, 3745], [600, 642]]), it = rpPick([[10000, 2, 1, 200], [20000, 1.5, 2, 600], [5000, 3, 3, 450]]);
+    return [
+      Q.rpNum({ q: 'สินค้าติดราคา 640 บาท ลด 25% ได้ส่วนลดกี่บาท', a: 160, unit: 'บาท', hint: '25% ของ 800', sig: 'y1', diff: 3 }),
+      Q.rpNum({ q: `สินค้าติดราคา ${dc[0].toLocaleString('en-US')} บาท ลด ${dc[1]}% ต้องจ่ายกี่บาท`, a: dc[2], unit: 'บาท', hint: `จ่าย ${100 - dc[1]}% ของราคาที่ติด`, sig: 'y2', diff: 4 }),
+      Q.rpOpt({ q: 'ร้อยละของกำไร คำนวณตามข้อใด', opts: ['กำไร ÷ ราคาทุน × 100', 'กำไร ÷ ราคาขาย × 100', 'ราคาทุน ÷ กำไร × 100'], right: 'กำไร ÷ ราคาทุน × 100', hint: 'กำไรขาดทุนเทียบกับทุนเสมอ', sig: 'y3', diff: 5 }),
+      Q.rpNum({ q: `ซื้อมา ${pf[0]} บาท ขายไป ${pf[1]} บาท ได้กำไรกี่เปอร์เซ็นต์`, a: pf[2], unit: '%', hint: 'กำไร ÷ ทุน × 100', sig: 'y4', diff: 7 }),
+      Q.rpNum({ q: `ซื้อมา ${ls[0]} บาท ขายไป ${ls[1]} บาท ขาดทุนกี่เปอร์เซ็นต์`, a: ls[2], unit: '%', hint: 'ขาดทุน ÷ ทุน × 100', sig: 'y5', diff: 8 }),
+      Q.rpNum({ story: `${rpNm(1)[0]}ฝากเงิน ${it[0].toLocaleString('en-US')} บาท ได้ดอกเบี้ย ${it[1]}% ต่อปี (ดอกเบี้ยอย่างง่าย)`, q: `ฝาก ${it[2]} ปี ได้ดอกเบี้ยกี่บาท`, a: it[3], unit: 'บาท', hint: 'เงินต้น × อัตรา × จำนวนปี', sig: 'y6', diff: 9 }),
+      Q.rpNum({ q: `ทุน ${sp[0]} บาท ต้องการกำไร ${sp[1]}% ต้องขายกี่บาท`, a: sp[2], unit: 'บาท', hint: `ราคาขาย = ${100 + sp[1]}% ของทุน`, sig: 'y7', diff: 9 }),
+      Q.rpNum({ q: `ราคาสินค้า ${vt[0].toLocaleString('en-US')} บาท ยังไม่รวมภาษีมูลค่าเพิ่ม 7% ต้องจ่ายทั้งหมดกี่บาท`, a: vt[1], unit: 'บาท', hint: 'จ่าย 107% ของราคาสินค้า', sig: 'y8', diff: 10 }),
+      Q.rpNum({ q: 'ค่าอาหาร 850 บาท มีค่าบริการ 10% ต้องจ่ายทั้งหมดกี่บาท', a: 935, unit: 'บาท', hint: 'ค่าบริการคิดจากค่าอาหาร', sig: 'y9', diff: 10 }),
+      Q.rpNum({ q: 'ติดราคา 1,250 บาท ขายจริง 1,000 บาท ลดราคากี่เปอร์เซ็นต์', a: 20, unit: '%', hint: 'ส่วนลด ÷ ราคาที่ติด × 100', sig: 'y10', diff: 11 }),
+      rpTF('ลดราคา 20% แล้วลดอีก 10% เท่ากับลดราคา 30%', false, 'ต่อที่สองคิดจากราคาที่ลดแล้ว จึงลดรวม 28%'),
+      Q.rpNum({ q: 'ขายเสื้อไป 690 บาท ได้กำไร 15% เสื้อตัวนี้ซื้อมากี่บาท', a: 600, unit: 'บาท', hint: '690 บาท คือ 115% ของทุน', sig: 'y11', diff: 15 })]; }),
+  /* ---------- 20 ด่านสุดท้าย รวมทุกเรื่อง ---------- */
+  LR7(20, 'ปากแม่น้ำรวมพลัง', 'รวมอัตราส่วน สัดส่วน และร้อยละ', 'รวมพลัง', 'แยกแยะว่าโจทย์เป็นอัตราส่วน สัดส่วนตรง สัดส่วนผกผัน หรือร้อยละ เลือกวิธีคำนวณที่เหมาะสม และแก้โจทย์หลายขั้นตอนจากสถานการณ์จริง', [
+    T('<b>จัดการ์ด</b> — โจทย์นี้ใช้ความรู้เรื่องใด', 'จัดการ์ด โจทย์นี้ใช้ความรู้เรื่องใด', el => el.append(rpSort([
+      { t: 'แบ่งเงิน 600 บาท ตามอัตราส่วน 1 : 2', bin: 0, why: 'แบ่งตามส่วน' }, { t: 'ไข่ 10 ฟอง 45 บาท 30 ฟองราคาเท่าไร', bin: 1, why: 'ซื้อมากขึ้น ราคาเพิ่มเป็นเท่าเดียวกัน' },
+      { t: 'ช่าง 3 คนใช้ 8 วัน ถ้า 6 คนใช้กี่วัน', bin: 2, why: 'คนมากขึ้น วันลดลง และผลคูณคงที่' }, { t: 'ลดราคา 15% จาก 400 บาท', bin: 3, why: 'มีเปอร์เซ็นต์' },
+      { t: 'ขับเร็วขึ้นบนทางเดิม ใช้เวลาเท่าไร', bin: 2, why: 'อัตราเร็วกับเวลาสวนทางกันเป็นเท่า' }, { t: 'ทอง : เงิน = 3 : 5 ใช้ทอง 12 กรัม', bin: 0, why: 'ใช้อัตราส่วนของสองสิ่ง' },
+      { t: 'วิ่ง 2 ชม. ได้ 18 กม. 5 ชม. ได้กี่ กม.', bin: 1, why: 'อัตราเร็วคงที่ เวลาเพิ่ม ระยะทางเพิ่มเป็นเท่าเดียวกัน' }, { t: 'สอบได้ 45 จาก 60 คะแนน', bin: 3, why: 'ถามเป็นร้อยละ' }],
+      ['อัตราส่วน', 'สัดส่วนตรง', 'สัดส่วนผกผัน', 'ร้อยละ'], '<b>แตะการ์ด แล้วแตะกล่อง</b> — เลือกความรู้ที่ใช้แก้โจทย์'))),
+    T('ตัวอย่างทีละขั้น: <b>โจทย์หลายขั้นตอน</b>', 'ตัวอย่างทีละขั้น โจทย์หลายขั้นตอน', el => el.append(rpWalk('แบ่งเงิน <b>2,400 บาท</b> ให้พี่ : น้อง = <b>5 : 3</b> น้องใช้เงินไป <b>40%</b> ของที่ได้ น้องเหลือเงินกี่บาท',
+      [['① แบ่งตามอัตราส่วน', '5 + 3 = 8 ส่วน → ส่วนละ 2,400 ÷ 8 = 300 บาท'], ['② น้องได้', '3 × 300 = 900 บาท'], ['③ ใช้ไป 40% → เหลือ 60%', '60% ของ 900 = <b>540 บาท</b>']],
+      'โจทย์หลายขั้นตอน: แยกเป็นขั้นย่อย แต่ละขั้นใช้ความรู้คนละเรื่อง', 'แยกเป็นขั้นย่อย')))
+  ], () => { const sh = rpPick([[2400, 5, 3, 40, 540], [1600, 3, 5, 25, 750], [3200, 3, 1, 50, 400]]), tb = rpPick([[4, 6, 12, 18], [3, 5, 9, 15]]), ip = rpPick([[4, 9, 6], [5, 12, 4], [3, 10, 5]]);
+    return [
+      Q.rpOpt({ q: '"คนงาน 4 คน ขุดบ่อเสร็จใน 6 วัน ถ้ามีคนงาน 8 คนจะเสร็จในกี่วัน" ใช้ความรู้เรื่องใด', opts: ['สัดส่วนผกผัน', 'สัดส่วนตรง', 'ร้อยละ'], right: 'สัดส่วนผกผัน', hint: 'คนเพิ่มเป็น 2 เท่า วันเป็นอย่างไร', sig: 'z1', diff: 4 }),
+      Q.rpRat({ q: 'ทำ <b>36 : 48</b> ให้เป็นอัตราส่วนอย่างต่ำ', a: [3, 4], mode: 'low', hint: 'หารด้วย ห.ร.ม. ของ 36 กับ 48', sig: 'z2', diff: 4 }),
+      Q.rpNum({ q: '<b>35%</b> ของ 160 เท่ากับเท่าใด', a: 56, hint: '10% = 16', sig: 'z3', diff: 5 }),
+      Q.rpNum({ story: `ส้ม ${tb[0]} กิโลกรัม ราคา ${tb[0] * 30} บาท`, q: `ส้ม ${tb[2]} กิโลกรัม ราคากี่บาท`, a: tb[2] * 30, unit: 'บาท', hint: 'สัดส่วนตรง', sig: 'z4', diff: 6 }),
+      Q.rpNum({ story: `เครื่องจักร ${ip[0]} เครื่อง ทำงานเสร็จใน ${ip[1]} ชั่วโมง`, q: `ถ้าใช้ ${ip[2]} เครื่อง จะเสร็จในกี่ชั่วโมง`, a: ip[0] * ip[1] / ip[2], unit: 'ชั่วโมง', hint: 'สัดส่วนผกผัน: เครื่อง × ชั่วโมง คงที่', sig: 'z5', diff: 8 }),
+      Q.rpNum({ story: 'แบ่งลูกอม 84 เม็ด ให้สามคนตามอัตราส่วน 2 : 3 : 7', q: 'คนที่ได้มากที่สุดได้กี่เม็ด', a: 49, unit: 'เม็ด', hint: 'ทั้งหมด 12 ส่วน', sig: 'z6', diff: 9 }),
+      Q.rpNum({ q: '<b>27</b> เป็นกี่เปอร์เซ็นต์ของ 36', a: 75, unit: '%', hint: '27/36 × 100', sig: 'z7', diff: 9 }),
+      Q.rpNum({ q: 'หาค่า x จาก x : 14 = 9 : 21', a: 6, hint: 'คูณไขว้: 21x = 14 × 9', sig: 'z8', diff: 10 }),
+      Q.rpNum({ story: 'เสื้อติดราคา 450 บาท ลดราคา 20% แล้วต้องจ่ายภาษีมูลค่าเพิ่มอีก 7% ของราคาที่ลดแล้ว', q: 'ต้องจ่ายทั้งหมดกี่บาท', a: 385.2, unit: 'บาท', hint: 'ลดก่อน แล้วจึงบวกภาษี', sig: 'z9', diff: 13 }),
+      Q.rpNum({ story: `แบ่งเงิน ${sh[0].toLocaleString('en-US')} บาท ให้พี่ : น้อง = ${sh[1]} : ${sh[2]} น้องใช้เงินไป ${sh[3]}% ของที่ได้`, q: 'น้องเหลือเงินกี่บาท', a: sh[4], unit: 'บาท', hint: 'หาเงินของน้องก่อน แล้วหาเปอร์เซ็นต์ที่เหลือ', sig: 'z10', diff: 15 }),
+      Q.rpNum({ story: 'สูตรน้ำยาล้างจาน น้ำยาเข้มข้น : น้ำ = 1 : 4 ต้องการน้ำยาผสมทั้งหมด 15 ลิตร', q: 'ต้องใช้น้ำกี่ลิตร', a: 12, unit: 'ลิตร', hint: 'ทั้งหมด 5 ส่วน', sig: 'z11', diff: 11 }),
+      Q.rpNum({ story: 'นักเรียนห้องหนึ่งมีชาย : หญิง = 4 : 5 มีนักเรียนหญิง 20 คน', q: 'นักเรียนชายคิดเป็นกี่เปอร์เซ็นต์ของทั้งห้อง (ตอบทศนิยมสองตำแหน่ง)', a: 44.44, unit: '%', hint: 'ชาย 16 คน จากทั้งหมด 36 คน', sig: 'z12', diff: 17 })]; })
+);
+
+/* ---------- บอส: 20 ข้อ (แต่งใหม่ทั้งหมด) · lv = id ด่านของแต่ละข้อ (หน้าผลบอสจัดกลุ่มข้อที่พลาดตามด่าน) ---------- */
+const EXAM_M1C7 = xrot([
+  { q: 'ขนม 18 ชิ้น ลูกอม 6 เม็ด จำนวนขนมเป็นกี่เท่าของจำนวนลูกอม', opts: ['3 เท่า', '12 เท่า', '1/3 เท่า', '24 เท่า'], a: 0, lv: 2701 },
+  { q: 'ห้องเรียนมีนักเรียนชาย 16 คน หญิง 19 คน อัตราส่วนของนักเรียนหญิงต่อนักเรียนทั้งห้องคือข้อใด', opts: ['19 : 35', '16 : 35', '19 : 16', '35 : 19'], a: 0, lv: 2702 },
+  { q: 'เชือกยาว 3 เมตร กับ 45 เซนติเมตร อัตราส่วนของความยาว (เซนติเมตร) คือข้อใด', opts: ['300 : 45', '3 : 45', '30 : 45', '3 : 4.5'], a: 0, lv: 2703 },
+  { q: 'ข้อใดเท่ากับ 4 : 7', opts: ['12 : 21', '8 : 11', '7 : 4', '16 : 21'], a: 0, lv: 2704 },
+  { q: '0.8 : 2 เขียนเป็นอัตราส่วนอย่างต่ำได้ตามข้อใด', opts: ['2 : 5', '8 : 20', '4 : 10', '5 : 2'], a: 0, lv: 2705 },
+  { q: 'ถ้า p : q = 3 : 5 และ q : r = 2 : 3 แล้ว p : q : r เท่ากับข้อใด', opts: ['6 : 10 : 15', '3 : 5 : 3', '3 : 10 : 3', '6 : 5 : 15'], a: 0, lv: 2706 },
+  { q: 'แบ่งเงิน 1,500 บาท ให้ ก : ข : ค = 2 : 3 : 5 ค ได้เงินกี่บาท', opts: ['750 บาท', '500 บาท', '300 บาท', '450 บาท'], a: 0, lv: 2707 },
+  { q: 'อัตราส่วนคู่ใดนำมาเขียนเป็นสัดส่วนได้', opts: ['3 : 8 = 12 : 32', '3 : 8 = 6 : 13', '3 : 8 = 8 : 3', '3 : 8 = 4 : 9'], a: 0, lv: 2708 },
+  { q: 'จาก x/15 = 4/6 ค่าของ x คือข้อใด', opts: ['10', '22.5', '9', '6'], a: 0, lv: 2709 },
+  { q: 'เมื่อ x = 2, 3, 5 ได้ y = 14, 21, 35 ตามลำดับ x กับ y สัมพันธ์กันแบบใด', opts: ['สัดส่วนตรง y = 7x', 'สัดส่วนผกผัน xy = 28', 'สัดส่วนตรง y = x + 12', 'ไม่เป็นสัดส่วน'], a: 0, lv: 2710 },
+  { q: 'ดินสอ 5 แท่ง ราคา 35 บาท ซื้อดินสอแบบเดียวกัน 12 แท่ง ต้องจ่ายกี่บาท', opts: ['84 บาท', '42 บาท', '72 บาท', '60 บาท'], a: 0, lv: 2711 },
+  { q: 'สถานการณ์ใดที่ปริมาณสองปริมาณแปรผกผันกัน', opts: ['อัตราเร็วกับเวลาที่ใช้ (ระยะทางเท่าเดิม)', 'จำนวนสินค้ากับราคารวม', 'เวลากับระยะทาง (อัตราเร็วคงที่)', 'จำนวนขนมที่กินกับจำนวนขนมที่เหลือ'], a: 0, lv: 2712 },
+  { q: 'คนงาน 9 คน สร้างกำแพงเสร็จใน 8 วัน ถ้าใช้คนงาน 12 คน จะเสร็จในกี่วัน', opts: ['6 วัน', '11 วัน', '10.7 วัน', '5 วัน'], a: 0, lv: 2713 },
+  { q: 'อัตราส่วน 7 : 20 คิดเป็นร้อยละเท่าใด', opts: ['35%', '7%', '20%', '28%'], a: 0, lv: 2714 },
+  { q: 'จำนวนใดต่อไปนี้มีค่ามากที่สุดเมื่อเทียบเป็นร้อยละ', opts: ['0.72', '68%', '7/10', '0.7%'], a: 0, lv: 2715 },
+  { q: '45% ของ 260 เท่ากับเท่าใด', opts: ['117', '45', '215', '126'], a: 0, lv: 2716 },
+  { q: '24 เป็น 40% ของจำนวนใด', opts: ['60', '9.6', '64', '96'], a: 0, lv: 2717 },
+  { q: 'ราคาจาก 250 บาท เพิ่มเป็น 290 บาท เพิ่มขึ้นกี่เปอร์เซ็นต์', opts: ['16%', '40%', '13.8%', '14%'], a: 0, lv: 2718 },
+  { q: 'ซื้อจักรยานมา 2,400 บาท ขายไปได้กำไร 15% ขายไปกี่บาท', opts: ['2,760 บาท', '2,415 บาท', '2,040 บาท', '3,600 บาท'], a: 0, lv: 2719 },
+  { q: 'แบ่งเงิน 3,600 บาท ให้พี่ : น้อง = 7 : 5 พี่ฝากธนาคาร 30% ของที่ได้ พี่ฝากเงินกี่บาท', opts: ['630 บาท', '450 บาท', '1,080 บาท', '1,470 บาท'], a: 0, lv: 2720 }
+], 5);
+LESSONS_M1C7.push({ id: 2721, boss: true, place: 'วังจระเข้ร้อยละ', title: 'ด่านบอส: ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ', short: 'ด่านบอส · ข้อสอบ', tone: 'coral',
+  goal: 'ตอบคำถามเรื่องอัตราส่วน สัดส่วน และร้อยละ 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะจระเข้ร้อยละ',
+  exam: EXAM_M1C7, pass: 16, bossName: 'จระเข้ร้อยละ', bossPal: 'coral', emblem: '%', bossKind: 'croc',
+  winLine: 'ชนะจระเข้ร้อยละแล้ว! แบ่งส่วน ตั้งสัดส่วน และคิดเปอร์เซ็นต์ได้คล่องมาก', loseLine: 'จระเข้ร้อยละยังเฝ้าปากแม่น้ำอยู่ ลองทวนสัดส่วนตรง ผกผัน และร้อยละอีกนิดแล้วมาสู้ใหม่นะ!' });
+
 'use strict';
 /* =========================================================
    Each lesson = { id, title, goal, video, icon, color,
@@ -34521,6 +35372,9 @@ const CITIES = [
     theme: { river: true, hills: ['#BFE3C9', '#ADD9B8', '#CFEBD7'], far: '#DDF0E3', edge: ['pier', 'tree', 'stilthouse', 'pine'], small: ['lotus', 'reeds', 'flowers', 'kayak', 'bush', 'reeds'] } },
   { id: 92, grade: 7, name: 'ลำน้ำยกกำลัง', chapter: 'บทที่ 3 เลขยกกำลัง', lessons: LESSONS_M1C3,
     theme: { river: true, hills: ['#C9E4B0', '#BADB9C', '#D8EDC4'], far: '#E6F3D6', edge: ['ricebarn', 'tree', 'pier', 'stilthouse'], small: ['paddy', 'duck', 'reeds', 'lotus', 'flowers', 'kayak'] } },
+  /* v244 (ผู้ใช้ขอ): ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2701–2720 + บอส 2721 */
+  { id: 96, grade: 7, term: 2, name: 'ลำน้ำอัตราส่วน', chapter: 'บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ', lessons: LESSONS_M1C7,
+    theme: { river: true, hills: ['#CDE8B4', '#BEE0A0', '#DCEFC8'], far: '#E8F4DA', edge: ['pier', 'stilthouse', 'tree', 'ricebarn'], small: ['kayak', 'lotus', 'duck', 'paddy', 'reeds', 'flowers'] } },
   { id: 94, grade: 8, name: 'เมืองนักสืบข้อมูล', chapter: 'บทที่ 7 สถิติ (2)', lessons: LESSONS_M2C7,
     theme: { detect: true, hills: ['#E6DDF6', '#DCD1F0', '#F2E6DA'], far: '#F1ECFA', edge: ['dtlamp', 'dthouse', 'dtboard', 'dtoffice'], small: ['dtmagnify', 'dtbook', 'dtprints', 'dthydrant', 'dtbench', 'dtbox'] } },
   { id: 93, grade: 9, name: 'ขั้วโลกสถิติ', chapter: 'บทที่ 6 สถิติ (3)', lessons: LESSONS_M3C6,
