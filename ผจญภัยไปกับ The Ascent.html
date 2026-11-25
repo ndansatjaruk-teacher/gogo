@@ -4581,6 +4581,7 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .mg-cards.mx .mi-card.fc .f .mg-fig,.mi-cards.mx .mi-card.fc .f .mg-fig{max-width:82cqw!important;max-height:48cqh}
 .mi-cards.mx[data-n="4"] .mi-card.fc{aspect-ratio:1.05/1}
 .mi-cards.mx:is([data-n="7"],[data-n="8"]) .mi-card.fc{flex:0 1 calc(25% - 15px);max-width:none}
+.word.fnote.fn2{min-height:2.9em}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -9796,6 +9797,8 @@ Object.assign(Q, {
    TEACHING SIMULATIONS
    ========================================================= */
 const fNote = () => h('div', { class: 'word fnote', style: { fontSize: 'clamp(16px,2vw,22px)', minHeight: '1.6em' } });
+/* v242: หน้าลาก — จองที่ 2 บรรทัด ข้อความยาวขึ้นระหว่างลากแล้วรูปไม่กระโดดหนีนิ้ว */
+const fNote2 = () => { const o = fNote(); o.classList.add('fn2'); o.style.minHeight = '2.9em'; return o; };
 const stepper = (label, get, set, lo, hi, onChange) => { const v = h('b', { class: 'num' }, get());
   const b = (d, t) => h('button', { class: 'btn icon sm ia ' + (d > 0 ? 'primary' : 'danger'), onclick: e => { e.stopPropagation(); const x = Math.max(lo(), Math.min(hi(), get() + d)); if (x === get()) { sfx.no(); return; } set(x); v.textContent = get(); sfx.pop(get() % 8); onChange(); } }, PM(t));
   const el = h('div', { class: 'fstep' }, h('span', null, label), b(-1, '-'), v, b(1, '+')); el.sync = () => v.textContent = get(); return el; };
@@ -27819,6 +27822,8 @@ const MI_NM = ['ภูผา', 'น้ำใส', 'ต้นกล้า', 'ใ�
 const MI_FMT = /^−?\d+(\.\d+)?$|^−?\d+\/\d+$/;
 const miVal = t => { const neg = t[0] === '−', b = neg ? t.slice(1) : t, v = b.includes('/') ? (([n, d]) => +d ? +n / +d : NaN)(b.split('/')) : +b; return neg ? -v : v; };
 const miShow = t => t.replace(/^(−?)(\d+)/, (_, s, d) => s + (+d).toLocaleString('en-US'));
+/* pointer → svg user coords (same matrix the drawing uses; zoomfix keeps it right on Safari) */
+const miSvgPt = (svg, ev) => { const m = svg.getScreenCTM(), q = svg.createSVGPoint(); q.x = ev.clientX; q.y = ev.clientY; const r = q.matrixTransform(m.inverse()); return [r.x, r.y]; };
 function miAns(ctx, expected, o = {}) {
   const want = typeof expected === 'number' ? expected : miVal(String(expected).replace(/-/g, '−')), wantTxt = typeof expected === 'number' ? miN(expected) : String(expected).replace(/-/g, '−');
   let val = '';
@@ -27865,7 +27870,7 @@ function miLine(lo, hi, o = {}) {
       lay.insertAdjacentHTML('beforeend', `<g class="mi-arc"><path d="M${xa} ${y0 - 4} Q${mx} ${y0 - 4 - hgt * 2} ${xb} ${y0 - 4}" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/><path d="M${xb} ${y0 - 4} l${d * 9} -6 l${d * 2} 10 z" fill="${col}"/>${lab ? `<text x="${mx}" y="${y0 - 10 - hgt}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" font-size="18" fill="#2B2550">${lab}</text>` : ''}</g>`); },
     span: (a, b, col = '#4FD1A1', lab) => { const xa = X(Math.min(a, b)), xb = X(Math.max(a, b)), yy = y0 + 44;
       lay.insertAdjacentHTML('beforeend', `<g class="mi-span"><path d="M${xa} ${yy - 6} V${yy} H${xb} V${yy - 6}" fill="none" stroke="${col}" stroke-width="3"/>${lab ? `<text x="${(xa + xb) / 2}" y="${yy + 20}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="19" fill="#2B2550">${lab}</text>` : ''}</g>`); } });
-  const at = ev => { const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W; return Math.max(lo, Math.min(hi, Math.round((x - pad) / st + lo))); };
+  const at = ev => { const x = miSvgPt(svg, ev)[0]; return Math.max(lo, Math.min(hi, Math.round((x - pad) / st + lo))); }; /* v242: พิกัดผ่าน CTM — รูปที่ถูกย่อแบบเว้นขอบ (letterbox) ก็ยังตรงนิ้ว */
   if (o.tap) svg.addEventListener('click', ev => { ev.stopPropagation(); o.tap(at(ev), el); });
   if (o.drag) { let down = false; svg.addEventListener('pointerdown', ev => { down = true; svg.setPointerCapture && svg.setPointerCapture(ev.pointerId); o.drag(at(ev), el, true); });
     svg.addEventListener('pointermove', ev => { if (down) o.drag(at(ev), el, false); }); const up = () => { if (down) { down = false; o.end && o.end(el); } }; svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up); svg.addEventListener('click', ev => ev.stopPropagation()); }
@@ -27882,7 +27887,7 @@ const miChip = (s, cls = '') => h('button', { class: 'mi-chip ' + (s > 0 ? 'p' :
 /* sea level: drag the bird / fish above and below the river surface */
 function miSeaSim() {
   const H = 300, top = 20, lvl = 10, U = (H - 2 * top) / 20, Y = v => top + (lvl - v) * U; let v = 6; const seen = new Set();
-  const out = fNote();
+  const out = fNote2();
   const svgF = () => { let s = `<rect x="0" y="0" width="420" height="${Y(0)}" fill="#E4F4FD"/><rect x="0" y="${Y(0)}" width="420" height="${H - Y(0)}" fill="#7FCCEE"/><path d="M0 ${Y(0)} q30 -6 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#fff" stroke-width="3"/>`;
     for (let k = -10; k <= 10; k++) { const y = Y(k); s += `<path d="M60 ${y} H${k % 5 === 0 ? 80 : 72}" stroke="#2B2550" stroke-width="${k === 0 ? 3 : 1.6}"/>`; if (k % 2 === 0) s += `<text x="52" y="${y + 5}" text-anchor="end" font-family="Nunito,sans-serif" font-weight="800" font-size="15" fill="#2B2550">${miN(k)}</text>`; }
     s += `<path d="M66 ${Y(10)} V${Y(-10)}" stroke="#2B2550" stroke-width="2"/><text x="400" y="${Y(0) - 8}" text-anchor="end" font-size="14" font-weight="700" fill="#1E5A7A">ระดับน้ำ = 0</text>`;
@@ -27892,7 +27897,7 @@ function miSeaSim() {
   const box = h('div', { class: 'mi-seabox ia drag' }); const draw = () => { box.innerHTML = svgF();
     out.innerHTML = v > 0 ? `อยู่<b>เหนือ</b>ระดับน้ำ ${v} เมตร → <b class="mi-pos">${miN(v)}</b> (จำนวนเต็มบวก)` : v < 0 ? `อยู่<b>ใต้</b>ระดับน้ำ ${-v} เมตร → <b class="mi-neg">${miN(v)}</b> (จำนวนเต็มลบ)` : `อยู่<b>ที่</b>ระดับน้ำพอดี → <b>0</b> (ศูนย์)`;
     seen.add(Math.sign(v)); if (seen.size === 3) { out.innerHTML += ' ✓'; teachDone(box); } };
-  const at = ev => { const r = box.firstChild.getBoundingClientRect(), y = (ev.clientY - r.top) / r.height * H; return Math.max(-10, Math.min(10, Math.round(lvl - (y - top) / U))); };
+  const at = ev => { const y = miSvgPt(box.firstChild, ev)[1]; return Math.max(-10, Math.min(10, Math.round(lvl - (y - top) / U))); };
   let down = false; box.addEventListener('pointerdown', ev => { down = true; box.setPointerCapture && box.setPointerCapture(ev.pointerId); const n = at(ev); if (n !== v) { v = n; sfx.pop(Math.abs(v) % 8); draw(); } });
   box.addEventListener('pointermove', ev => { if (!down) return; const n = at(ev); if (n !== v) { v = n; draw(); } });
   box.addEventListener('pointerup', () => { if (down) { down = false; say(v > 0 ? `เหนือระดับน้ำ ${v} เมตร บวก ${v}` : v < 0 ? `ใต้ระดับน้ำ ${-v} เมตร ลบ ${-v}` : 'ศูนย์ ระดับน้ำพอดี', true); } });
@@ -27926,7 +27931,7 @@ function miOrderSim(nums) {
 }
 /* opposite and absolute value: drag the point, its mirror and its distance from 0 follow */
 function miOppSim() {
-  const out = fNote(), seen = new Set(); let el, v = 4;
+  const out = fNote2(), seen = new Set(); let el, v = 4;
   const draw = () => { el.clear(); if (v !== 0) { el.dot(-v, '#B8AEDB', miN(-v)); el.span(0, v, '#4FD1A1', `ห่างจาก 0 = ${Math.abs(v)}`); }
     el.dot(v, v < 0 ? '#E5505E' : '#2F86C2', miN(v));
     out.innerHTML = v === 0 ? 'จำนวนตรงข้ามของ 0 คือ 0<br>|0| = 0' : `จำนวนตรงข้ามของ <b>${miN(v)}</b> คือ <b>${miN(-v)}</b> (ห่างจาก 0 เท่ากัน คนละข้าง)<br>ค่าสัมบูรณ์ <b>|${miN(v)}| = ${Math.abs(v)}</b>`; };
@@ -28925,7 +28930,7 @@ const mgMeasDemo = (deg = 65, rot = 15) => { const B = [4.6, 1.6], A = mgP(B, ro
     summary: `∠ABC = <b>${deg}°</b> — เริ่มนับจากสเกลที่เป็น 0 ตรงแขนมุมข้างแรกเสมอ`, keepTools: true }; };
 /* ความยาว 3 ด้านประกอบเป็นรูปสามเหลี่ยมได้ไหม (วงเวียนจากปลายทั้งสอง) */
 function mgIneqSim(sets) {
-  const box = h('div', { class: 'mg-figbox mg-big' }), out = fNote(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
+  const box = h('div', { class: 'mg-figbox mg-big' }), out = fNote2(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
   const show = (k, [x, y, z]) => { const c = Math.max(x, y, z), [a, b] = [x, y, z].filter((v, i, arr) => i !== arr.indexOf(c)), A = [0, 0], B = [c, 0], X = mgXCC(A, a, B, b).sort((p, q) => q[1] - p[1])[0], ok = a + b > c;
     const f = { pts: { A, B }, segs: [['A', 'B']], arcs: [[A, a, -4, 100, '#3D8BD9'], [B, b, 80, 184, '#E5487A']], extra: [[0, Math.max(a, b) * .9]] };
     if (ok) { f.pts.C = X; f.segs.push(['A', 'C'], ['B', 'C']); f.fill = [[['A', 'B', 'C'], '#FFD27A']]; }
@@ -28940,7 +28945,7 @@ function mgIneqSim(sets) {
 /* ลากจุดยอด C — มุมภายในรวมกันได้ 180° เสมอ */
 function mgSumSim() {
   const NS = 'http://www.w3.org/2000/svg', W = 560, H = 300, A = [70, 260], B = [470, 260]; let C = [230, 70], drags = 0, last = null;
-  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('class', 'mg-sum ia'); const out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('class', 'mg-sum ia'); const out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
   const angAt = (P, Q, R) => { const a = Math.atan2(-(Q[1] - P[1]), Q[0] - P[0]), b = Math.atan2(-(R[1] - P[1]), R[0] - P[0]); let d = Math.abs(a - b) * 180 / Math.PI; if (d > 180) d = 360 - d; return d; };
   const arc = (P, Q, R, col, r = 34) => { const a = Math.atan2(Q[1] - P[1], Q[0] - P[0]), b = Math.atan2(R[1] - P[1], R[0] - P[0]); let s = a, e = b; let sw = e - s; while (sw > Math.PI) sw -= 2 * Math.PI; while (sw < -Math.PI) sw += 2 * Math.PI; const x1 = P[0] + r * Math.cos(s), y1 = P[1] + r * Math.sin(s), x2 = P[0] + r * Math.cos(s + sw), y2 = P[1] + r * Math.sin(s + sw); return `<path d="M${P[0]} ${P[1]} L${x1} ${y1} A${r} ${r} 0 0 ${sw > 0 ? 1 : 0} ${x2} ${y2} Z" fill="${col}" fill-opacity=".55" stroke="${col}" stroke-width="2"/>`; };
   const draw = () => { const a = Math.round(angAt(A, B, C)), b = Math.round(angAt(B, A, C)), c = 180 - a - b;
@@ -28968,7 +28973,7 @@ const mgArmDeg = (O, p, prev, lo, hi, minR = 34) => { if (Math.hypot(p[0] - O[0]
 const MG_AT = [['มุมแหลม', d => d > 0 && d < 90, '#3D8BD9'], ['มุมฉาก', d => d === 90, '#E5487A'], ['มุมป้าน', d => d > 90 && d < 180, '#F0A020'], ['มุมตรง', d => d === 180, '#4FB97A'], ['มุมกลับ', d => d > 180 && d < 360, '#7C5CE0']];
 /* ชนิดของมุม: ลากแขนของมุม ดูขนาดและชื่อชนิดเปลี่ยนตาม — หาให้ครบ 5 ชนิด */
 function mgAngTypeSim() {
-  const W = 560, H = 340, O = [280, 170], R = 130, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait()); let th = 50;
+  const W = 560, H = 340, O = [280, 170], R = 130, svg = mgSvg(W, H, 'mg-sum'), out = fNote2(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait()); let th = 50;
   const chips = h('div', { class: 'rowstack mg-sets' }, ...MG_AT.map(([n, , c]) => h('span', { class: 'mg-chip', style: { '--pc': c } }, n)));
   const P = (d, r) => [O[0] + r * Math.cos(d * Math.PI / 180), O[1] - r * Math.sin(d * Math.PI / 180)];
   const draw = () => { const k = MG_AT.findIndex(t => t[1](th)), col = k < 0 ? '#9790B0' : MG_AT[k][2], a = P(th, 58), e = P(th, R);
@@ -28985,7 +28990,7 @@ function mgAngTypeSim() {
 }
 /* สมบัติของเส้นแบ่งครึ่ง: 'seg' จุดบนเส้นตั้งฉากแบ่งครึ่ง AB ห่างจาก A และ B เท่ากัน · 'ang' จุดบนเส้นแบ่งครึ่งมุมห่างจากแขนทั้งสองเท่ากัน */
 function mgEquiSim(mode) {
-  const W = 560, H = 320, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), K = 40, hits = new Set(); let P = mode === 'seg' ? [200, 80] : [330, 150];
+  const W = 560, H = 320, svg = mgSvg(W, H, 'mg-sum'), out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), K = 40, hits = new Set(); let P = mode === 'seg' ? [200, 80] : [330, 150];
   const A = [120, 260], B = [440, 260], V = [70, 280], ARM = 62, bis = ARM / 2, Pa = (d, r) => [V[0] + r * Math.cos(d * Math.PI / 180), V[1] - r * Math.sin(d * Math.PI / 180)];
   const foot = (d, p) => { const u = [Math.cos(d * Math.PI / 180), -Math.sin(d * Math.PI / 180)], t = (p[0] - V[0]) * u[0] + (p[1] - V[1]) * u[1]; return [V[0] + u[0] * t, V[1] + u[1] * t]; };
   const L = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) / K, f1 = x => (Math.round(x * 10) / 10).toFixed(1);
@@ -29013,7 +29018,7 @@ function mgEquiSim(mode) {
 }
 /* ระยะห่างระหว่างจุดกับเส้นตรง: เลื่อนจุด Q บนเส้นตรง หาตำแหน่งที่ PQ สั้นที่สุด */
 function mgDistSim() {
-  const W = 560, H = 300, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), P = [300, 70], y = 250, K = 40; let qx = 110, moves = 0, done = false;
+  const W = 560, H = 300, svg = mgSvg(W, H, 'mg-sum'), out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), P = [300, 70], y = 250, K = 40; let qx = 110, moves = 0, done = false;
   const draw = () => { const d = Math.hypot(qx - P[0], y - P[1]) / K, on = qx === P[0];
     svg.innerHTML = `<path d="M20 ${y} H${W - 20}" stroke="#2B2550" stroke-width="3.4"/><text x="${W - 34}" y="${y + 28}" class="mg-fn">B</text><text x="22" y="${y + 28}" class="mg-fn">A</text>
       <path d="M${P} L${qx} ${y}" stroke="${on ? '#2E8A57' : '#E5487A'}" stroke-width="3"/>${on ? `<path d="M${qx} ${y - 16} h16 v16" fill="none" stroke="#2E8A57" stroke-width="2.4"/>` : ''}
@@ -29028,7 +29033,7 @@ const MG_PAIR = { corr: [['1', '5'], ['2', '6'], ['3', '7'], ['4', '8']], alt: [
 const MG_PNAME = { corr: 'มุมสมนัย', alt: 'มุมแย้ง', co: 'มุมภายในบนข้างเดียวกันของเส้นตัด', vert: 'มุมตรงข้าม' };
 const mgSecDeg = (k, t) => (+k % 2 ? t : 180 - t);
 function mgTransSim() {
-  const W = 600, H = 330, y1 = 110, y2 = 240, X1 = 330, svg = mgSvg(W, H, 'mg-sum mg-trans'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), seen = new Set(); let t = 60, show = null;
+  const W = 600, H = 330, y1 = 110, y2 = 240, X1 = 330, svg = mgSvg(W, H, 'mg-sum mg-trans'), out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), seen = new Set(); let t = 60, show = null;
   const col = { corr: '#3D8BD9', alt: '#E5487A', co: '#2FB5A3' };
   const P = (c, d, r) => [c[0] + r * Math.cos(d * Math.PI / 180), c[1] - r * Math.sin(d * Math.PI / 180)];
   const draw = () => { const Ia = [X1, y1], Ib = [X1 - (y2 - y1) / Math.tan(t * Math.PI / 180), y2], sec = [[0, t], [t, 180], [180, 180 + t], [180 + t, 360]];
@@ -29972,7 +29977,7 @@ function m3BoxBuild(data, o = {}) {
   const keys = ['min', 'q1', 'q2', 'q3', 'max'], cur = { min: ax.lo + (ax.hi - ax.lo) * .1, q1: ax.lo + (ax.hi - ax.lo) * .3, q2: ax.lo + (ax.hi - ax.lo) * .5, q3: ax.lo + (ax.hi - ax.lo) * .7, max: ax.lo + (ax.hi - ax.lo) * .9 };
   Object.keys(cur).forEach(k => cur[k] = Math.round(cur[k] * 2) / 2);
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} 150`); svg.setAttribute('class', 'm3-build ia'); let drag = null, done = false;
-  const wrap = h('div', { class: 'colstack no-side m3-bb rvl' }, o.game ? '' : h6wait()), out = fNote(), chk = h('button', { class: 'btn primary ia' }, icon('check'), h('span', null, 'ตรวจแผนภาพกล่อง'));
+  const wrap = h('div', { class: 'colstack no-side m3-bb rvl' }, o.game ? '' : h6wait()), out = fNote2(), chk = h('button', { class: 'btn primary ia' }, icon('check'), h('span', null, 'ตรวจแผนภาพกล่อง'));
   const draw = () => { const v = keys.map(k => cur[k]); let s = `<path d="M${pad - 10} 120 H${W - pad + 10}" stroke="#2B2550" stroke-width="2"/>`;
     for (let t = ax.lo; t <= ax.hi + 1e-9; t += ax.step) s += `<path d="M${X(t)} 115 V125" stroke="#2B2550" stroke-width="1.5"/><text x="${X(t)}" y="142" text-anchor="middle" class="m3-ax">${m3N(t)}</text>`;
     const sv = [...v].sort((a, b) => a - b); s += `<path d="M${X(sv[0])} ${y} H${X(sv[1])} M${X(sv[3])} ${y} H${X(sv[4])}" stroke="#2B2550" stroke-width="2.4"/><rect x="${X(sv[1])}" y="${y - 16}" width="${Math.max(1, X(sv[3]) - X(sv[1]))}" height="32" rx="3" fill="#3D9BE9" fill-opacity=".3" stroke="#2B2550" stroke-width="2.4"/><path d="M${X(sv[2])} ${y - 16} V${y + 16}" stroke="#2B2550" stroke-width="3"/>`;
@@ -29992,7 +29997,7 @@ function m3BoxBuild(data, o = {}) {
 function m3TechSim(data, lo, hi) {
   const a = data.slice(), W = 640, pad = 44, X = v => pad + (v - lo) / (hi - lo) * (W - 2 * pad), V = x => lo + (x - pad) / (W - 2 * pad) * (hi - lo), NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} 250`); svg.setAttribute('class', 'm3-tech ia');
-  const tbl = h('div', { class: 'm3-out' }), wrap = h('div', { class: 'colstack no-side' }, h6wait()), out = fNote(); let drag = -1, moves = 0, last = '';
+  const tbl = h('div', { class: 'm3-out' }), wrap = h('div', { class: 'colstack no-side' }, h6wait()), out = fNote2(); let drag = -1, moves = 0, last = '';
   const draw = () => { const F = m3FiveO(a), cnt = {}; let s = `<rect x="0" y="0" width="${W}" height="250" fill="#fff"/><path d="M${pad - 10} 140 H${W - pad + 10}" stroke="#2B2550" stroke-width="2"/>`;
     for (let t = lo; t <= hi; t += 10) s += `<path d="M${X(t)} 136 V144" stroke="#2B2550" stroke-width="1.4"/><text x="${X(t)}" y="160" text-anchor="middle" class="m3-ax">${t}</text>`;
     a.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0]).forEach(([v, i]) => { cnt[v] = (cnt[v] || 0) + 1; s += `<circle data-i="${i}" cx="${X(v)}" cy="${128 - (cnt[v] - 1) * 14}" r="6.5" fill="${i === drag ? '#E36A8C' : '#7C5CE0'}" stroke="#fff" stroke-width="1.4"/>`; });
@@ -30947,7 +30952,7 @@ function tgDrag(fig, move) { let id = null, raf = 0, last = null;
   fig.addEventListener('pointermove', e => { if (e.pointerId !== id) return; if (e.pointerType === 'mouse' && !e.buttons) { id = null; return; } e.preventDefault(); last = pt(e); if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (id != null && last) move(last); }); });
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => fig.addEventListener(t, e => { if (e.pointerId !== id) return; id = null; if (raf) cancelAnimationFrame(raf); raf = 0; if (t === 'pointerup' && last) move(last); last = null; })); }
 function tgScene(o) {
-  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote(), mis = tgMission(o.missions, wrap); let st = o.st;
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote2(), mis = tgMission(o.missions, wrap); let st = o.st;
   const draw = () => { fig.innerHTML = `<svg viewBox="0 0 ${o.W} ${o.H}" class="tg-scene" aria-hidden="true">${o.svg(st)}</svg>`; out.innerHTML = o.info(st); };
   tgDrag(fig, p => { const n = o.drag(p, st); if (n != null) { st = n; draw(); mis.check(st); } });
   draw(); wrap.append(h('div', { class: 'cap', html: o.cap }), mis.el, h('div', { class: 'tg-row' }, fig, o.side ? o.side : ''), out); return wrap;
@@ -35964,10 +35969,14 @@ const SEQ_BTN = b => b.matches('button.btn') && /\b(info|accent|primary)\b/.test
 /* v211 (ผู้ใช้ขอ: หน้าที่ให้แตะ ต้องแตะครบทุกอัน — ทุกชั้น): แถวแผนภูมิรูปภาพ การ์ดสูตรคูณ/การ์ดเดือน ของบนเครื่องชั่ง แถวตาราง รูปทรงในฉาก เลขโดด ฯลฯ — EXP_SEL2 นับแม้ไม่ได้ใช้ onclick */
 const EXP_SEL2 = '.mi-card.fc, .pc-row.tapr, .mtcard, .tkmc, .tray-it, .tapscene .sc-it, .scene.room .sc-it, .k7-cards:not(.s9-netpick) .k7-card, .p4c .p4d, .g2fl, .s9o-card, .w2cvc, .pzhs, .p4seg button';
 const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb, .objcard, .solidbtn, .flipcard, .g2cell, tr, ' + EXP_SEL2; /* v206 (ผู้ใช้เจอ: แตะ 2 อันก็ไปต่อได้) — การ์ดสิ่งของ รูปทรง การ์ดพลิก การ์ดของ */ /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
+const STEP_RE = /ขั้นต่อไป|ขั้นถัดไป|หลักต่อไป|ข้อต่อไป|รอบต่อไป|ภาพต่อไป|ด้านต่อไป|ประโยคถัดไป/;
 const ONCE_RE = /เพิ่มอีก|ขีดเพิ่ม|ใส่ลูกแก้ว|เพิ่มไม้|หมุน|ไล่ลง|หาสูงที่สุด|ดูวิธีวาด|ลองวาด/;
 function teachGate(vis, onDone) {
   let done = false, taps = 0; const seq = new Set([...vis.querySelectorAll('button')].filter(SEQ_BTN));
-  const fin = b => !b.isConnected || /ใหม่/.test(b.textContent) || b.dataset.done || (b.dataset.clicked && (b.disabled || ONCE_RE.test(b.textContent)));
+  /* v242 (ผู้ใช้ขอ: ต้องดูตัวอย่างครบทุกขั้นก่อนไปหน้าถัดไป — ทุกเกม): ปุ่ม “ขั้นต่อไป” นับว่าเสร็จเมื่อหายไป/ซ่อนถาวรเท่านั้น
+     เดิมกดครั้งแรกแล้วปุ่มถูกปิดชั่วคราวระหว่างภาพเคลื่อนไหว (disabled) → ถือว่าจบ → ไปหน้าถัดไปได้ทั้งที่ยังดูไม่ครบ */
+  const fin = b => { if (STEP_RE.test(b.textContent)) return !b.isConnected || !!b.dataset.done || (b.offsetParent === null && !b.disabled);
+    return !b.isConnected || /ใหม่/.test(b.textContent) || b.dataset.done || (b.dataset.clicked && (b.disabled || ONCE_RE.test(b.textContent))); };
   const interactive = vis.querySelector('.ia, button, canvas, .tappable, [draggable]');
   const finish = () => { if (done) return; done = true; mo.disconnect(); onDone(); };
   /* v205 (ผู้ใช้ขอ: ทุกบทเรียน กดให้ครบก่อนจึงไปต่อ) — things the child taps to explore (each child in a line, each shelf cell, each figure…) must ALL be tapped */
@@ -36123,6 +36132,7 @@ function startTeach(li, at = 0, seen = false) {
    Below FIT_MIN text gets too small → keep FIT_MIN and let the box scroll. Works for lessons, games and the boss exam. */
 const FIT_MIN = .45;
 function fitShrink(body) {
+  if (typeof DK_T !== 'undefined' && DK_T && body.contains(DK_T)) { if (!body.__fsq) { body.__fsq = 1; addEventListener('pointerup', () => { body.__fsq = 0; if (body.isConnected) fitShrink(body); }, { once: true }); } return; } /* v242: ระหว่างลาก ห้ามย่อ/จัดหน้าใหม่ — รูปจะเลื่อนหนีนิ้ว */
   const over = () => body.scrollHeight > body.clientHeight + 2 || body.scrollWidth > body.clientWidth + 2;
   const top = [...body.children].filter(c => c.nodeType === 1 && !c.classList.contains('czbar-float'));
   const zset = (kids, z) => kids.forEach(c => { c.style.zoom = z === 1 ? (c.dataset.gz || '') : String(+(z * (+c.dataset.gz || 1)).toFixed(3)); });
