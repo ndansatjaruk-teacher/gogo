@@ -87,6 +87,9 @@ grades/m3/m3tl.js
 grades/m1/m1r.js
 grades/m1/m1rl.js
 grades/m1/m1rl2.js
+grades/m1/m1q.js
+grades/m1/m1ql.js
+grades/m1/m1ql2.js
 app/lessons.js
 app/learn.js
 app/wpic.js

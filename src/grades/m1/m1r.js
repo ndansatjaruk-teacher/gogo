@@ -219,13 +219,13 @@ function rpSimInverse(P = 24) {
     info: s => `${s.n} คน ใช้ ${P / s.n} วัน<span class="rp-sep"></span><b>คน × วัน = ${s.n} × ${P / s.n} = ${P}</b> เท่าเดิมเสมอ → เป็น<b>สัดส่วนผกผัน</b> (คนเพิ่มกี่เท่า วันลดลงเท่านั้น)` });
 }
 /* 12 · sort cards into bins (tap a card, then tap a bin) */
-function rpSort(cards, bins, cap) {
+function rpSort(cards, bins, cap, fin) { /* fin = ข้อความสรุปเมื่อจัดครบ (v245) */
   const wrap = tgWrap(), out = fNote2(), deck = h('div', { class: 'rp-deck' }), binEls = bins.map(b => h('button', { class: 'rp-binx ia', html: `<b>${b}</b><span class="rp-in"></span>` })); let sel = null, left = cards.length;
   cards.forEach(c => { const el = h('button', { class: 'rp-card ia', html: c.t }); el.onclick = e => { e.stopPropagation(); if (el.classList.contains('in')) return; deck.querySelectorAll('.rp-card').forEach(x => x.classList.toggle('sel', x === el)); sel = { el, c }; sfx.tap(); out.innerHTML = 'แตะกล่องที่ใช่'; }; deck.append(el); });
   binEls.forEach((b, i) => b.onclick = e => { e.stopPropagation(); if (!sel) { out.innerHTML = 'แตะการ์ดก่อน แล้วค่อยแตะกล่อง'; return; }
     if (sel.c.bin !== i) { sfx.no(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); out.innerHTML = '🤔 ' + (sel.c.why || 'ลองคิดใหม่'); return; }
     sfx.pop(3); sel.el.classList.remove('sel'); sel.el.classList.add('in'); b.querySelector('.rp-in').append(h('span', { class: 'rp-mini', html: sel.c.s || sel.c.t })); sel.el.remove(); out.innerHTML = '✓ ' + (sel.c.ok || 'ถูกต้อง'); sel = null; left--;
-    if (!left) { sfx.ok(); out.innerHTML = '<b>จัดครบทุกใบแล้ว</b> 🎉'; teachDone(wrap); } });
+    if (!left) { sfx.ok(); out.innerHTML = fin || '<b>จัดครบทุกใบแล้ว</b> 🎉'; teachDone(wrap); } });
   wrap.append(h('div', { class: 'cap', html: cap }), deck, h('div', { class: 'rp-bins', 'data-n': bins.length }, ...binEls), out); return wrap;
 }
 /* 13 · percent grid: drag across the 10×10 grid to shade squares */
