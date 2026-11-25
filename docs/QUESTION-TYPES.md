@@ -383,13 +383,13 @@
 | `Q.syPaint` | `D` | [`grades/p3/p3s.js:212`](../src/grades/p3/p3s.js#L212) |
 | `Q.syPick` | `{ c, rot = 0 }` | [`grades/p3/p3s.js:194`](../src/grades/p3/p3s.js#L194) |
 | `Q.syWhich` | `{ items, not }` | [`grades/p3/p3s.js:179`](../src/grades/p3/p3s.js#L179) |
-| `Q.t3Conv` | `{ from, to }` | [`grades/p3/p3t.js:60`](../src/grades/p3/p3t.js#L60) |
-| `Q.t3Dot` | `{ h: H, m, sep = '.' }` | [`grades/p3/p3t.js:46`](../src/grades/p3/p3t.js#L46) |
-| `Q.t3DotPick` | `{ h: H, m, sep = '.' }` | [`grades/p3/p3t.js:49`](../src/grades/p3/p3t.js#L49) |
-| `Q.t3Dur` | `{ what, h1, m1, h2, m2 }` | [`grades/p3/p3t.js:51`](../src/grades/p3/p3t.js#L51) |
-| `Q.t3End` | `{ text, h1, m1, add, back }` | [`grades/p3/p3t.js:56`](../src/grades/p3/p3t.js#L56) |
-| `Q.t3Read` | `{ h: H, m }` | [`grades/p3/p3t.js:39`](../src/grades/p3/p3t.js#L39) |
-| `Q.t3Set` | `{ h: H, m }` | [`grades/p3/p3t.js:42`](../src/grades/p3/p3t.js#L42) |
+| `Q.t3Conv` | `{ from, to }` | [`grades/p3/p3t.js:49`](../src/grades/p3/p3t.js#L49) |
+| `Q.t3Dot` | `{ h: H, m, sep = '.' }` | [`grades/p3/p3t.js:35`](../src/grades/p3/p3t.js#L35) |
+| `Q.t3DotPick` | `{ h: H, m, sep = '.' }` | [`grades/p3/p3t.js:38`](../src/grades/p3/p3t.js#L38) |
+| `Q.t3Dur` | `{ what, h1, m1, h2, m2 }` | [`grades/p3/p3t.js:40`](../src/grades/p3/p3t.js#L40) |
+| `Q.t3End` | `{ text, h1, m1, add, back }` | [`grades/p3/p3t.js:45`](../src/grades/p3/p3t.js#L45) |
+| `Q.t3Read` | `{ h: H, m }` | [`grades/p3/p3t.js:28`](../src/grades/p3/p3t.js#L28) |
+| `Q.t3Set` | `{ h: H, m }` | [`grades/p3/p3t.js:31`](../src/grades/p3/p3t.js#L31) |
 | `Q.t4Cmp` | `{ A, B }` | [`grades/p4/p4t.js:92`](../src/grades/p4/p4t.js#L92) |
 | `Q.t4Conv` | `{ from, to }` | [`grades/p4/p4t.js:76`](../src/grades/p4/p4t.js#L76) |
 | `Q.t4Diff` | `{ text, A, B, units }` | [`grades/p4/p4t.js:96`](../src/grades/p4/p4t.js#L96) |

@@ -90,6 +90,7 @@ grades/m1/m1rl2.js
 grades/m1/m1q.js
 grades/m1/m1ql.js
 grades/m1/m1ql2.js
+grades/p3/p3tm.js
 app/lessons.js
 app/learn.js
 app/wpic.js

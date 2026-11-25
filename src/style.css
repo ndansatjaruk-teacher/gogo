@@ -4655,3 +4655,12 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .lq-arr{display:inline-grid;place-items:center;padding:2px 10px;border-radius:999px;background:#FFF1E2;color:#B8620F;font-size:.8em}
 .lq-to{color:var(--ink-2)}
 .lq-big{font-size:clamp(24px,3.2cqw,34px);line-height:1.6;text-align:center}
+/* v246 ป.3 บทที่ 3 เวลา — หน้าสอนแบบ ม.ต้น (prefix t3m) */
+.t3m-dig{font-family:Nunito,var(--font-num,sans-serif);font-size:46px;font-weight:900;fill:#9BE3B5;letter-spacing:.04em}
+.t3m-jl{font-size:15px;font-weight:800}
+.t3m-blk{font-size:17px;font-weight:800;fill:#fff}
+.t3m-rec{display:flex;flex-direction:column;gap:6px;width:min(620px,80cqw)}
+.t3m-rt{font-weight:800;font-size:clamp(16px,1.9cqw,19px);color:var(--ink);text-align:center}
+.t3m-row{display:grid;grid-template-columns:7em 1fr;align-items:center;gap:12px;padding:8px 16px;border:0;border-radius:12px;background:#fff;box-shadow:var(--e1);font:inherit;font-size:clamp(16px,1.9cqw,20px);color:var(--ink);text-align:left;cursor:pointer}
+.t3m-row.seen{background:#F4F1FD}.t3m-row.on{box-shadow:inset 0 0 0 3px #7C5CE0;background:#EEE9FB}
+.t3m-row b{font-size:1.05em}
