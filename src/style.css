@@ -4664,3 +4664,11 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .t3m-row{display:grid;grid-template-columns:7em 1fr;align-items:center;gap:12px;padding:8px 16px;border:0;border-radius:12px;background:#fff;box-shadow:var(--e1);font:inherit;font-size:clamp(16px,1.9cqw,20px);color:var(--ink);text-align:left;cursor:pointer}
 .t3m-row.seen{background:#F4F1FD}.t3m-row.on{box-shadow:inset 0 0 0 3px #7C5CE0;background:#EEE9FB}
 .t3m-row b{font-size:1.05em}
+/* v248 ม.2 บทที่ 5 สมบัติของเลขยกกำลัง (prefix ep) */
+.ep-grps{gap:16px}
+.ep-grp{min-width:150px;padding:10px 16px;border-radius:14px;background:#fff;box-shadow:var(--e1);font-size:clamp(18px,2.2cqw,24px);text-align:center;color:var(--ink)}
+.ep-grp b{font-size:1.3em}
+.ep-ex{display:inline;white-space:normal;font-weight:800;font-family:var(--font-num)}
+.ep-ex sup{font-size:.6em;font-weight:900;line-height:0;vertical-align:super}
+.ep-ex .e3p{display:inline}.ep-ex .e3p sup{position:static;top:auto;vertical-align:super;line-height:0;margin-left:.04em;font-size:.6em}
+.ep-ex .fq{vertical-align:middle}

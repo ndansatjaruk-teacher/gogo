@@ -2962,6 +2962,9 @@ const CITIES = [
   /* v244 (ผู้ใช้ขอ): ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2701–2720 + บอส 2721 */
   { id: 96, grade: 7, term: 2, name: 'ลำน้ำอัตราส่วน', chapter: 'บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ', lessons: LESSONS_M1C7,
     theme: { river: true, hills: ['#CDE8B4', '#BEE0A0', '#DCEFC8'], far: '#E8F4DA', edge: ['pier', 'stilthouse', 'tree', 'ricebarn'], small: ['kayak', 'lotus', 'duck', 'paddy', 'reeds', 'flowers'] } },
+  /* v248 (ผู้ใช้ขอ): ม.2 บทที่ 5 สมบัติของเลขยกกำลัง — 18 ด่าน 8501–8518 + บอส 8519 (ความยากเท่าแบบฝึกหัดที่ผู้ใช้ส่งมา) */
+  { id: 98, grade: 8, name: 'เมืองนักสืบเลขยกกำลัง', chapter: 'บทที่ 5 สมบัติของเลขยกกำลัง', lessons: LESSONS_M2C5,
+    theme: { detect: true, hills: ['#DDE4F6', '#D1DAF0', '#EFE6DA'], far: '#ECF0FA', edge: ['dtoffice', 'dtlamp', 'dthouse', 'dtboard'], small: ['dtbook', 'dtmagnify', 'dtbox', 'dtprints', 'dtbench', 'dthydrant'] } },
   { id: 94, grade: 8, name: 'เมืองนักสืบข้อมูล', chapter: 'บทที่ 7 สถิติ (2)', lessons: LESSONS_M2C7,
     theme: { detect: true, hills: ['#E6DDF6', '#DCD1F0', '#F2E6DA'], far: '#F1ECFA', edge: ['dtlamp', 'dthouse', 'dtboard', 'dtoffice'], small: ['dtmagnify', 'dtbook', 'dtprints', 'dthydrant', 'dtbench', 'dtbox'] } },
   { id: 93, grade: 9, name: 'ขั้วโลกสถิติ', chapter: 'บทที่ 6 สถิติ (3)', lessons: LESSONS_M3C6,
