@@ -135,7 +135,7 @@ Object.assign(Q, {
 const g4Ask = (C, q, a, hint, sig) => g4SideAsk({ ...C, nolab: false }, q, a, C.unit, hint, 'g4k ' + sig);
 const g4Read = C => { const i = rnd(0, C.cats.length - 1); return g4SideAsk({ ...C, nolab: true }, `<b>${g4cat(C, i)}</b> มีจำนวนเท่าใด <small>(อ่านจากแกน)</small>`, g4V(C, i), C.unit, 'ลากเส้นจากปลายแท่งไปที่แกนตั้ง แล้วอ่านค่า (ครึ่งช่องคือครึ่งหนึ่งของช่อง)', `g4e ${C.title} ${C.series[0].v} ${i}`); };
 /* problems from a bar chart */
-const g4BarQ = C => { const v = C.series[0].v, n = v.length, [i, j] = pkF([...Array(n).keys()], 2), k = pick(['diff', 'sum', 'all', 'price', 'more']), u = C.unit;
+const g4BarQ = (C, k0) => { const v = C.series[0].v, n = v.length, [i, j] = pkF([...Array(n).keys()], 2), k = k0 || pick(['diff', 'sum', 'all', 'price', 'more']), u = C.unit; /* v252: k0 = ชนิดโจทย์ที่ต้องการ (หน้าลองทำ/เกมเรียงตามประเด็น) */
   if (k === 'diff') return g4Ask(C, `<b>${g4cat(C, i)}</b> กับ <b>${g4cat(C, j)}</b> ต่างกันเท่าใด`, Math.abs(v[i] - v[j]), 'นำค่าที่มากกว่า ลบด้วยค่าที่น้อยกว่า', `${C.title}${v}d${i}${j}`);
   if (k === 'sum') return g4Ask(C, `<b>${g4cat(C, i)}</b> และ <b>${g4cat(C, j)}</b> รวมกันเท่าใด`, v[i] + v[j], 'อ่านค่าทั้งสองแท่งแล้วบวกกัน', `${C.title}${v}s${i}${j}`);
   if (k === 'all') return g4Ask(C, 'รวมทั้งหมดเท่าใด', v.reduce((a, b) => a + b, 0), 'บวกค่าทุกแท่ง', `${C.title}${v}a`);

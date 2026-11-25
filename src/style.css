@@ -2979,6 +2979,11 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .r4v-see[data-n="1"] .r4v-pt,.r4v-see[data-n="2"] .r4v-pt{font-size:clamp(17px,2cqw,22px)}
 .r4v-see[data-n="1"] .r4v-pl,.r4v-see[data-n="2"] .r4v-pl{font-size:clamp(15px,1.75cqw,19px)}
 @media (prefers-reduced-motion:reduce){.r4d-pen{display:none}}
+/* v252 ป.4 บทที่ 10: ตาราง/แผนภูมิ svg ในหน้าดูภาพและหน้าทำให้ดู */
+svg .g5d-t{font:800 15px var(--font-num);fill:var(--ink)}
+svg .g5d-h{font:700 14px var(--font);fill:#3A2F6B}
+svg .g5d-s{font:600 12.5px var(--font);fill:#4A4270}
+.r4v-ps .r4d-tx{font:800 15px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 @container stage (orientation:portrait){.r4d-row{flex-direction:column;align-items:center}.r4d-fw{width:min(560px,92%)}.r4d-pap{width:min(560px,92%);flex:0 0 auto;min-height:220px}}
 .r4-svg .r4v-st{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 .r4-svg .r4-rowno{font:700 11px var(--font-num);fill:#9A6406}
