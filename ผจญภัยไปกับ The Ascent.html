@@ -4646,6 +4646,22 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .rp-mini{font-size:12.5px;background:#fff;border-radius:8px;padding:3px 7px;text-align:left;line-height:1.35}
 .rp-binx.shake{animation:h6shake .45s}
 .rp-sep{display:inline-block;width:1.4em;text-align:center}.rp-sep::before{content:"•";color:var(--ink-2,#5C587A)}
+/* v245 ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว (prefix lq) */
+.lq-e{white-space:nowrap;font-weight:800}
+.lq-it-t{font-size:20px;font-weight:800;fill:#fff;pointer-events:none}
+.lq-it{cursor:pointer}
+.tg-board.lq-bal .tg-scene{width:min(600px,62cqw);max-height:min(44cqh,330px)}
+.lq-eqnow{font-size:clamp(22px,2.8cqw,30px);font-weight:800;color:var(--ink);min-height:1.4em;text-align:center}
+.lq-tilt{color:#E0445A}
+.lq-act{min-height:40px}
+.tg-fig .lq-bs{width:min(520px,52cqw);max-height:min(38cqh,260px)}
+.lq-chain{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;font-size:clamp(20px,2.6cqw,28px);font-weight:800;color:var(--ink)}
+.lq-chain.back{min-height:2.2em}
+.lq-box{display:inline-grid;place-items:center;min-width:2.2em;height:1.9em;padding:0 10px;border-radius:12px;background:#fff;box-shadow:var(--e1)}
+.lq-box.x{background:#EEE9FB;color:#7C5CE0;box-shadow:inset 0 0 0 2.5px #7C5CE0}
+.lq-arr{display:inline-grid;place-items:center;padding:2px 10px;border-radius:999px;background:#FFF1E2;color:#B8620F;font-size:.8em}
+.lq-to{color:var(--ink-2)}
+.lq-big{font-size:clamp(24px,3.2cqw,34px);line-height:1.6;text-align:center}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -31835,13 +31851,13 @@ function rpSimInverse(P = 24) {
     info: s => `${s.n} คน ใช้ ${P / s.n} วัน<span class="rp-sep"></span><b>คน × วัน = ${s.n} × ${P / s.n} = ${P}</b> เท่าเดิมเสมอ → เป็น<b>สัดส่วนผกผัน</b> (คนเพิ่มกี่เท่า วันลดลงเท่านั้น)` });
 }
 /* 12 · sort cards into bins (tap a card, then tap a bin) */
-function rpSort(cards, bins, cap) {
+function rpSort(cards, bins, cap, fin) { /* fin = ข้อความสรุปเมื่อจัดครบ (v245) */
   const wrap = tgWrap(), out = fNote2(), deck = h('div', { class: 'rp-deck' }), binEls = bins.map(b => h('button', { class: 'rp-binx ia', html: `<b>${b}</b><span class="rp-in"></span>` })); let sel = null, left = cards.length;
   cards.forEach(c => { const el = h('button', { class: 'rp-card ia', html: c.t }); el.onclick = e => { e.stopPropagation(); if (el.classList.contains('in')) return; deck.querySelectorAll('.rp-card').forEach(x => x.classList.toggle('sel', x === el)); sel = { el, c }; sfx.tap(); out.innerHTML = 'แตะกล่องที่ใช่'; }; deck.append(el); });
   binEls.forEach((b, i) => b.onclick = e => { e.stopPropagation(); if (!sel) { out.innerHTML = 'แตะการ์ดก่อน แล้วค่อยแตะกล่อง'; return; }
     if (sel.c.bin !== i) { sfx.no(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); out.innerHTML = '🤔 ' + (sel.c.why || 'ลองคิดใหม่'); return; }
     sfx.pop(3); sel.el.classList.remove('sel'); sel.el.classList.add('in'); b.querySelector('.rp-in').append(h('span', { class: 'rp-mini', html: sel.c.s || sel.c.t })); sel.el.remove(); out.innerHTML = '✓ ' + (sel.c.ok || 'ถูกต้อง'); sel = null; left--;
-    if (!left) { sfx.ok(); out.innerHTML = '<b>จัดครบทุกใบแล้ว</b> 🎉'; teachDone(wrap); } });
+    if (!left) { sfx.ok(); out.innerHTML = fin || '<b>จัดครบทุกใบแล้ว</b> 🎉'; teachDone(wrap); } });
   wrap.append(h('div', { class: 'cap', html: cap }), deck, h('div', { class: 'rp-bins', 'data-n': bins.length }, ...binEls), out); return wrap;
 }
 /* 13 · percent grid: drag across the 10×10 grid to shade squares */
@@ -32413,6 +32429,619 @@ LESSONS_M1C7.push({ id: 2721, boss: true, place: 'วังจระเข้ร
   goal: 'ตอบคำถามเรื่องอัตราส่วน สัดส่วน และร้อยละ 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะจระเข้ร้อยละ',
   exam: EXAM_M1C7, pass: 16, bossName: 'จระเข้ร้อยละ', bossPal: 'coral', emblem: '%', bossKind: 'croc',
   winLine: 'ชนะจระเข้ร้อยละแล้ว! แบ่งส่วน ตั้งสัดส่วน และคิดเปอร์เซ็นต์ได้คล่องมาก', loseLine: 'จระเข้ร้อยละยังเฝ้าปากแม่น้ำอยู่ ลองทวนสัดส่วนตรง ผกผัน และร้อยละอีกนิดแล้วมาสู้ใหม่นะ!' });
+
+/* =========================================================
+   ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว (v245) — prefix lq<span class="rp-sep"></span>ตัวช่วยและหน้าลงมือทำ
+   บทเรียนอยู่ใน m1ql.js (ด่าน 1–10) และ m1ql2.js (ด่าน 11–20 + บอส)<span class="rp-sep"></span>ใช้ Q.rpOpt / Q.rpNum / rpTF / rpSort / rpWalk ของบทที่ 7
+   หัวใจของบท: ตาชั่งสมดุล (lqBalance) — เอาของออกข้างหนึ่ง ตาชั่งเอียง ต้องเอาของชนิดเดียวกันออกอีกข้างด้วย
+   → เด็กเห็นเองว่า "ย้ายข้างแล้วเปลี่ยนเครื่องหมาย" มาจากการทำสิ่งเดียวกันทั้งสองข้าง
+   ========================================================= */
+const lqN = n => n < 0 ? '−' + rpN(-n) : rpN(n);
+const lqP = n => n < 0 ? `(${lqN(n)})` : lqN(n);
+const lqT = (a, v = 'x') => a === 1 ? v : a === -1 ? '−' + v : lqN(a) + v;
+const lqLin = (a, b, v = 'x') => { if (!a) return lqN(b); let s = lqT(a, v); if (b > 0) s += ' + ' + rpN(b); else if (b < 0) s += ' − ' + rpN(-b); return s; };
+const lqE = s => `<span class="num lq-e">${s}</span>`;
+const lqSide = o => o.x && o.u ? `${lqT(o.x)} + ${o.u}` : o.x ? lqT(o.x) : String(o.u);
+const LQ_C = { x: '#7C5CE0', u: '#F08A24' };
+/* static balanced scale for game pictures: L/R = { x, u } */
+const lqBalSVG = (L, R) => { const it = (o, cx) => { let s = '', k = 0; const put = (kind) => { const c = k % 5, r = Math.floor(k / 5), x = cx - 80 + c * 40, y = 118 - r * 40; s += kind === 'x' ? `<rect x="${x}" y="${y - 34}" width="34" height="34" rx="6" fill="${LQ_C.x}"/><text x="${x + 17}" y="${y - 10}" class="lq-it-t" text-anchor="middle">x</text>` : `<circle cx="${x + 17}" cy="${y - 16}" r="15" fill="${LQ_C.u}"/><text x="${x + 17}" y="${y - 10}" class="lq-it-t" text-anchor="middle">1</text>`; k++; };
+    for (let i = 0; i < o.x; i++) put('x'); for (let i = 0; i < o.u; i++) put('u'); return s; };
+  return `<svg viewBox="0 0 520 210" class="lq-bs" aria-hidden="true"><path d="M260 150 L236 200 h48 z" fill="#CFC7E6"/><path d="M60 150 H460" stroke="#2B2550" stroke-width="6" stroke-linecap="round"/><path d="M40 122 h200 l-12 20 h-176 z M280 122 h200 l-12 20 h-176 z" fill="#FFF6D6" stroke="#2B2550" stroke-width="2.5"/>${it(L, 140)}${it(R, 380)}</svg>`; };
+
+/* =========================================================
+   ตาชั่งสมดุล: แตะของบนจานเพื่อเอาออก<span class="rp-sep"></span>rounds = [{ L: { x, u }, R: { x, u }, sol }]
+   ========================================================= */
+function lqBalance(rounds, cap) {
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board lq-bal' }), out = fNote2(), eqEl = h('div', { class: 'lq-eqnow' });
+  const mis = tgMission(rounds.map((R, i) => [`${lqSide(R.L)} = ${lqSide(R.R)}`, s => s.done > i]), wrap); let r = 0, S, pend = null, done = 0;
+  const act = h('div', { class: 'rp-chips lq-act' }), nm = k => k === 'x' ? 'กล่อง x' : 'ก้อน 1';
+  const solved = () => (S.L.x === 1 && !S.L.u && !S.R.x) || (S.R.x === 1 && !S.R.u && !S.L.x);
+  const load = () => { const R = rounds[r]; S = { L: { ...R.L }, R: { ...R.R } }; pend = null; act.innerHTML = ''; draw(); out.innerHTML = 'แตะ<b>กล่อง x</b> หรือ<b>ก้อน 1</b> บนจานเพื่อเอาออก — ทำให้เหลือ x อยู่ข้างเดียว'; after(); };
+  const after = () => { act.innerHTML = '';
+    if (!pend && solved()) { const v = S.L.x ? S.R.u : S.L.u; out.innerHTML = `<b>x = ${v}</b> ✓ ตรวจ: แทน x = ${v} ในสมการเดิม ${lqSide(rounds[r].L)} = ${lqSide(rounds[r].R)} ได้ ${rounds[r].L.x * v + rounds[r].L.u} = ${rounds[r].R.x * v + rounds[r].R.u}`; done = Math.max(done, r + 1); sfx.ok(); mis.check({ done });
+      if (r < rounds.length - 1) act.append(h('button', { class: 'btn sm rp-next', onclick: e => { e.stopPropagation(); r++; load(); } }, 'ข้อต่อไป')); return; }
+    if (!pend) { const sx = S.L.x > 1 && !S.L.u && !S.R.x ? 'L' : S.R.x > 1 && !S.R.u && !S.L.x ? 'R' : null;
+      if (sx) { const k = S[sx].x, o = sx === 'L' ? 'R' : 'L'; act.append(h('button', { class: 'btn sm', onclick: e => { e.stopPropagation(); if (S[o].u % k) { out.innerHTML = 'แบ่งไม่ลงตัว'; return; } S[sx].x = 1; S[o].u /= k; sfx.pop(4); draw(); after(); } }, `แบ่งทั้งสองข้างเป็น ${k} ส่วนเท่ากัน`)); out.innerHTML = `เหลือ ${lqT(k)} = ${S[o].u} — <b>ทั้งสองข้างหารด้วย ${k}</b> (แบ่งเป็น ${k} ส่วนเท่า ๆ กัน)`; } } };
+  const take = (side, kind) => { const o = side === 'L' ? 'R' : 'L';
+    if (pend) { if (side === pend.side) { sfx.no(); out.innerHTML = `ตาชั่งเอียงอยู่ — ต้องเอา<b>${nm(pend.kind)}</b>ออกจาก<b>อีกข้าง</b>ก่อน`; return; }
+      if (kind !== pend.kind) { sfx.no(); out.innerHTML = `ต้องเอาของ<b>ชนิดเดียวกัน</b> (${nm(pend.kind)}) ออกจากอีกข้าง ตาชั่งจึงจะสมดุล`; return; }
+      S[side][kind]--; pend = null; sfx.pop(3); draw(); out.innerHTML = `สมดุลอีกครั้ง! เอา${nm(kind)}ออก<b>ทั้งสองข้าง</b> → ${lqSide(S.L)} = ${lqSide(S.R)}`; after(); return; }
+    if (!S[o][kind]) { sfx.no(); out.innerHTML = `อีกข้างไม่มี${nm(kind)}ให้เอาออกด้วย — ลองเอาของอย่างอื่นออก`; return; }
+    S[side][kind]--; pend = { side, kind }; sfx.pop(1); draw(); out.innerHTML = `ตาชั่ง<b>เอียง</b>! เอา${nm(kind)}ออกจากอีกข้างด้วย`; act.innerHTML = ''; };
+  const draw = () => { const R = rounds[r], wL = S.L.x * R.sol + S.L.u, wR = S.R.x * R.sol + S.R.u, t = Math.max(-12, Math.min(12, (wR - wL) * 4)) * Math.PI / 180, cx = 320, cy = 250, A = 200;
+    const ex = (sd) => [cx + sd * A * Math.cos(t), cy + sd * A * Math.sin(t)];
+    const pan = (side, sd) => { const [px, py] = ex(sd), o = S[side]; let s = `<path d="M${px - 104} ${py - 4} h208 l-14 22 h-180 z" fill="#FFF6D6" stroke="#2B2550" stroke-width="2.5"/>`, k = 0;
+      const put = kind => { const c = k % 5, row = Math.floor(k / 5), x = px - 96 + c * 40, y = py - 8 - row * 40; s += `<g class="lq-it rp-hit" data-s="${side}" data-k="${kind}">${kind === 'x' ? `<rect x="${x}" y="${y - 34}" width="34" height="34" rx="6" fill="${LQ_C.x}"/><text x="${x + 17}" y="${y - 10}" class="lq-it-t" text-anchor="middle">x</text>` : `<circle cx="${x + 17}" cy="${y - 16}" r="16" fill="${LQ_C.u}"/><text x="${x + 17}" y="${y - 10}" class="lq-it-t" text-anchor="middle">1</text>`}</g>`; k++; };
+      for (let i = 0; i < o.x; i++) put('x'); for (let i = 0; i < o.u; i++) put('u'); return s; };
+    fig.innerHTML = `<svg viewBox="50 96 540 232" class="tg-scene" aria-hidden="true"><path d="M${cx} ${cy} L${cx - 30} 322 h60 z" fill="#CFC7E6"/><path d="M${ex(-1)[0]} ${ex(-1)[1]} L${ex(1)[0]} ${ex(1)[1]}" stroke="#2B2550" stroke-width="7" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="7" fill="#2B2550"/>${pan('L', -1)}${pan('R', 1)}</svg>`;
+    fig.querySelectorAll('.lq-it').forEach(g => g.onclick = e => { e.stopPropagation(); if (!pend && solved()) return; take(g.dataset.s, g.dataset.k); });
+    eqEl.innerHTML = pend ? `<span class="lq-tilt">ไม่สมดุล</span>` : lqE(`${lqSide(S.L)} = ${lqSide(S.R)}`); };
+  load(); wrap.append(h('div', { class: 'cap', html: cap || '<b>ตาชั่งสมดุล</b> = สมการ<span class="rp-sep"></span>กล่อง x ทุกกล่องหนักเท่ากัน ก้อน 1 หนัก 1 หน่วย' }), mis.el, eqEl, fig, act, out); return wrap;
+}
+/* substitute and check: drag x on the number line, the scale tips until both sides are equal */
+function lqSimTry(a, b, c, lo = -2, hi = 10) {
+  const W = 620, H = 270, X0 = 40, SX = (W - 80) / (hi - lo), Y = 220, sol = (c - b) / a, ex = x => `${a === 1 ? '' : a === -1 ? '−' : lqN(a)}${a === 1 || a === -1 ? lqP(x) : `(${lqN(x)})`}${b ? (b > 0 ? ' + ' + b : ' − ' + -b) : ''}`;
+  return tgScene({ W, H, st: { x: lo + 1, lo: false, hi: false }, cap: `สมการ ${lqE(`${lqLin(a, b)} = ${lqN(c)}`)} — <b>ลากจุดบนเส้นจำนวน</b> เพื่อลองแทนค่า x`,
+    missions: [['ลองค่าที่ทำให้ข้างซ้ายน้อยไป', s => s.lo], ['ลองค่าที่ทำให้ข้างซ้ายมากไป', s => s.hi], ['หาคำตอบของสมการ', s => s.x === sol]],
+    svg: s => { const v = a * s.x + b, t = Math.max(-10, Math.min(10, (c - v) * 1.5)) * Math.PI / 180, cx = 310, cy = 80, A = 170;
+      let g = `<path d="M${cx} ${cy} L${cx - 20} ${cy + 60} h40 z" fill="#CFC7E6"/><path d="M${cx - A * Math.cos(t)} ${cy - A * Math.sin(t)} L${cx + A * Math.cos(t)} ${cy + A * Math.sin(t)}" stroke="#2B2550" stroke-width="6" stroke-linecap="round"/>`;
+      g += `<text x="${cx - A * Math.cos(t)}" y="${cy - A * Math.sin(t) - 14}" class="rp-sv" text-anchor="middle">${rpN(v)}</text><text x="${cx + A * Math.cos(t)}" y="${cy + A * Math.sin(t) - 14}" class="rp-sv" text-anchor="middle">${rpN(c)}</text>`;
+      g += `<path d="M${X0} ${Y} h${SX * (hi - lo)}" stroke="#2B2550" stroke-width="2"/>`; for (let i = lo; i <= hi; i++) g += `<path d="M${X0 + (i - lo) * SX} ${Y - 6} v12" stroke="#2B2550" stroke-width="1.5"/><text x="${X0 + (i - lo) * SX}" y="${Y + 26}" class="rp-sm" text-anchor="middle">${lqN(i)}</text>`;
+      return g + tgHandle(X0 + (s.x - lo) * SX, Y, RP_C.o); },
+    drag: (p, s) => { const x = Math.max(lo, Math.min(hi, Math.round((p[0] - X0) / SX) + lo)), v = a * x + b; return { x, lo: s.lo || v < c, hi: s.hi || v > c }; },
+    info: s => { const v = a * s.x + b; return `แทน x = ${lqN(s.x)}: ${ex(s.x)} = <b>${lqN(v)}</b> ${v === c ? '=' : v < c ? '&lt;' : '&gt;'} ${lqN(c)} → ${v === c ? '<b>เป็นคำตอบ</b> ✓ ทั้งสองข้างเท่ากัน' : 'ยังไม่ใช่คำตอบ'}`; } });
+}
+/* value of an expression: drag x on the number line */
+function lqSimSub(a, b, xs = [4, -2, 0], lo = -5, hi = 8) {
+  const W = 620, H = 200, X0 = 40, SX = (W - 80) / (hi - lo), Y = 120, ex = x => `${a === 1 ? '' : lqN(a) + ' × '}${lqP(x)}${b > 0 ? ' + ' + b : b < 0 ? ' − ' + -b : ''}`;
+  return tgScene({ W, H, st: { x: 1 }, cap: `นิพจน์ ${lqE(lqLin(a, b))} — <b>ลากจุดบนเส้นจำนวน</b> เพื่อเปลี่ยนค่าของ x`,
+    missions: xs.map(x => [`ทำให้ค่าเป็น ${lqN(a * x + b)}`, s => s.x === x]),
+    svg: s => { let g = `<path d="M${X0} ${Y} h${SX * (hi - lo)}" stroke="#2B2550" stroke-width="2"/>`; for (let i = lo; i <= hi; i++) g += `<path d="M${X0 + (i - lo) * SX} ${Y - 6} v12" stroke="#2B2550" stroke-width="1.5"/><text x="${X0 + (i - lo) * SX}" y="${Y + 26}" class="rp-sm" text-anchor="middle">${lqN(i)}</text>`;
+      return g + `<text x="${X0 + (s.x - lo) * SX}" y="${Y - 30}" class="rp-sv" text-anchor="middle" style="fill:${LQ_C.x}">x = ${lqN(s.x)}</text>` + tgHandle(X0 + (s.x - lo) * SX, Y, RP_C.o); },
+    drag: p => ({ x: Math.max(lo, Math.min(hi, Math.round((p[0] - X0) / SX) + lo)) }),
+    info: s => `เมื่อ x = ${lqN(s.x)}: ${lqLin(a, b)} = ${ex(s.x)} = <b class="num">${lqN(a * s.x + b)}</b>` });
+}
+/* distributive property: drag the divider of a rows × cols rectangle */
+function lqSimDist(rows = 3, cols = 8, picks = [5, 2, 6]) {
+  const C = 40, X0 = 30, Y0 = 30, W = X0 * 2 + cols * C, H = Y0 + rows * C + 40;
+  return tgScene({ W, H, st: { b: 4 }, cap: `สี่เหลี่ยม ${rows} แถว แถวละ ${cols} ช่อง — <b>ลากเส้นแบ่งสีส้ม</b> แบ่งเป็นสองส่วน แล้วนับทีละส่วน`,
+    missions: picks.map(b => [`${cols} = ${b} + ${cols - b}`, s => s.b === b]),
+    svg: s => { let g = ''; for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) g += `<rect x="${X0 + c * C + 2}" y="${Y0 + r * C + 2}" width="${C - 4}" height="${C - 4}" rx="5" fill="${c < s.b ? '#BFE0FF' : '#FFE1C2'}"/>`;
+      const x = X0 + s.b * C; return g + `<path d="M${x} ${Y0 - 14} V${Y0 + rows * C + 14}" stroke="${RP_C.o}" stroke-width="4"/>` + tgHandle(x, Y0 + rows * C + 22, RP_C.o) + `<text x="${X0 + s.b * C / 2}" y="${Y0 - 10}" class="rp-sv" text-anchor="middle">${s.b}</text><text x="${x + (cols - s.b) * C / 2}" y="${Y0 - 10}" class="rp-sv" text-anchor="middle">${cols - s.b}</text>`; },
+    drag: p => ({ b: Math.max(1, Math.min(cols - 1, Math.round((p[0] - X0) / C))) }),
+    info: s => `${rows} × (${s.b} + ${cols - s.b}) = ${rows} × ${s.b} + ${rows} × ${cols - s.b} = ${rows * s.b} + ${rows * (cols - s.b)} = <b>${rows * cols}</b>` });
+}
+/* undo machine: tap the inverse operations in the right order (last operation first) */
+function lqSimMachine(rounds) {
+  const wrap = tgWrap(), chain = h('div', { class: 'lq-chain' }), back = h('div', { class: 'lq-chain back' }), chips = h('div', { class: 'rp-chips' }), out = fNote2(), dots = h('div', { class: 'tg-mis' }, ...rounds.map((_, i) => h('span', { class: 'tg-mi' }, 'ข้อ ' + (i + 1)))); let r = 0, k = 0, val = 0;
+  const inv = ([o, n]) => [{ '×': '÷', '÷': '×', '+': '−', '−': '+' }[o], n], run = (v, [o, n]) => o === '×' ? v * n : o === '÷' ? v / n : o === '+' ? v + n : v - n;
+  const show = () => { const R = rounds[r]; k = 0; val = R.out; chain.innerHTML = `<span class="lq-box x">x</span><span class="lq-to">→</span>${R.ops.map(([o, n]) => `<span class="lq-arr">${o} ${n}</span>`).join('<span class="lq-to">→</span>')}<span class="lq-to">→</span><span class="lq-box">${R.out}</span>`; back.innerHTML = `<span class="lq-box">${R.out}</span>`;
+    const opts = shuffle([...R.ops.map(inv), ...R.ops]); chips.innerHTML = ''; opts.forEach(op => chips.append(h('button', { class: 'btn sm rp-chip', onclick: e => { e.stopPropagation(); step(op, e.currentTarget); } }, `${op[0]} ${op[1]}`)));
+    out.innerHTML = 'ย้อนกลับจากผลลัพธ์: แตะ<b>การดำเนินการที่ทำกลับ</b> ของขั้น<b>สุดท้าย</b>ก่อน'; };
+  const step = (op, b) => { const R = rounds[r], want = inv(R.ops[R.ops.length - 1 - k]);
+    if (op[0] !== want[0] || op[1] !== want[1]) { sfx.no(); out.innerHTML = R.ops.some(x => x[0] === op[0] && x[1] === op[1]) ? 'นั่นคือขั้นเดิม — ต้องทำ<b>ตรงข้าม</b>เพื่อย้อนกลับ' : `ยังไม่ใช่ — ย้อนขั้น <b>${R.ops[R.ops.length - 1 - k].join(' ')}</b> ก่อน`; return; }
+    val = run(val, op); k++; b.disabled = true; sfx.pop(k + 2); back.innerHTML += `<span class="lq-arr">${op[0]} ${op[1]}</span><span class="lq-to">→</span><span class="lq-box${k === R.ops.length ? ' x' : ''}">${rpN(val)}</span>`;
+    if (k === R.ops.length) { dots.children[r].classList.add('ok'); sfx.ok(); out.innerHTML = `<b>x = ${rpN(val)}</b> — ตรวจ: ${rpN(val)} ${R.ops.map(o => o.join(' ')).join(' ')} = ${R.out} ✓`; chips.innerHTML = '';
+      setTimeout(() => { r++; if (r < rounds.length) show(); else { out.innerHTML += '<span class="rp-sep"></span>แก้สมการ = ย้อนกลับทีละขั้นจากขั้นสุดท้าย'; teachDone(wrap); } }, 1800); } };
+  show(); wrap.append(h('div', { class: 'cap', html: '<b>เครื่องแปลงจำนวน</b>: x ผ่านเครื่องแล้วได้ผลลัพธ์ — ย้อนกลับเพื่อหา x' }), dots, chain, chips, back, out); return wrap;
+}
+/* clearing fractions: tap a number to multiply both sides — only a common multiple of the denominators clears them all */
+function lqSimClear(d1 = 2, d2 = 3, rhs = 5, cands = [2, 3, 5, 6]) {
+  const wrap = tgWrap(), out = fNote2(), eq = h('div', { class: 'fbig lq-big', html: `${fqHTML('x', d1)} + ${fqHTML('x', d2)} = ${rhs}` }), L = rpLcm(d1, d2), st = { bad: false, ok: false };
+  const mis = tgMission([['ลองจำนวนที่ยังเหลือเศษส่วน', s => s.bad], [`คูณด้วย ค.ร.น. ของ ${d1} กับ ${d2}`, s => s.ok]], wrap);
+  const chips = h('div', { class: 'rp-chips' }, ...cands.map(m => h('button', { class: 'btn sm rp-chip', onclick: e => { e.stopPropagation(); chips.querySelectorAll('.rp-chip').forEach(c => c.classList.toggle('on', c === e.currentTarget));
+    const t = d => m % d === 0 ? lqT(m / d) : `${fqHTML(m + 'x', d)}`, a = m / d1 + m / d2;
+    eq.innerHTML = `${m} × ${fqHTML('x', d1)} + ${m} × ${fqHTML('x', d2)} = ${m} × ${rhs} <br>${t(d1)} + ${t(d2)} = ${m * rhs}`;
+    if (m % d1 || m % d2) { st.bad = true; sfx.no(); out.innerHTML = `คูณด้วย ${m} แล้ว<b>ยังมีเศษส่วนเหลือ</b> — ต้องเป็นจำนวนที่ทั้ง ${d1} และ ${d2} หารลงตัว`; }
+    else { st.ok = st.ok || m === L; sfx.pop(3); out.innerHTML = `เศษส่วนหายหมด → ${lqT(a)} = ${m * rhs} → <b>x = ${rpN(m * rhs / a)}</b>${m === L ? `<span class="rp-sep"></span>${L} คือ ค.ร.น. — ตัวเลขเล็กที่สุดที่ใช้ได้` : ''}`; }
+    mis.check(st); } }, `× ${m}`)));
+  out.innerHTML = '<b>แตะจำนวน</b> เพื่อคูณทั้งสองข้างของสมการ'; wrap.append(h('div', { class: 'cap', html: 'กำจัดตัวส่วน: คูณ<b>ทั้งสองข้าง</b>ด้วยจำนวนเดียวกัน' }), mis.el, eq, chips, out); return wrap;
+}
+/* consecutive numbers: drag n, see n, n + 1, n + 2 and their sum */
+function lqSimConsec(targets = [48, 66, 33]) {
+  const W = 620, H = 190, X0 = 30, SX = 19, Y = 110;
+  return tgScene({ W, H, st: { n: 5 }, cap: '<b>ลากจุด</b> เลือกจำนวนแรก n — จำนวนเรียงกันสามจำนวนคือ n, n + 1, n + 2',
+    missions: targets.map(t => [`ผลบวกเป็น ${t}`, s => 3 * s.n + 3 === t]),
+    svg: s => { let g = `<path d="M${X0} ${Y} h${SX * 29}" stroke="#2B2550" stroke-width="2"/>`; for (let i = 1; i <= 30; i++) g += `<path d="M${X0 + (i - 1) * SX} ${Y - 5} v10" stroke="#2B2550" stroke-width="1.3"/>${i % 5 === 0 || i === 1 ? `<text x="${X0 + (i - 1) * SX}" y="${Y + 26}" class="rp-sm" text-anchor="middle">${i}</text>` : ''}`;
+      [0, 1, 2].forEach(k => { if (s.n + k <= 30) g += `<circle cx="${X0 + (s.n + k - 1) * SX}" cy="${Y}" r="9" fill="${[RP_C.o, RP_C.b, RP_C.g][k]}"/><text x="${X0 + (s.n + k - 1) * SX}" y="${Y - 20 - k * 18}" class="rp-sv" text-anchor="middle">${s.n + k}</text>`; }); return g + tgHandle(X0 + (s.n - 1) * SX, Y, RP_C.o); },
+    drag: p => ({ n: Math.max(1, Math.min(28, Math.round((p[0] - X0) / SX) + 1)) }),
+    info: s => `${s.n} + ${s.n + 1} + ${s.n + 2} = <b>${3 * s.n + 3}</b><span class="rp-sep"></span>เขียนเป็นนิพจน์: n + (n + 1) + (n + 2) = <b>3n + 3</b>` });
+}
+/* ages over time: drag the year — the difference never changes, the "times" does */
+function lqSimAge(f0 = 40, c0 = 10, missions) {
+  const W = 620, H = 250, X0 = 60, SX = 21, Y = 210, lo = -10, hi = 15, U = 2.6;
+  return tgScene({ W, H, st: { t: 0 }, cap: `ตอนนี้พ่ออายุ ${f0} ปี ลูกอายุ ${c0} ปี — <b>ลากจุดบนเส้นเวลา</b> ไปอดีต (ซ้าย) หรืออนาคต (ขวา)`,
+    missions: missions || [['พ่ออายุเป็น 3 เท่าของลูก', s => f0 + s.t === 3 * (c0 + s.t)], ['อายุรวมกัน 70 ปี', s => f0 + c0 + 2 * s.t === 70], ['พ่ออายุเป็น 6 เท่าของลูก', s => f0 + s.t === 6 * (c0 + s.t)]],
+    svg: s => { const fa = f0 + s.t, ca = c0 + s.t; let g = `<rect x="${X0}" y="30" width="${fa * U * 2}" height="34" rx="6" fill="${RP_C.b}" fill-opacity=".8"/><text x="${X0 - 8}" y="53" class="rp-sv" text-anchor="end">พ่อ</text><text x="${X0 + fa * U * 2 + 8}" y="53" class="rp-sv">${fa} ปี</text>`;
+      g += `<rect x="${X0}" y="80" width="${Math.max(0, ca) * U * 2}" height="34" rx="6" fill="${RP_C.o}" fill-opacity=".85"/><text x="${X0 - 8}" y="103" class="rp-sv" text-anchor="end">ลูก</text><text x="${X0 + Math.max(0, ca) * U * 2 + 8}" y="103" class="rp-sv">${ca} ปี</text>`;
+      g += `<path d="M${X0} ${Y} h${SX * (hi - lo)}" stroke="#2B2550" stroke-width="2"/>`; for (let i = lo; i <= hi; i += 5) g += `<path d="M${X0 + (i - lo) * SX} ${Y - 6} v12" stroke="#2B2550" stroke-width="1.5"/><text x="${X0 + (i - lo) * SX}" y="${Y + 26}" class="rp-sm" text-anchor="middle">${i === 0 ? 'ตอนนี้' : i > 0 ? `อีก ${i} ปี` : `${-i} ปีก่อน`}</text>`;
+      return g + tgHandle(X0 + (s.t - lo) * SX, Y, RP_C.o); },
+    drag: p => ({ t: Math.max(lo, Math.min(hi, Math.round((p[0] - X0) / SX) + lo)) }),
+    info: s => { const fa = f0 + s.t, ca = c0 + s.t; return s.t === 0 ? `ตอนนี้: พ่อ ${fa} ปี<span class="rp-sep"></span>ลูก ${ca} ปี<span class="rp-sep"></span>อายุต่างกัน ${fa - ca} ปี<span class="rp-sep"></span>พ่อเป็น ${rpN(fa / ca)} เท่าของลูก` : `${s.t > 0 ? `อีก ${s.t} ปี` : `${-s.t} ปีก่อน`}: พ่อ ${f0} ${s.t >= 0 ? '+' : '−'} ${Math.abs(s.t)} = ${fa}<span class="rp-sep"></span>ลูก ${c0} ${s.t >= 0 ? '+' : '−'} ${Math.abs(s.t)} = ${ca}<span class="rp-sep"></span>อายุต่างกัน ${fa - ca} ปีเสมอ<span class="rp-sep"></span>พ่อเป็น ${rpN(fa / ca)} เท่าของลูก`; } });
+}
+/* rectangle: drag the width, length = width + d, see the perimeter */
+function lqSimRect(d = 4, targets = [20, 28, 40]) {
+  const W = 620, H = 360, X0 = 30, Y0 = 40, U = 29;
+  return tgScene({ W, H, st: { w: 4 }, cap: `สี่เหลี่ยมผืนผ้ามีความยาว<b>มากกว่า</b>ความกว้าง ${d} หน่วย — <b>ลากมุมขวาล่าง</b>เพื่อเปลี่ยนความกว้าง`,
+    missions: targets.map(t => [`ความยาวรอบรูป ${t} หน่วย`, s => 2 * (2 * s.w + d) === t]),
+    svg: s => { const L = s.w + d; return `<rect x="${X0}" y="${Y0}" width="${L * U}" height="${s.w * U}" fill="${RP_C.g}" fill-opacity=".18" stroke="${RP_C.g}" stroke-width="3"/><text x="${X0 + L * U / 2}" y="${Y0 - 10}" class="rp-sv" text-anchor="middle">ยาว x + ${d} = ${L}</text><text x="${X0 + L * U + 10}" y="${Y0 + s.w * U / 2 + 6}" class="rp-sv">กว้าง x = ${s.w}</text>` + tgHandle(X0 + L * U, Y0 + s.w * U, RP_C.o); },
+    drag: p => ({ w: Math.max(1, Math.min(10, Math.round((p[1] - Y0) / U))) }),
+    info: s => `ความยาวรอบรูป = 2 × (กว้าง + ยาว) = 2 × (${s.w} + ${s.w + d}) = <b>${2 * (2 * s.w + d)}</b><span class="rp-sep"></span>เป็นนิพจน์: 2(x + x + ${d}) = <b>4x + ${2 * d}</b>` });
+}
+
+/* =========================================================
+   ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว — ด่าน 2601–2610 (v245) · prefix lq
+   ตามแผน 20 ด่านของผู้ใช้: ช่วงที่ 1 พื้นฐานพีชคณิต (1–5) · ช่วงที่ 2 ความเข้าใจสมการ (6–8)
+   ช่วงที่ 3 การแก้สมการ (9–15) · ช่วงที่ 4 โจทย์ปัญหา (16–20) — ด่าน 11–20 + บอสอยู่ใน m1ql2.js
+   ด่าน 8 เป็นเกมตาชั่งสมดุล (ตามที่ผู้ใช้เน้น) และใช้ตาชั่งต่อในด่าน 9, 10, 12 · โจทย์แต่งใหม่ทั้งหมด
+   ========================================================= */
+const LQ6 = (no, place, title, short, goal, teach, game, x = {}) => ({ id: 2600 + no, no, place, title, short, tone: TONES5[(no + 1) % 6], goal, teach, game, ...x });
+const lqSolve = (eq, a, hint, sig, diff, o = {}) => Q.rpNum({ q: `หาค่า x จากสมการ ${lqE(eq)}`, a, hint, sig, diff, ...o });
+const lqX = (q, a, hint, sig, diff, o = {}) => Q.rpNum({ q: `${lqE(q)} เท่ากับเท่าใด`, a, hint, sig, diff, ...o });
+
+const LESSONS_M1C6 = [
+  /* ---------- 1 ทบทวนการคำนวณจำนวนเต็ม ---------- */
+  LQ6(1, 'ท่าทบทวน', 'ทบทวนการคำนวณจำนวนเต็ม', 'จำนวนเต็ม', 'บวก ลบ คูณ หารจำนวนเต็มได้ถูกต้องตามกฎเครื่องหมาย และคำนวณตามลำดับการดำเนินการ เพื่อใช้แก้สมการต่อไป', [
+    T('<b>ชิปบวก–ลบ</b> — จับคู่ศูนย์', 'จับคู่ชิปบวกลบให้เป็นศูนย์', el => el.append(miChipSim([[-5, 3], [4, -7]]))),
+    T('<b>กฎเครื่องหมายของการคูณ</b> — แตะทุกช่อง', 'กฎเครื่องหมายของการคูณ แตะทุกช่อง', el => el.append(miSignTable())),
+    T('<b>สรุปกฎ</b> — แตะการ์ดทีละใบ', 'สรุปกฎ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['การลบ', '<b>ลบ = บวกด้วยจำนวนตรงข้าม</b><small>3 − 8 = 3 + (−8) = −5</small>'], ['คูณ / หาร', '<b>เครื่องหมายเหมือนกัน → บวก</b><small>เครื่องหมายต่างกัน → ลบ</small>'],
+      ['ลำดับ', '<b>วงเล็บ → คูณ หาร → บวก ลบ</b><small>2 + 3 × (−4) = 2 + (−12) = −10</small>']])))
+  ], () => { const a = rpR(3, 9), b = rpR(2, 9), c = rpR(2, 6), d = rpR(3, 7), t = rpPick([-6, -8, -4]), u = rpR(7, 12);
+    return [
+      lqX(`${lqP(-a)} + ${a + b}`, b, 'ชิปลบกับชิปบวกจับคู่กันเป็นศูนย์', 'i1', 3),
+      lqX(`${b} − ${a + b + 3}`, -a - 3, 'ลบจำนวนที่มากกว่า ผลลัพธ์เป็นจำนวนลบ', 'i2', 4),
+      lqX(`${lqN(-c)} − ${lqP(-d)}`, -c + d, 'ลบด้วยจำนวนลบ = บวกด้วยจำนวนบวก', 'i3', 6),
+      lqX(`${lqP(-c)} × ${lqP(-d)}`, c * d, 'ลบ × ลบ', 'i4', 4),
+      lqX(`${d} × ${lqP(-c)}`, -c * d, 'บวก × ลบ', 'i5', 4),
+      lqX(`${lqP(-c * d)} ÷ ${d}`, -c, 'ลบ ÷ บวก', 'i6', 5),
+      lqX(`${lqP(-c * d)} ÷ ${lqP(-c)}`, d, 'ลบ ÷ ลบ', 'i7', 6),
+      lqX(`${lqP(-2)} × ${c} × ${lqP(-5)}`, 10 * c, 'คูณทีละคู่ และนับจำนวนเครื่องหมายลบ', 'i8', 8),
+      lqX(`${u} − 4 × ${lqP(-2)}`, u + 8, 'คูณก่อนลบ', 'i9', 10),
+      Q.rpNum({ story: `ตอนเช้าอุณหภูมิ ${lqN(t)} °C ตอนบ่ายสูงขึ้น ${u} องศา`, q: 'ตอนบ่ายอุณหภูมิกี่องศาเซลเซียส', a: t + u, unit: '°C', hint: 'สูงขึ้น = บวก', sig: 'i10', diff: 7 }),
+      rpTF('จำนวนลบคูณจำนวนลบ ได้จำนวนบวก', true, ''),
+      rpTF('จำนวนลบหารด้วยจำนวนบวก ได้จำนวนบวก', false, 'เครื่องหมายต่างกัน ผลหารเป็นจำนวนลบ'),
+      lqX(`${lqP(-3)} × 4 − ${lqP(-6)} ÷ 2`, -9, 'คูณหารก่อน แล้วจึงลบ', 'i11', 13)]; }),
+  /* ---------- 2 สมบัติของการดำเนินการ ---------- */
+  LQ6(2, 'ศาลาสมบัติ', 'สมบัติของการดำเนินการทางคณิตศาสตร์', 'สมบัติ', 'ใช้สมบัติการสลับที่ การเปลี่ยนหมู่ การแจกแจง เอกลักษณ์ และอินเวอร์สของการบวกและการคูณ ช่วยคำนวณและจัดรูปนิพจน์', [
+    T('<b>สมบัติการแจกแจง</b> — ลากเส้นแบ่งสี่เหลี่ยม', 'ลากเส้นแบ่งสี่เหลี่ยม ดูสมบัติการแจกแจง', el => el.append(lqSimDist(3, 8, [5, 2, 6]))),
+    T('<b>สมบัติที่ใช้บ่อย</b> — แตะการ์ดทีละใบ', 'สมบัติที่ใช้บ่อย แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['การสลับที่', '<b>a + b = b + a · a × b = b × a</b><small>การลบและการหารสลับที่ไม่ได้</small>'], ['การเปลี่ยนหมู่', '<b>(a + b) + c = a + (b + c)</b><small>(a × b) × c = a × (b × c)</small>'],
+      ['การแจกแจง', '<b>a × (b + c) = a × b + a × c</b><small>4 × 103 = 4 × 100 + 4 × 3</small>'], ['เอกลักษณ์', '<b>a + 0 = a · a × 1 = a</b><small>0 เป็นเอกลักษณ์การบวก 1 เป็นเอกลักษณ์การคูณ</small>'],
+      ['อินเวอร์ส', `<b>a + (−a) = 0 · a × ${fqHTML(1, 'a')} = 1</b><small>อินเวอร์สการบวกของ 7 คือ −7 · อินเวอร์สการคูณของ 7 คือ ${fqHTML(1, 7)}</small>`]])))
+  ], () => { const k = rpPick([6, 7, 8, 9]), n = rpPick([5, 8, 11]), m = rpPick([4, 6, 9]), q = rpPick([[25, 37, 4, 3700], [25, 19, 4, 1900], [5, 43, 2, 430]]);
+    return [
+      Q.rpOpt({ q: `${lqE(`${k} + ${n} = ${n} + ${k}`)} ใช้สมบัติใด`, opts: ['การสลับที่ของการบวก', 'การเปลี่ยนหมู่ของการบวก', 'การแจกแจง'], right: 'การสลับที่ของการบวก', hint: 'ตัวเลขสลับตำแหน่งกัน', sig: 'p1', diff: 3 }),
+      Q.rpOpt({ q: `${lqE(`(2 × ${k}) × 5 = 2 × (${k} × 5)`)} ใช้สมบัติใด`, opts: ['การเปลี่ยนหมู่ของการคูณ', 'การสลับที่ของการคูณ', 'การแจกแจง'], right: 'การเปลี่ยนหมู่ของการคูณ', hint: 'ลำดับตัวเลขเหมือนเดิม แต่วงเล็บย้ายที่', sig: 'p2', diff: 5 }),
+      Q.rpOpt({ q: `${lqE(`${m} × (10 + ${n}) = ${m} × 10 + ${m} × ${n}`)} ใช้สมบัติใด`, opts: ['การแจกแจง', 'การเปลี่ยนหมู่ของการบวก', 'การสลับที่ของการคูณ'], right: 'การแจกแจง', hint: 'คูณเข้าไปในวงเล็บทุกพจน์', sig: 'p3', diff: 5 }),
+      Q.rpNum({ q: `อินเวอร์สการบวกของ ${lqE(String(k + 5))} คือจำนวนใด`, a: -(k + 5), hint: 'บวกกันแล้วได้ 0', sig: 'p4', diff: 4 }),
+      Q.rpNum({ q: `อินเวอร์สการคูณของ ${lqE(String(n))} คือจำนวนใด`, a: `1/${n}`, hint: 'คูณกันแล้วได้ 1 (ตอบเป็นเศษส่วน)', sig: 'p5', diff: 7 }),
+      Q.rpOpt({ q: `${lqE('a + 0 = a')} แสดงว่า 0 เป็นอะไร`, opts: ['เอกลักษณ์การบวก', 'เอกลักษณ์การคูณ', 'อินเวอร์สการบวก'], right: 'เอกลักษณ์การบวก', hint: 'บวกด้วย 0 แล้วได้ค่าเดิม', sig: 'p6', diff: 4 }),
+      Q.rpNum({ q: `ใช้สมบัติการแจกแจง: ${lqE(`${k} × 98`)} เท่ากับเท่าใด`, a: k * 98, hint: `${k} × 100 − ${k} × 2`, sig: 'p7', diff: 9 }),
+      Q.rpNum({ q: `${lqE(`${q[0]} × ${q[1]} × ${q[2]}`)} เท่ากับเท่าใด`, a: q[3], hint: `สลับที่แล้วคูณ ${q[0]} × ${q[2]} ก่อน`, sig: 'p8', diff: 8 }),
+      Q.rpNum({ q: `${lqE(`${m}(x + ${n}) = ${m}x + □`)} &nbsp; □ คือจำนวนใด`, a: m * n, hint: `คูณ ${m} เข้าไปทั้ง x และ ${n}`, sig: 'p9', diff: 9 }),
+      Q.rpNum({ q: `${lqE(`${k} × 13 + ${k} × 7`)} เท่ากับเท่าใด (ใช้สมบัติการแจกแจง)`, a: k * 20, hint: `${k} × (13 + 7)`, sig: 'p10', diff: 10 }),
+      rpTF('การลบมีสมบัติการสลับที่ เช่น 9 − 4 = 4 − 9', false, '9 − 4 = 5 แต่ 4 − 9 = −5'),
+      rpTF('จำนวนใดคูณด้วยอินเวอร์สการคูณของจำนวนนั้น ได้ 1 เสมอ (ยกเว้น 0)', true, '')]; }),
+  /* ---------- 3 ความเข้าใจเกี่ยวกับตัวแปร ---------- */
+  LQ6(3, 'ท่าตัวแปร', 'ความเข้าใจเกี่ยวกับตัวแปร', 'ตัวแปร', 'บอกความหมายของตัวแปร ใช้ตัวอักษรแทนจำนวน แทนค่าตัวแปรเพื่อหาค่าของนิพจน์ และแยกตัวแปรกับค่าคงตัว', [
+    T('<b>ลากค่า x</b> — ดูค่าของนิพจน์เปลี่ยน', 'ลากค่าเอ็กซ์ ดูค่าของนิพจน์เปลี่ยน', el => el.append(lqSimSub(3, 2, [4, -2, 0]))),
+    T('<b>ตัวแปร กับ ค่าคงตัว</b> — แตะการ์ดทีละใบ', 'ตัวแปร กับ ค่าคงตัว แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['ตัวแปร', '<b>ตัวอักษรที่ใช้แทนจำนวน</b><small>เปลี่ยนค่าได้ เช่น x, y, n</small>'], ['ค่าคงตัว', '<b>จำนวนที่ค่าไม่เปลี่ยน</b><small>ใน 3x + 2 ค่าคงตัวคือ 2</small>'],
+      ['3x หมายถึง', '<b>3 × x</b><small>ไม่เขียนเครื่องหมายคูณระหว่างตัวเลขกับตัวแปร</small>'], ['การแทนค่า', '<b>ใส่จำนวนแทนตัวแปร แล้วคำนวณ</b><small>x = −2: 3x + 2 = 3 × (−2) + 2 = −4 (ใส่วงเล็บเมื่อเป็นจำนวนลบ)</small>']])))
+  ], () => { const x = rpR(3, 7), y = rpPick([-2, -3, -4]), a = rpR(5, 8), b = rpR(2, 4), p = rpPick([12, 15, 18]), n2 = rpPick([10, 14, 16]);
+    return [
+      Q.rpOpt({ q: `ในนิพจน์ ${lqE('5y + 8')} ข้อใดเป็นตัวแปร`, opts: ['y', '5', '8'], right: 'y', hint: 'ตัวอักษรที่แทนจำนวน', sig: 'v1', diff: 2 }),
+      Q.rpOpt({ q: `ในนิพจน์ ${lqE('4n − 9')} ข้อใดเป็นค่าคงตัว`, opts: ['−9', 'n', '4n'], right: '−9', hint: 'จำนวนที่ไม่มีตัวแปร', sig: 'v2', diff: 4 }),
+      Q.rpNum({ q: `ถ้า x = ${x} แล้ว ${lqE('4x + 3')} เท่ากับเท่าใด`, a: 4 * x + 3, hint: `4 × ${x} + 3`, sig: 'v3', diff: 3 }),
+      Q.rpNum({ q: `ถ้า x = ${lqN(y)} แล้ว ${lqE('5x − 1')} เท่ากับเท่าใด`, a: 5 * y - 1, hint: `5 × (${lqN(y)}) − 1`, sig: 'v4', diff: 6 }),
+      Q.rpNum({ q: `ถ้า a = ${a} และ b = ${b} แล้ว ${lqE('2a − b')} เท่ากับเท่าใด`, a: 2 * a - b, hint: 'แทนค่าทั้งสองตัวแปร', sig: 'v5', diff: 7 }),
+      Q.rpNum({ q: `ถ้า x = ${x + 2} แล้ว ${lqE('4(x − 1)')} เท่ากับเท่าใด`, a: 4 * (x + 1), hint: 'ทำในวงเล็บก่อน', sig: 'v6', diff: 8 }),
+      Q.rpNum({ q: `ถ้า x = ${n2} แล้ว ${lqE(`${fqHTML('x', 2)} + 3`)} เท่ากับเท่าใด`, a: n2 / 2 + 3, hint: 'x ÷ 2 แล้วบวก 3', sig: 'v7', diff: 8 }),
+      Q.rpNum({ q: `ถ้า x = ${lqN(y)} แล้ว ${lqE('−x')} เท่ากับเท่าใด`, a: -y, hint: 'จำนวนตรงข้ามของ x', sig: 'v8', diff: 9 }),
+      Q.rpOpt({ story: `สมุดเล่มละ ${p} บาท ซื้อ n เล่ม`, q: 'ราคาสมุดทั้งหมดเขียนเป็นนิพจน์ได้ตามข้อใด', opts: [`${p}n`, `n + ${p}`, `${p} − n`], right: `${p}n`, hint: 'ราคาต่อเล่ม × จำนวนเล่ม', sig: 'v9', diff: 6 }),
+      Q.rpNum({ q: `ถ้า x = ${lqN(y)} แล้ว ${lqE('x × x + 1')} เท่ากับเท่าใด`, a: y * y + 1, hint: 'ลบ × ลบ ได้บวก', sig: 'v10', diff: 11 }),
+      rpTF('ตัวแปรแทนจำนวนได้หลายค่า', true, ''),
+      rpTF('3x หมายถึง 3 + x', false, '3x หมายถึง 3 × x')]; }),
+  /* ---------- 4 นิพจน์พีชคณิต ---------- */
+  LQ6(4, 'ตลาดนิพจน์', 'นิพจน์พีชคณิต', 'นิพจน์', 'เขียนนิพจน์จากข้อความและเขียนข้อความจากนิพจน์ บอกสัมประสิทธิ์ ค่าคงตัว จำนวนพจน์ และพจน์ที่คล้ายกัน', [
+    T('<b>จับคู่ข้อความกับนิพจน์</b> — แตะการ์ด แล้วแตะกล่อง', 'จับคู่ข้อความกับนิพจน์', el => el.append(rpSort([
+      { t: 'x เพิ่มขึ้นอีก 5', bin: 0 }, { t: 'ผลบวกของ x กับ 5', bin: 0 }, { t: 'x ลบด้วย 5', bin: 1 }, { t: 'น้อยกว่า x อยู่ 5', bin: 1 },
+      { t: 'ห้าเท่าของ x', bin: 2 }, { t: 'ผลคูณของ 5 กับ x', bin: 2 }, { t: '5 ลบด้วย x', bin: 3 }, { t: 'นำ x ไปหักออกจาก 5', bin: 3 }].map(c => ({ ...c, why: 'อ่านว่าอะไรเริ่มก่อน แล้วทำอะไรกับอะไร' })),
+      ['x + 5', 'x − 5', '5x', '5 − x'], '<b>แตะการ์ดข้อความ แล้วแตะนิพจน์ที่ตรงกัน</b> — ระวัง "ลบด้วย" กับ "หักออกจาก"'))),
+    T('<b>ส่วนประกอบของนิพจน์</b> — แตะการ์ดทีละใบ', 'ส่วนประกอบของนิพจน์ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['พจน์', '<b>ส่วนที่คั่นด้วย + หรือ −</b><small>3x − 2y + 7 มี 3 พจน์</small>'], ['สัมประสิทธิ์', '<b>ตัวเลขที่คูณกับตัวแปร</b><small>3x มีสัมประสิทธิ์ 3 · −x มีสัมประสิทธิ์ −1</small>'],
+      ['ค่าคงตัว', '<b>พจน์ที่ไม่มีตัวแปร</b><small>ใน 3x − 2y + 7 คือ 7</small>'], ['พจน์ที่คล้ายกัน', '<b>ตัวแปรเหมือนกันทุกประการ</b><small>4x กับ −9x คล้ายกัน · 4x กับ 4y ไม่คล้ายกัน</small>']])))
+  ], () => { const a = rpR(3, 9), b = rpR(2, 9), k = rpPick([2, 3, 4]), m = rpPick([3, 4, 6]);
+    return [
+      Q.rpNum({ q: `สัมประสิทธิ์ของ x ใน ${lqE(`${a}x − ${b}`)} คือจำนวนใด`, a, hint: 'ตัวเลขที่คูณกับ x', sig: 'n1', diff: 3 }),
+      Q.rpNum({ q: `ค่าคงตัวใน ${lqE(`${b}x + ${a + 3}`)} คือจำนวนใด`, a: a + 3, hint: 'พจน์ที่ไม่มีตัวแปร', sig: 'n2', diff: 3 }),
+      Q.rpNum({ q: `สัมประสิทธิ์ของ x ใน ${lqE(`${a} − x`)} คือจำนวนใด`, a: -1, hint: '−x = −1 × x', sig: 'n3', diff: 8 }),
+      Q.rpNum({ q: `นิพจน์ ${lqE(`${a}x + 2y − ${b}`)} มีกี่พจน์`, a: 3, unit: 'พจน์', hint: 'นับส่วนที่คั่นด้วย + หรือ −', sig: 'n4', diff: 4 }),
+      Q.rpOpt({ q: `"มากกว่า<b>${k} เท่าของ x</b> อยู่ ${b}" เขียนเป็นนิพจน์ได้ตามข้อใด`, opts: [`${k}x + ${b}`, `${k}(x + ${b})`, `${b}x + ${k}`], right: `${k}x + ${b}`, hint: `คูณ ${k} กับ x ก่อน แล้วบวก ${b}`, sig: 'n5', diff: 7 }),
+      Q.rpOpt({ q: `"<b>น้อยกว่า x อยู่ ${b}</b>" เขียนเป็นนิพจน์ได้ตามข้อใด`, opts: [`x − ${b}`, `${b} − x`, `x + ${b}`], right: `x − ${b}`, hint: 'เริ่มจาก x แล้วลดลง', sig: 'n6', diff: 6 }),
+      Q.rpOpt({ q: `${lqE(`${m}(x + 1)`)} อ่านเป็นข้อความได้ตามข้อใด`, opts: [`${m} เท่าของผลบวกของ x กับ 1`, `ผลบวกของ ${m} เท่าของ x กับ 1`, `x บวก ${m}`], right: `${m} เท่าของผลบวกของ x กับ 1`, hint: 'วงเล็บทำก่อน', sig: 'n7', diff: 9 }),
+      Q.rpOpt({ q: `พจน์ใด<b>คล้ายกับ</b> ${lqE(`${a}x`)}`, opts: [`−${b + 1}x`, `${a}y`, `${a}`], right: `−${b + 1}x`, hint: 'ตัวแปรต้องเหมือนกัน', sig: 'n8', diff: 6 }),
+      Q.rpOpt({ story: `${rpNm(1)[0]}มีเงิน x บาท ใช้ไปครึ่งหนึ่ง แล้วได้เพิ่มอีก 20 บาท`, q: 'เงินที่มีอยู่เขียนเป็นนิพจน์ได้ตามข้อใด', opts: [`${fqHTML('x', 2)} + 20`, `${fqHTML('x + 20', 2)}`, '2x + 20'], right: `${fqHTML('x', 2)} + 20`, hint: 'ใช้ไปครึ่งหนึ่งก่อน แล้วจึงเพิ่ม 20', sig: 'n9', diff: 11 }),
+      Q.rpOpt({ q: `"ผลต่างของ x กับ ${a} แล้วคูณด้วย ${k}" เขียนเป็นนิพจน์ได้ตามข้อใด`, opts: [`${k}(x − ${a})`, `${k}x − ${a}`, `x − ${a * k}`], right: `${k}(x − ${a})`, hint: 'หาผลต่างก่อน จึงต้องใส่วงเล็บ', sig: 'n10', diff: 12 }),
+      rpTF(`x + ${a} เป็นนิพจน์พีชคณิต`, true, ''),
+      rpTF('2x กับ 2y เป็นพจน์ที่คล้ายกัน', false, 'ตัวแปรต่างกัน (x กับ y)')]; }),
+  /* ---------- 5 การจัดรูปนิพจน์ ---------- */
+  LQ6(5, 'ลานรวมพจน์', 'การจัดรูปนิพจน์พีชคณิต', 'รวมพจน์', 'รวมพจน์ที่คล้ายกัน บวกลบพจน์ที่คล้ายกัน ใช้สมบัติการแจกแจง และจัดรูปนิพจน์ให้อยู่ในรูปอย่างง่าย', [
+    T('<b>แยกพจน์</b> — พจน์ที่มี x กับ ค่าคงตัว', 'แยกพจน์ที่มีเอ็กซ์ กับค่าคงตัว', el => el.append(rpSort([
+      { t: '3x', bin: 0 }, { t: '+ 2', bin: 1 }, { t: '− x', bin: 0 }, { t: '+ 4', bin: 1 }, { t: '+ 2x', bin: 0 }, { t: '− 1', bin: 1 }].map(c => ({ ...c, why: 'พจน์ที่มี x อยู่ด้วยคือพจน์ x' })),
+      ['พจน์ที่มี x', 'ค่าคงตัว'], `แยกพจน์ของ ${lqE('3x + 2 − x + 4 + 2x − 1')} — <b>แตะพจน์ แล้วแตะกล่อง</b> (เครื่องหมายหน้าพจน์ติดไปด้วย)`,
+      `รวมพจน์ x: 3x − x + 2x = <b>4x</b> · รวมค่าคงตัว: 2 + 4 − 1 = <b>5</b> → จัดรูปได้ <b>4x + 5</b>`))),
+    T('ตัวอย่างทีละขั้น: <b>มีวงเล็บ</b>', 'ตัวอย่างทีละขั้น มีวงเล็บ', el => el.append(rpWalk(`จัดรูป ${lqE('3(2x − 1) + 4')}`,
+      [['① แจกแจง', '3 × 2x − 3 × 1 + 4 = 6x − 3 + 4'], ['② รวมค่าคงตัว', '−3 + 4 = 1'], ['③ ผลลัพธ์', '<b>6x + 1</b>']],
+      'รวมได้เฉพาะพจน์ที่คล้ายกัน — 6x กับ 1 รวมกันไม่ได้', 'รวมได้เฉพาะพจน์ที่คล้ายกัน')))
+  ], () => { const a = rpR(3, 8), b = rpR(2, 6), c = rpR(2, 5), d = rpR(3, 9), m = rpPick([2, 4, 5]);
+    return [
+      Q.rpNum({ q: `${lqE(`${a}x + ${b}x = □x`)} &nbsp; □ คือจำนวนใด`, a: a + b, hint: 'บวกสัมประสิทธิ์', sig: 'r1', diff: 3 }),
+      Q.rpNum({ q: `${lqE(`${a + b}x − ${b}x = □x`)} &nbsp; □ คือจำนวนใด`, a, hint: 'ลบสัมประสิทธิ์', sig: 'r2', diff: 4 }),
+      Q.rpNum({ q: `${lqE(`x + x + x + x = □x`)} &nbsp; □ คือจำนวนใด`, a: 4, hint: 'x = 1x', sig: 'r3', diff: 3 }),
+      Q.rpNum({ q: `${lqE(`${lqN(-c)}x + ${c + d}x = □x`)} &nbsp; □ คือจำนวนใด`, a: d, hint: `${lqN(-c)} + ${c + d}`, sig: 'r4', diff: 6 }),
+      Q.rpOpt({ q: `จัดรูป ${lqE(`${a}x + ${c} + ${b}x + ${d}`)}`, opts: [`${a + b}x + ${c + d}`, `${a + b + c + d}x`, `${a + b}x + ${c}`], right: `${a + b}x + ${c + d}`, hint: 'รวม x กับ x และค่าคงตัวกับค่าคงตัว', sig: 'r5', diff: 6 }),
+      Q.rpOpt({ q: `จัดรูป ${lqE(`${m}(x + ${c})`)}`, opts: [`${m}x + ${m * c}`, `${m}x + ${c}`, `x + ${m * c}`], right: `${m}x + ${m * c}`, hint: `คูณ ${m} เข้าไปทั้งสองพจน์`, sig: 'r6', diff: 7 }),
+      Q.rpOpt({ q: `จัดรูป ${lqE(`${a + 3}x − (${b}x − ${c})`)}`, opts: [`${a + 3 - b}x + ${c}`, `${a + 3 - b}x − ${c}`, `${a + 3 + b}x − ${c}`], right: `${a + 3 - b}x + ${c}`, hint: 'ลบหน้าวงเล็บ เปลี่ยนเครื่องหมายทุกพจน์ในวงเล็บ', sig: 'r7', diff: 12 }),
+      Q.rpOpt({ q: `จัดรูป ${lqE(`${m}(2x − ${c}) + ${m * c + 1}`)}`, opts: [`${2 * m}x + 1`, `${2 * m}x − ${m * c}`, `${2 * m}x + ${2 * m * c + 1}`], right: `${2 * m}x + 1`, hint: 'แจกแจงก่อน แล้วรวมค่าคงตัว', sig: 'r8', diff: 11 }),
+      Q.rpNum({ q: `${lqE(`a − ${c + 1}a = □a`)} &nbsp; □ คือจำนวนใด`, a: -c, hint: 'a = 1a', sig: 'r9', diff: 8 }),
+      Q.rpNum({ q: `จัดรูป ${lqE(`2x + 3x − ${d}`)} แล้วหาค่าเมื่อ x = 3`, a: 15 - d, hint: 'จัดรูปเป็น 5x − ' + d + ' ก่อน', sig: 'r10', diff: 10 }),
+      rpTF('3x + 2 จัดรูปได้เป็น 5x', false, '3x กับ 2 ไม่ใช่พจน์ที่คล้ายกัน รวมกันไม่ได้'),
+      rpTF('−(x − 4) = −x + 4', true, '')]; }),
+  /* ---------- 6 ความหมายของสมการ ---------- */
+  LQ6(6, 'สะพานเท่ากับ', 'ความหมายของสมการ', 'สมการ', 'บอกความหมายของสมการ แยกสมการกับนิพจน์ เข้าใจเครื่องหมายเท่ากับ และตรวจว่าสมการที่ไม่มีตัวแปรเป็นจริงหรือไม่เป็นจริง', [
+    T('<b>สมการ หรือ ไม่ใช่</b> — แตะการ์ด แล้วแตะกล่อง', 'สมการ หรือไม่ใช่ แตะการ์ดแล้วแตะกล่อง', el => el.append(rpSort([
+      { t: '3 + 5 = 8', bin: 0 }, { t: 'x + 2 = 9', bin: 0 }, { t: '2x + 1', bin: 1 }, { t: '7 − 3', bin: 1 }, { t: '4 = 2 + 2', bin: 0 }, { t: 'y − 5 = 1', bin: 0 }, { t: '6y', bin: 1 }].map(c => ({ ...c, why: 'สมการต้องมีเครื่องหมาย = แสดงว่าสองข้างเท่ากัน' })),
+      ['สมการ', 'ไม่ใช่สมการ (นิพจน์)'], '<b>สมการ</b> คือประโยคที่มีเครื่องหมาย <b>=</b> บอกว่าสองข้างเท่ากัน'))),
+    T('<b>เครื่องหมายเท่ากับ</b> — แตะการ์ดทีละใบ', 'เครื่องหมายเท่ากับ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['=', '<b>ข้างซ้ายมีค่าเท่ากับข้างขวา</b><small>ไม่ได้แปลว่า "คำตอบอยู่ข้างขวา"</small>'], ['สมการที่เป็นจริง', '<b>สองข้างเท่ากันจริง</b><small>6 × 3 = 20 − 2 (18 = 18)</small>'],
+      ['สมการที่เป็นเท็จ', '<b>สองข้างไม่เท่ากัน</b><small>5 + 4 = 10 (9 ≠ 10)</small>'], ['มีตัวแปร', '<b>ยังบอกไม่ได้</b><small>x + 3 = 7 จริงหรือเท็จขึ้นกับค่าของ x</small>']])))
+  ], () => { const a = rpR(3, 9), b = rpR(2, 8), c = rpR(3, 6);
+    return [
+      Q.rpOpt({ q: 'ข้อใดเป็น<b>สมการ</b>', opts: [`x + ${a} = ${a + b + 4}`, `x + ${a}`, `${b}x − 2y`], right: `x + ${a} = ${a + b + 4}`, hint: 'สมการต้องมีเครื่องหมาย =', sig: 'q1', diff: 2 }),
+      Q.rpOpt({ q: 'ข้อใด<b>ไม่ใช่สมการ</b>', opts: [`${b}x − ${a}`, `${b}x = ${a}`, `${a} + ${b} = ${a + b}`], right: `${b}x − ${a}`, hint: 'นิพจน์ไม่มีเครื่องหมาย =', sig: 'q2', diff: 3 }),
+      rpTF(`${a + b} − ${b} = ${a} เป็นสมการที่เป็นจริง`, true, ''),
+      rpTF(`${c} × ${b} = ${c * b + 2} เป็นสมการที่เป็นจริง`, false, `${c} × ${b} = ${c * b}`),
+      Q.rpNum({ q: `เติม □ ให้สมการเป็นจริง: ${lqE(`${a} + ${b} = 4 + □`)}`, a: a + b - 4, hint: `ข้างซ้ายเท่ากับ ${a + b}`, sig: 'q3', diff: 5 }),
+      Q.rpOpt({ q: 'ข้อใดเป็นสมการที่<b>เป็นจริง</b>', opts: [`${c * 3} − ${c} = ${c} × 2`, `${c * 3} − ${c} = ${c} + 2`, `${c * 3} ÷ 3 = ${c + 1}`], right: `${c * 3} − ${c} = ${c} × 2`, hint: 'คำนวณทั้งสองข้างของแต่ละข้อ', sig: 'q4', diff: 7 }),
+      Q.rpOpt({ q: `ในสมการ ${lqE(`x + ${b} = ${a + 9}`)} ข้างซ้ายคือข้อใด`, opts: [`x + ${b}`, `${a + 9}`, 'x'], right: `x + ${b}`, hint: 'ทุกอย่างที่อยู่ซ้ายเครื่องหมาย =', sig: 'q5', diff: 4 }),
+      Q.rpOpt({ q: 'เครื่องหมาย <b>=</b> ในสมการหมายถึงข้อใด', opts: ['ทั้งสองข้างมีค่าเท่ากัน', 'ให้คำนวณต่อไป', 'ข้างขวาเป็นคำตอบเสมอ'], right: 'ทั้งสองข้างมีค่าเท่ากัน', hint: '= อ่านว่า เท่ากับ', sig: 'q6', diff: 5 }),
+      Q.rpOpt({ q: 'ประโยคใด<b>ยังบอกไม่ได้</b>ว่าเป็นจริงหรือเท็จ', opts: [`x + ${b} = ${a + 6}`, `${a} + ${b} = ${a + b}`, `${a} + ${b} = ${a + b + 1}`], right: `x + ${b} = ${a + 6}`, hint: 'ประโยคที่มีตัวแปร', sig: 'q7', diff: 8 }),
+      rpTF(`${c} × 4 − 5 = ${c * 4 - 5} เป็นสมการที่เป็นจริง`, true, ''),
+      rpTF('สมการต้องมีตัวแปรเสมอ', false, '3 + 4 = 7 ก็เป็นสมการ'),
+      Q.rpNum({ q: `เติม □ ให้สมการเป็นจริง: ${lqE(`${c} × □ = ${c * b} − ${c}`)}`, a: b - 1, hint: `ข้างขวาเท่ากับ ${c * b - c}`, sig: 'q8', diff: 9 }),
+      Q.rpOpt({ q: 'ข้อใดเป็นสมการที่<b>เป็นเท็จ</b>', opts: [`${a} + ${b} = ${a + b + 1}`, `${a} + ${b} = ${b} + ${a}`, `${a} × 1 = ${a}`], right: `${a} + ${b} = ${a + b + 1}`, hint: 'คำนวณทั้งสองข้างของแต่ละข้อ', sig: 'q9', diff: 6 }),
+      Q.rpOpt({ q: `ในสมการ ${lqE(`${c}x − ${a} = ${b}x + ${c + 2}`)} ข้างขวาคือข้อใด`, opts: [`${b}x + ${c + 2}`, `${c}x − ${a}`, `${c + 2}`], right: `${b}x + ${c + 2}`, hint: 'ทุกอย่างที่อยู่ขวาเครื่องหมาย =', sig: 'q10', diff: 5 })]; }),
+  /* ---------- 7 คำตอบของสมการ ---------- */
+  LQ6(7, 'ท่าลองแทน', 'คำตอบของสมการ', 'คำตอบ', 'บอกความหมายของคำตอบของสมการ แทนค่าเพื่อตรวจคำตอบ หาคำตอบจากการลองแทนค่า และรู้จักสมการที่ไม่มีคำตอบหรือมีคำตอบได้ทุกจำนวน', [
+    T('<b>ลองแทนค่า</b> — ลากหาค่า x ที่ทำให้สมดุล', 'ลากค่าเอ็กซ์ ลองแทนค่าจนสมดุล', el => el.append(lqSimTry(3, -4, 11))),
+    T('<b>คำตอบของสมการ</b> — แตะการ์ดทีละใบ', 'คำตอบของสมการ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['คำตอบ', '<b>จำนวนที่แทนแล้วสมการเป็นจริง</b><small>x + 7 = 12 มีคำตอบคือ 5</small>'], ['ตรวจคำตอบ', '<b>แทนค่าแล้วคำนวณสองข้าง</b><small>สองข้างเท่ากัน = ถูก</small>'],
+      ['ไม่มีคำตอบ', '<b>x + 1 = x + 2</b><small>แทนค่าใดก็ไม่เท่ากัน (เนื้อหาเสริม)</small>'], ['ทุกจำนวนเป็นคำตอบ', '<b>2x = x + x</b><small>เป็นจริงเสมอ (เนื้อหาเสริม)</small>']])))
+  ], () => { const x = rpR(3, 9), a = rpR(2, 5), b = rpR(2, 9), w = rpPick([1, 2, 3]), tf = Math.random() < .5;
+    return [
+      Q.rpOpt({ q: `ข้อใดเป็นคำตอบของสมการ ${lqE(`x + ${b} = ${x + b}`)}`, opts: [String(x), String(x + 2 * b), lqN(-x)], right: String(x), hint: 'แทนค่าแต่ละตัวเลือก', sig: 'a1', diff: 3 }),
+      Q.rpOpt({ q: `ข้อใดเป็นคำตอบของสมการ ${lqE(`${a}x − ${b} = ${a * x - b}`)}`, opts: [String(x), String(x + 1), String(x - 1)], right: String(x), hint: 'แทนค่าแล้วดูว่าสองข้างเท่ากันไหม', sig: 'a2', diff: 6 }),
+      tf ? rpTF(`x = ${x} เป็นคำตอบของสมการ ${a}x + ${b} = ${a * x + b}`, true, '') : rpTF(`x = ${x} เป็นคำตอบของสมการ ${a}x + ${b} = ${a * x + b + 1}`, false, `แทนค่าได้ ${a * x + b} ไม่ใช่ ${a * x + b + 1}`),
+      rpTF(`x = −2 เป็นคำตอบของสมการ 5 − x = 3`, false, '5 − (−2) = 7 ไม่ใช่ 3'),
+      Q.rpNum({ q: `ลองแทน x = 0, 1, 2, 3, … ค่าใดทำให้ ${lqE(`4x − ${b} = ${4 * w - b}`)} เป็นจริง`, a: w, hint: 'ลองแทนทีละค่า', sig: 'a3', diff: 5 }),
+      Q.rpNum({ q: `สมการ ${lqE(`${a}x = ${a * x}`)} มีคำตอบคือจำนวนใด`, a: x, hint: `${a} คูณจำนวนใดได้ ${a * x}`, sig: 'a4', diff: 4 }),
+      Q.rpOpt({ q: `แทน x = ${x} ในสมการ ${lqE(`x − ${b} = ${x - b + 1}`)} แล้วได้อะไร`, opts: [`${x - b} = ${x - b + 1} เป็นเท็จ`, `${x - b + 1} = ${x - b + 1} เป็นจริง`, `${x + b} = ${x - b + 1} เป็นเท็จ`], right: `${x - b} = ${x - b + 1} เป็นเท็จ`, hint: 'คำนวณข้างซ้ายเมื่อ x = ' + x, sig: 'a5', diff: 8 }),
+      Q.rpOpt({ q: `สมการ ${lqE('x + 3 = x + 5')} มีคำตอบอย่างไร`, opts: ['ไม่มีคำตอบ', 'มีคำตอบเดียว', 'ทุกจำนวนเป็นคำตอบ'], right: 'ไม่มีคำตอบ', hint: 'จำนวนเดียวกันบวก 3 กับบวก 5 เท่ากันได้ไหม', sig: 'a6', diff: 10 }),
+      Q.rpOpt({ q: `สมการ ${lqE('3x = x + x + x')} มีคำตอบอย่างไร`, opts: ['ทุกจำนวนเป็นคำตอบ', 'ไม่มีคำตอบ', 'มีคำตอบเดียวคือ 3'], right: 'ทุกจำนวนเป็นคำตอบ', hint: 'จัดรูปข้างขวาดู', sig: 'a7', diff: 11 }),
+      Q.rpOpt({ q: `ข้อใดเป็นคำตอบของสมการ ${lqE(`${lqN(-a)}x = ${a * x}`)}`, opts: [lqN(-x), String(x), String(a * x)], right: lqN(-x), hint: 'ลบ × ลบ ได้บวก', sig: 'a8', diff: 9 }),
+      Q.rpNum({ q: `คำตอบของสมการ ${lqE(`${fqHTML('x', a)} = ${b}`)} คือจำนวนใด`, a: a * b, hint: `จำนวนใดหารด้วย ${a} ได้ ${b}`, sig: 'a9', diff: 7 }),
+      rpTF('คำตอบของสมการ คือจำนวนที่แทนตัวแปรแล้วทำให้สมการเป็นจริง', true, ''),
+      Q.rpNum({ q: `สมการ ${lqE(`x − ${b} = ${x}`)} มีคำตอบคือจำนวนใด`, a: x + b, hint: `จำนวนใดลบ ${b} แล้วได้ ${x}`, sig: 'a10', diff: 4 }),
+      Q.rpNum({ q: `จำนวนใดแทน x แล้วทำให้ ${lqE(`${x + 6} − x = ${x}`)} เป็นจริง`, a: 6, hint: `${x + 6} ลบจำนวนใดได้ ${x}`, sig: 'a11', diff: 6 })]; }),
+  /* ---------- 8 สมบัติของการเท่ากัน (ตาชั่ง) ---------- */
+  LQ6(8, 'ตาชั่งยักษ์', 'สมบัติของการเท่ากัน', 'ตาชั่งสมดุล', 'ใช้สมบัติของการเท่ากันเกี่ยวกับการบวก การลบ การคูณ และการหาร รักษาสมดุลของสมการด้วยการทำสิ่งเดียวกันทั้งสองข้าง', [
+    T('<b>ตาชั่งสมดุล</b> — เอาของออกทั้งสองข้าง', 'ตาชั่งสมดุล เอาของออกทั้งสองข้าง', el => el.append(lqBalance([{ L: { x: 1, u: 3 }, R: { x: 0, u: 8 }, sol: 5 }, { L: { x: 2, u: 1 }, R: { x: 0, u: 7 }, sol: 3 }]))),
+    T('<b>สมบัติของการเท่ากัน</b> — แตะการ์ดทีละใบ', 'สมบัติของการเท่ากัน แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['การบวก', '<b>ถ้า a = b แล้ว a + c = b + c</b><small>เติมของเท่ากันทั้งสองข้าง ยังสมดุล</small>'], ['การลบ', '<b>ถ้า a = b แล้ว a − c = b − c</b><small>เอาออกเท่ากันทั้งสองข้าง ยังสมดุล</small>'],
+      ['การคูณ', '<b>ถ้า a = b แล้ว a × c = b × c</b><small>เพิ่มเป็นกี่เท่าทั้งสองข้าง</small>'], ['การหาร', '<b>ถ้า a = b แล้ว a ÷ c = b ÷ c</b><small>c ≠ 0 · แบ่งทั้งสองข้างเป็นส่วนเท่ากัน</small>']])))
+  ], () => { const x = rpR(3, 7), u = rpR(2, 5), k = rpPick([2, 3]), x2 = rpPick([2, 3, 4]), c = rpR(3, 9), d = rpR(4, 9);
+    return [
+      Q.rpNum({ q: 'จากรูป ตาชั่งสมดุล กล่อง x หนักเท่าใด', fig: lqBalSVG({ x: 1, u }, { x: 0, u: x + u }), a: x, hint: `เอาก้อน 1 ออกข้างละ ${u} ก้อน`, sig: 'e1 ' + x + u, base: 'lqbal', diff: 4 }),
+      Q.rpNum({ q: 'จากรูป ตาชั่งสมดุล กล่อง x หนักเท่าใด', fig: lqBalSVG({ x: k, u: 1 }, { x: 0, u: k * x2 + 1 }), a: x2, hint: 'เอาก้อน 1 ออกทั้งสองข้าง แล้วแบ่งเป็นส่วนเท่ากัน', sig: 'e2 ' + k + x2, base: 'lqbal', diff: 8 }),
+      Q.rpOpt({ q: 'ถ้า a = b แล้ว a + 5 เท่ากับข้อใด', opts: ['b + 5', 'b', '5b'], right: 'b + 5', hint: 'ทำอย่างเดียวกันทั้งสองข้าง', sig: 'e3', diff: 3 }),
+      Q.rpOpt({ q: `จาก ${lqE(`x − ${c} = ${d}`)} บวกด้วย ${c} ทั้งสองข้าง ได้สมการใด`, opts: [`x = ${c + d}`, `x = ${d - c}`, `x − ${2 * c} = ${d}`], right: `x = ${c + d}`, hint: `− ${c} + ${c} = 0`, sig: 'e4', diff: 5 }),
+      Q.rpOpt({ q: `จาก ${lqE(`${k + 2}x = ${(k + 2) * d}`)} ต้องทำอย่างไรทั้งสองข้างจึงเหลือ x`, opts: [`หารด้วย ${k + 2}`, `ลบด้วย ${k + 2}`, `คูณด้วย ${k + 2}`], right: `หารด้วย ${k + 2}`, hint: 'ทำตรงข้ามกับการคูณ', sig: 'e5', diff: 5 }),
+      Q.rpOpt({ q: `จาก ${lqE(`${fqHTML('x', c)} = ${k}`)} ต้องทำอย่างไรทั้งสองข้างจึงเหลือ x`, opts: [`คูณด้วย ${c}`, `หารด้วย ${c}`, `บวกด้วย ${c}`], right: `คูณด้วย ${c}`, hint: 'ทำตรงข้ามกับการหาร', sig: 'e6', diff: 6 }),
+      Q.rpNum({ q: `จาก ${lqE(`x + ${c} = ${c + d}`)} ลบทั้งสองข้างด้วยจำนวนใดจึงเหลือ x`, a: c, hint: 'ทำให้ข้างซ้ายเหลือ x', sig: 'e7', diff: 4 }),
+      rpTF('บวก 3 เฉพาะข้างซ้ายของสมการ สมการยังเป็นจริงเหมือนเดิม', false, 'ต้องบวก 3 ทั้งสองข้าง ตาชั่งจึงยังสมดุล'),
+      rpTF('หารทั้งสองข้างของสมการด้วย 0 ได้', false, 'หารด้วย 0 ไม่ได้'),
+      Q.rpOpt({ q: `จาก ${lqE(`x + ${c} = ${d + c}`)} ใช้สมบัติการเท่ากันข้อใดแก้สมการ`, opts: ['สมบัติการลบ', 'สมบัติการคูณ', 'สมบัติการสลับที่'], right: 'สมบัติการลบ', hint: `เอา ${c} ออกทั้งสองข้าง`, sig: 'e8', diff: 7 }),
+      Q.rpNum({ story: `ตาชั่งสมดุล ข้างหนึ่งมีกล่อง x 3 กล่อง อีกข้างมีก้อน 1 จำนวน ${3 * x} ก้อน`, q: 'กล่อง x หนักกล่องละเท่าใด', a: x, hint: 'แบ่งทั้งสองข้างเป็น 3 ส่วน', sig: 'e9', diff: 9 }),
+      rpTF('ถ้า a = b แล้ว 2a = 2b', true, '')]; }),
+  /* ---------- 9 สมการการบวกและการลบ ---------- */
+  LQ6(9, 'ท่าบวกลบ', 'สมการการบวกและการลบ', 'x + a = b', 'แก้สมการรูป x + a = b และ x − a = b ด้วยสมบัติการเท่ากัน และตรวจคำตอบ — เข้าใจว่า "ย้ายข้างเปลี่ยนเครื่องหมาย" มาจากการทำสิ่งเดียวกันทั้งสองข้าง', [
+    T('<b>ตาชั่ง</b> — แก้ x + 6 = 10', 'ตาชั่ง แก้เอ็กซ์บวกหกเท่ากับสิบ', el => el.append(lqBalance([{ L: { x: 1, u: 6 }, R: { x: 0, u: 10 }, sol: 4 }]))),
+    T('ตัวอย่างทีละขั้น: <b>x − 4 = 9</b>', 'ตัวอย่างทีละขั้น เอ็กซ์ลบสี่เท่ากับเก้า', el => el.append(rpWalk(`แก้สมการ ${lqE('x − 4 = 9')}`,
+      [['① อยากให้เหลือ x', 'ข้างซ้ายมี − 4 → ต้อง <b>บวก 4</b>'], ['② บวก 4 ทั้งสองข้าง', 'x − 4 + 4 = 9 + 4'], ['③ คำนวณ', '<b>x = 13</b>'], ['④ ตรวจ', '13 − 4 = 9 ✓']],
+      'ทางลัด "ย้าย − 4 ไปอีกข้างเป็น + 4" ก็คือการบวก 4 ทั้งสองข้างนั่นเอง', 'ย้ายข้างเปลี่ยนเครื่องหมาย ก็คือการทำสิ่งเดียวกันทั้งสองข้าง')))
+  ], () => { const x1 = rpR(5, 19), a1 = rpR(3, 12), x2 = rpR(8, 25), a2 = rpR(3, 9), x3 = rpR(2, 9), a3 = rpR(11, 20), x4 = rpR(-9, -2), a4 = rpR(3, 8), b5 = rpR(10, 30), a5 = rpR(12, 25);
+    return [
+      lqSolve(`x + ${a1} = ${x1 + a1}`, x1, `ลบ ${a1} ทั้งสองข้าง`, 'b1', 3),
+      lqSolve(`x − ${a2} = ${x2 - a2}`, x2, `บวก ${a2} ทั้งสองข้าง`, 'b2', 4),
+      lqSolve(`${a3} + x = ${a3 + x3}`, x3, `ลบ ${a3} ทั้งสองข้าง`, 'b3', 5),
+      lqSolve(`${x2 + a1} = x + ${a1}`, x2, 'x อยู่ข้างขวาก็ได้ ทำแบบเดิม', 'b4', 6),
+      lqSolve(`x + ${a4} = ${x4 + a4}`, x4, `ลบ ${a4} ทั้งสองข้าง (คำตอบอาจเป็นจำนวนลบ)`, 'b5', 8),
+      lqSolve(`x − ${a5} = ${lqN(b5 - a5 - 30)}`, b5 - 30, `บวก ${a5} ทั้งสองข้าง`, 'b6', 9),
+      lqSolve(`x + ${lqP(-a2)} = ${x3}`, x3 + a2, `x − ${a2} = ${x3}`, 'b7', 10),
+      Q.rpOpt({ q: `แก้สมการ ${lqE(`x + ${a1} = ${x1 + a1}`)} ขั้นแรกควรทำอย่างไร`, opts: [`ลบ ${a1} ทั้งสองข้าง`, `บวก ${a1} ทั้งสองข้าง`, `ลบ ${a1} เฉพาะข้างซ้าย`], right: `ลบ ${a1} ทั้งสองข้าง`, hint: 'ทำให้ข้างซ้ายเหลือ x และทำเหมือนกันทั้งสองข้าง', sig: 'b8', diff: 4 }),
+      rpTF(`x = ${x2} เป็นคำตอบของ x − ${a2} = ${x2 - a2}`, true, ''),
+      Q.rpNum({ story: `${rpNm(1)[0]}มีเงินอยู่จำนวนหนึ่ง ได้เพิ่มอีก ${a1 * 5} บาท รวมเป็น ${x1 * 10 + a1 * 5} บาท`, q: 'เดิมมีเงินกี่บาท (เขียนสมการ x + ' + a1 * 5 + ' = ' + (x1 * 10 + a1 * 5) + ')', a: x1 * 10, unit: 'บาท', hint: 'ลบเงินที่ได้เพิ่มออกทั้งสองข้าง', sig: 'b9', diff: 7 }),
+      lqSolve(`${lqN(-a2)} + x = ${lqN(-a2 - x3)}`, -x3, `บวก ${a2} ทั้งสองข้าง`, 'b10', 12),
+      lqSolve(`x − 2.5 = 4`, 6.5, 'บวก 2.5 ทั้งสองข้าง', 'b11', 11)]; }),
+  /* ---------- 10 สมการการคูณและการหาร ---------- */
+  LQ6(10, 'ท่าคูณหาร', 'สมการการคูณและการหาร', 'ax = b', 'แก้สมการรูป ax = b และ x/a = b ด้วยสมบัติการเท่ากันของการคูณและการหาร รวมถึงเมื่อสัมประสิทธิ์เป็นจำนวนลบ', [
+    T('<b>ตาชั่ง</b> — แก้ 3x = 12', 'ตาชั่ง แก้สามเอ็กซ์เท่ากับสิบสอง', el => el.append(lqBalance([{ L: { x: 3, u: 0 }, R: { x: 0, u: 12 }, sol: 4 }]))),
+    T('ตัวอย่างทีละขั้น: <b>x หารด้วย 3</b>', 'ตัวอย่างทีละขั้น เอ็กซ์หารด้วยสาม', el => el.append(rpWalk(`แก้สมการ ${lqE(`${fqHTML('x', 3)} = 5`)}`,
+      [['① x ถูกหารด้วย 3', 'ทำตรงข้าม → <b>คูณ 3</b> ทั้งสองข้าง'], ['② คูณ 3', `3 × ${fqHTML('x', 3)} = 3 × 5`], ['③ คำนวณ', '<b>x = 15</b>'], ['④ ตรวจ', '15 ÷ 3 = 5 ✓']],
+      'คูณ ↔ หาร เป็นการดำเนินการตรงข้ามกัน', 'คูณกับหารเป็นการดำเนินการตรงข้ามกัน'))),
+    T('ตัวอย่างทีละขั้น: <b>สัมประสิทธิ์ติดลบ</b>', 'ตัวอย่างทีละขั้น สัมประสิทธิ์ติดลบ', el => el.append(rpWalk(`แก้สมการ ${lqE('−2x = 10')}`,
+      [['① x ถูกคูณด้วย −2', 'หารด้วย <b>−2</b> ทั้งสองข้าง (เครื่องหมายลบไปด้วย)'], ['② หาร', '−2x ÷ (−2) = 10 ÷ (−2)'], ['③ คำนวณ', '<b>x = −5</b>'], ['④ ตรวจ', '−2 × (−5) = 10 ✓']],
+      'หารด้วยสัมประสิทธิ์ทั้งตัว รวมเครื่องหมายด้วย', 'หารด้วยสัมประสิทธิ์รวมเครื่องหมาย')))
+  ], () => { const a = rpR(4, 9), x = rpR(3, 12), b = rpR(4, 8), y = rpR(3, 9), c = rpR(2, 6), z = rpR(2, 8), d = rpR(3, 6), q = rpR(2, 7);
+    return [
+      lqSolve(`${a}x = ${a * x}`, x, `หาร ${a} ทั้งสองข้าง`, 'm1', 3),
+      lqSolve(`${fqHTML('x', b)} = ${y}`, b * y, `คูณ ${b} ทั้งสองข้าง`, 'm2', 4),
+      lqSolve(`${lqN(-c)}x = ${lqN(c * z)}`, -z, `หาร ${lqN(-c)} ทั้งสองข้าง`, 'm3', 7),
+      lqSolve(`${d}x = ${lqN(-d * q)}`, -q, `หาร ${d} ทั้งสองข้าง`, 'm4', 6),
+      lqSolve(`${fqHTML('x', c + 1)} = ${lqN(-q)}`, -q * (c + 1), `คูณ ${c + 1} ทั้งสองข้าง`, 'm5', 8),
+      lqSolve(`${a * x} = ${a}x`, x, 'x อยู่ข้างขวา หาร ' + a + ' ทั้งสองข้าง', 'm6', 5),
+      lqSolve(`−x = ${z + 4}`, -(z + 4), '−x = −1 × x หารด้วย −1 ทั้งสองข้าง', 'm7', 9),
+      lqSolve(`${fqHTML('2x', 3)} = ${2 * z}`, 3 * z, 'คูณ 3 ทั้งสองข้างก่อน แล้วหาร 2', 'm8', 12),
+      lqSolve(`0.5x = ${d + 2}`, 2 * (d + 2), '0.5x คือครึ่งหนึ่งของ x', 'm9', 11),
+      Q.rpOpt({ q: `แก้สมการ ${lqE(`${fqHTML('x', b)} = ${y}`)} ต้องทำอย่างไรทั้งสองข้าง`, opts: [`คูณด้วย ${b}`, `หารด้วย ${b}`, `ลบด้วย ${b}`], right: `คูณด้วย ${b}`, hint: 'ทำตรงข้ามกับการหาร', sig: 'm10', diff: 4 }),
+      Q.rpNum({ story: `ซื้อปากการาคาเท่ากัน ${a} ด้าม จ่ายเงิน ${a * x * 3} บาท`, q: 'ปากการาคาด้ามละกี่บาท', a: x * 3, unit: 'บาท', hint: `${a}x = ${a * x * 3}`, sig: 'm11', diff: 7 }),
+      rpTF(`x = ${lqN(-z)} เป็นคำตอบของ ${lqN(-c)}x = ${c * z}`, true, '')]; })
+];
+
+/* =========================================================
+   ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว — ด่าน 2611–2620 + บอส 2621 (v245) · prefix lq
+   ด่าน 9–15 ยากขึ้นทีละขั้น · ด่าน 16–20 ฝึก 4 ขั้น: อ่านโจทย์ → กำหนดตัวแปร → สร้างและแก้สมการ → ตรวจกับโจทย์
+   ========================================================= */
+LESSONS_M1C6.push(
+  /* ---------- 11 สมการที่มีหลายขั้นตอน ---------- */
+  LQ6(11, 'เครื่องย้อนกลับ', 'สมการที่มีหลายขั้นตอน', 'ax + b = c', 'แก้สมการที่มีทั้งการบวก/ลบ และการคูณ/หาร ด้วยการดำเนินการย้อนกลับ โดยย้อนขั้นสุดท้ายก่อน', [
+    T('<b>เครื่องแปลงจำนวน</b> — ย้อนกลับหา x', 'เครื่องแปลงจำนวน ย้อนกลับหาเอ็กซ์', el => el.append(lqSimMachine([{ ops: [['×', 3], ['−', 4]], out: 11 }, { ops: [['÷', 2], ['+', 5]], out: 9 }]))),
+    T('ตัวอย่างทีละขั้น: <b>2x + 3 = 11</b>', 'ตัวอย่างทีละขั้น สองเอ็กซ์บวกสามเท่ากับสิบเอ็ด', el => el.append(rpWalk(`แก้สมการ ${lqE('2x + 3 = 11')}`,
+      [['① x ถูกทำอะไรบ้าง', 'คูณ 2 แล้วบวก 3 → ย้อนกลับ: ลบ 3 ก่อน แล้วจึงหาร 2'], ['② ลบ 3 ทั้งสองข้าง', '2x = 8'], ['③ หาร 2 ทั้งสองข้าง', '<b>x = 4</b>'], ['④ ตรวจ', '2 × 4 + 3 = 11 ✓']],
+      'ย้อนขั้นที่ทำ<b>หลังสุด</b>ก่อน เหมือนถอดถุงเท้าหลังถอดรองเท้า', 'ย้อนขั้นที่ทำหลังสุดก่อน')))
+  ], () => { const a = rpR(3, 7), x = rpR(3, 9), b = rpR(4, 15), c = rpR(2, 5), y = rpR(2, 8), d = rpR(3, 9), k = rpR(5, 9), e = rpR(2, 4), z = rpR(2, 6);
+    return [
+      lqSolve(`${a}x + ${b} = ${a * x + b}`, x, `ลบ ${b} ก่อน แล้วหาร ${a}`, 'h1', 4),
+      lqSolve(`${a}x − ${b} = ${a * x - b}`, x, `บวก ${b} ก่อน แล้วหาร ${a}`, 'h2', 5),
+      lqSolve(`${fqHTML('x', c)} + ${d} = ${y + d}`, c * y, `ลบ ${d} ก่อน แล้วคูณ ${c}`, 'h3', 7),
+      lqSolve(`${fqHTML('x', c)} − ${d} = ${y}`, c * (y + d), `บวก ${d} ก่อน แล้วคูณ ${c}`, 'h4', 7),
+      lqSolve(`${fqHTML(`x + ${d}`, c)} = ${y}`, c * y - d, `คูณ ${c} ก่อน แล้วลบ ${d}`, 'h5', 9),
+      lqSolve(`${lqN(-e)}x + ${k} = ${k - e * z}`, z, `ลบ ${k} ก่อน แล้วหาร ${lqN(-e)}`, 'h6', 10),
+      lqSolve(`${k + e * z} − ${e}x = ${k}`, z, `ลบ ${k + e * z} ทั้งสองข้าง หรือบวก ${e}x ทั้งสองข้าง`, 'h7', 11),
+      Q.rpOpt({ q: `แก้สมการ ${lqE(`${a}x + ${b} = ${a * x + b}`)} ขั้นแรกควรทำอย่างไร`, opts: [`ลบ ${b} ทั้งสองข้าง`, `บวก ${b} ทั้งสองข้าง`, `คูณ ${a} ทั้งสองข้าง`], right: `ลบ ${b} ทั้งสองข้าง`, hint: 'ย้อนขั้นบวกก่อน', sig: 'h8', diff: 5 }),
+      Q.rpNum({ story: `คิดเลขในใจ: นำจำนวนหนึ่งคูณ 4 แล้วบวก ${d} ได้ ${4 * y + d}`, q: 'จำนวนนั้นคือจำนวนใด', a: y, hint: `4x + ${d} = ${4 * y + d}`, sig: 'h9', diff: 8 }),
+      Q.rpNum({ q: `x → × 5 → − 3 → ${5 * z - 3} &nbsp; x คือจำนวนใด`, a: z, hint: 'ย้อนกลับ: + 3 แล้ว ÷ 5', sig: 'h10', diff: 6 }),
+      rpTF(`x = ${x} เป็นคำตอบของ ${a}x − ${b} = ${a * x - b}`, true, ''),
+      lqSolve(`${fqHTML('3x', 4)} + 2 = ${3 * e + 2}`, 4 * e, 'ลบ 2 ก่อน แล้วคูณ 4 หาร 3', 'h11', 13)]; }),
+  /* ---------- 12 ตัวแปรอยู่ทั้งสองข้าง ---------- */
+  LQ6(12, 'ตาชั่งสองฝั่ง', 'สมการที่มีตัวแปรอยู่ทั้งสองข้าง', 'x ทั้งสองข้าง', 'รวมตัวแปรไว้ข้างเดียวกันด้วยสมบัติการเท่ากัน รวมพจน์ที่คล้ายกัน และจัดรูปสมการก่อนหาคำตอบ', [
+    T('<b>ตาชั่ง</b> — มีกล่อง x ทั้งสองข้าง', 'ตาชั่ง มีกล่องเอ็กซ์ทั้งสองข้าง', el => el.append(lqBalance([{ L: { x: 3, u: 1 }, R: { x: 1, u: 9 }, sol: 4 }]))),
+    T('ตัวอย่างทีละขั้น: <b>5x − 2 = 2x + 10</b>', 'ตัวอย่างทีละขั้น ห้าเอ็กซ์ลบสองเท่ากับสองเอ็กซ์บวกสิบ', el => el.append(rpWalk(`แก้สมการ ${lqE('5x − 2 = 2x + 10')}`,
+      [['① ลบ 2x ทั้งสองข้าง', '5x − 2x − 2 = 10 → 3x − 2 = 10'], ['② บวก 2 ทั้งสองข้าง', '3x = 12'], ['③ หาร 3 ทั้งสองข้าง', '<b>x = 4</b>'], ['④ ตรวจ', 'ซ้าย 5 × 4 − 2 = 18 · ขวา 2 × 4 + 10 = 18 ✓']],
+      'เก็บ x ไว้ข้างที่สัมประสิทธิ์มากกว่า จะได้ไม่ต้องหารด้วยจำนวนลบ', 'เก็บเอ็กซ์ไว้ข้างที่สัมประสิทธิ์มากกว่า')))
+  ], () => { const P = rpPick([[4, 1], [6, 2], [7, 3], [5, 3]]), x = rpR(2, 9), b = rpR(2, 9), y = rpR(-6, -2), Q2 = rpPick([[3, 7], [2, 6], [4, 9]]), z = rpR(2, 7), w = rpR(3, 8);
+    const d = (P[0] - P[1]) * x + b;
+    return [
+      lqSolve(`${P[0]}x + ${b} = ${P[1]}x + ${d}`, x, `ลบ ${P[1]}x ทั้งสองข้าง`, 'k1', 5),
+      lqSolve(`${P[0]}x = ${P[1]}x + ${(P[0] - P[1]) * w}`, w, `ลบ ${P[1]}x ทั้งสองข้าง`, 'k2', 4),
+      lqSolve(`${Q2[0]}x + ${(Q2[1] - Q2[0]) * z} = ${Q2[1]}x`, z, `ลบ ${Q2[0]}x ทั้งสองข้าง (x อยู่ข้างขวามากกว่า)`, 'k3', 7),
+      lqSolve(`${P[0]}x − ${b} = ${lqLin(P[1], (P[0] - P[1]) * y - b)}`, y, 'รวม x ไว้ข้างเดียวกัน คำตอบอาจเป็นจำนวนลบ', 'k4', 10),
+      lqSolve(`${w}x − ${z} = ${lqLin(w - 2, 2 * b - z)}`, b, `ลบ ${w - 2}x ทั้งสองข้าง แล้วบวก ${z}`, 'k5', 9),
+      lqSolve(`${b + 9} − x = ${lqLin(2, b + 9 - 3 * z)}`, z, 'บวก x ทั้งสองข้าง', 'k6', 12),
+      Q.rpOpt({ q: `แก้สมการ ${lqE(`${P[0]}x + ${b} = ${P[1]}x + ${d}`)} ขั้นแรกที่ดีคือข้อใด`, opts: [`ลบ ${P[1]}x ทั้งสองข้าง`, `บวก ${P[1]}x ทั้งสองข้าง`, `หาร ${P[0]} ทั้งสองข้าง`], right: `ลบ ${P[1]}x ทั้งสองข้าง`, hint: 'รวมตัวแปรไว้ข้างเดียว', sig: 'k7', diff: 5 }),
+      Q.rpOpt({ q: `จาก ${lqE(`${P[0]}x + ${b} = ${P[1]}x + ${d}`)} ลบ ${P[1]}x ทั้งสองข้างแล้วได้สมการใด`, opts: [`${P[0] - P[1]}x + ${b} = ${d}`, `${P[0] + P[1]}x + ${b} = ${d}`, `${P[0]}x + ${b} = ${d}`], right: `${P[0] - P[1]}x + ${b} = ${d}`, hint: `${P[0]}x − ${P[1]}x`, sig: 'k8', diff: 6 }),
+      rpTF(`x = ${x} เป็นคำตอบของ ${P[0]}x + ${b} = ${P[1]}x + ${d}`, true, ''),
+      Q.rpNum({ story: `ร้านหนึ่งขายสมุดเล่มละ 12 บาท ส่งฟรี อีกร้านขายเล่มละ 10 บาท ค่าส่ง ${2 * w} บาท`, q: 'ซื้อสมุดกี่เล่ม สองร้านจึงคิดเงินเท่ากัน', a: w, unit: 'เล่ม', hint: `12x = 10x + ${2 * w}`, sig: 'k9', diff: 11 }),
+      lqSolve(`0.5x + ${z} = 1.5x − ${w}`, z + w, 'ลบ 0.5x ทั้งสองข้าง', 'k10', 13)]; }),
+  /* ---------- 13 สมการที่มีวงเล็บ ---------- */
+  LQ6(13, 'ท่าวงเล็บ', 'สมการที่มีวงเล็บ', 'มีวงเล็บ', 'ใช้สมบัติการแจกแจงตัดวงเล็บ (ระวังเครื่องหมายลบหน้าวงเล็บ) จัดรูปสมการ แล้วแก้สมการ', [
+    T('ตัวอย่างทีละขั้น: <b>2(x + 3) = 14</b>', 'ตัวอย่างทีละขั้น สองคูณวงเล็บเอ็กซ์บวกสามเท่ากับสิบสี่', el => el.append(rpWalk(`แก้สมการ ${lqE('2(x + 3) = 14')}`,
+      [['① แจกแจง', '2x + 6 = 14'], ['② ลบ 6 ทั้งสองข้าง', '2x = 8'], ['③ หาร 2 ทั้งสองข้าง', '<b>x = 4</b>'], ['วิธีลัด', 'หาร 2 ทั้งสองข้างก่อน: x + 3 = 7 → x = 4']],
+      'ตัดวงเล็บก่อน หรือหารด้วยตัวคูณหน้าวงเล็บก่อนก็ได้', 'ตัดวงเล็บก่อน หรือหารก่อนก็ได้'))),
+    T('ตัวอย่างทีละขั้น: <b>วงเล็บสองข้าง</b>', 'ตัวอย่างทีละขั้น วงเล็บสองข้าง', el => el.append(rpWalk(`แก้สมการ ${lqE('3(x − 2) = 2(x + 1)')}`,
+      [['① แจกแจงทั้งสองข้าง', '3x − 6 = 2x + 2'], ['② ลบ 2x ทั้งสองข้าง', 'x − 6 = 2'], ['③ บวก 6 ทั้งสองข้าง', '<b>x = 8</b>'], ['④ ตรวจ', '3 × 6 = 18 · 2 × 9 = 18 ✓']],
+      'ลบหน้าวงเล็บ: −(x − 3) = −x + 3 เปลี่ยนเครื่องหมายทุกพจน์ในวงเล็บ', 'ลบหน้าวงเล็บ เปลี่ยนเครื่องหมายทุกพจน์')))
+  ], () => { const a = rpPick([3, 4, 5]), x = rpR(2, 9), b = rpR(2, 7), c = rpPick([2, 3]), y = rpR(3, 9), z = rpR(4, 10);
+    return [
+      lqSolve(`${a}(x + ${b}) = ${a * (x + b)}`, x, `แจกแจงหรือหาร ${a} ทั้งสองข้างก่อน`, 'w1', 4),
+      lqSolve(`${a}(x − ${b}) = ${a * (y - b)}`, y, `หาร ${a} ทั้งสองข้างก่อน`, 'w2', 5),
+      Q.rpOpt({ q: `${lqE(`${a}(x − ${b})`)} ตัดวงเล็บแล้วได้ข้อใด`, opts: [`${a}x − ${a * b}`, `${a}x − ${b}`, `${a}x + ${a * b}`], right: `${a}x − ${a * b}`, hint: `คูณ ${a} เข้าไปทุกพจน์`, sig: 'w3', diff: 4 }),
+      Q.rpOpt({ q: `${lqE(`−(x − ${b})`)} ตัดวงเล็บแล้วได้ข้อใด`, opts: [`−x + ${b}`, `−x − ${b}`, `x + ${b}`], right: `−x + ${b}`, hint: 'เปลี่ยนเครื่องหมายทุกพจน์ในวงเล็บ', sig: 'w4', diff: 7 }),
+      lqSolve(`${lqN(-c)}(x − ${b}) = ${-c * (z - b)}`.replace(/= -/, '= −'), z, `หาร ${lqN(-c)} ทั้งสองข้าง`, 'w5', 10),
+      lqSolve(`${a}(x + ${b}) = ${a - 1}x + ${a * b + y}`, y, 'แจกแจง แล้วรวม x ไว้ข้างเดียว', 'w6', 11),
+      lqSolve(`2(x + 1) − (x − 3) = ${z + 5}`, z, '2x + 2 − x + 3', 'w7', 12),
+      lqSolve(`${c}(x + ${b}) + ${c + 1}x = ${(2 * c + 1) * y + c * b}`, y, 'แจกแจงแล้วรวมพจน์ x', 'w8', 13),
+      lqSolve(`${a}(${c}x − 1) = ${a * (c * x - 1)}`, x, `หาร ${a} ทั้งสองข้าง แล้วแก้ ${c}x − 1`, 'w9', 9),
+      rpTF(`3(x + 4) = 3x + 4`, false, 'ต้องคูณ 3 เข้าไปที่ 4 ด้วย: 3x + 12'),
+      rpTF(`x = ${x} เป็นคำตอบของ ${a}(x + ${b}) = ${a * (x + b)}`, true, ''),
+      Q.rpNum({ story: `ซื้อขนม ${c + 2} ชุด ชุดละ 1 กล่องราคา x บาท กับน้ำ 1 ขวดราคา 8 บาท จ่ายทั้งหมด ${(c + 2) * (y + 8)} บาท`, q: 'ขนมราคากล่องละกี่บาท', a: y, unit: 'บาท', hint: `${c + 2}(x + 8) = ${(c + 2) * (y + 8)}`, sig: 'w10', diff: 10 })]; }),
+  /* ---------- 14 สมการที่มีเศษส่วน ---------- */
+  LQ6(14, 'แก่งเศษส่วน', 'สมการที่มีเศษส่วน', 'เศษส่วน', 'แก้สมการที่มีเศษส่วน โดยหา ค.ร.น. ของตัวส่วน แล้วคูณทั้งสองข้างเพื่อกำจัดตัวส่วน', [
+    T('<b>กำจัดตัวส่วน</b> — แตะจำนวนที่ใช้คูณ', 'แตะจำนวนที่ใช้คูณ เพื่อกำจัดตัวส่วน', el => el.append(lqSimClear(2, 3, 5))),
+    T('ตัวอย่างทีละขั้น: <b>ตัวเศษมีหลายพจน์</b>', 'ตัวอย่างทีละขั้น ตัวเศษมีหลายพจน์', el => el.append(rpWalk(`แก้สมการ ${lqE(`${fqHTML('x + 1', 3)} = 4`)}`,
+      [['① คูณ 3 ทั้งสองข้าง', 'x + 1 = 12 (ตัวเศษทั้งก้อนเหมือนอยู่ในวงเล็บ)'], ['② ลบ 1 ทั้งสองข้าง', '<b>x = 11</b>'], ['③ ตรวจ', `${fqHTML('11 + 1', 3)} = ${fqHTML(12, 3)} = 4 ✓`]],
+      'ตัวเศษหลายพจน์ ให้คิดเหมือนมีวงเล็บครอบไว้', 'ตัวเศษหลายพจน์ คิดเหมือนมีวงเล็บ')))
+  ], () => { const k = rpPick([2, 3, 4]), y = rpR(2, 8), c = rpR(2, 6), t = rpPick([[4, 6, 12], [3, 4, 12], [2, 5, 10]]), f9 = rpPick([[7, 6], [13, 11], [19, 16]]);
+    return [
+      lqSolve(`${fqHTML('x', 2)} + ${fqHTML('x', 4)} = ${3 * k}`, 4 * k, 'คูณ 4 ทั้งสองข้าง', 'f1', 6),
+      lqSolve(`${fqHTML('x', 2)} + ${fqHTML('x', 3)} = ${5 * k}`, 6 * k, 'คูณ 6 ทั้งสองข้าง', 'f2', 7),
+      lqSolve(`${fqHTML('x', 3)} − ${fqHTML('x', 6)} = ${y}`, 6 * y, 'คูณ 6 ทั้งสองข้าง', 'f3', 8),
+      lqSolve(`${fqHTML(`x − ${c}`, 5)} = ${y}`, 5 * y + c, 'คูณ 5 ทั้งสองข้าง', 'f4', 5),
+      lqSolve(`${fqHTML('x', 4)} − 1 = ${y}`, 4 * (y + 1), 'บวก 1 แล้วคูณ 4', 'f5', 5),
+      lqSolve(`${fqHTML('2x', 3)} + 1 = ${2 * y + 1}`, 3 * y, 'ลบ 1 แล้วคูณ 3 หาร 2', 'f6', 9),
+      Q.rpNum({ q: `กำจัดตัวส่วนของ ${lqE(`${fqHTML('x', t[0])} + ${fqHTML('x', t[1])} = 5`)} ควรคูณทั้งสองข้างด้วยจำนวนใด (เล็กที่สุด)`, a: t[2], hint: `ค.ร.น. ของ ${t[0]} กับ ${t[1]}`, sig: 'f7', diff: 4 }),
+      lqSolve(`${fqHTML('x − 2', 5)} = ${fqHTML('x + 1', 8)}`, 7, 'คูณไขว้: 8(x − 2) = 5(x + 1)', 'f8', 14),
+      lqSolve(`${fqHTML('x + 1', 2)} + ${fqHTML('x − 1', 3)} = ${f9[1]}`, f9[0], 'คูณ 6 ทั้งสองข้าง: 3(x + 1) + 2(x − 1)', 'f9', 15),
+      rpTF(`คูณทั้งสองข้างของ ${fqHTML('x', 2)} + ${fqHTML('x', 3)} = 5 ด้วย 6 ได้ 3x + 2x = 30`, true, ''),
+      rpTF(`คูณทั้งสองข้างของ ${fqHTML('x', 2)} = 5 ด้วย 2 ได้ x = 5`, false, 'ข้างขวาต้องคูณ 2 ด้วย: x = 10')]; }),
+  /* ---------- 15 สมการที่มีทศนิยมและจำนวนลบ ---------- */
+  LQ6(15, 'ท่าทศนิยม', 'สมการที่มีทศนิยมและจำนวนลบ', 'ทศนิยม/ลบ', 'แก้สมการที่มีทศนิยม (คูณ 10 หรือ 100 ทั้งสองข้าง) และสมการที่มีจำนวนลบ จัดการเครื่องหมายลบให้ถูก และตรวจคำตอบ', [
+    T('ตัวอย่างทีละขั้น: <b>ทศนิยม</b>', 'ตัวอย่างทีละขั้น ทศนิยม', el => el.append(rpWalk(`แก้สมการ ${lqE('0.5x + 1.2 = 3.7')}`,
+      [['① คูณ 10 ทั้งสองข้าง', '5x + 12 = 37 (ไม่มีทศนิยมแล้ว)'], ['② ลบ 12 ทั้งสองข้าง', '5x = 25'], ['③ หาร 5', '<b>x = 5</b>'], ['④ ตรวจ', '0.5 × 5 + 1.2 = 3.7 ✓']],
+      'ทศนิยม 1 ตำแหน่ง คูณ 10 · ทศนิยม 2 ตำแหน่ง คูณ 100 — คูณ<b>ทุกพจน์</b>', 'คูณทุกพจน์ด้วยสิบหรือร้อย'))),
+    T('ตัวอย่างทีละขั้น: <b>จำนวนลบ</b>', 'ตัวอย่างทีละขั้น จำนวนลบ', el => el.append(rpWalk(`แก้สมการ ${lqE('−3x + 4 = 19')}`,
+      [['① ลบ 4 ทั้งสองข้าง', '−3x = 15'], ['② หาร −3 ทั้งสองข้าง', '<b>x = −5</b>'], ['③ ตรวจ', '−3 × (−5) + 4 = 15 + 4 = 19 ✓']],
+      'หารด้วยจำนวนลบ เครื่องหมายของคำตอบเปลี่ยน — ตรวจคำตอบทุกครั้ง', 'หารด้วยจำนวนลบ ตรวจคำตอบทุกครั้ง')))
+  ], () => { const a = rpPick([0.2, 0.4, 0.3]), x = rpR(3, 9), b = rpR(3, 8), y = rpR(2, 6), c = rpR(2, 5), z = rpR(2, 7), x7 = rpPick([10, 15, 20]);
+    return [
+      lqSolve(`${a}x = ${rpN(a * x)}`, x, 'คูณ 10 ทั้งสองข้าง', 'd1', 4),
+      lqSolve('1.5x = 4.5', 3, 'คูณ 10 ทั้งสองข้าง หรือหาร 1.5', 'd2', 5),
+      lqSolve(`0.3x + 0.6 = ${rpN(0.3 * y + 0.6)}`, y, 'คูณ 10 ทั้งสองข้าง', 'd3', 8),
+      lqSolve(`−x = ${b + 4}`, -(b + 4), 'หาร −1 ทั้งสองข้าง', 'd4', 4),
+      lqSolve(`${lqN(-c)}x − 6 = ${-c * -z - 6}`, -z, `บวก 6 แล้วหาร ${lqN(-c)}`, 'd5', 9),
+      lqSolve(`${b} − x = ${b + z}`, -z, `ลบ ${b} ทั้งสองข้าง ได้ −x = ${z}`, 'd6', 8),
+      lqSolve(`0.2(x − 5) = ${(x7 - 5) / 5}`, x7, 'คูณ 5 ทั้งสองข้าง หรือแจกแจงก่อน', 'd7', 11),
+      lqSolve(`−2(x + ${c}) = ${2 * z - 2 * c}`.replace(/= -/, '= −'), -z, 'หาร −2 ทั้งสองข้าง', 'd8', 12),
+      lqSolve(`1.2x = 0.8x + ${rpN(0.4 * x)}`, x, 'ลบ 0.8x ทั้งสองข้าง', 'd9', 12),
+      lqSolve(`x − 2.5 = ${lqN(-c)}`, 2.5 - c, 'บวก 2.5 ทั้งสองข้าง', 'd10', 10),
+      rpTF(`x = ${lqN(-z)} เป็นคำตอบของ ${b} − x = ${b + z}`, true, ''),
+      rpTF('จาก −4x = 20 ได้ x = 5', false, '20 ÷ (−4) = −5')]; }),
+  /* ---------- 16 การแปลข้อความเป็นสมการ ---------- */
+  LQ6(16, 'ศาลาแปลภาษา', 'การแปลข้อความเป็นสมการ', 'แปลเป็นสมการ', 'กำหนดตัวแปรจากโจทย์ แปลคำว่า มากกว่า น้อยกว่า ผลรวม ผลต่าง เป็นกี่เท่า ให้เป็นนิพจน์และสมการ และตรวจว่าสมการสมเหตุสมผล', [
+    T('<b>จับคู่ข้อความกับสมการ</b>', 'จับคู่ข้อความกับสมการ', el => el.append(rpSort([
+      { t: 'จำนวนหนึ่งบวกด้วย 7 ได้ 20', bin: 0 }, { t: 'เพิ่มจำนวนหนึ่งอีก 7 ได้ 20', bin: 0 }, { t: 'จำนวนหนึ่งลบด้วย 7 ได้ 20', bin: 1 }, { t: 'นำ 7 ไปหักออกจากจำนวนหนึ่ง ได้ 20', bin: 1 },
+      { t: '7 เท่าของจำนวนหนึ่งเท่ากับ 20', bin: 2 }, { t: 'ผลคูณของ 7 กับจำนวนหนึ่งเป็น 20', bin: 2 }, { t: 'จำนวนหนึ่งหารด้วย 7 ได้ 20', bin: 3 }, { t: 'แบ่งจำนวนหนึ่งเป็น 7 ส่วนเท่ากัน ได้ส่วนละ 20', bin: 3 }].map(c => ({ ...c, why: 'ให้ x แทน "จำนวนหนึ่ง" แล้วอ่านทีละคำ' })),
+      ['x + 7 = 20', 'x − 7 = 20', '7x = 20', 'x/7 = 20'], '<b>แตะข้อความ แล้วแตะสมการที่ตรงกัน</b> — ให้ x แทน "จำนวนหนึ่ง"'))),
+    T('<b>คำสำคัญ</b> — แตะการ์ดทีละใบ', 'คำสำคัญ แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['มากกว่า x อยู่ 4', '<b>x + 4</b><small>"น้อยกว่า x อยู่ 4" = x − 4</small>'], ['ผลรวม / ผลต่าง', '<b>x + y · x − y</b><small>ผลต่างให้เอาจำนวนมากลบจำนวนน้อย</small>'],
+      ['เป็น 3 เท่า', '<b>3x</b><small>"สามเท่าของผลบวกของ x กับ 2" = 3(x + 2)</small>'], ['ครึ่งหนึ่ง', `<b>${fqHTML('x', 2)}</b><small>"หนึ่งในสาม" = ${fqHTML('x', 3)}</small>`]])))
+  ], () => { const a = rpR(5, 12), b = rpR(14, 30), k = rpPick([2, 3, 4]), c = rpR(3, 8), d = rpR(10, 30), p = rpPick([12, 15, 18]);
+    return [
+      Q.rpOpt({ q: `"จำนวนหนึ่งบวก ${a} ได้ ${b}" เขียนเป็นสมการได้ตามข้อใด`, opts: [`x + ${a} = ${b}`, `${a}x = ${b}`, `x = ${a} + ${b}`], right: `x + ${a} = ${b}`, hint: 'ให้ x แทนจำนวนหนึ่ง', sig: 't1', diff: 3 }),
+      Q.rpNum({ q: `"จำนวนหนึ่งบวก ${a} ได้ ${b}" จำนวนนั้นคือจำนวนใด`, a: b - a, hint: `x + ${a} = ${b}`, sig: 't2', diff: 4 }),
+      Q.rpOpt({ q: `"${k} เท่าของจำนวนหนึ่ง ลบด้วย ${c} ได้ ${d}" เขียนเป็นสมการได้ตามข้อใด`, opts: [`${k}x − ${c} = ${d}`, `${k}(x − ${c}) = ${d}`, `${c} − ${k}x = ${d}`], right: `${k}x − ${c} = ${d}`, hint: `คูณ ${k} ก่อน แล้วลบ ${c}`, sig: 't3', diff: 6 }),
+      Q.rpOpt({ q: `"${k} เท่าของผลบวกของจำนวนหนึ่งกับ ${c} เท่ากับ ${d}" เขียนเป็นสมการได้ตามข้อใด`, opts: [`${k}(x + ${c}) = ${d}`, `${k}x + ${c} = ${d}`, `x + ${k * c} = ${d}`], right: `${k}(x + ${c}) = ${d}`, hint: 'หาผลบวกก่อน จึงต้องมีวงเล็บ', sig: 't4', diff: 8 }),
+      Q.rpOpt({ q: `"จำนวนหนึ่งหารด้วย ${k} แล้วบวก ${c} ได้ ${d}" เขียนเป็นสมการได้ตามข้อใด`, opts: [`x/${k} + ${c} = ${d}`, `(x + ${c})/${k} = ${d}`, `${k}x + ${c} = ${d}`], right: `x/${k} + ${c} = ${d}`, hint: 'หารก่อน แล้วบวก', sig: 't5', diff: 8 }),
+      Q.rpOpt({ q: `"น้อยกว่าสองเท่าของจำนวนหนึ่งอยู่ ${c} คือ ${d}" เขียนเป็นสมการได้ตามข้อใด`, opts: [`2x − ${c} = ${d}`, `${c} − 2x = ${d}`, `2(x − ${c}) = ${d}`], right: `2x − ${c} = ${d}`, hint: 'เริ่มจากสองเท่าของจำนวนนั้น แล้วลดลง', sig: 't6', diff: 10 }),
+      Q.rpOpt({ q: `"ครึ่งหนึ่งของจำนวนหนึ่งเท่ากับ ${a}" เขียนเป็นสมการได้ตามข้อใด`, opts: [`x/2 = ${a}`, `2x = ${a}`, `x − 2 = ${a}`], right: `x/2 = ${a}`, hint: 'ครึ่งหนึ่ง = หาร 2', sig: 't7', diff: 5 }),
+      Q.rpOpt({ story: `ซื้อสมุด x เล่ม เล่มละ ${p} บาท จ่ายธนบัตร 100 บาท ได้เงินทอน ${100 - 4 * p} บาท`, q: 'เขียนเป็นสมการได้ตามข้อใด', opts: [`100 − ${p}x = ${100 - 4 * p}`, `${p}x − 100 = ${100 - 4 * p}`, `${p} + x = ${100 - 4 * p}`], right: `100 − ${p}x = ${100 - 4 * p}`, hint: 'เงินทอน = เงินที่จ่าย − ราคาสมุด', sig: 't8', diff: 11 }),
+      Q.rpOpt({ story: 'พี่มีลูกแก้วมากกว่าน้อง 6 ลูก รวมกันมี 30 ลูก', q: 'ถ้าให้น้องมีลูกแก้ว x ลูก เขียนสมการได้ตามข้อใด', opts: ['x + (x + 6) = 30', 'x + 6 = 30', '6x = 30'], right: 'x + (x + 6) = 30', hint: 'พี่มี x + 6 ลูก', sig: 't9', diff: 12 }),
+      rpTF(`"น้อยกว่า x อยู่ ${c}" เขียนเป็น ${c} − x`, false, `น้อยกว่า x อยู่ ${c} คือ x − ${c}`),
+      rpTF(`"x เพิ่มขึ้นเป็น ${k} เท่า" เขียนเป็น ${k}x`, true, ''),
+      Q.rpOpt({ story: 'โจทย์: "ห้องเรียนมีนักเรียน x คน แบ่งเป็นกลุ่มละ 4 คน ได้ 7 กลุ่มพอดี"', q: 'สมการใด<b>สมเหตุสมผล</b>', opts: ['x/4 = 7', 'x + 4 = 7', '4x = 7'], right: 'x/4 = 7', hint: 'จำนวนคนทั้งหมดแบ่งเป็นกลุ่ม', sig: 't10', diff: 9 })]; }),
+  /* ---------- 17 โจทย์ปัญหาเกี่ยวกับจำนวน ---------- */
+  LQ6(17, 'เกาะจำนวน', 'โจทย์ปัญหาเกี่ยวกับจำนวน', 'โจทย์จำนวน', 'สร้างสมการจากโจทย์ผลบวก ผลต่าง จำนวนที่สัมพันธ์กัน จำนวนคู่ จำนวนคี่ และจำนวนเรียงกัน แล้วแก้และตรวจคำตอบ', [
+    T('<b>จำนวนเรียงกัน</b> — ลากหาจำนวนแรก', 'ลากหาจำนวนแรกของจำนวนเรียงกัน', el => el.append(lqSimConsec([48, 66, 33]))),
+    T('ตัวอย่างทีละขั้น: <b>4 ขั้นของโจทย์ปัญหา</b>', 'ตัวอย่างทีละขั้น สี่ขั้นของโจทย์ปัญหา', el => el.append(rpWalk('จำนวนสองจำนวนรวมกันได้ <b>50</b> จำนวนหนึ่งมากกว่าอีกจำนวน <b>8</b> จงหาจำนวนทั้งสอง',
+      [['① อ่าน', 'รู้ผลรวม 50 และผลต่าง 8'], ['② กำหนดตัวแปร', 'ให้จำนวนน้อยเป็น x → จำนวนมากเป็น x + 8'], ['③ สร้างและแก้สมการ', 'x + (x + 8) = 50 → 2x = 42 → x = 21'], ['④ ตรวจกับโจทย์', '21 กับ 29 · 21 + 29 = 50 ✓ · 29 − 21 = 8 ✓']],
+      'ตอบให้ครบตามที่โจทย์ถาม — โจทย์นี้ถามทั้งสองจำนวน', 'ตอบให้ครบตามที่โจทย์ถาม')))
+  ], () => { const s = rpPick([40, 56, 64]), df = rpPick([6, 10, 12]), m = rpR(6, 12), t = rpPick([45, 60, 75]), ev = rpPick([42, 54, 66]), od = rpPick([39, 51, 63]), q = rpR(5, 9), r = rpR(3, 6);
+    return [
+      Q.rpNum({ story: `จำนวนสองจำนวนรวมกันได้ ${s} จำนวนหนึ่งมากกว่าอีกจำนวน ${df}`, q: '<b>จำนวนที่น้อยกว่า</b>คือจำนวนใด', a: (s - df) / 2, hint: `x + (x + ${df}) = ${s}`, sig: 'u1', diff: 7 }),
+      Q.rpNum({ story: `สามเท่าของจำนวนหนึ่งมากกว่าจำนวนนั้นอยู่ ${2 * m}`, q: 'จำนวนนั้นคือจำนวนใด', a: m, hint: `3x − x = ${2 * m}`, sig: 'u2', diff: 8 }),
+      Q.rpNum({ story: `จำนวนสองจำนวนรวมกันได้ ${t} จำนวนหนึ่งเป็น 2 เท่าของอีกจำนวน`, q: '<b>จำนวนที่มากกว่า</b>คือจำนวนใด', a: t / 3 * 2, hint: 'x + 2x = ' + t, sig: 'u3', diff: 8 }),
+      Q.rpNum({ story: `จำนวนนับสามจำนวนเรียงกันรวมกันได้ ${3 * m + 3 + 30}`, q: 'จำนวนที่<b>น้อยที่สุด</b>คือจำนวนใด', a: m + 10, hint: 'n + (n + 1) + (n + 2)', sig: 'u4', diff: 9 }),
+      Q.rpNum({ story: `จำนวนคู่สามจำนวนเรียงกันรวมกันได้ ${ev}`, q: 'จำนวนที่<b>น้อยที่สุด</b>คือจำนวนใด', a: ev / 3 - 2, hint: 'จำนวนคู่เรียงกันห่างกันทีละ 2: n, n + 2, n + 4', sig: 'u5', diff: 11 }),
+      Q.rpNum({ story: `จำนวนคี่สามจำนวนเรียงกันรวมกันได้ ${od}`, q: 'จำนวนที่<b>มากที่สุด</b>คือจำนวนใด', a: od / 3 + 2, hint: 'จำนวนคี่เรียงกันห่างกันทีละ 2', sig: 'u6', diff: 12 }),
+      Q.rpNum({ story: `จำนวนหนึ่งหารด้วย 3 แล้วลบด้วย ${r} ได้ ${q}`, q: 'จำนวนนั้นคือจำนวนใด', a: 3 * (q + r), hint: `x/3 − ${r} = ${q}`, sig: 'u7', diff: 7 }),
+      Q.rpNum({ story: `เมื่อนำ ${r} ไปบวกกับสองเท่าของจำนวนหนึ่ง จะได้ ${2 * q + r}`, q: 'จำนวนนั้นคือจำนวนใด', a: q, hint: `2x + ${r} = ${2 * q + r}`, sig: 'u8', diff: 5 }),
+      Q.rpOpt({ story: 'จำนวนเต็มสองจำนวนเรียงกัน รวมกันได้ 37', q: 'ถ้าให้จำนวนแรกเป็น n เขียนสมการได้ตามข้อใด', opts: ['n + (n + 1) = 37', 'n + n = 37', '2n + 2 = 37'], right: 'n + (n + 1) = 37', hint: 'จำนวนถัดไปมากกว่า 1', sig: 'u9', diff: 6 }),
+      rpTF('ผลบวกของจำนวนคู่สองจำนวนที่เรียงกัน เป็นจำนวนคี่ได้', false, 'n + (n + 2) = 2n + 2 เป็นจำนวนคู่เสมอ'),
+      rpTF('จำนวนนับสามจำนวนเรียงกันรวมกันได้ 30 คือ 9, 10, 11', true, ''),
+      Q.rpNum({ story: `จำนวนสองจำนวนต่างกัน ${df} ถ้านำจำนวนมากบวกสองเท่าของจำนวนน้อยจะได้ ${3 * m + df}`, q: 'จำนวนน้อยคือจำนวนใด', a: m, hint: `(x + ${df}) + 2x = ${3 * m + df}`, sig: 'u10', diff: 14 })]; }),
+  /* ---------- 18 อายุและเงิน ---------- */
+  LQ6(18, 'ตลาดอายุ', 'โจทย์ปัญหาเกี่ยวกับอายุและเงิน', 'อายุ/เงิน', 'สร้างสมการจากโจทย์อายุในอดีตและอนาคต ความสัมพันธ์ของอายุ การซื้อสินค้า และการแบ่งเงิน แล้วตรวจคำตอบกับโจทย์', [
+    T('<b>เส้นเวลาของอายุ</b> — ลากไปอดีตและอนาคต', 'ลากเส้นเวลาของอายุ ไปอดีตและอนาคต', el => el.append(lqSimAge(40, 10))),
+    T('ตัวอย่างทีละขั้น: <b>ซื้อของ</b>', 'ตัวอย่างทีละขั้น ซื้อของ', el => el.append(rpWalk('ซื้อสมุด <b>3 เล่ม</b> กับปากกา <b>2 ด้าม</b> ด้ามละ 15 บาท จ่ายทั้งหมด <b>96 บาท</b> สมุดเล่มละกี่บาท',
+      [['① กำหนดตัวแปร', 'ให้สมุดราคาเล่มละ x บาท'], ['② สร้างสมการ', '3x + 2 × 15 = 96 → 3x + 30 = 96'], ['③ แก้สมการ', '3x = 66 → <b>x = 22</b>'], ['④ ตรวจ', '3 × 22 + 30 = 96 ✓']],
+      'โจทย์อายุ: ผ่านไปกี่ปี ทุกคนอายุเพิ่มเท่ากัน · โจทย์เงิน: ราคารวม = ราคาต่อชิ้น × จำนวน', 'ผ่านไปกี่ปี ทุกคนอายุเพิ่มเท่ากัน')))
+  ], () => { const c = rpPick([8, 10, 12]), g = rpPick([4, 5, 6]), sm = rpPick([26, 30, 34]), dd = rpPick([2, 4, 6]), ch = rpPick([12, 14, 16]), n5 = rpPick([[20, 150, 10], [24, 170, 10], [18, 130, 8]]), dv = rpPick([[500, 80, 210], [600, 100, 250], [450, 50, 200]]), tx = rpPick([[35, 6, 95, 10], [40, 5, 90, 10], [35, 7, 105, 10]]);
+    return [
+      Q.rpNum({ story: `อายุพี่กับน้องรวมกัน ${sm} ปี พี่อายุมากกว่าน้อง ${dd} ปี`, q: 'น้องอายุกี่ปี', a: (sm - dd) / 2, unit: 'ปี', hint: `x + (x + ${dd}) = ${sm}`, sig: 'g1', diff: 5 }),
+      Q.rpNum({ story: `ปัจจุบันลูกอายุ ${c} ปี อีก ${g} ปี พ่อจะอายุเป็น 3 เท่าของลูก`, q: 'ปัจจุบันพ่ออายุกี่ปี', a: 3 * (c + g) - g, unit: 'ปี', hint: `อีก ${g} ปีลูกอายุ ${c + g} ปี`, sig: 'g2', diff: 8 }),
+      Q.rpNum({ story: `5 ปีที่แล้ว แม่อายุเป็น 4 เท่าของลูก ปัจจุบันลูกอายุ ${ch} ปี`, q: 'ปัจจุบันแม่อายุกี่ปี', a: (ch - 5) * 4 + 5, unit: 'ปี', hint: `5 ปีที่แล้วลูกอายุ ${ch - 5} ปี`, sig: 'g3', diff: 9 }),
+      Q.rpNum({ story: 'พ่ออายุมากกว่าลูก 28 ปี อีก 4 ปี พ่อจะอายุเป็น 3 เท่าของลูก', q: 'ปัจจุบันลูกอายุกี่ปี', a: 10, unit: 'ปี', hint: 'ให้ลูกอายุ x ปี: x + 28 + 4 = 3(x + 4)', sig: 'g4', diff: 13 }),
+      Q.rpNum({ story: `ซื้อสมุด 4 เล่ม กับปากกา 2 ด้าม ด้ามละ 12 บาท จ่ายทั้งหมด ${4 * (c + 8) + 24} บาท`, q: 'สมุดเล่มละกี่บาท', a: c + 8, unit: 'บาท', hint: `4x + 24 = ${4 * (c + 8) + 24}`, sig: 'g5', diff: 6 }),
+      Q.rpNum({ story: `ค่าแท็กซี่เริ่มต้น ${tx[0]} บาท และคิดเพิ่มกิโลเมตรละ ${tx[1]} บาท จ่ายทั้งหมด ${tx[2]} บาท`, q: 'นั่งไปกี่กิโลเมตร', a: tx[3], unit: 'กม.', hint: `${tx[0]} + ${tx[1]}x = ${tx[2]}`, sig: 'g6', diff: 7 }),
+      Q.rpNum({ story: `แบ่งเงิน ${dv[0]} บาท ให้พี่ได้มากกว่าน้อง ${dv[1]} บาท`, q: 'น้องได้เงินกี่บาท', a: dv[2], unit: 'บาท', hint: `x + (x + ${dv[1]}) = ${dv[0]}`, sig: 'g7', diff: 8 }),
+      Q.rpNum({ story: `มีเหรียญ 5 บาทและ 10 บาท รวม ${n5[0]} เหรียญ คิดเป็นเงิน ${n5[1]} บาท`, q: 'มีเหรียญ 10 บาทกี่เหรียญ', a: n5[1] / 5 - n5[0], unit: 'เหรียญ', hint: `5(${n5[0]} − y) + 10y = ${n5[1]}`, sig: 'g8', diff: 14 }),
+      Q.rpNum({ story: 'บัตรผู้ใหญ่ใบละ 120 บาท บัตรเด็กใบละ 70 บาท ซื้อบัตร 5 ใบ จ่าย 450 บาท', q: 'ซื้อบัตรผู้ใหญ่กี่ใบ', a: 2, unit: 'ใบ', hint: '120a + 70(5 − a) = 450', sig: 'g9', diff: 13 }),
+      Q.rpOpt({ story: `ปัจจุบันลูกอายุ x ปี พ่ออายุ ${3 * c + 4} ปี อีก 6 ปีพ่อจะอายุเป็น 3 เท่าของลูก`, q: 'เขียนสมการได้ตามข้อใด', opts: [`${3 * c + 10} = 3(x + 6)`, `${3 * c + 4} = 3x + 6`, `${3 * c + 10} = 3x + 6`], right: `${3 * c + 10} = 3(x + 6)`, hint: 'อีก 6 ปี ทั้งพ่อและลูกอายุเพิ่ม 6', sig: 'g10', diff: 10 }),
+      rpTF('ผ่านไป 5 ปี ผลต่างของอายุพ่อกับลูกยังเท่าเดิม', true, ''),
+      rpTF('ถ้าตอนนี้พ่ออายุเป็น 3 เท่าของลูก อีก 10 ปีพ่อก็ยังอายุเป็น 3 เท่าของลูก', false, 'อายุเพิ่มเท่ากันทั้งคู่ จำนวนเท่าจึงลดลง')]; }),
+  /* ---------- 19 การวัดและสถานการณ์จริง ---------- */
+  LQ6(19, 'ทุ่งวัดระยะ', 'โจทย์ปัญหาเกี่ยวกับการวัดและสถานการณ์จริง', 'การวัด', 'สร้างสมการจากความยาว ความยาวรอบรูป มุม ระยะทางและเวลา จำนวนสิ่งของ และแก้โจทย์หลายขั้นตอน', [
+    T('<b>สี่เหลี่ยมผืนผ้า</b> — ลากความกว้าง', 'ลากความกว้างของสี่เหลี่ยมผืนผ้า', el => el.append(lqSimRect(4, [20, 28, 40]))),
+    T('ตัวอย่างทีละขั้น: <b>ระยะทาง</b>', 'ตัวอย่างทีละขั้น ระยะทาง', el => el.append(rpWalk('ปั่นจักรยานด้วยอัตราเร็ว x กิโลเมตรต่อชั่วโมง นาน <b>3 ชั่วโมง</b> แล้วเดินต่ออีก <b>4 กิโลเมตร</b> รวมระยะทาง <b>31 กิโลเมตร</b>',
+      [['① ระยะทางที่ปั่น', 'อัตราเร็ว × เวลา = 3x'], ['② สร้างสมการ', '3x + 4 = 31'], ['③ แก้สมการ', '3x = 27 → <b>x = 9</b>'], ['④ ตรวจ', '3 × 9 + 4 = 31 ✓ อัตราเร็ว 9 กม./ชม. สมเหตุสมผลสำหรับจักรยาน']],
+      'ตรวจว่าคำตอบสมเหตุสมผลกับสถานการณ์จริงด้วย', 'ตรวจว่าคำตอบสมเหตุสมผล')))
+  ], () => { const d = rpPick([3, 5, 6]), w = rpR(5, 9), m = rpPick([2, 3]), wm = rpR(4, 8), base = rpPick([8, 10, 12]), leg = rpR(9, 15), cut = rpPick([[300, 40, 130], [250, 30, 110], [200, 20, 90]]), sp = rpPick([[360, 50, 70, 3], [420, 60, 80, 3], [300, 45, 55, 3]]), tk = rpPick([[20, 3, 50, 10], [15, 4, 55, 10], [30, 5, 80, 10]]), sq = rpPick([48, 64, 72]);
+    return [
+      Q.rpNum({ story: `สี่เหลี่ยมผืนผ้ายาวมากกว่ากว้าง ${d} เซนติเมตร ความยาวรอบรูป ${2 * (2 * w + d)} เซนติเมตร`, q: 'ความกว้างกี่เซนติเมตร', a: w, unit: 'ซม.', hint: `2(x + x + ${d}) = ${2 * (2 * w + d)}`, sig: 'y1', diff: 6 }),
+      Q.rpNum({ story: `สี่เหลี่ยมผืนผ้ายาวเป็น ${m} เท่าของความกว้าง ความยาวรอบรูป ${2 * (m + 1) * wm} เซนติเมตร`, q: 'ความยาวกี่เซนติเมตร', a: m * wm, unit: 'ซม.', hint: `2(x + ${m}x) = ${2 * (m + 1) * wm}`, sig: 'y2', diff: 8 }),
+      Q.rpNum({ story: `รูปสี่เหลี่ยมจัตุรัสมีความยาวรอบรูป ${sq} เมตร`, q: 'ยาวด้านละกี่เมตร', a: sq / 4, unit: 'ม.', hint: `4x = ${sq}`, sig: 'y3', diff: 3 }),
+      Q.rpNum({ story: `สามเหลี่ยมหน้าจั่วมีฐานยาว ${base} เซนติเมตร ความยาวรอบรูป ${base + 2 * leg} เซนติเมตร`, q: 'ด้านที่ยาวเท่ากันยาวด้านละกี่เซนติเมตร', a: leg, unit: 'ซม.', hint: `${base} + 2x = ${base + 2 * leg}`, sig: 'y4', diff: 7 }),
+      Q.rpNum({ story: 'สามเหลี่ยมรูปหนึ่งมีขนาดของมุมเป็น x, 2x และ 3x องศา', q: 'มุมที่เล็กที่สุดมีขนาดกี่องศา', a: 30, unit: 'องศา', hint: 'มุมภายในของสามเหลี่ยมรวมกัน 180°', sig: 'y5', diff: 9 }),
+      Q.rpNum({ story: `ตัดไม้ยาว ${cut[0] / 100} เมตร เป็นสองท่อน ท่อนหนึ่งยาวกว่าอีกท่อน ${cut[1]} เซนติเมตร`, q: 'ท่อนที่สั้นกว่ายาวกี่เซนติเมตร', a: cut[2], unit: 'ซม.', hint: `เปลี่ยนเป็นเซนติเมตร: x + (x + ${cut[1]}) = ${cut[0]}`, sig: 'y6', diff: 11 }),
+      Q.rpNum({ story: `เมืองสองเมืองห่างกัน ${sp[0]} กิโลเมตร รถสองคันออกจากสองเมืองพร้อมกัน วิ่งเข้าหากันด้วยอัตราเร็ว ${sp[1]} และ ${sp[2]} กิโลเมตรต่อชั่วโมง`, q: 'อีกกี่ชั่วโมงรถจะพบกัน', a: sp[3], unit: 'ชั่วโมง', hint: `${sp[1]}t + ${sp[2]}t = ${sp[0]}`, sig: 'y7', diff: 12 }),
+      Q.rpNum({ story: `ถังมีน้ำ ${tk[0]} ลิตร เปิดน้ำเติมนาทีละ ${tk[1]} ลิตร`, q: `อีกกี่นาทีจะมีน้ำ ${tk[2]} ลิตร`, a: tk[3], unit: 'นาที', hint: `${tk[0]} + ${tk[1]}x = ${tk[2]}`, sig: 'y8', diff: 5 }),
+      Q.rpNum({ story: 'เดิน 2 ชั่วโมง แล้วปั่นจักรยานต่ออีก 3 ชั่วโมง ปั่นเร็วกว่าเดิน 8 กิโลเมตรต่อชั่วโมง ไปได้ทั้งหมด 44 กิโลเมตร', q: 'เดินด้วยอัตราเร็วกี่กิโลเมตรต่อชั่วโมง', a: 4, unit: 'กม./ชม.', hint: '2v + 3(v + 8) = 44', sig: 'y9', diff: 14 }),
+      Q.rpOpt({ story: `สี่เหลี่ยมผืนผ้ากว้าง x เซนติเมตร ยาวมากกว่ากว้าง ${d} เซนติเมตร ความยาวรอบรูป 50 เซนติเมตร`, q: 'เขียนสมการได้ตามข้อใด', opts: [`2(x + x + ${d}) = 50`, `x + x + ${d} = 50`, `x(x + ${d}) = 50`], right: `2(x + x + ${d}) = 50`, hint: 'ความยาวรอบรูป = 2 × (กว้าง + ยาว)', sig: 'y10', diff: 8 }),
+      rpTF('ถ้าแก้สมการแล้วได้ความกว้างเป็นจำนวนลบ คำตอบนั้นใช้ได้', false, 'ความยาวเป็นจำนวนลบไม่ได้ ต้องตรวจสมการใหม่'),
+      Q.rpNum({ story: 'ห้องประชุมจัดเก้าอี้แถวละ 12 ตัว ได้ x แถว และมีเก้าอี้เหลืออีก 7 ตัว รวมเก้าอี้ 151 ตัว', q: 'จัดได้กี่แถว', a: 12, unit: 'แถว', hint: '12x + 7 = 151', sig: 'y11', diff: 7 })]; }),
+  /* ---------- 20 ด่านสุดท้าย ---------- */
+  LQ6(20, 'ปากแม่น้ำสมการ', 'รวมโจทย์สมการ', 'รวมพลัง', 'วิเคราะห์ข้อความ กำหนดตัวแปร สร้างสมการจากสถานการณ์ เลือกวิธีแก้ที่เหมาะสม แก้สมการหลายขั้นตอน และตรวจคำตอบกับเงื่อนไขของโจทย์', [
+    T('ตัวอย่างทีละขั้น: <b>โจทย์ที่ไม่บอกวิธี</b>', 'ตัวอย่างทีละขั้น โจทย์ที่ไม่บอกวิธี', el => el.append(rpWalk('ร้านขายไข่ไก่แผงละ 30 ฟอง ขายไปแล้ว 4 แผงกับอีก 18 ฟอง เหลือไข่ 72 ฟอง เดิมมีไข่กี่แผง',
+      [['① อ่าน', 'ถามจำนวนแผงเดิม · รู้ว่าขายไป 4 แผง + 18 ฟอง และเหลือ 72 ฟอง'], ['② กำหนดตัวแปร', 'ให้เดิมมีไข่ x แผง = 30x ฟอง'], ['③ สร้างและแก้สมการ', '30x − (4 × 30 + 18) = 72 → 30x − 138 = 72 → 30x = 210 → x = 7'], ['④ ตรวจกับเงื่อนไข', '7 แผง = 210 ฟอง · 210 − 138 = 72 ✓ · จำนวนแผงเป็นจำนวนนับ ✓']],
+      'คำตอบต้องสมเหตุสมผล: จำนวนคน สิ่งของ แผง ต้องเป็นจำนวนนับ ความยาวต้องเป็นบวก', 'คำตอบต้องสมเหตุสมผลกับโจทย์'))),
+    T('<b>4 ขั้นของโจทย์ปัญหา</b> — แตะการ์ดทีละใบ', 'สี่ขั้นของโจทย์ปัญหา แตะการ์ดทีละใบ', el => el.append(miCards([
+      ['① อ่านและวิเคราะห์', '<b>โจทย์ให้อะไร ถามอะไร</b><small>ขีดเส้นใต้ตัวเลขและคำสำคัญ</small>'], ['② กำหนดตัวแปร', '<b>ให้ x แทนสิ่งที่ไม่รู้</b><small>เขียนสิ่งอื่นเป็นนิพจน์ของ x</small>'],
+      ['③ สร้างและแก้สมการ', '<b>หาสองสิ่งที่เท่ากัน</b><small>เขียนเป็นสมการ แล้วแก้ทีละขั้น</small>'], ['④ ตรวจคำตอบ', '<b>แทนกลับในโจทย์ ไม่ใช่แค่ในสมการ</b><small>และดูว่าสมเหตุสมผลไหม</small>']])))
+  ], () => { const x = rpR(3, 9), a = rpR(2, 5), b = rpR(3, 9), w = rpR(4, 8), s = rpPick([60, 72, 84]);
+    return [
+      lqSolve(`${a}x + ${b} = ${a * x + b}`, x, `ลบ ${b} แล้วหาร ${a}`, 'z1', 4),
+      lqSolve(`${a + 2}x − ${b} = 2x + ${a * x - b}`, x, 'รวม x ไว้ข้างเดียว', 'z2', 7),
+      lqSolve(`${a}(x − ${b}) = ${a * (x + 1 - b)}`.replace(/= -/, '= −'), x + 1, `หาร ${a} ทั้งสองข้างก่อน`, 'z3', 7),
+      lqSolve(`${fqHTML('x', 2)} + ${fqHTML('x', 5)} = ${7 * a}`, 10 * a, 'คูณ 10 ทั้งสองข้าง', 'z4', 10),
+      Q.rpNum({ story: `จำนวนนับสามจำนวนเรียงกันรวมกันได้ ${s}`, q: 'จำนวนที่มากที่สุดคือจำนวนใด', a: s / 3 + 1, hint: 'n + (n + 1) + (n + 2)', sig: 'z5', diff: 9 }),
+      Q.rpNum({ story: `ร้านขายไข่ไก่แผงละ 30 ฟอง ขายไปแล้ว 3 แผงกับอีก 12 ฟอง เหลือไข่ ${30 * w - 102} ฟอง`, q: 'เดิมมีไข่กี่แผง', a: w, unit: 'แผง', hint: '30x − (3 × 30 + 12) = ' + (30 * w - 102), sig: 'z6', diff: 13 }),
+      Q.rpNum({ story: `สี่เหลี่ยมผืนผ้ายาวเป็น 2 เท่าของความกว้าง ถ้าเพิ่มความกว้าง 3 ซม. ความยาวรอบรูปจะเป็น ${6 * w + 6} ซม.`, q: 'ความกว้างเดิมกี่เซนติเมตร', a: w, unit: 'ซม.', hint: `2((x + 3) + 2x) = ${6 * w + 6}`, sig: 'z7', diff: 15 }),
+      Q.rpNum({ story: `ปัจจุบันพี่อายุ ${2 * w + 4} ปี น้องอายุ ${w + 4} ปี`, q: 'กี่ปีที่แล้ว พี่อายุเป็น 2 เท่าของน้อง', a: 4, unit: 'ปี', hint: `${2 * w + 4} − t = 2(${w + 4} − t)`, sig: 'z8', diff: 14 }),
+      Q.rpOpt({ story: 'โจทย์: "แบ่งนักเรียนเป็นกลุ่มละ 6 คน ได้ x กลุ่ม เหลือ 4 คน มีนักเรียน 40 คน"', q: 'คำตอบ x ข้อใดเป็นไปได้', opts: ['x = 6', 'x = 6.5', 'x = −6'], right: 'x = 6', hint: 'จำนวนกลุ่มต้องเป็นจำนวนนับ และ 6x + 4 = 40', sig: 'z9', diff: 8 }),
+      Q.rpOpt({ q: `แก้สมการ ${lqE(`${fqHTML(`x + ${b}`, 3)} = ${a}`)} วิธีใดเหมาะที่สุดเป็นขั้นแรก`, opts: ['คูณ 3 ทั้งสองข้าง', `ลบ ${b} ทั้งสองข้าง`, 'หาร 3 ทั้งสองข้าง'], right: 'คูณ 3 ทั้งสองข้าง', hint: 'กำจัดตัวส่วนก่อน', sig: 'z10', diff: 6 }),
+      rpTF('ตรวจคำตอบควรแทนค่ากลับในโจทย์ ไม่ใช่แค่ในสมการที่เราเขียน', true, ''),
+      Q.rpNum({ story: `แก้วมีเงินมากกว่ากล้า ${10 * b} บาท ทั้งสองคนมีเงินรวมกัน ${200 + 10 * b} บาท`, q: 'แก้วมีเงินกี่บาท', a: 100 + 10 * b, unit: 'บาท', hint: `x + (x − ${10 * b}) = ${200 + 10 * b}`, sig: 'z11', diff: 9 })]; })
+);
+
+/* ---------- บอส: 20 ข้อ (แต่งใหม่ทั้งหมด) · lv = id ด่าน ---------- */
+const EXAM_M1C6 = xrot([
+  { q: '(−8) + 3 × (−2) มีค่าเท่าใด', opts: ['−14', '10', '−2', '14'], a: 0, lv: 2601 },
+  { q: 'สมบัติใดทำให้ 6 × 47 + 6 × 53 = 6 × (47 + 53)', opts: ['การแจกแจง', 'การสลับที่ของการคูณ', 'การเปลี่ยนหมู่ของการบวก', 'เอกลักษณ์การคูณ'], a: 0, lv: 2602 },
+  { q: 'ค่าของ 4m − 7 เมื่อ m = −3 คือข้อใด', opts: ['−19', '5', '−5', '19'], a: 0, lv: 2603 },
+  { q: 'สัมประสิทธิ์ของ y ในนิพจน์ 8 − 5y คือข้อใด', opts: ['−5', '5', '8', '3'], a: 0, lv: 2604 },
+  { q: '6k − 2(k − 5) จัดรูปได้ตามข้อใด', opts: ['4k + 10', '4k − 10', '4k − 5', '8k + 10'], a: 0, lv: 2605 },
+  { q: 'ประโยคใดเป็นสมการที่เป็นจริง', opts: ['9 × 4 − 6 = 30', '9 × 4 − 6 = 18', '9 + 4 = 4 × 4', '20 ÷ 4 = 4'], a: 0, lv: 2606 },
+  { q: 'จำนวนใดเป็นคำตอบของสมการ 3 − 2p = 11', opts: ['−4', '4', '7', '−7'], a: 0, lv: 2607 },
+  { q: 'ถ้า m = n แล้วข้อใดถูกต้องเสมอ', opts: ['m − 9 = n − 9', 'm − 9 = n + 9', '9m = n', 'm + 9 = 9n'], a: 0, lv: 2608 },
+  { q: 'คำตอบของสมการ k − 14 = −6 คือข้อใด', opts: ['8', '−20', '20', '−8'], a: 0, lv: 2609 },
+  { q: 'คำตอบของสมการ −7k = 56 คือข้อใด', opts: ['−8', '8', '63', '49'], a: 0, lv: 2610 },
+  { q: 'คำตอบของสมการ 4p − 9 = 23 คือข้อใด', opts: ['8', '3.5', '14', '6'], a: 0, lv: 2611 },
+  { q: 'คำตอบของสมการ 7m + 3 = 4m + 18 คือข้อใด', opts: ['5', '7', '3', '1.5'], a: 0, lv: 2612 },
+  { q: 'คำตอบของสมการ 5(n − 3) = 2(n + 6) คือข้อใด', opts: ['9', '3', '1', '27'], a: 0, lv: 2613 },
+  { q: 'คำตอบของสมการ k/3 + k/4 = 14 คือข้อใด', opts: ['24', '12', '2', '98'], a: 0, lv: 2614 },
+  { q: 'คำตอบของสมการ 0.4m − 1.5 = 0.9 คือข้อใด', opts: ['6', '0.6', '−1.5', '9.6'], a: 0, lv: 2615 },
+  { q: '"สองเท่าของผลต่างของจำนวนหนึ่งกับ 4 เท่ากับ 18" เขียนเป็นสมการได้ตามข้อใด', opts: ['2(n − 4) = 18', '2n − 4 = 18', 'n − 8 = 18', '2(4 − n) = 18'], a: 0, lv: 2616 },
+  { q: 'จำนวนคี่สามจำนวนเรียงกันรวมกันได้ 57 จำนวนที่น้อยที่สุดคือข้อใด', opts: ['17', '19', '18', '21'], a: 0, lv: 2617 },
+  { q: 'ปัจจุบันน้าอายุ 35 ปี หลานอายุ 9 ปี อีกกี่ปีน้าจะอายุเป็น 2 เท่าของหลาน', opts: ['17 ปี', '13 ปี', '8 ปี', '26 ปี'], a: 0, lv: 2618 },
+  { q: 'ลวดยาว 66 เซนติเมตร ดัดเป็นรูปสี่เหลี่ยมผืนผ้าที่ยาวกว่ากว้าง 7 เซนติเมตร ความกว้างเท่าใด', opts: ['13 ซม.', '20 ซม.', '29.5 ซม.', '16.5 ซม.'], a: 0, lv: 2619 },
+  { q: 'ร้านขายผลไม้ ขายส้มไปครึ่งหนึ่ง แล้วขายเพิ่มอีก 15 ผล เหลือส้ม 25 ผล เดิมมีส้มกี่ผล', opts: ['80 ผล', '20 ผล', '40 ผล', '65 ผล'], a: 0, lv: 2620 }
+], 2);
+LESSONS_M1C6.push({ id: 2621, boss: true, place: 'วังจระเข้สมการ', title: 'ด่านบอส: ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว', short: 'ด่านบอส · ข้อสอบ', tone: 'lilac',
+  goal: 'ตอบคำถามเรื่องสมการเชิงเส้นตัวแปรเดียว 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะจระเข้สมการ',
+  exam: EXAM_M1C6, pass: 16, bossName: 'จระเข้สมการ', bossPal: 'lilac', emblem: 'x', bossKind: 'croc',
+  winLine: 'ชนะจระเข้สมการแล้ว! รักษาสมดุลและแก้สมการได้คล่องมาก', loseLine: 'จระเข้สมการยังเฝ้าวังน้ำอยู่ ลองทวนการแก้สมการและโจทย์ปัญหาอีกนิดแล้วมาสู้ใหม่นะ!' });
 
 'use strict';
 /* =========================================================
@@ -35372,6 +36001,9 @@ const CITIES = [
     theme: { river: true, hills: ['#BFE3C9', '#ADD9B8', '#CFEBD7'], far: '#DDF0E3', edge: ['pier', 'tree', 'stilthouse', 'pine'], small: ['lotus', 'reeds', 'flowers', 'kayak', 'bush', 'reeds'] } },
   { id: 92, grade: 7, name: 'ลำน้ำยกกำลัง', chapter: 'บทที่ 3 เลขยกกำลัง', lessons: LESSONS_M1C3,
     theme: { river: true, hills: ['#C9E4B0', '#BADB9C', '#D8EDC4'], far: '#E6F3D6', edge: ['ricebarn', 'tree', 'pier', 'stilthouse'], small: ['paddy', 'duck', 'reeds', 'lotus', 'flowers', 'kayak'] } },
+  /* v245 (ผู้ใช้ขอ): ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2601–2620 + บอส 2621 */
+  { id: 97, grade: 7, term: 2, name: 'ลำน้ำสมการ', chapter: 'บทที่ 6 สมการเชิงเส้นตัวแปรเดียว', lessons: LESSONS_M1C6,
+    theme: { river: true, hills: ['#C4E6B8', '#B3DDA4', '#D4EDC9'], far: '#E4F3DC', edge: ['stilthouse', 'pier', 'pine', 'tree'], small: ['reeds', 'duck', 'lotus', 'kayak', 'paddy', 'bush'] } },
   /* v244 (ผู้ใช้ขอ): ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2701–2720 + บอส 2721 */
   { id: 96, grade: 7, term: 2, name: 'ลำน้ำอัตราส่วน', chapter: 'บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ', lessons: LESSONS_M1C7,
     theme: { river: true, hills: ['#CDE8B4', '#BEE0A0', '#DCEFC8'], far: '#E8F4DA', edge: ['pier', 'stilthouse', 'tree', 'ricebarn'], small: ['kayak', 'lotus', 'duck', 'paddy', 'reeds', 'flowers'] } },
