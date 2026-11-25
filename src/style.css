@@ -2920,6 +2920,37 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .r4v-fig{display:flex;justify-content:center}
 .r4v-fig svg{display:block;width:auto;max-width:100%;height:auto;max-height:min(30cqh,200px)}
 .r4v-two{gap:14px;justify-content:center}
+/* v250 ป.4 บทที่ 9: หน้าดูภาพ (แตะรูปแล้วรูปเปลี่ยน) · การ์ดรูปภาพ · เกมลากปรับรูป */
+.r4v-see{display:flex;gap:clamp(8px,1.2cqw,14px);justify-content:center;width:min(1080px,98cqw)}
+.r4v-pan{flex:1 1 0;min-width:0;max-width:300px;border:0;border-radius:18px;background:#fff;box-shadow:inset 0 0 0 3px #F6C2D3,var(--e1);padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;font:inherit;color:var(--ink);cursor:pointer;transition:transform .15s,box-shadow .2s}
+.r4v-pan:not(.on){animation:r4vNudge 2.4s ease-in-out infinite}
+.r4v-pan:not(.on):hover{transform:translateY(-2px)}
+.r4v-pan.on{background:#F4FBF7;box-shadow:inset 0 0 0 3px #9BD9B5,var(--e1);animation:none}
+.r4v-pt{font-weight:800;font-size:clamp(15px,1.75cqw,19px);line-height:1.25}
+.r4v-pl{font-size:clamp(13px,1.5cqw,16px);line-height:1.38;min-height:2.8em;text-align:center}
+.r4v-pan:not(.on) .r4v-pl{color:#E5487A;font-weight:800}
+.r4v-ps{display:block;width:100%;height:auto;max-height:min(36cqh,236px)}
+.r4v-ps .r4-lab{font:800 15px var(--font-num);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+.r4v-ps .r4-nm,.r4v-ps .r4v-nm{font:800 16px var(--font-num);fill:#3A2F6B}
+.r4v-ps .r4v-tx{font:800 15px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+.r4v-ps .r4v-big{font:900 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.r4v-ps .r4v-sm,.r4v-mini .r4v-sm{font:800 11px var(--font-num)}
+.r4v-ps .r4v-sm{paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-linejoin:round}
+.r4v-ps .r4v-bar{font:800 12.5px var(--font-num)}
+.r4v-hl{animation:r4vIn .55s ease-out both}
+@keyframes r4vIn{from{opacity:0}to{opacity:1}}
+@keyframes r4vNudge{0%,100%{box-shadow:inset 0 0 0 3px #F6C2D3,var(--e1)}50%{box-shadow:inset 0 0 0 3px #E5487A,var(--e1)}}
+@media (prefers-reduced-motion:reduce){.r4v-hl,.r4v-pan{animation:none!important}}
+@container stage (orientation:portrait){.r4v-see{flex-wrap:wrap}.r4v-see .r4v-pan{flex:1 1 40%;max-width:46%}}
+.rp-card:has(.r4v-mini){display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 8px 7px;text-align:center;font-size:clamp(13px,1.45cqw,15px);line-height:1.25;max-width:172px}
+.r4v-mini{display:block;width:clamp(96px,12cqw,140px);height:auto}
+.r4v-cap{font-size:clamp(15px,1.75cqw,19px)!important;font-weight:600;line-height:1.45;max-width:min(720px,90cqw);margin:4px auto 0;text-align:center}
+.r4v-mini .r4-lab{font:800 10px var(--font-num);fill:var(--ink)}
+.rp-mini .r4v-mini{width:46px;display:inline-block;vertical-align:middle}
+.rp-mini:has(.r4v-mini){padding:2px 3px;background:transparent}
+.rp-in:has(.r4v-mini){display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
+.r4v-adj{width:min(100%,520px)}
+.r4-svg .r4v-st{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 .r4-svg .r4-rowno{font:700 11px var(--font-num);fill:#9A6406}
 .r4-handle,.r4-peg{cursor:grab}
 .r4-seg,.r4-cell,.r4-ec,.r4-sh{cursor:pointer}
