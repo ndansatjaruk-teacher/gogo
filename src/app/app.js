@@ -583,10 +583,14 @@ const SEQ_BTN = b => b.matches('button.btn') && /\b(info|accent|primary)\b/.test
 /* v211 (ผู้ใช้ขอ: หน้าที่ให้แตะ ต้องแตะครบทุกอัน — ทุกชั้น): แถวแผนภูมิรูปภาพ การ์ดสูตรคูณ/การ์ดเดือน ของบนเครื่องชั่ง แถวตาราง รูปทรงในฉาก เลขโดด ฯลฯ — EXP_SEL2 นับแม้ไม่ได้ใช้ onclick */
 const EXP_SEL2 = '.mi-card.fc, .pc-row.tapr, .mtcard, .tkmc, .tray-it, .tapscene .sc-it, .scene.room .sc-it, .k7-cards:not(.s9-netpick) .k7-card, .p4c .p4d, .g2fl, .s9o-card, .w2cvc, .pzhs, .p4seg button';
 const EXP_SEL = '.lu-kid, .sh-cell, .hb-col, .palb, .objcard, .solidbtn, .flipcard, .g2cell, tr, ' + EXP_SEL2; /* v206 (ผู้ใช้เจอ: แตะ 2 อันก็ไปต่อได้) — การ์ดสิ่งของ รูปทรง การ์ดพลิก การ์ดของ */ /* v205: things to explore one by one (not take-away rows, where only some are tapped) */
+const STEP_RE = /ขั้นต่อไป|ขั้นถัดไป|หลักต่อไป|ข้อต่อไป|รอบต่อไป|ภาพต่อไป|ด้านต่อไป|ประโยคถัดไป/;
 const ONCE_RE = /เพิ่มอีก|ขีดเพิ่ม|ใส่ลูกแก้ว|เพิ่มไม้|หมุน|ไล่ลง|หาสูงที่สุด|ดูวิธีวาด|ลองวาด/;
 function teachGate(vis, onDone) {
   let done = false, taps = 0; const seq = new Set([...vis.querySelectorAll('button')].filter(SEQ_BTN));
-  const fin = b => !b.isConnected || /ใหม่/.test(b.textContent) || b.dataset.done || (b.dataset.clicked && (b.disabled || ONCE_RE.test(b.textContent)));
+  /* v242 (ผู้ใช้ขอ: ต้องดูตัวอย่างครบทุกขั้นก่อนไปหน้าถัดไป — ทุกเกม): ปุ่ม “ขั้นต่อไป” นับว่าเสร็จเมื่อหายไป/ซ่อนถาวรเท่านั้น
+     เดิมกดครั้งแรกแล้วปุ่มถูกปิดชั่วคราวระหว่างภาพเคลื่อนไหว (disabled) → ถือว่าจบ → ไปหน้าถัดไปได้ทั้งที่ยังดูไม่ครบ */
+  const fin = b => { if (STEP_RE.test(b.textContent)) return !b.isConnected || !!b.dataset.done || (b.offsetParent === null && !b.disabled);
+    return !b.isConnected || /ใหม่/.test(b.textContent) || b.dataset.done || (b.dataset.clicked && (b.disabled || ONCE_RE.test(b.textContent))); };
   const interactive = vis.querySelector('.ia, button, canvas, .tappable, [draggable]');
   const finish = () => { if (done) return; done = true; mo.disconnect(); onDone(); };
   /* v205 (ผู้ใช้ขอ: ทุกบทเรียน กดให้ครบก่อนจึงไปต่อ) — things the child taps to explore (each child in a line, each shelf cell, each figure…) must ALL be tapped */
@@ -742,6 +746,7 @@ function startTeach(li, at = 0, seen = false) {
    Below FIT_MIN text gets too small → keep FIT_MIN and let the box scroll. Works for lessons, games and the boss exam. */
 const FIT_MIN = .45;
 function fitShrink(body) {
+  if (typeof DK_T !== 'undefined' && DK_T && body.contains(DK_T)) { if (!body.__fsq) { body.__fsq = 1; addEventListener('pointerup', () => { body.__fsq = 0; if (body.isConnected) fitShrink(body); }, { once: true }); } return; } /* v242: ระหว่างลาก ห้ามย่อ/จัดหน้าใหม่ — รูปจะเลื่อนหนีนิ้ว */
   const over = () => body.scrollHeight > body.clientHeight + 2 || body.scrollWidth > body.clientWidth + 2;
   const top = [...body.children].filter(c => c.nodeType === 1 && !c.classList.contains('czbar-float'));
   const zset = (kids, z) => kids.forEach(c => { c.style.zoom = z === 1 ? (c.dataset.gz || '') : String(+(z * (+c.dataset.gz || 1)).toFixed(3)); });

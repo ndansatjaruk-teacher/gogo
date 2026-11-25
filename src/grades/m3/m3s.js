@@ -272,7 +272,7 @@ function m3BoxBuild(data, o = {}) {
   const keys = ['min', 'q1', 'q2', 'q3', 'max'], cur = { min: ax.lo + (ax.hi - ax.lo) * .1, q1: ax.lo + (ax.hi - ax.lo) * .3, q2: ax.lo + (ax.hi - ax.lo) * .5, q3: ax.lo + (ax.hi - ax.lo) * .7, max: ax.lo + (ax.hi - ax.lo) * .9 };
   Object.keys(cur).forEach(k => cur[k] = Math.round(cur[k] * 2) / 2);
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} 150`); svg.setAttribute('class', 'm3-build ia'); let drag = null, done = false;
-  const wrap = h('div', { class: 'colstack no-side m3-bb rvl' }, o.game ? '' : h6wait()), out = fNote(), chk = h('button', { class: 'btn primary ia' }, icon('check'), h('span', null, 'ตรวจแผนภาพกล่อง'));
+  const wrap = h('div', { class: 'colstack no-side m3-bb rvl' }, o.game ? '' : h6wait()), out = fNote2(), chk = h('button', { class: 'btn primary ia' }, icon('check'), h('span', null, 'ตรวจแผนภาพกล่อง'));
   const draw = () => { const v = keys.map(k => cur[k]); let s = `<path d="M${pad - 10} 120 H${W - pad + 10}" stroke="#2B2550" stroke-width="2"/>`;
     for (let t = ax.lo; t <= ax.hi + 1e-9; t += ax.step) s += `<path d="M${X(t)} 115 V125" stroke="#2B2550" stroke-width="1.5"/><text x="${X(t)}" y="142" text-anchor="middle" class="m3-ax">${m3N(t)}</text>`;
     const sv = [...v].sort((a, b) => a - b); s += `<path d="M${X(sv[0])} ${y} H${X(sv[1])} M${X(sv[3])} ${y} H${X(sv[4])}" stroke="#2B2550" stroke-width="2.4"/><rect x="${X(sv[1])}" y="${y - 16}" width="${Math.max(1, X(sv[3]) - X(sv[1]))}" height="32" rx="3" fill="#3D9BE9" fill-opacity=".3" stroke="#2B2550" stroke-width="2.4"/><path d="M${X(sv[2])} ${y - 16} V${y + 16}" stroke="#2B2550" stroke-width="3"/>`;
@@ -292,7 +292,7 @@ function m3BoxBuild(data, o = {}) {
 function m3TechSim(data, lo, hi) {
   const a = data.slice(), W = 640, pad = 44, X = v => pad + (v - lo) / (hi - lo) * (W - 2 * pad), V = x => lo + (x - pad) / (W - 2 * pad) * (hi - lo), NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} 250`); svg.setAttribute('class', 'm3-tech ia');
-  const tbl = h('div', { class: 'm3-out' }), wrap = h('div', { class: 'colstack no-side' }, h6wait()), out = fNote(); let drag = -1, moves = 0, last = '';
+  const tbl = h('div', { class: 'm3-out' }), wrap = h('div', { class: 'colstack no-side' }, h6wait()), out = fNote2(); let drag = -1, moves = 0, last = '';
   const draw = () => { const F = m3FiveO(a), cnt = {}; let s = `<rect x="0" y="0" width="${W}" height="250" fill="#fff"/><path d="M${pad - 10} 140 H${W - pad + 10}" stroke="#2B2550" stroke-width="2"/>`;
     for (let t = lo; t <= hi; t += 10) s += `<path d="M${X(t)} 136 V144" stroke="#2B2550" stroke-width="1.4"/><text x="${X(t)}" y="160" text-anchor="middle" class="m3-ax">${t}</text>`;
     a.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0]).forEach(([v, i]) => { cnt[v] = (cnt[v] || 0) + 1; s += `<circle data-i="${i}" cx="${X(v)}" cy="${128 - (cnt[v] - 1) * 14}" r="6.5" fill="${i === drag ? '#E36A8C' : '#7C5CE0'}" stroke="#fff" stroke-width="1.4"/>`; });

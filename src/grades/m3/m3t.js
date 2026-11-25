@@ -101,7 +101,7 @@ function tgDrag(fig, move) { let id = null, raf = 0, last = null;
   fig.addEventListener('pointermove', e => { if (e.pointerId !== id) return; if (e.pointerType === 'mouse' && !e.buttons) { id = null; return; } e.preventDefault(); last = pt(e); if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (id != null && last) move(last); }); });
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => fig.addEventListener(t, e => { if (e.pointerId !== id) return; id = null; if (raf) cancelAnimationFrame(raf); raf = 0; if (t === 'pointerup' && last) move(last); last = null; })); }
 function tgScene(o) {
-  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote(), mis = tgMission(o.missions, wrap); let st = o.st;
+  const wrap = tgWrap(), fig = h('div', { class: 'tg-board ia' }), out = fNote2(), mis = tgMission(o.missions, wrap); let st = o.st;
   const draw = () => { fig.innerHTML = `<svg viewBox="0 0 ${o.W} ${o.H}" class="tg-scene" aria-hidden="true">${o.svg(st)}</svg>`; out.innerHTML = o.info(st); };
   tgDrag(fig, p => { const n = o.drag(p, st); if (n != null) { st = n; draw(); mis.check(st); } });
   draw(); wrap.append(h('div', { class: 'cap', html: o.cap }), mis.el, h('div', { class: 'tg-row' }, fig, o.side ? o.side : ''), out); return wrap;

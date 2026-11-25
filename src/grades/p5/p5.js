@@ -243,6 +243,8 @@ Object.assign(Q, {
    TEACHING SIMULATIONS
    ========================================================= */
 const fNote = () => h('div', { class: 'word fnote', style: { fontSize: 'clamp(16px,2vw,22px)', minHeight: '1.6em' } });
+/* v242: หน้าลาก — จองที่ 2 บรรทัด ข้อความยาวขึ้นระหว่างลากแล้วรูปไม่กระโดดหนีนิ้ว */
+const fNote2 = () => { const o = fNote(); o.classList.add('fn2'); o.style.minHeight = '2.9em'; return o; };
 const stepper = (label, get, set, lo, hi, onChange) => { const v = h('b', { class: 'num' }, get());
   const b = (d, t) => h('button', { class: 'btn icon sm ia ' + (d > 0 ? 'primary' : 'danger'), onclick: e => { e.stopPropagation(); const x = Math.max(lo(), Math.min(hi(), get() + d)); if (x === get()) { sfx.no(); return; } set(x); v.textContent = get(); sfx.pop(get() % 8); onChange(); } }, PM(t));
   const el = h('div', { class: 'fstep' }, h('span', null, label), b(-1, '-'), v, b(1, '+')); el.sync = () => v.textContent = get(); return el; };

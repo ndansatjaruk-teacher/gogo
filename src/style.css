@@ -4574,3 +4574,4 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .mg-cards.mx .mi-card.fc .f .mg-fig,.mi-cards.mx .mi-card.fc .f .mg-fig{max-width:82cqw!important;max-height:48cqh}
 .mi-cards.mx[data-n="4"] .mi-card.fc{aspect-ratio:1.05/1}
 .mi-cards.mx:is([data-n="7"],[data-n="8"]) .mi-card.fc{flex:0 1 calc(25% - 15px);max-width:none}
+.word.fnote.fn2{min-height:2.9em}

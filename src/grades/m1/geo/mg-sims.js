@@ -14,7 +14,7 @@ const mgMeasDemo = (deg = 65, rot = 15) => { const B = [4.6, 1.6], A = mgP(B, ro
     summary: `∠ABC = <b>${deg}°</b> — เริ่มนับจากสเกลที่เป็น 0 ตรงแขนมุมข้างแรกเสมอ`, keepTools: true }; };
 /* ความยาว 3 ด้านประกอบเป็นรูปสามเหลี่ยมได้ไหม (วงเวียนจากปลายทั้งสอง) */
 function mgIneqSim(sets) {
-  const box = h('div', { class: 'mg-figbox mg-big' }), out = fNote(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
+  const box = h('div', { class: 'mg-figbox mg-big' }), out = fNote2(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
   const show = (k, [x, y, z]) => { const c = Math.max(x, y, z), [a, b] = [x, y, z].filter((v, i, arr) => i !== arr.indexOf(c)), A = [0, 0], B = [c, 0], X = mgXCC(A, a, B, b).sort((p, q) => q[1] - p[1])[0], ok = a + b > c;
     const f = { pts: { A, B }, segs: [['A', 'B']], arcs: [[A, a, -4, 100, '#3D8BD9'], [B, b, 80, 184, '#E5487A']], extra: [[0, Math.max(a, b) * .9]] };
     if (ok) { f.pts.C = X; f.segs.push(['A', 'C'], ['B', 'C']); f.fill = [[['A', 'B', 'C'], '#FFD27A']]; }
@@ -29,7 +29,7 @@ function mgIneqSim(sets) {
 /* ลากจุดยอด C — มุมภายในรวมกันได้ 180° เสมอ */
 function mgSumSim() {
   const NS = 'http://www.w3.org/2000/svg', W = 560, H = 300, A = [70, 260], B = [470, 260]; let C = [230, 70], drags = 0, last = null;
-  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('class', 'mg-sum ia'); const out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('class', 'mg-sum ia'); const out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait());
   const angAt = (P, Q, R) => { const a = Math.atan2(-(Q[1] - P[1]), Q[0] - P[0]), b = Math.atan2(-(R[1] - P[1]), R[0] - P[0]); let d = Math.abs(a - b) * 180 / Math.PI; if (d > 180) d = 360 - d; return d; };
   const arc = (P, Q, R, col, r = 34) => { const a = Math.atan2(Q[1] - P[1], Q[0] - P[0]), b = Math.atan2(R[1] - P[1], R[0] - P[0]); let s = a, e = b; let sw = e - s; while (sw > Math.PI) sw -= 2 * Math.PI; while (sw < -Math.PI) sw += 2 * Math.PI; const x1 = P[0] + r * Math.cos(s), y1 = P[1] + r * Math.sin(s), x2 = P[0] + r * Math.cos(s + sw), y2 = P[1] + r * Math.sin(s + sw); return `<path d="M${P[0]} ${P[1]} L${x1} ${y1} A${r} ${r} 0 0 ${sw > 0 ? 1 : 0} ${x2} ${y2} Z" fill="${col}" fill-opacity=".55" stroke="${col}" stroke-width="2"/>`; };
   const draw = () => { const a = Math.round(angAt(A, B, C)), b = Math.round(angAt(B, A, C)), c = 180 - a - b;
@@ -57,7 +57,7 @@ const mgArmDeg = (O, p, prev, lo, hi, minR = 34) => { if (Math.hypot(p[0] - O[0]
 const MG_AT = [['มุมแหลม', d => d > 0 && d < 90, '#3D8BD9'], ['มุมฉาก', d => d === 90, '#E5487A'], ['มุมป้าน', d => d > 90 && d < 180, '#F0A020'], ['มุมตรง', d => d === 180, '#4FB97A'], ['มุมกลับ', d => d > 180 && d < 360, '#7C5CE0']];
 /* ชนิดของมุม: ลากแขนของมุม ดูขนาดและชื่อชนิดเปลี่ยนตาม — หาให้ครบ 5 ชนิด */
 function mgAngTypeSim() {
-  const W = 560, H = 340, O = [280, 170], R = 130, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait()); let th = 50;
+  const W = 560, H = 340, O = [280, 170], R = 130, svg = mgSvg(W, H, 'mg-sum'), out = fNote2(), seen = new Set(), wrap = h('div', { class: 'colstack no-side' }, h6wait()); let th = 50;
   const chips = h('div', { class: 'rowstack mg-sets' }, ...MG_AT.map(([n, , c]) => h('span', { class: 'mg-chip', style: { '--pc': c } }, n)));
   const P = (d, r) => [O[0] + r * Math.cos(d * Math.PI / 180), O[1] - r * Math.sin(d * Math.PI / 180)];
   const draw = () => { const k = MG_AT.findIndex(t => t[1](th)), col = k < 0 ? '#9790B0' : MG_AT[k][2], a = P(th, 58), e = P(th, R);
@@ -74,7 +74,7 @@ function mgAngTypeSim() {
 }
 /* สมบัติของเส้นแบ่งครึ่ง: 'seg' จุดบนเส้นตั้งฉากแบ่งครึ่ง AB ห่างจาก A และ B เท่ากัน · 'ang' จุดบนเส้นแบ่งครึ่งมุมห่างจากแขนทั้งสองเท่ากัน */
 function mgEquiSim(mode) {
-  const W = 560, H = 320, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), K = 40, hits = new Set(); let P = mode === 'seg' ? [200, 80] : [330, 150];
+  const W = 560, H = 320, svg = mgSvg(W, H, 'mg-sum'), out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), K = 40, hits = new Set(); let P = mode === 'seg' ? [200, 80] : [330, 150];
   const A = [120, 260], B = [440, 260], V = [70, 280], ARM = 62, bis = ARM / 2, Pa = (d, r) => [V[0] + r * Math.cos(d * Math.PI / 180), V[1] - r * Math.sin(d * Math.PI / 180)];
   const foot = (d, p) => { const u = [Math.cos(d * Math.PI / 180), -Math.sin(d * Math.PI / 180)], t = (p[0] - V[0]) * u[0] + (p[1] - V[1]) * u[1]; return [V[0] + u[0] * t, V[1] + u[1] * t]; };
   const L = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]) / K, f1 = x => (Math.round(x * 10) / 10).toFixed(1);
@@ -102,7 +102,7 @@ function mgEquiSim(mode) {
 }
 /* ระยะห่างระหว่างจุดกับเส้นตรง: เลื่อนจุด Q บนเส้นตรง หาตำแหน่งที่ PQ สั้นที่สุด */
 function mgDistSim() {
-  const W = 560, H = 300, svg = mgSvg(W, H, 'mg-sum'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), P = [300, 70], y = 250, K = 40; let qx = 110, moves = 0, done = false;
+  const W = 560, H = 300, svg = mgSvg(W, H, 'mg-sum'), out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), P = [300, 70], y = 250, K = 40; let qx = 110, moves = 0, done = false;
   const draw = () => { const d = Math.hypot(qx - P[0], y - P[1]) / K, on = qx === P[0];
     svg.innerHTML = `<path d="M20 ${y} H${W - 20}" stroke="#2B2550" stroke-width="3.4"/><text x="${W - 34}" y="${y + 28}" class="mg-fn">B</text><text x="22" y="${y + 28}" class="mg-fn">A</text>
       <path d="M${P} L${qx} ${y}" stroke="${on ? '#2E8A57' : '#E5487A'}" stroke-width="3"/>${on ? `<path d="M${qx} ${y - 16} h16 v16" fill="none" stroke="#2E8A57" stroke-width="2.4"/>` : ''}
@@ -117,7 +117,7 @@ const MG_PAIR = { corr: [['1', '5'], ['2', '6'], ['3', '7'], ['4', '8']], alt: [
 const MG_PNAME = { corr: 'มุมสมนัย', alt: 'มุมแย้ง', co: 'มุมภายในบนข้างเดียวกันของเส้นตัด', vert: 'มุมตรงข้าม' };
 const mgSecDeg = (k, t) => (+k % 2 ? t : 180 - t);
 function mgTransSim() {
-  const W = 600, H = 330, y1 = 110, y2 = 240, X1 = 330, svg = mgSvg(W, H, 'mg-sum mg-trans'), out = fNote(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), seen = new Set(); let t = 60, show = null;
+  const W = 600, H = 330, y1 = 110, y2 = 240, X1 = 330, svg = mgSvg(W, H, 'mg-sum mg-trans'), out = fNote2(), wrap = h('div', { class: 'colstack no-side' }, h6wait()), seen = new Set(); let t = 60, show = null;
   const col = { corr: '#3D8BD9', alt: '#E5487A', co: '#2FB5A3' };
   const P = (c, d, r) => [c[0] + r * Math.cos(d * Math.PI / 180), c[1] - r * Math.sin(d * Math.PI / 180)];
   const draw = () => { const Ia = [X1, y1], Ib = [X1 - (y2 - y1) / Math.tan(t * Math.PI / 180), y2], sec = [[0, t], [t, 180], [180, 180 + t], [180 + t, 360]];

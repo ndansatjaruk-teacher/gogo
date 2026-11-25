@@ -20,6 +20,8 @@ const MI_NM = ['ภูผา', 'น้ำใส', 'ต้นกล้า', 'ใ�
 const MI_FMT = /^−?\d+(\.\d+)?$|^−?\d+\/\d+$/;
 const miVal = t => { const neg = t[0] === '−', b = neg ? t.slice(1) : t, v = b.includes('/') ? (([n, d]) => +d ? +n / +d : NaN)(b.split('/')) : +b; return neg ? -v : v; };
 const miShow = t => t.replace(/^(−?)(\d+)/, (_, s, d) => s + (+d).toLocaleString('en-US'));
+/* pointer → svg user coords (same matrix the drawing uses; zoomfix keeps it right on Safari) */
+const miSvgPt = (svg, ev) => { const m = svg.getScreenCTM(), q = svg.createSVGPoint(); q.x = ev.clientX; q.y = ev.clientY; const r = q.matrixTransform(m.inverse()); return [r.x, r.y]; };
 function miAns(ctx, expected, o = {}) {
   const want = typeof expected === 'number' ? expected : miVal(String(expected).replace(/-/g, '−')), wantTxt = typeof expected === 'number' ? miN(expected) : String(expected).replace(/-/g, '−');
   let val = '';
@@ -66,7 +68,7 @@ function miLine(lo, hi, o = {}) {
       lay.insertAdjacentHTML('beforeend', `<g class="mi-arc"><path d="M${xa} ${y0 - 4} Q${mx} ${y0 - 4 - hgt * 2} ${xb} ${y0 - 4}" fill="none" stroke="${col}" stroke-width="3.2" stroke-linecap="round"/><path d="M${xb} ${y0 - 4} l${d * 9} -6 l${d * 2} 10 z" fill="${col}"/>${lab ? `<text x="${mx}" y="${y0 - 10 - hgt}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="800" font-size="18" fill="#2B2550">${lab}</text>` : ''}</g>`); },
     span: (a, b, col = '#4FD1A1', lab) => { const xa = X(Math.min(a, b)), xb = X(Math.max(a, b)), yy = y0 + 44;
       lay.insertAdjacentHTML('beforeend', `<g class="mi-span"><path d="M${xa} ${yy - 6} V${yy} H${xb} V${yy - 6}" fill="none" stroke="${col}" stroke-width="3"/>${lab ? `<text x="${(xa + xb) / 2}" y="${yy + 20}" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="19" fill="#2B2550">${lab}</text>` : ''}</g>`); } });
-  const at = ev => { const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width * W; return Math.max(lo, Math.min(hi, Math.round((x - pad) / st + lo))); };
+  const at = ev => { const x = miSvgPt(svg, ev)[0]; return Math.max(lo, Math.min(hi, Math.round((x - pad) / st + lo))); }; /* v242: พิกัดผ่าน CTM — รูปที่ถูกย่อแบบเว้นขอบ (letterbox) ก็ยังตรงนิ้ว */
   if (o.tap) svg.addEventListener('click', ev => { ev.stopPropagation(); o.tap(at(ev), el); });
   if (o.drag) { let down = false; svg.addEventListener('pointerdown', ev => { down = true; svg.setPointerCapture && svg.setPointerCapture(ev.pointerId); o.drag(at(ev), el, true); });
     svg.addEventListener('pointermove', ev => { if (down) o.drag(at(ev), el, false); }); const up = () => { if (down) { down = false; o.end && o.end(el); } }; svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up); svg.addEventListener('click', ev => ev.stopPropagation()); }
@@ -83,7 +85,7 @@ const miChip = (s, cls = '') => h('button', { class: 'mi-chip ' + (s > 0 ? 'p' :
 /* sea level: drag the bird / fish above and below the river surface */
 function miSeaSim() {
   const H = 300, top = 20, lvl = 10, U = (H - 2 * top) / 20, Y = v => top + (lvl - v) * U; let v = 6; const seen = new Set();
-  const out = fNote();
+  const out = fNote2();
   const svgF = () => { let s = `<rect x="0" y="0" width="420" height="${Y(0)}" fill="#E4F4FD"/><rect x="0" y="${Y(0)}" width="420" height="${H - Y(0)}" fill="#7FCCEE"/><path d="M0 ${Y(0)} q30 -6 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#fff" stroke-width="3"/>`;
     for (let k = -10; k <= 10; k++) { const y = Y(k); s += `<path d="M60 ${y} H${k % 5 === 0 ? 80 : 72}" stroke="#2B2550" stroke-width="${k === 0 ? 3 : 1.6}"/>`; if (k % 2 === 0) s += `<text x="52" y="${y + 5}" text-anchor="end" font-family="Nunito,sans-serif" font-weight="800" font-size="15" fill="#2B2550">${miN(k)}</text>`; }
     s += `<path d="M66 ${Y(10)} V${Y(-10)}" stroke="#2B2550" stroke-width="2"/><text x="400" y="${Y(0) - 8}" text-anchor="end" font-size="14" font-weight="700" fill="#1E5A7A">ระดับน้ำ = 0</text>`;
@@ -93,7 +95,7 @@ function miSeaSim() {
   const box = h('div', { class: 'mi-seabox ia drag' }); const draw = () => { box.innerHTML = svgF();
     out.innerHTML = v > 0 ? `อยู่<b>เหนือ</b>ระดับน้ำ ${v} เมตร → <b class="mi-pos">${miN(v)}</b> (จำนวนเต็มบวก)` : v < 0 ? `อยู่<b>ใต้</b>ระดับน้ำ ${-v} เมตร → <b class="mi-neg">${miN(v)}</b> (จำนวนเต็มลบ)` : `อยู่<b>ที่</b>ระดับน้ำพอดี → <b>0</b> (ศูนย์)`;
     seen.add(Math.sign(v)); if (seen.size === 3) { out.innerHTML += ' ✓'; teachDone(box); } };
-  const at = ev => { const r = box.firstChild.getBoundingClientRect(), y = (ev.clientY - r.top) / r.height * H; return Math.max(-10, Math.min(10, Math.round(lvl - (y - top) / U))); };
+  const at = ev => { const y = miSvgPt(box.firstChild, ev)[1]; return Math.max(-10, Math.min(10, Math.round(lvl - (y - top) / U))); };
   let down = false; box.addEventListener('pointerdown', ev => { down = true; box.setPointerCapture && box.setPointerCapture(ev.pointerId); const n = at(ev); if (n !== v) { v = n; sfx.pop(Math.abs(v) % 8); draw(); } });
   box.addEventListener('pointermove', ev => { if (!down) return; const n = at(ev); if (n !== v) { v = n; draw(); } });
   box.addEventListener('pointerup', () => { if (down) { down = false; say(v > 0 ? `เหนือระดับน้ำ ${v} เมตร บวก ${v}` : v < 0 ? `ใต้ระดับน้ำ ${-v} เมตร ลบ ${-v}` : 'ศูนย์ ระดับน้ำพอดี', true); } });
@@ -127,7 +129,7 @@ function miOrderSim(nums) {
 }
 /* opposite and absolute value: drag the point, its mirror and its distance from 0 follow */
 function miOppSim() {
-  const out = fNote(), seen = new Set(); let el, v = 4;
+  const out = fNote2(), seen = new Set(); let el, v = 4;
   const draw = () => { el.clear(); if (v !== 0) { el.dot(-v, '#B8AEDB', miN(-v)); el.span(0, v, '#4FD1A1', `ห่างจาก 0 = ${Math.abs(v)}`); }
     el.dot(v, v < 0 ? '#E5505E' : '#2F86C2', miN(v));
     out.innerHTML = v === 0 ? 'จำนวนตรงข้ามของ 0 คือ 0<br>|0| = 0' : `จำนวนตรงข้ามของ <b>${miN(v)}</b> คือ <b>${miN(-v)}</b> (ห่างจาก 0 เท่ากัน คนละข้าง)<br>ค่าสัมบูรณ์ <b>|${miN(v)}| = ${Math.abs(v)}</b>`; };
