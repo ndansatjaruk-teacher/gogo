@@ -34,6 +34,9 @@ function mgBoard(T, cb = {}) {
   const layer = c => { const g = document.createElementNS(NS, 'g'); g.setAttribute('class', c); svg.append(g); return g; };
   const gObj = layer('cg-obj'), gTool = layer('cg-tool'), gLab = layer('cg-lab'), gUI = layer('cg-ui'); board.append(svg);
   const save = () => { hist.push(JSON.stringify(S)); if (hist.length > 80) hist.shift(); };
+  /* v243 (ผู้ใช้ขอ): โจทย์ตัวใหญ่ชัด ๆ เหนือกระดาน · ทำถูก/ดูเฉลย/ยังไม่ถูก แสดงในแถบเดียวกันให้เห็นชัด */
+  const banner = h('div', { class: 'mg-banner', role: 'status' }, h('span', { class: 'mg-bi' }, '✎'), h('span', { class: 'mg-bt', html: T.title || '' }));
+  const flag = (kind, html) => { banner.classList.remove('ok', 'bad', 'rev'); void banner.offsetWidth; if (kind) banner.classList.add(kind); banner.firstChild.textContent = kind === 'ok' ? '✓' : kind === 'bad' ? '!' : kind === 'rev' ? '👁' : '✎'; banner.lastChild.innerHTML = html; board.classList.toggle('mg-ok', kind === 'ok'); };
   const say2 = (t, ms = 0) => { msg.innerHTML = t; msg.classList.toggle('hint', !!ms); clearTimeout(hintT); if (ms) hintT = setTimeout(() => { msg.innerHTML = ''; msg.classList.remove('hint'); }, ms); };
   /* ---------- geometry ---------- */
   const D = mgD, ang = mgA, dir = mgU, nrm = mgNrm, adiff = mgAd, wrapD = d => ((d % 360) + 540) % 360 - 180;
@@ -86,9 +89,9 @@ function mgBoard(T, cb = {}) {
   const sol = T.sol || [], cum = []; { let a = 0, s = 0; sol.forEach(st => { (st.ops || []).forEach(o => { if (o.t === 'arc') a++; if (o.t === 'seg') s++; }); cum.push({ a, s }); }); }
   const nextSay = () => { const na = S.arcs.length, ns = mine().length; const i = cum.findIndex(c => c.a > na || c.s > ns); return (sol[i < 0 ? sol.length - 1 : i] || {}).say || 'ลองใช้วงเวียนและสันตรงตามขั้นตอน'; };
   const finish = () => { RUL.out = prot.out = comp.out = false; tool = 'none'; act = null; hover = null; tbar.querySelectorAll('.cnsf-t').forEach(x => x.classList.remove('on')); };
-  const success = r => { done = true; (T.marks || []).forEach(m => G.ptName(m.p, m.name)); ((r && r.names) || []).forEach(([q, n]) => G.ptName(q, n)); finish(); req(); say2(T.okMsg || '<b>สร้างเสร็จแล้ว!</b> 🎉'); sfx.ok(); cb.onOK && cb.onOK(); if (teach) { try { teachDone(wrap); } catch (_) { } } };
+  const success = r => { done = true; (T.marks || []).forEach(m => G.ptName(m.p, m.name)); ((r && r.names) || []).forEach(([q, n]) => G.ptName(q, n)); finish(); req(); say2(T.okMsg || '<b>สร้างเสร็จแล้ว!</b> 🎉'); flag('ok', `<b>ถูกต้อง!</b> ${String(T.okMsg || 'สร้างเสร็จแล้ว').replace(/<\/?b>/g, '').replace(/^สร้างเสร็จแล้ว!?\s*/, '') || 'สร้างเสร็จแล้ว'}`); sfx.ok(); cb.onOK && cb.onOK(); if (teach) { try { teachDone(wrap); } catch (_) { } } };
   const check = manual => { if (done || demo || !T.goal) return; let r = null; try { r = T.goal(G); } catch (e) { r = { ok: false }; } if (r && r.ok) return success(r);
-    if (!manual) return; const why = (r && r.why) || 'ยังสร้างไม่ครบ'; sfx.no(); board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); say2(why + ' — 💡 ' + nextSay()); cb.onWrong && cb.onWrong(why); };
+    if (!manual) return; const why = (r && r.why) || 'ยังสร้างไม่ครบ'; sfx.no(); board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake'); say2(why + ' — 💡 ' + nextSay()); flag('bad', `<b>ยังไม่ถูก</b> — ${why}`); clearTimeout(banner.__t); banner.__t = setTimeout(() => { if (!done) flag('', T.title || ''); }, 3500); cb.onWrong && cb.onWrong(why); };
   const hint = () => { say2('💡 ' + nextSay(), 4000); sfx.pop(2); };
   /* ---------- drawing ---------- */
   const arcP = (c, r, a0, a1, cls = '') => { if (a1 - a0 >= 359.5) return `<circle cx="${X(c)[0]}" cy="${X(c)[1]}" r="${r * K}" fill="none" class="mg-arc ${cls}"/>`; const A = X(mgAdd(c, dir(a0), r)), B = X(mgAdd(c, dir(a1), r)); return `<path d="M${A} A${r * K} ${r * K} 0 ${a1 - a0 > 180 ? 1 : 0} 0 ${B}" fill="none" class="mg-arc ${cls}"/>`; };
@@ -221,21 +224,21 @@ function mgBoard(T, cb = {}) {
   const LAB = { point: ['tap', 'จุด'], ruler: ['ruler', T.edgeName || 'สันตรง (ไม้บรรทัด)'], prot: ['prot', 'ครึ่งวงกลม'], comp: ['compass', 'วงเวียน'] };
   const setOn = k => tbar.querySelectorAll('.cnsf-t').forEach(x => x.classList.toggle('on', x.dataset.k === k));
   const tb = key => h('button', { class: 'btn sm ia cnsf-t' + (tool === key ? ' on' : ''), 'data-k': key, onclick: e => { e.stopPropagation(); if (done || anim) return; tool = key; if (key === 'prot') prot.out = true; if (key === 'comp') comp.out = true; if (key === 'ruler') RUL.out = true; resetIfLost(key); setOn(key); say2(TIPS[key], 8000); req(); } }, h('span', { class: 'cns-ti ' + LAB[key][0] }), h('span', null, LAB[key][1]));
-  const head = T.title ? h('div', { class: 'cns-head mg-head', html: T.title }) : '';
+  const head = ''; /* v243: โจทย์ย้ายไปเป็นแถบใหญ่เหนือกระดาน (banner) */
   if (demo) { let k = 0; const stepB = h('button', { class: 'btn info ia mg-next' }, icon('right'), h('span', null, 'ขั้นต่อไป'));
     const cnt = h('small', { class: 'mg-cnt' }, `ขั้นที่ 0 / ${sol.length}`), list = h('ol', { class: 'mg-steps' });
     stepB.onclick = e => { e.stopPropagation(); if (anim || k >= sol.length) return; const st = sol[k++]; cnt.textContent = `ขั้นที่ ${k} / ${sol.length}`; list.querySelectorAll('li').forEach(li => li.classList.remove('now')); list.append(h('li', { class: 'now', html: st.say })); say2(''); sfx.page && sfx.page();
       try { say(String(st.say).replace(/<[^>]+>/g, ''), true); } catch (_) { }
-      stepB.disabled = true; runOps(st.ops || [], true, () => { stepB.disabled = false; if (k >= sol.length) { done = true; (T.marks || []).forEach(m => G.ptName(m.p, m.name)); if (!T.keepTools) RUL.out = prot.out = comp.out = false; req(); stepB.remove(); say2(T.summary || T.okMsg || 'เสร็จแล้ว'); sfx.ok(); try { teachDone(wrap); } catch (_) { } } }); };
+      stepB.disabled = true; runOps(st.ops || [], true, () => { stepB.disabled = false; if (k >= sol.length) { done = true; (T.marks || []).forEach(m => G.ptName(m.p, m.name)); if (!T.keepTools) RUL.out = prot.out = comp.out = false; req(); stepB.remove(); say2(T.summary || T.okMsg || 'เสร็จแล้ว'); flag('ok', `<b>ครบทุกขั้นแล้ว</b> — ${String(T.summary || T.okMsg || '').replace(/<\/?b>/g, '') || 'ดูตัวอย่างจบแล้ว'}`); sfx.ok(); try { teachDone(wrap); } catch (_) { } } }); };
     tbar.classList.add('mg-demo'); tbar.append(cnt, list, stepB); }
   else { TOOLS.forEach(k => tbar.append(tb(k)));
     tbar.append(h('button', { class: 'btn sm ia cnsf-u', onclick: e => { e.stopPropagation(); if (done || !hist.length) return; S = JSON.parse(hist.pop()); sfx.page(); req(); } }, icon('undo'), h('span', null, 'ย้อนกลับ')),
       h('button', { class: 'btn sm ia cnsf-h', onclick: e => { e.stopPropagation(); if (!done) hint(); } }, icon('sparkle'), h('span', null, 'คำใบ้')));
     if (T.goal && T.manual !== false) tbar.append(h('button', { class: 'btn sm ia primary mg-chk', onclick: e => { e.stopPropagation(); check(true); } }, icon('check'), h('span', null, 'ตรวจ')));
     if (teach) tbar.append(h('button', { class: 'btn sm ia cnsf-r', onclick: e => { e.stopPropagation(); if (done) return; wrap.reveal(); try { teachDone(wrap); } catch (_) { } } }, icon('eye'), h('span', null, 'ดูเฉลย'))); }
-  wrap.append(h('div', { class: 'cns-side' }, head, tbar, msg), board);
+  if (T.title) wrap.append(banner); wrap.append(h('div', { class: 'cns-side' }, head, tbar, msg), board);
   wrap.selfTest = () => { S = JSON.parse(S0); runOps(sol.flatMap(s => s.ops || []), false); const r = T.goal ? T.goal(G) : { ok: true }; S = JSON.parse(S0); return r; }; /* ตรวจว่าเฉลยผ่าน goal (tests) */
-  wrap.reveal = () => { if (done) return; S = JSON.parse(S0); hist = []; runOps(sol.flatMap(s => s.ops || []), false); done = true; (T.marks || []).forEach(m => G.ptName(m.p, m.name)); finish(); req(); say2('ดูเฉลย: ' + (T.revealMsg || 'ทำตามขั้นตอนนี้')); };
+  wrap.reveal = () => { if (done) return; S = JSON.parse(S0); hist = []; runOps(sol.flatMap(s => s.ops || []), false); done = true; (T.marks || []).forEach(m => G.ptName(m.p, m.name)); finish(); req(); say2('ดูเฉลย: ' + (T.revealMsg || 'ทำตามขั้นตอนนี้')); flag('rev', `<b>ดูเฉลย</b> — ${T.title || ''}`); };
   wrap._t = { S: () => S, G, RUL, prot, comp, X, U, setTool: k => tbar.querySelector(`[data-k="${k}"]`)?.click(), done: () => done, rulKnob, protKnob, compPts, render, check };
   render(); if (!demo) say2(T.start || 'เลือกอุปกรณ์ แล้วลงมือสร้างได้เลย'); return wrap;
 }

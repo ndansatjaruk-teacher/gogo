@@ -4575,3 +4575,16 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .mi-cards.mx[data-n="4"] .mi-card.fc{aspect-ratio:1.05/1}
 .mi-cards.mx:is([data-n="7"],[data-n="8"]) .mi-card.fc{flex:0 1 calc(25% - 15px);max-width:none}
 .word.fnote.fn2{min-height:2.9em}
+/* v243 (ผู้ใช้ขอ) ลำน้ำเรขา: โจทย์เป็นแถบใหญ่เหนือกระดาน · ถูก = เขียว ใหญ่ ชัด · ยังไม่ถูก = แดง · ดูเฉลย = ฟ้า */
+.mgb .mg-banner{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:5px 14px;margin-bottom:-4px;border-radius:14px;background:#FFF6D6;box-shadow:inset 0 0 0 2.5px #F3C548;color:var(--ink);font-size:clamp(18px,2.2cqw,24px);line-height:1.3;text-align:left;font-weight:600}
+.mgb .mg-banner b{font-weight:900}
+.mgb .mg-bi{flex:0 0 auto;display:grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;background:#F3C548;color:#fff;font-weight:900;font-size:.95em}
+.mgb .mg-banner.ok{background:#DDF6EC;box-shadow:inset 0 0 0 3px #3DBE8B;color:#14684A;animation:mgPop .45s var(--spring) both}
+.mgb .mg-banner.ok .mg-bi{background:#2FAF7C;font-size:1.15em}
+.mgb .mg-banner.bad{background:#FDE7EA;box-shadow:inset 0 0 0 3px #E86A7E;color:#8E1F33;animation:h6shake .45s}
+.mgb .mg-banner.bad .mg-bi{background:#E0445A}
+.mgb .mg-banner.rev{background:#E6F2FD;box-shadow:inset 0 0 0 3px #5AA9E6;color:#18507E}
+.mgb .mg-banner.rev .mg-bi{background:#3D8FD6;font-size:.8em}
+.cns-board.mg-ok{box-shadow:var(--e1),inset 0 0 0 4px #3DBE8B}
+@keyframes mgPop{0%{transform:scale(.92);opacity:.4}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+.mg-qrow > .mgb.mg-meas .mg-banner{display:none}
