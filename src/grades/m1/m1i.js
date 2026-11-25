@@ -3,7 +3,7 @@
    1 คลิปของ สสวท. = 1 ด่าน (ชื่อด่าน = ชื่อคลิป) · เนื้อหาและโจทย์แต่งใหม่ทั้งหมด
    integer kit: signed keypad, number line (drag / tap / hops), chips with zero pairs, groups, sea-level scale. Prefix mi.
    ========================================================= */
-const miN = n => (n < 0 ? '−' + (-n).toLocaleString('en-US') : n.toLocaleString('en-US'));
+const miN = n => (n < 0 ? '−' + (-n).toLocaleString('en-US', { maximumFractionDigits: 10 }) : n.toLocaleString('en-US', { maximumFractionDigits: 10 })); /* v247: เดิมปัดเหลือทศนิยม 3 ตำแหน่ง → เฉลย 0.0046 แสดงเป็น 0.005 */
 const miP = n => (n < 0 ? `(${miN(n)})` : miN(n));
 /* v217 (ผู้ใช้ขอ: ให้มีสีสัน): จำนวนลบสีแดง จำนวนบวกสีฟ้า ศูนย์สีเข้ม — สีเดียวกับเส้นจำนวน */
 const miC = n => `<span class="num">${miN(n)}</span>`; /* v219 (ผู้ใช้ขอ): ตัวเลข ม.1 สีดำทั้งหมด */
