@@ -2934,7 +2934,7 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .r4v-ps .r4-nm,.r4v-ps .r4v-nm{font:800 16px var(--font-num);fill:#3A2F6B}
 .r4v-ps .r4v-tx{font:800 15px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 .r4v-ps .r4v-big{font:900 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
-.r4v-ps .r4v-sm,.r4v-mini .r4v-sm{font:800 11px var(--font-num)}
+.r4v-ps .r4v-sm{font:800 11px var(--font-num)}
 .r4v-ps .r4v-sm{paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-linejoin:round}
 .r4v-ps .r4v-bar{font:800 12.5px var(--font-num)}
 .r4v-hl{animation:r4vIn .55s ease-out both}
@@ -2942,14 +2942,44 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 @keyframes r4vNudge{0%,100%{box-shadow:inset 0 0 0 3px #F6C2D3,var(--e1)}50%{box-shadow:inset 0 0 0 3px #E5487A,var(--e1)}}
 @media (prefers-reduced-motion:reduce){.r4v-hl,.r4v-pan{animation:none!important}}
 @container stage (orientation:portrait){.r4v-see{flex-wrap:wrap}.r4v-see .r4v-pan{flex:1 1 40%;max-width:46%}}
-.rp-card:has(.r4v-mini){display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 8px 7px;text-align:center;font-size:clamp(13px,1.45cqw,15px);line-height:1.25;max-width:172px}
-.r4v-mini{display:block;width:clamp(96px,12cqw,140px);height:auto}
 .r4v-cap{font-size:clamp(15px,1.75cqw,19px)!important;font-weight:600;line-height:1.45;max-width:min(720px,90cqw);margin:4px auto 0;text-align:center}
-.r4v-mini .r4-lab{font:800 10px var(--font-num);fill:var(--ink)}
-.rp-mini .r4v-mini{width:46px;display:inline-block;vertical-align:middle}
-.rp-mini:has(.r4v-mini){padding:2px 3px;background:transparent}
-.rp-in:has(.r4v-mini){display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
 .r4v-adj{width:min(100%,520px)}
+/* v251 ป.4 บทที่ 9 ทำให้ดู (r4dDo): รูปซ้าย ดินสอวาดบนรูป · กระดาษทดขวา เขียนทีละบรรทัด คำอธิบายสั้น ๆ ข้างบรรทัด */
+.r4d{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.2cqh,12px);width:min(1100px,98cqw)}
+.r4d-row{display:flex;gap:clamp(10px,1.6cqw,18px);width:100%;align-items:stretch;justify-content:center}
+.r4d-fw{position:relative;flex:0 1 auto;width:min(560px,52%);align-self:center;background:#fff;border-radius:18px;box-shadow:inset 0 0 0 3px #E6E0F3,var(--e1)}
+.r4d-svg{display:block;width:100%;height:auto}
+.r4d-svg .r4-lab{font:800 16px var(--font-num);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.r4d-svg .r4-nm,.r4d-svg .r4v-nm{font:800 18px var(--font-num);fill:#3A2F6B}
+.r4d-svg .r4d-tx,.r4d-svg .r4v-tx{font:800 17px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.r4d-svg .r4d-sm{font:800 13px var(--font-num)}
+.r4d-svg .r4d-big{font:900 24px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.r4d-ink .r4d-tx,.r4d-ink .r4d-sm,.r4d-ink .r4d-big{font-family:'Mali',var(--font-num);font-weight:500}
+.r4d-pap{position:relative;flex:1 1 0;max-width:500px;min-height:min(44cqh,330px);border-radius:16px;padding:10px 14px 12px 40px;background:#FFFDF6 linear-gradient(90deg,transparent 28px,#F6B3C4 28px 30px,transparent 30px),repeating-linear-gradient(180deg,transparent 0 45px,#D7E6F5 45px 47px);background-blend-mode:normal;box-shadow:inset 0 0 0 2px #EDE6D2,var(--e1);overflow:hidden}
+.r4d-pap{background:linear-gradient(90deg,transparent 28px,#F6B3C4 28px 30px,transparent 30px),repeating-linear-gradient(180deg,#FFFDF6 0 45px,#D7E6F5 45px 47px)}
+.r4d-q{font-size:clamp(14px,1.6cqw,17px);line-height:47px;font-weight:600;color:#4A4270;margin:0;min-height:47px}
+.r4d-lns{display:flex;flex-direction:column}
+.r4d-ln{display:flex;align-items:center;flex-wrap:wrap;gap:2px 10px;min-height:47px}
+.r4d-w{position:relative;font-family:'Mali',var(--font);font-weight:500;font-size:clamp(20px,2.3cqw,26px);line-height:1.5;color:#2856A8;white-space:nowrap}
+.r4d-w b{font-weight:500;color:#C2185B}
+.r4d-wp{display:inline-block;white-space:pre}
+.r4d-nt{font-size:clamp(13px,1.45cqw,15.5px);line-height:1.3;background:#FFF1CC;color:#6B4300;border-radius:10px;padding:3px 9px 3px 16px;opacity:0;position:relative;max-width:100%}
+.r4d-nt::before{content:'';position:absolute;left:4px;top:50%;margin-top:-5px;border:5px solid transparent;border-right-color:#E9B949;border-left-width:0}
+.r4d-nt.on{opacity:1}
+.r4d-pen{position:absolute;left:0;top:0;width:46px;height:46px;transform:translate(-24.5%,-84%);pointer-events:none;opacity:0;transition:opacity .25s;z-index:3;filter:drop-shadow(0 3px 2px rgba(43,37,80,.25))}
+.r4d-pen.on{opacity:1}.r4d-pen svg{display:block;width:100%;height:100%}
+.r4d-bub{position:absolute;transform:translate(-50%,calc(-100% - 16px));background:#FFF1CC;color:#6B4300;border-radius:12px;padding:5px 11px;font-size:clamp(13px,1.5cqw,16px);line-height:1.3;box-shadow:0 2px 6px rgba(43,37,80,.18);max-width:62%;width:max-content;text-align:center;pointer-events:none;opacity:0;z-index:2}
+.r4d-bub.on{opacity:1}.r4d-bub.lo{transform:translate(-50%,18px)}
+.r4d-ring{position:absolute;left:-12px;right:-14px;top:-6px;bottom:-6px;pointer-events:none}.r4d-ring svg{display:block;width:100%;height:100%;overflow:visible}
+.r4d-bar{display:flex;align-items:center;justify-content:center;gap:14px;width:100%;min-height:52px}
+.r4d-bar .fnote{margin:0}
+.r4d-k{font:800 13px var(--font-num);opacity:.8;margin-left:4px}
+.r4v-see[data-n="1"] .r4v-pan{max-width:520px}.r4v-see[data-n="2"] .r4v-pan{max-width:440px}
+.r4v-see[data-n="1"] .r4v-ps,.r4v-see[data-n="2"] .r4v-ps{max-height:min(46cqh,320px)}
+.r4v-see[data-n="1"] .r4v-pt,.r4v-see[data-n="2"] .r4v-pt{font-size:clamp(17px,2cqw,22px)}
+.r4v-see[data-n="1"] .r4v-pl,.r4v-see[data-n="2"] .r4v-pl{font-size:clamp(15px,1.75cqw,19px)}
+@media (prefers-reduced-motion:reduce){.r4d-pen{display:none}}
+@container stage (orientation:portrait){.r4d-row{flex-direction:column;align-items:center}.r4d-fw{width:min(560px,92%)}.r4d-pap{width:min(560px,92%);flex:0 0 auto;min-height:220px}}
 .r4-svg .r4v-st{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 .r4-svg .r4-rowno{font:700 11px var(--font-num);fill:#9A6406}
 .r4-handle,.r4-peg{cursor:grab}
