@@ -19,9 +19,13 @@ TASKS = ("mgT.copySeg(4.7);mgT.sumSeg(3.3,2.4);mgT.bisSeg(6.6);mgT.copyAng(55);m
          "mgT.parallel();mgT.tri('sss',{c:7,b:5,a:4});mgT.tri('asa',{c:6,A:50,B:60});mgT.tri('sas',{c:6,b:4,A:50});mgT.segLen(5.5);"
          "mgT.diffSeg(5.6);mgT.kSeg(2.4,3);mgT.quartSeg(9.6);mgT.circ(3.5);mgT.meet(4,3,5);mgT.sumAng(45,30);mgT.parPerp();mgT.altitude();mgT.hexagon(3)")
 ap = argparse.ArgumentParser(); ap.add_argument('--tasks', default=TASKS); ap.add_argument('--n', type=int, default=2); ap.add_argument('--noise', type=float, default=1.0)
-A = ap.parse_args(); tasks = A.tasks.split(';'); N = A.n; noise = A.noise; DBG = os.environ.get('DBG'); TR = os.environ.get('TR')
+ap.add_argument('--touch', action='store_true', help='drive with finger (touch) events instead of the mouse')
+ap.add_argument('--legacy', action='store_true', help='Safari-like legacy CSS zoom: board zoomed .85 and the hit-test CTM path forced')
+A = ap.parse_args(); A_ZOOM = '.85' if A.legacy else '1'; tasks = A.tasks.split(';'); N = A.n; noise = A.noise; DBG = os.environ.get('DBG'); TR = os.environ.get('TR')
 with sync_playwright() as p:
-    b = p.chromium.launch(executable_path=os.environ.get('CHROME') or None, args=['--no-sandbox']); pg = b.new_page(viewport={'width': 1180, 'height': 820})
+    b = p.chromium.launch(executable_path=os.environ.get('CHROME') or None, args=['--no-sandbox'] + (['--disable-blink-features=StandardizedBrowserZoom'] if A.legacy else [])); ctx = b.new_context(viewport={'width': 1180, 'height': 820}, has_touch=A.touch); pg = ctx.new_page()
+    if A.legacy: pg.add_init_script('window.ZF_FORCE_HIT = true')
+    cdp = ctx.new_cdp_session(pg) if A.touch else None
     errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.goto((ROOT / 'dist' / 'index.html').as_uri()); pg.wait_for_timeout(800)
     pg.evaluate("SET.mute = true; window.say = () => {}; 0")
@@ -34,13 +38,21 @@ with sync_playwright() as p:
         for trial in range(N):
             if TR and str(trial) != TR: continue
             rnd = random.Random(trial * 7 + 1)
-            ops = pg.evaluate(f"(() => {{ const T = {task}; window.__T = T; document.getElementById('kidbox')?.remove(); const box = h('div', {{ id: 'kidbox', class: 'stage-card', style: {{ position: 'fixed', left: '20px', top: '20px', width: '1120px', height: '700px', zIndex: 999, background: '#fff', display: 'flex', containerType: 'size' }} }}); document.body.append(box); const w = mgBoard(T, {{ onOK: () => {{}} }}); box.append(w); return T.sol.flatMap(s => s.ops || []); }})()")
+            ops = pg.evaluate(f"(() => {{ const T = {task}; window.__T = T; document.getElementById('kidbox')?.remove(); const box = h('div', {{ id: 'kidbox', class: 'stage-card', style: {{ position: 'fixed', left: '20px', top: '20px', width: '1120px', height: '700px', zIndex: 999, zoom: '{A_ZOOM}', background: '#fff', display: 'flex', containerType: 'size' }} }}); document.body.append(box); const w = mgBoard(T, {{ onOK: () => {{}} }}); box.append(w); return T.sol.flatMap(s => s.ops || []); }})()")
             pg.wait_for_timeout(300)
             s0 = pg.evaluate("__scr([0,0])"); s1 = pg.evaluate("__scr([1,0])"); PX = s1[0] - s0[0]
             def scr(pt): return pg.evaluate(f"__scr({json.dumps(pt)})")
             def jit(px): return [rnd.uniform(-px, px) * noise, rnd.uniform(-px, px) * noise]
             def drag(pts, steps=5, jpx=0):
-                a = scr(pts[0]); pg.mouse.move(*a); pg.mouse.down()
+                a = scr(pts[0])
+                if cdp:
+                    cur = a; cdp.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [{'x': a[0], 'y': a[1]}]})
+                    for q in pts[1:]:
+                        s = scr(q); j = jit(jpx); t = [s[0] + j[0], s[1] + j[1]]
+                        for k in range(1, steps + 1): cdp.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': [{'x': cur[0] + (t[0] - cur[0]) * k / steps, 'y': cur[1] + (t[1] - cur[1]) * k / steps}]})
+                        cur = t
+                    cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []}); pg.wait_for_timeout(40); return
+                pg.mouse.move(*a); pg.mouse.down()
                 for q in pts[1:]:
                     s = scr(q); j = jit(jpx); pg.mouse.move(s[0] + j[0], s[1] + j[1], steps=steps)
                 pg.mouse.up(); pg.wait_for_timeout(40)
@@ -106,7 +118,7 @@ with sync_playwright() as p:
             def mark(c, rot, deg):
                 tool('prot'); P0 = pg.evaluate("__w()._t.prot"); o = P0['c']; th = P0['rot'] + deg
                 drag([pol(o, 2.6 + rnd.uniform(-.3, .3) * noise, th + rnd.uniform(-4, 4) * noise), pol(o, 2.6, th)], steps=6)
-            def tap(pt): tool('point'); a = scr(cmpx(pt, 8)); pg.mouse.click(*a); pg.wait_for_timeout(60)
+            def tap(pt): tool('point'); a = scr(cmpx(pt, 8)); (cdp.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [{'x': a[0], 'y': a[1]}]}), cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})) if cdp else pg.mouse.click(*a); pg.wait_for_timeout(60)
             lost = False
             for op in ops:
                 if not pg.evaluate("!!__w()"): lost = True; print('   lost before op', op['t'], ops.index(op), flush=True); break
