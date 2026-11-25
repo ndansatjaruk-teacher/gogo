@@ -2956,6 +2956,9 @@ const CITIES = [
     theme: { river: true, hills: ['#BFE3C9', '#ADD9B8', '#CFEBD7'], far: '#DDF0E3', edge: ['pier', 'tree', 'stilthouse', 'pine'], small: ['lotus', 'reeds', 'flowers', 'kayak', 'bush', 'reeds'] } },
   { id: 92, grade: 7, name: 'ลำน้ำยกกำลัง', chapter: 'บทที่ 3 เลขยกกำลัง', lessons: LESSONS_M1C3,
     theme: { river: true, hills: ['#C9E4B0', '#BADB9C', '#D8EDC4'], far: '#E6F3D6', edge: ['ricebarn', 'tree', 'pier', 'stilthouse'], small: ['paddy', 'duck', 'reeds', 'lotus', 'flowers', 'kayak'] } },
+  /* v244 (ผู้ใช้ขอ): ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2701–2720 + บอส 2721 */
+  { id: 96, grade: 7, term: 2, name: 'ลำน้ำอัตราส่วน', chapter: 'บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ', lessons: LESSONS_M1C7,
+    theme: { river: true, hills: ['#CDE8B4', '#BEE0A0', '#DCEFC8'], far: '#E8F4DA', edge: ['pier', 'stilthouse', 'tree', 'ricebarn'], small: ['kayak', 'lotus', 'duck', 'paddy', 'reeds', 'flowers'] } },
   { id: 94, grade: 8, name: 'เมืองนักสืบข้อมูล', chapter: 'บทที่ 7 สถิติ (2)', lessons: LESSONS_M2C7,
     theme: { detect: true, hills: ['#E6DDF6', '#DCD1F0', '#F2E6DA'], far: '#F1ECFA', edge: ['dtlamp', 'dthouse', 'dtboard', 'dtoffice'], small: ['dtmagnify', 'dtbook', 'dtprints', 'dthydrant', 'dtbench', 'dtbox'] } },
   { id: 93, grade: 9, name: 'ขั้วโลกสถิติ', chapter: 'บทที่ 6 สถิติ (3)', lessons: LESSONS_M3C6,

@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-458 types
+461 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -339,6 +339,9 @@
 | `Q.readScale` | `{ a, v, unit = 'kg', col }` | [`engine/questions.js:1075`](../src/engine/questions.js#L1075) |
 | `Q.readWords` | `{ n, from = 'digit' }` | [`engine/questions.js:712`](../src/engine/questions.js#L712) |
 | `Q.robotCount` | `{ kind }` | [`engine/questions.js:1249`](../src/engine/questions.js#L1249) |
+| `Q.rpNum` | `{ story, q, fig, a, unit, hint, sig, base, cap, diff }` | [`grades/m1/m1r.js:78`](../src/grades/m1/m1r.js#L78) |
+| `Q.rpOpt` | `{ story, q, fig, opts, right, hint, sig, base, cap, diff }` | [`grades/m1/m1r.js:75`](../src/grades/m1/m1r.js#L75) |
+| `Q.rpRat` | `{ story, q, fig, a, mode, pre, hint, sig, base, cap, diff }` | [`grades/m1/m1r.js:80`](../src/grades/m1/m1r.js#L80) |
 | `Q.rulDraw` | `{ len, k = 'straw', col = 'mint', name = 'หลอด', max = 12 }` | [`app/lessons.js:1781`](../src/app/lessons.js#L1781) |
 | `Q.rulerSet` | `{ len, col = 'mint', kind = 'straw', max = 10 }` | [`engine/questions.js:1381`](../src/engine/questions.js#L1381) |
 | `Q.s2build` | `{ text, nums, res }` | [`grades/p2/p2m.js:47`](../src/grades/p2/p2m.js#L47) |
