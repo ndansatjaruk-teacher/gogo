@@ -102,6 +102,7 @@ grades/p4/p4fd.js
 grades/p4/p4td.js
 grades/p4/p4od.js
 grades/p4/p4md.js
+grades/m1/m1qd.js
 app/lessons.js
 app/learn.js
 app/wpic.js

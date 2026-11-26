@@ -2939,6 +2939,8 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 svg .e4d-dg{font:800 26px var(--font-num);fill:var(--ink)}
 svg .o4d-e{font:800 22px var(--font-num);fill:var(--ink)}
 svg .m4d-c{font:800 26px var(--font-num);fill:var(--ink)}
+svg .e1d-t{font:800 24px var(--font-num);fill:var(--ink)}
+.r4d-ink .e1d-t{font-family:'Mali',var(--font-num);font-weight:600}
 .r4d-ink .m4d-c{font-family:'Mali',var(--font-num);font-weight:600}
 .r4d-ink .o4d-e{font-family:'Mali',var(--font-num);font-weight:600}
 svg .e4d-dg.z{fill:#B7AED3}
