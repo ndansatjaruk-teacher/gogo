@@ -144,7 +144,7 @@ with sync_playwright() as p:
                  'elev': (4116, [[(360, 50), (260, 130 - 150 * math.tan(30 * R))], [(260, 43), (260, 130 + 150 * math.tan(40 * R))], [(260, 250), (360, 130 + 250 * math.tan(20 * R))]]),
                  'walk': (4118, [[(120, 250), (420 - 42.6 / math.tan(30 * R) * 4.6, 250)], [(80, 250), (420 - 42.6 / math.tan(60 * R) * 4.6, 250)]])}
         for name, (lid, paths) in cases.items():
-            open_page(lid, 0)
+            open_page(lid, '')  # v264: the first hands-on page "ลงมือเอง — …" (ดูภาพ comes first now)
             for path in paths: drag('.tg-board svg', path)
             mis = pg.evaluate("[...document.querySelectorAll('#stage .tg-mi')].every(e => e.classList.contains('ok'))")
             check('tg-' + name, mis and gate(), out()[:40])
