@@ -11,13 +11,15 @@ const E1C = { ink: '#2B2550', p: '#E5487A', b: '#2F7BC0', g: '#1B8862', o: '#EC7
    tokens split by spaces · "!" pink, "^" blue, "*" green · "{num|den}" a fraction ("~" = space inside, "!" colours a part) · a token ending "_" sticks to the next one */
 const e1dTw = (s, fs) => [...s].reduce((a, c) => a + fs * (/[(),.]/.test(c) ? .34 : /\s|~/.test(c) ? .3 : /[−+=×÷]/.test(c) ? .62 : /[฀-๿]/.test(c) ? .64 : .6), 0);
 function e1dParse(str) { return str.trim().split(/\s+/).map(t => { let col = null, stick = false; if (/^[!^*]/.test(t)) { col = { '!': E1C.p, '^': E1C.b, '*': E1C.g }[t[0]]; t = t.slice(1); } if (t.endsWith('_')) { stick = true; t = t.slice(0, -1); }
+  const pw = !/^\{/.test(t) && t.match(/^(.+?)'(.+)$/); if (pw) { const e = pw[2], ec = /^[!^*]/.test(e) ? { '!': E1C.p, '^': E1C.b, '*': E1C.g }[e[0]] : null; return { t: pw[1], pw: { s: (ec ? e.slice(1) : e).replace(/~/g, ' '), col: ec }, col, stick }; } /* v262: "2'5" = 2⁵ (เลขชี้กำลังตัวเล็กยกขึ้น · "!" ตัวแรกหลัง ' ระบายสีเลขชี้กำลัง) */
   const fr = t.match(/^\{(.+)\|(.+)\}$/); return fr ? { f: [fr[1], fr[2]].map(p => /^[!^*]/.test(p) ? { s: p.slice(1).replace(/~/g, ' '), col: { '!': E1C.p, '^': E1C.b, '*': E1C.g }[p[0]] } : { s: p.replace(/~/g, ' '), col: null }), col, stick } : { t, col, stick, op: /^[+−×÷=]$/.test(t) }; }); }
-const e1dWid = (k, fs) => k.f ? Math.max(e1dTw(k.f[0].s, fs * .82), e1dTw(k.f[1].s, fs * .82)) + 6 : k.op ? fs * .62 : e1dTw(k.t, fs);
+const e1dWid = (k, fs) => k.pw ? e1dTw(k.t, fs) + e1dTw(k.pw.s, fs * .62) + 2 : k.f ? Math.max(e1dTw(k.f[0].s, fs * .82), e1dTw(k.f[1].s, fs * .82)) + 6 : k.op ? fs * .62 : e1dTw(k.t, fs);
 const e1dGap = (a, b, fs) => a.stick || (b && b.t === ')') ? 0 : fs * .3;
 const e1dSides = (T, fs) => { const e = T.findIndex(k => k.t === '='); let L = 0, R = 0; T.forEach((k, i) => { const w = e1dWid(k, fs) + (i < T.length - 1 ? e1dGap(k, T[i + 1], fs) : 0); if (e < 0 || i > e) R += w; else if (i < e) L += w; }); return { e, L, R }; };
 function e1dLine(str, eqX, y, fs, col = E1C.ink) { const T = e1dParse(str), S = e1dSides(T, fs), eqW = fs * .62, g = fs * .3; let x = S.e < 0 ? eqX + eqW / 2 + g : eqX - eqW / 2 - g - S.L, s = ''; const xs = [];
   T.forEach((k, i) => { const w = e1dWid(k, fs), c = x + w / 2, kc = k.col || col; xs.push([x, x + w]);
     if (k.f) { const fs2 = fs * .82; s += `<text x="${a4n(c)}" y="${a4n(y - fs * .42)}" class="e1d-t" text-anchor="middle" style="fill:${k.f[0].col || kc};font-size:${a4n(fs2)}px">${k.f[0].s}</text><path d="M${a4n(x + 1)} ${a4n(y - fs * .3)} H${a4n(x + w - 1)}" stroke="${kc}" stroke-width="2"/><text x="${a4n(c)}" y="${a4n(y + fs * .5)}" class="e1d-t" text-anchor="middle" style="fill:${k.f[1].col || kc};font-size:${a4n(fs2)}px">${k.f[1].s}</text>`; }
+    else if (k.pw) { const bw = e1dTw(k.t, fs); s += `<text x="${a4n(x + bw / 2)}" y="${a4n(y)}" class="e1d-t" text-anchor="middle" style="fill:${kc};font-size:${a4n(fs)}px">${k.t}</text><text x="${a4n(x + bw + 1)}" y="${a4n(y - fs * .5)}" class="e1d-t" style="fill:${k.pw.col || kc};font-size:${a4n(fs * .62)}px">${k.pw.s}</text>`; }
     else s += `<text x="${a4n(c)}" y="${a4n(y)}" class="e1d-t" text-anchor="middle" style="fill:${kc};font-size:${a4n(fs)}px">${k.t}</text>`;
     x += w + (i < T.length - 1 ? e1dGap(k, T[i + 1], fs) : 0); });
   return { s, xs, T, y, fs }; }
@@ -25,7 +27,7 @@ function e1dLine(str, eqX, y, fs, col = E1C.ink) { const T = e1dParse(str), S = 
 function e1dEq(rows, o = {}) {
   const fs0 = 24, meas = rows.filter(r => r.e).map(r => e1dSides(e1dParse(r.e), fs0)), mL = Math.max(1, ...meas.map(m => m.e < 0 ? 0 : m.L)), mR = Math.max(1, ...meas.map(m => m.e < 0 ? m.R + fs0 : m.R));
   const eqX = o.eqX || Math.max(70, Math.min(290, 180 + (mL - mR) / 2)), sc = Math.min(1, (eqX - 20) / mL, (346 - eqX - 20) / mR), fs = Math.max(15, Math.round(fs0 * sc * 10) / 10);
-  let y = o.y0 || 44; const ys = rows.map((r, i) => { const fr = r.e && /\{/.test(r.e); if (i) y += (fr || /\{/.test(rows[i - 1].e || '') ? 1.95 : 1.62) * fs; return y; });
+  let y = o.y0 || 44; const ys = rows.map((r, i) => { const fr = r.e && /\{/.test(r.e); if (i && !r.sk) y += (fr || /\{/.test(rows[i - 1].e || '') ? 1.95 : 1.62) * fs; return y; });
   const H = Math.max(240, y + 30 + (o.extraH || 0)), Ls = rows.map((r, i) => r.e ? e1dLine(r.e, eqX, ys[i], fs) : null);
   const steps = rows.slice(1).map((r, j) => { const i = j + 1; return { ink: (r.e ? Ls[i].s : '') + (r.ex ? r.ex(Ls, { eqX, fs, ys }) : ''), w: r.w, n: r.n, ans: r.ans, tmp: r.tmp }; });
   return { W: 360, H, fig: (o.fig || '') + Ls[0].s, steps, q: o.q, fin: o.fin, say: o.say, dense: steps.length > 3 || o.dense, Ls, eqX, fs, ys }; }
