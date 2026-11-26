@@ -2937,6 +2937,8 @@ body[data-world=desert]{background:linear-gradient(180deg,#FFE3B0 0%,#FCEFD6 50%
 .r4v-ps .r4v-sm{font:800 11px var(--font-num)}
 /* v254 ป.4 บทที่ 7: เลขโดดในตารางหลัก / ตั้งบวกลบ / ประโยคระคน (svg) */
 svg .e4d-dg{font:800 26px var(--font-num);fill:var(--ink)}
+svg .o4d-e{font:800 22px var(--font-num);fill:var(--ink)}
+.r4d-ink .o4d-e{font-family:'Mali',var(--font-num);font-weight:600}
 svg .e4d-dg.z{fill:#B7AED3}
 svg .e4d-sm{font:800 15px var(--font-num);fill:var(--ink)}
 svg .e4d-nm{font:700 10.5px var(--font);fill:#7A70A0}
