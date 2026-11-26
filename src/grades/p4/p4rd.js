@@ -12,11 +12,11 @@ const r4dTxt = s => String(s || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' '
 
 /* worked example done like a person (no paragraphs): each step = { ink: svg drawn on the figure, w: line written on the scratch paper,
    wa: true → the line continues the previous line, n: short note beside it (or a bubble on the figure when the step writes nothing), ans: circle this line }
-   o = { W, H, fig (svg inside viewBox 0 0 W H; a [data-grp] group in the ink pops in as one piece, e.g. a protractor), q: the problem (top of the paper), steps, fin, say } · step.off: selectors of figure parts that fade away (e.g. the “?”) · step.tmp: this ink goes away at the next step · o.top: svg kept above the ink (labels) */
+   o = { W, H, fig (svg inside viewBox 0 0 W H; a [data-grp] group in the ink pops in as one piece, e.g. a protractor), q: the problem (top of the paper), steps, fin, say } · step.off: selectors of figure parts that fade away (e.g. the “?”) · step.tmp: this ink goes away at the next step · o.top: svg kept above the ink (labels) · o.dense: tighter paper lines (long column sums) */
 function r4dDo(o) {
   const W = o.W || 360, H = o.H || 240, S = o.steps, n = S.length, rm = r4dRM();
   window.__lastWalk = S.map((s, i) => [`${i + 1}`, r4dTxt(s.n || s.w)]);
-  const root = h('div', { class: 'r4d' }), fw = h('div', { class: 'r4d-fw' }), paper = h('div', { class: 'r4d-pap' }), lines = h('div', { class: 'r4d-lns' });
+  const root = h('div', { class: 'r4d' + (o.dense ? ' dense' : '') }), fw = h('div', { class: 'r4d-fw' }), paper = h('div', { class: 'r4d-pap' }), lines = h('div', { class: 'r4d-lns' });
   fw.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="r4d-svg" aria-hidden="true">${o.fig}<g class="r4d-lay"></g>${o.top || ''}</svg>`;
   const svg = fw.firstChild, lay = svg.querySelector('.r4d-lay'), penF = h('div', { class: 'r4d-pen', html: R4D_PEN }), penP = h('div', { class: 'r4d-pen', html: R4D_PEN }), bub = h('div', { class: 'r4d-bub' });
   fw.append(penF, bub); if (o.q) paper.append(h('div', { class: 'r4d-q', html: o.q })); paper.append(lines, penP);
