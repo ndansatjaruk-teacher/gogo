@@ -9,11 +9,73 @@ addEventListener('pointerdown', e => { if (e.pointerType === 'pen') { PEN.down =
 /* a touch is treated as a resting palm if the pen is in use, or the contact is very large */
 const isPalm = e => e.pointerType === 'touch' && (PEN.down || Date.now() - PEN.last < 1200 || (e.width > 45 && e.height > 45));
 
+/* ---------------- v263 (ผู้ใช้ขอ) ขีดซ้ำเพื่อลบ · scratch-to-erase (แบบ Goodnotes) ----------------
+   ขีดไปมาเร็ว ๆ ทับหมึกที่เขียนไว้ = ลบเส้นที่อยู่ใต้รอยขีด โดยไม่ต้องเปลี่ยนเป็นยางลบ
+   ใช้ได้ทั้งกระดาษทด (Scratch) และช่องเขียนคำตอบ (InkPad) · ปากกา Apple Pencil / สไตลัส นิ้ว และเมาส์
+   จำว่าเป็นรอยขีดลบเมื่อ: เปลี่ยนทิศกลับไปมาตามแกนหลัก ≥ minRev ครั้ง (แต่ละขาไกลกว่า minLeg px) · มุมกลับแหลม (ไม่ใช่โค้งมนแบบลายมือ)
+   ความยาวเส้นต่อขนาดกรอบ ≥ minDens · เร็วพอ (minSpeed px/ms) · กรอบไม่ใหญ่เกิน maxSize · และต้องมีหมึกอยู่ใต้รอยขีดจริง
+   เส้นที่ถูกลบ: แตะรอยขีด (ระยะ tol) และอยู่ในพื้นที่รอยขีด ≥ minCover ของความยาวเส้น (หรือเกือบทั้งเส้นอยู่ในพื้นที่) — เส้นข้าง ๆ ที่แค่เฉียดไม่ถูกลบ
+   ระหว่างขีด: เมื่อจำได้แล้ว รอยขีดจางลงเป็นสีเทา และเส้นที่จะถูกลบจางลง (บอกล่วงหน้า) · ยกปากกา = ลบทันที · ย้อน/ทำซ้ำได้ */
+const SCRUB = { minRev: 4, minLeg: 7, sharpCos: -.25, sharpShare: .6, minDens: 3, minSpeed: .25, maxSize: 360, minCover: .15, tol: 6 };
+const SCRUB_LV = { low: { minRev: 5, minDens: 3.6, minCover: .25, sharpShare: .7, minSpeed: .4 }, normal: {}, high: { minRev: 3, minDens: 2.4, minCover: .1, sharpShare: .5, minSpeed: .15 } };
+const scrubCfg = () => Object.assign({}, SCRUB, SCRUB_LV[(typeof SET !== 'undefined' && SET.scrubLv) || 'normal'] || {});
+const scrubOn = () => typeof SET === 'undefined' || SET.scrubErase !== false;
+function scrubRes(P, step = 3) { if (!P.length) return []; const out = [{ x: P[0].x, y: P[0].y }]; let px = P[0].x, py = P[0].y, acc = 0; /* even spacing (step px), points added between far-apart samples */
+  for (let i = 1; i < P.length; i++) { let ax = px, ay = py; const bx = P[i].x, by = P[i].y; let d = Math.hypot(bx - ax, by - ay);
+    while (acc + d >= step) { const t = (step - acc) / d; ax += (bx - ax) * t; ay += (by - ay) * t; out.push({ x: ax, y: ay }); d = Math.hypot(bx - ax, by - ay); acc = 0; }
+    acc += d; px = bx; py = by; }
+  return out; }
+function scrubHull(P) { const a = P.map(p => [p.x, p.y]).sort((u, v) => u[0] - v[0] || u[1] - v[1]); if (a.length < 3) return a; const cr = (o, p, q) => (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0]), lo = [], up = [];
+  for (const p of a) { while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); }
+  for (let i = a.length - 1; i >= 0; i--) { const p = a[i]; while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop(); up.push(p); }
+  return lo.slice(0, -1).concat(up.slice(0, -1)); }
+const scrubSegD = (x, y, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy, t = L ? Math.max(0, Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / L)) : 0; return Math.hypot(x - a[0] - t * dx, y - a[1] - t * dy); };
+const scrubInHull = (x, y, H, tol) => { if (H.length < 3) return H.some(q => Math.hypot(x - q[0], y - q[1]) <= tol); let ins = false; for (let i = 0, j = H.length - 1; i < H.length; j = i++) { const [xi, yi] = H[i], [xj, yj] = H[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) ins = !ins; }
+  if (ins) return true; for (let i = 0, j = H.length - 1; i < H.length; j = i++) if (scrubSegD(x, y, H[j], H[i]) <= tol) return true; return false; };
+/* is this stroke a scratch gesture? pts = [{x, y}], ms = how long it took · returns { R, H, box } or null */
+function scrubShape(pts, ms, cfg = scrubCfg()) {
+  const R = scrubRes(pts, 3); if (R.length < 10) return null;
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9, len = 0, mx = 0, my = 0; R.forEach((p, i) => { x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x); y1 = Math.max(y1, p.y); mx += p.x; my += p.y; if (i) len += Math.hypot(p.x - R[i - 1].x, p.y - R[i - 1].y); });
+  const size = Math.max(x1 - x0, y1 - y0); if (size < 10 || size > cfg.maxSize || len / size < cfg.minDens || len / Math.max(1, ms) < cfg.minSpeed) return null;
+  mx /= R.length; my /= R.length; let sxx = 0, syy = 0, sxy = 0; R.forEach(p => { const dx = p.x - mx, dy = p.y - my; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; });
+  const th0 = Math.atan2(2 * sxy, sxx - syy) / 2; let rev = [];
+  /* both the main axis and the one across it: a zig-zag that travels down a word has its back-and-forth across the main axis */
+  for (const th of [th0, th0 + Math.PI / 2]) { const c = Math.cos(th), sn = Math.sin(th), u = R.map(p => (p.x - mx) * c + (p.y - my) * sn);
+  /* direction changes along the main axis, with hysteresis: a leg counts only when it is longer than minLeg */
+  const rv = []; let dir = 0, ext = 0, lo = 0, hi = 0; for (let i = 1; i < u.length; i++) {
+    if (!dir) { if (u[i] > u[hi]) hi = i; if (u[i] < u[lo]) lo = i; if (u[i] - u[lo] > cfg.minLeg) { dir = 1; ext = i; } else if (u[hi] - u[i] > cfg.minLeg) { dir = -1; ext = i; } continue; }
+    if (dir > 0) { if (u[i] >= u[ext]) ext = i; else if (u[ext] - u[i] > cfg.minLeg) { rv.push(ext); dir = -1; ext = i; } }
+    else { if (u[i] <= u[ext]) ext = i; else if (u[i] - u[ext] > cfg.minLeg) { rv.push(ext); dir = 1; ext = i; } } }
+    if (rv.length > rev.length) rev = rv; }
+  if (rev.length < cfg.minRev) return null;
+  const sharp = rev.filter(k => { const a = R[Math.max(0, k - 3)], m = R[k], b = R[Math.min(R.length - 1, k + 3)], v1 = [m.x - a.x, m.y - a.y], v2 = [b.x - m.x, b.y - m.y], n = Math.hypot(...v1) * Math.hypot(...v2); return n && (v1[0] * v2[0] + v1[1] * v2[1]) / n < cfg.sharpCos; }).length;
+  if (sharp / rev.length < cfg.sharpShare) return null;
+  return { R, H: scrubHull(R), box: [x0, y0, x1, y1] }; }
+/* the strokes under a scratch: they touch the scratch line and lie (mostly) inside its area */
+function scrubTargets(sc, strokes, skip, cfg = scrubCfg()) { const out = [], [bx0, by0, bx1, by1] = sc.box;
+  strokes.forEach(s => { if (!s || s === skip || s.erase || !s.pts || !s.pts.length) return; const tol = cfg.tol + (s.width || 4) / 2, Q = scrubRes(s.pts, 3);
+    if (!Q.some(p => p.x >= bx0 - tol && p.x <= bx1 + tol && p.y >= by0 - tol && p.y <= by1 + tol)) return;
+    let ins = 0, touch = false; for (const p of Q) { if (scrubInHull(p.x, p.y, sc.H, tol)) ins++; if (!touch) for (let i = 1; i < sc.R.length; i++) if (scrubSegD(p.x, p.y, [sc.R[i - 1].x, sc.R[i - 1].y], [sc.R[i].x, sc.R[i].y]) <= tol) { touch = true; break; } }
+    const cov = ins / Q.length; if ((touch && cov >= cfg.minCover) || cov >= .8) out.push(s); });
+  return out; }
+/* live check while the pen is still down (every few points) · s.__scrub = the strokes that will go */
+function scrubLive(s, strokes) { if (!scrubOn() || s.erase) return false; const n = s.pts.length; if (n < 12 || n - (s.__chk || 0) < 4) return false; s.__chk = n;
+  const sc = scrubShape(s.pts, performance.now() - s.t0), tg = sc ? scrubTargets(sc, strokes, s) : [], was = !!s.__scrub; s.__scrub = tg.length ? tg : null;
+  return was !== !!s.__scrub || (s.__scrub && s.__scrub.length !== (s.__n || 0)) ? (s.__n = s.__scrub ? s.__scrub.length : 0, true) : false; }
+/* at pen-up: the final decision · returns the erased strokes (with their old places) or null */
+function scrubDo(s, strokes) { if (!scrubOn() || s.erase) return null; const sc = scrubShape(s.pts, performance.now() - s.t0), tg = sc ? scrubTargets(sc, strokes, s) : [];
+  delete s.__scrub; if (!tg.length) return null; const items = tg.map(t => ({ s: t, i: strokes.indexOf(t) })).sort((a, b) => a.i - b.i);
+  for (let k = items.length - 1; k >= 0; k--) strokes.splice(items[k].i, 1); const j = strokes.indexOf(s); if (j >= 0) strokes.splice(j, 1);
+  try { sfx.pop && sfx.pop(2); } catch (_) { } return items; }
+const scrubBack = (strokes, items) => items.forEach(({ s, i }) => strokes.splice(Math.min(i, strokes.length), 0, s));
+/* how a stroke is painted while a scratch is being recognised */
+const scrubAlpha = (s, cur) => cur && cur.__scrub ? (s === cur ? .35 : cur.__scrub.includes(s) ? .22 : 1) : 1;
+
 class InkPad {
   constructor(canvas, o = {}) {
     this.c = canvas; this.x = canvas.getContext('2d');
     this.o = Object.assign({ width: 7, color: '#2B2550' }, o);
-    this.strokes = []; this.cur = null; this.pid = null;
+    this.strokes = []; this.cur = null; this.pid = null; this.hist = [];
     canvas.classList.add('pad-canvas'); canvas.style.touchAction = 'none';
     canvas.addEventListener('pointerdown', e => this.down(e));
     canvas.addEventListener('pointermove', e => this.move(e));
@@ -37,7 +99,7 @@ class InkPad {
     e.preventDefault(); e.stopPropagation();
     try { this.c.setPointerCapture(e.pointerId); } catch (_) { }
     this.pid = e.pointerId;
-    this.cur = { pts: [this.pos(e)], type: e.pointerType, color: this.o.color, width: this.o.width };
+    this.cur = { pts: [this.pos(e)], type: e.pointerType, color: this.o.color, width: this.o.width, t0: performance.now() };
     this.strokes.push(this.cur); this.drawLast();
     this.o.onStart && this.o.onStart();
   }
@@ -46,20 +108,23 @@ class InkPad {
     e.preventDefault();
     const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
     for (const ev of (evs.length ? evs : [e])) { this.cur.pts.push(this.pos(ev)); this.drawLast(); }
+    if (!this.o.noScrub && scrubLive(this.cur, this.strokes)) this.redraw(); /* v263: บอกล่วงหน้าว่ากำลังขีดลบ */
   }
   up(e) {
     if (!this.cur || e.pointerId !== this.pid) return;
-    this.cur = null; this.pid = null;
+    const s = this.cur; this.cur = null; this.pid = null;
+    const gone = !this.o.noScrub && scrubDo(s, this.strokes); /* v263: ขีดซ้ำเพื่อลบ */
+    if (gone) { this.hist.push({ gone, n: this.strokes.length }); this.redraw(); this.o.onErase && this.o.onErase(gone); }
     this.o.onStroke && this.o.onStroke(this.strokes);
   }
   drawStroke(s, from = 1) {
     const x = this.x, p = s.pts;
-    x.strokeStyle = s.color; x.lineWidth = s.width; x.lineCap = 'round'; x.lineJoin = 'round';
+    x.strokeStyle = s.__scrub ? '#9A93B8' : s.color; x.lineWidth = s.width; x.lineCap = 'round'; x.lineJoin = 'round'; x.globalAlpha = scrubAlpha(s, this.cur);
     x.globalCompositeOperation = s.erase ? 'destination-out' : 'source-over';
     if (p.length === 1) { x.beginPath(); x.arc(p[0].x, p[0].y, s.width / 2, 0, 7); x.fillStyle = s.color; x.fill(); }
     x.beginPath(); x.moveTo(p[Math.max(0, from - 1)].x, p[Math.max(0, from - 1)].y);
     for (let i = from; i < p.length; i++) x.lineTo(p[i].x, p[i].y);
-    x.stroke(); x.globalCompositeOperation = 'source-over';
+    x.stroke(); x.globalCompositeOperation = 'source-over'; x.globalAlpha = 1;
   }
   drawLast() { const s = this.cur; if (s) this.drawStroke(s, Math.max(1, s.pts.length - 1)); }
   redraw() {
@@ -68,8 +133,8 @@ class InkPad {
     this.o.drawBg && this.o.drawBg(this.x, this.w, this.h);
     for (const s of this.strokes) this.drawStroke(s);
   }
-  clear() { this.strokes = []; this.cur = null; this.redraw(); }
-  undo() { this.strokes.pop(); this.redraw(); }
+  clear() { this.strokes = []; this.cur = null; this.hist = []; this.redraw(); }
+  undo() { const h = this.hist[this.hist.length - 1]; if (h && h.n === this.strokes.length) { this.hist.pop(); scrubBack(this.strokes, h.gone); } else this.strokes.pop(); this.redraw(); } /* v263: ย้อนการขีดลบได้ */
   destroy() { this.ro.disconnect(); }
 }
 
@@ -320,7 +385,7 @@ function animateDigit(canvas, d, opts = {}) {
 
 /* ---------------- Scratch layer (ทด) ---------------- */
 const Scratch = {
-  on: false, enabled: false, color: '#4C9BF0', strokes: [], cur: null,
+  on: false, enabled: false, color: '#4C9BF0', strokes: [], cur: null, hist: [], fwd: [],
   /* v179 (ผู้ใช้ขอ: แถบเครื่องมือทดลากย้ายได้) จับที่ป้าย "กระดาษทด" แล้วลาก — แถบไม่บังโจทย์ · จำตำแหน่งไว้ (ถ้าเบราว์เซอร์ให้เก็บ) */
   dragBar() { const T = this.tools, g = T.querySelector('.t'); g.classList.add('grip'); g.title = 'ลากเพื่อย้ายแถบ';
     const place = (x, y) => { const r = T.getBoundingClientRect(), X = Math.max(4, Math.min(innerWidth - r.width - 4, x)), Y = Math.max(4, Math.min(innerHeight - r.height - 4, y)); Object.assign(T.style, { left: X + 'px', top: Y + 'px', bottom: 'auto', transform: 'none' }); return [X, Y]; };
@@ -336,8 +401,9 @@ const Scratch = {
     const sw = c => h('button', { class: 'sw' + (c === this.color ? ' on' : ''), style: { background: c }, 'aria-label': 'สี', onclick: e => { this.color = c; this.tools.querySelectorAll('.sw').forEach(b => b.classList.toggle('on', b === e.currentTarget)); } });
     this.tools = h('div', { class: 'scratch-tools' }, h('span', { class: 't' }, icon('pencil'), 'กระดาษทด'),
       ['#4C9BF0', '#FF6F7D', '#2FBF8C', '#2B2550'].map(sw),
-      h('button', { class: 'ibtn', 'aria-label': 'ย้อน', onclick: () => { this.strokes.pop(); this.redraw(); } }, icon('undo')),
-      h('button', { class: 'ibtn', 'aria-label': 'ล้าง', onclick: () => this.clear() }, icon('eraser')),
+      h('button', { class: 'ibtn', 'aria-label': 'ย้อน', onclick: () => this.undo() }, icon('undo')),
+      h('button', { class: 'ibtn', 'aria-label': 'ทำซ้ำ', onclick: () => this.redo() }, icon('redo')),
+      h('button', { class: 'ibtn', 'aria-label': 'ล้าง', onclick: () => this.clear(true) }, icon('eraser')),
       h('button', { class: 'ibtn', 'aria-label': 'ปิด', onclick: () => this.toggle(false) }, icon('close')));
     document.body.append(this.tools); this.dragBar();
     addEventListener('resize', () => this.resize()); this.resize();
@@ -376,11 +442,12 @@ const Scratch = {
     const d = devicePixelRatio || 1; this.c.width = innerWidth * d; this.c.height = innerHeight * d;
     this.c.style.width = innerWidth + 'px'; this.c.style.height = innerHeight + 'px'; this.x.setTransform(d, 0, 0, d, 0, 0); this.redraw();
   },
-  start(e, passive) { this.cur = { pts: [{ x: e.clientX, y: e.clientY }], color: this.color, id: e.pointerId, moved: 0, passive }; this.strokes.push(this.cur); this.drawSeg(this.cur); },
+  start(e, passive) { this.cur = { pts: [{ x: e.clientX, y: e.clientY }], color: this.color, id: e.pointerId, moved: 0, passive, t0: performance.now() }; this.strokes.push(this.cur); this.drawSeg(this.cur); },
   move(e) {
     const s = this.cur; if (!s || e.pointerId !== s.id) return;
     const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
-    for (const ev of (evs.length ? evs : [e])) { const l = s.pts[s.pts.length - 1]; s.moved += Math.hypot(ev.clientX - l.x, ev.clientY - l.y); s.pts.push({ x: ev.clientX, y: ev.clientY }); this.drawSeg(s); }
+    for (const ev of (evs.length ? evs : [e])) { const l = s.pts[s.pts.length - 1]; s.moved += Math.hypot(ev.clientX - l.x, ev.clientY - l.y); s.pts.push({ x: ev.clientX, y: ev.clientY }); if (!s.__scrub) this.drawSeg(s); }
+    if (scrubLive(s, this.strokes) || s.__scrub) this.redraw(); /* v263: กำลังขีดลบ → รอยขีดเป็นสีเทาจาง เส้นที่จะถูกลบจางลง */
   },
   under(x, y) { this.c.style.pointerEvents = 'none'; const el = document.elementFromPoint(x, y); this.c.style.pointerEvents = ''; return el; },
   end(e) {
@@ -392,15 +459,20 @@ const Scratch = {
       try { el.dispatchEvent(new PointerEvent('pointerdown', o)); el.dispatchEvent(new PointerEvent('pointerup', o)); } catch (_) {}
         this.ours = true; try { const b = el.closest('button, a, label'); if (b) b.click(); else el.dispatchEvent(new MouseEvent('click', o)); } finally { this.ours = false; } this.blockClickUntil = Date.now() + 500; return; } }
     const s = this.cur; if (!s || e.pointerId !== s.id) return; this.cur = null;
-    if (s.passive) { if (s.moved < 6) { this.strokes.pop(); this.redraw(); } else this.blockClickUntil = Date.now() + 400; }
+    if (s.passive && s.moved < 6) { this.strokes.pop(); this.redraw(); return; } if (s.passive) this.blockClickUntil = Date.now() + 400;
+    const gone = e.type !== 'pointercancel' && scrubDo(s, this.strokes); /* v263: ขีดซ้ำเพื่อลบ */
+    this.hist.push(gone ? { gone } : { add: s }); this.fwd = []; this.redraw();
   },
+  /* v263: ย้อน / ทำซ้ำ (รวมการขีดลบและการล้าง) */
+  undo() { const h = this.hist.pop(); if (!h) { this.strokes.pop(); this.redraw(); return; } if (h.add) { const i = this.strokes.lastIndexOf(h.add); if (i >= 0) this.strokes.splice(i, 1); } else if (h.gone) scrubBack(this.strokes, h.gone); else if (h.all) this.strokes = h.all.slice(); this.fwd.push(h); this.redraw(); },
+  redo() { const h = this.fwd.pop(); if (!h) return; if (h.add) this.strokes.push(h.add); else if (h.gone) h.gone.slice().reverse().forEach(({ s }) => { const i = this.strokes.indexOf(s); if (i >= 0) this.strokes.splice(i, 1); }); else if (h.all) this.strokes = []; this.hist.push(h); this.redraw(); },
   drawSeg(s) {
     const x = this.x, p = s.pts, n = p.length; x.strokeStyle = s.color; x.fillStyle = s.color; x.lineWidth = 4; x.lineCap = 'round'; x.lineJoin = 'round';
     if (n === 1) { x.beginPath(); x.arc(p[0].x, p[0].y, 2, 0, 7); x.fill(); return; }
     x.beginPath(); x.moveTo(p[n - 2].x, p[n - 2].y); x.lineTo(p[n - 1].x, p[n - 1].y); x.stroke();
   },
-  redraw() { this.x.clearRect(0, 0, innerWidth, innerHeight); for (const s of this.strokes) { const p = s.pts; this.x.strokeStyle = s.color; this.x.lineWidth = 4; this.x.lineCap = 'round'; this.x.lineJoin = 'round'; this.x.beginPath(); p.forEach((q, i) => i ? this.x.lineTo(q.x, q.y) : this.x.moveTo(q.x, q.y)); this.x.stroke(); } },
-  clear() { this.strokes = []; this.cur = null; this.redraw(); },
+  redraw() { this.x.clearRect(0, 0, innerWidth, innerHeight); for (const s of this.strokes) { const p = s.pts; this.x.globalAlpha = scrubAlpha(s, this.cur); this.x.strokeStyle = s.__scrub ? '#9A93B8' : s.color; this.x.lineWidth = 4; this.x.lineCap = 'round'; this.x.lineJoin = 'round'; this.x.beginPath(); p.forEach((q, i) => i ? this.x.lineTo(q.x, q.y) : this.x.moveTo(q.x, q.y)); this.x.stroke(); } this.x.globalAlpha = 1; },
+  clear(undoable) { if (undoable && this.strokes.length) { this.hist.push({ all: this.strokes.slice() }); this.fwd = []; } else { this.hist = []; this.fwd = []; } this.strokes = []; this.cur = null; this.redraw(); },
   toggle(v = !this.on) { this.on = v; this.c.classList.toggle('on', v); this.tools.classList.toggle('on', v); const b = $('#btnScratch'); b && b.classList.toggle('on', v); if (v && this.barPos && this.placeBar) requestAnimationFrame(() => { this.barPos = this.placeBar(...this.barPos); }); },
   setEnabled(v) { this.enabled = v; if (!v) { this.toggle(false); this.clear(); } }
 };

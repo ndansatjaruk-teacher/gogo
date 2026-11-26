@@ -41,8 +41,10 @@ const QB_INT = [
   () => qbTry(() => { const x = qbNZ(2, 9), a = qbR(5, 20), k = qbR(2, 4), b = qbR(2, 9), c = qbR(2, 5), m = qbR(2, 6); if (k * c === m) return null; const d = (a - k * (b - c * x) - m * x) / m; return qbOK(d) && d && { e: `${a} − ${qbK(k, `${b} − ${c}x`)} = ${qbK(m, lqLin(1, d))}`, x, h: `−${k}(${b} − ${c}x) = −${k * b} + ${k * c}x` }; }),
   () => qbTry(() => { const x = qbNZ(2, 9), k = qbR(2, 3), m = qbR(2, 4), b = qbR(1, 6), c = qbR(1, 6), n = qbR(2, 5); const L = k * (2 * x - m * (x + b)) + c * x, rhs = n * x; if (k * (2 - m) + c === n) return null; const d = L - rhs; return d && qbOK(d) && { e: `${k}[2x − ${qbK(m, lqLin(1, b))}] + ${c}x = ${lqLin(n, d)}`, x, h: 'วงเล็บในก่อน แล้ววงเล็บนอก รวม x ไว้ข้างเดียว' }; })
 ];
-function qbIntGame() { const out = [], seen = new Set();
-  QB_INT.forEach((mk, i) => { let q = null; for (let t = 0; t < 20 && (!q || seen.has(q.e)); t++) q = mk(); if (!q) return; seen.add(q.e); out.push(lqSolve(q.e, q.x, q.h, 'qi' + (i + 1), i + 1)); });
+/* v263 (ผู้ใช้ขอ): ด่านพิเศษเหลือ 10 ข้อ — แต่ละกลุ่ม 3 แบบ (ง่าย → ยาก) สุ่มเลือก 2 แบบ ได้ 10 จาก 15 แบบ ยังเรียงง่าย → ยาก */
+const qbTen = () => { const drop = new Set([0, 1, 2, 3, 4].map(g => g * 3 + Math.floor(Math.random() * 3))); return i => !drop.has(i); };
+function qbIntGame() { const out = [], seen = new Set(), keep = qbTen();
+  QB_INT.forEach((mk, i) => { if (!keep(i)) return; let q = null; for (let t = 0; t < 20 && (!q || seen.has(q.e)); t++) q = mk(); if (!q) return; seen.add(q.e); out.push(lqSolve(q.e, q.x, q.h, 'qi' + (i + 1), i + 1)); });
   return out; }
 
 /* ---------- 2623: เศษส่วนและทศนิยม ---------- */
@@ -68,11 +70,11 @@ const QB_FD = [
   () => qbTry(() => { const k = qbR(2, 5) / 10, m = qbR(2, 6), x = qbNZ(2, 20), c = Math.round((k * (x - 4) + x / m) * 100) / 100; return Number.isInteger(x / m) && c && Number.isInteger(c * 10) && { e: `${qbD(k)}${qbK(1, lqLin(1, -4))} + ${qbF('x', m)} = ${qbD(c)}`, x, h: 'แจกแจงก่อน แล้วคูณด้วยจำนวนที่ทำให้ไม่มีเศษส่วนและทศนิยม' }; }),
   () => qbTry(() => { const a = [3, 4, 6][qbR(0, 2)], b = [2, 3, 5][qbR(0, 2)]; if (a === b || a === 2 * b) return null; /* 2/a − 1/b = 0 → x หายหมด */ const x = qbNZ(1, 30), p = qbR(1, 6), q = qbR(1, 6), d = qbR(1, 4) / 2, c = Math.round(((2 * x + p) / a - (x - q) / b - d) * 1000) / 1000; return Number.isInteger(c) && { e: `${qbF(`2x + ${p}`, a)} − ${qbF(`x − ${q}`, b)} − ${qbD(d)} = ${lqN(c)}`, x, h: 'เปลี่ยน ' + qbD(d) + ' เป็นเศษส่วน คูณด้วย ค.ร.น. ของตัวส่วนทุกตัว' }; })
 ];
-function qbFDGame() { const out = [], seen = new Set();
-  QB_FD.forEach((mk, i) => { let q = null; for (let t = 0; t < 20 && (!q || seen.has(q.e)); t++) q = mk(); if (!q) return; seen.add(q.e); out.push(lqSolve(q.e, q.x, q.h, 'qf' + (i + 1), i + 1)); });
+function qbFDGame() { const out = [], seen = new Set(), keep = qbTen();
+  QB_FD.forEach((mk, i) => { if (!keep(i)) return; let q = null; for (let t = 0; t < 20 && (!q || seen.has(q.e)); t++) q = mk(); if (!q) return; seen.add(q.e); out.push(lqSolve(q.e, q.x, q.h, 'qf' + (i + 1), i + 1)); });
   return out; }
 
-LESSONS_M1C6.splice(LESSONS_M1C6.findIndex(L => L.id === 2613) + 1, 0, { id: 2622, bonus: true, place: 'แก่งสมการยาก', title: 'ด่านพิเศษ: แก้สมการจำนวนเต็ม 15 ข้อ (ยาก)', short: 'สมการยาก', tone: 'yellow', learned: true, noTeach: true, gameN: 15,
-  goal: 'แก้สมการล้วน 15 ข้อ แบบยาก (สุ่มใหม่ทุกครั้ง) ไม่มีเศษส่วนและทศนิยม: มีจำนวนลบ x อยู่ทั้งสองข้าง วงเล็บ และวงเล็บซ้อน', teach: [], game: qbIntGame });
-LESSONS_M1C6.splice(LESSONS_M1C6.findIndex(L => L.id === 2615) + 1, 0, { id: 2623, bonus: true, place: 'แก่งเศษทศนิยม', title: 'ด่านพิเศษ: แก้สมการเศษส่วน ทศนิยม 15 ข้อ (ยาก)', short: 'เศษส่วน ทศนิยม', tone: 'yellow', learned: true, noTeach: true, gameN: 15,
-  goal: 'แก้สมการล้วน 15 ข้อ แบบยาก (สุ่มใหม่ทุกครั้ง) เน้นเศษส่วนและทศนิยม: กำจัดตัวส่วนด้วย ค.ร.น. คูณ 10 หรือ 100 และโจทย์ที่มีทั้งเศษส่วนกับทศนิยม', teach: [], game: qbFDGame });
+LESSONS_M1C6.splice(LESSONS_M1C6.findIndex(L => L.id === 2613) + 1, 0, { id: 2622, bonus: true, place: 'แก่งสมการยาก', title: 'ด่านพิเศษ: แก้สมการจำนวนเต็ม 10 ข้อ (ยาก)', short: 'สมการยาก', tone: 'yellow', learned: true, noTeach: true, gameN: 10,
+  goal: 'แก้สมการล้วน 10 ข้อ แบบยาก (สุ่มใหม่ทุกครั้ง) ไม่มีเศษส่วนและทศนิยม: มีจำนวนลบ x อยู่ทั้งสองข้าง วงเล็บ และวงเล็บซ้อน', teach: [], game: qbIntGame });
+LESSONS_M1C6.splice(LESSONS_M1C6.findIndex(L => L.id === 2615) + 1, 0, { id: 2623, bonus: true, place: 'แก่งเศษทศนิยม', title: 'ด่านพิเศษ: แก้สมการเศษส่วน ทศนิยม 10 ข้อ (ยาก)', short: 'เศษส่วน ทศนิยม', tone: 'yellow', learned: true, noTeach: true, gameN: 10,
+  goal: 'แก้สมการล้วน 10 ข้อ แบบยาก (สุ่มใหม่ทุกครั้ง) เน้นเศษส่วนและทศนิยม: กำจัดตัวส่วนด้วย ค.ร.น. คูณ 10 หรือ 100 และโจทย์ที่มีทั้งเศษส่วนกับทศนิยม', teach: [], game: qbFDGame });

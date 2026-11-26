@@ -27,7 +27,8 @@ with sync_playwright() as p:
     pg.evaluate("SET.mute = true; window.say = () => {}; window.__td = 0; document.addEventListener('teachdone', () => window.__td++, true); 0")
     cdp = ctx.new_cdp_session(pg) if A.touch else None
 
-    def open_page(lid, t):
+    def open_page(lid, t):  # t = page number, or words in the title of a hands-on page "ลงมือเอง — …" (v263: ลำน้ำเรขาเรียงหน้าใหม่)
+        if isinstance(t, str): t = pg.evaluate(f"LESSONS.find(L => L.id === {lid}).teach.findIndex(s => (s.t || '').includes('ลงมือเอง') && (s.t || '').includes({t!r}))")
         pg.evaluate(f"startTeach(LESSONS.findIndex(L => L.id === {lid}), {t}); window.__td = 0"); pg.wait_for_timeout(700)
     def scr(sel, x, y):  # svg user point → screen point (same matrix the page uses)
         return pg.evaluate(f"(() => {{ const s = document.querySelector('#stage {sel}'), m = s.getScreenCTM(), q = s.createSVGPoint(); q.x = {x}; q.y = {y}; const r = q.matrixTransform(m); return [r.x, r.y]; }})()")
@@ -75,7 +76,7 @@ with sync_playwright() as p:
         check('oppSim', ok, ' | '.join(g[:30] for g in got))
     # ---------- ม.1 ลำน้ำเรขา ----------
     def angType():
-        open_page(2201, 2); sel = 'svg.mg-sum'; O = (280, 170); P = lambda d, r=130: (O[0] + r * math.cos(d * R), O[1] - r * math.sin(d * R))
+        open_page(2201, 'ชนิดของมุม'); sel = 'svg.mg-sum'; O = (280, 170); P = lambda d, r=130: (O[0] + r * math.cos(d * R), O[1] - r * math.sin(d * R))
         path = [P(50)] + [P(d) for d in range(55, 256, 5)]; seen = []
         for stop in [40, 90, 135, 180, 250]:
             cur = pg.evaluate("+((document.querySelector('#stage .fnote').textContent.match(/= (\\d+)°/) || [])[1] || 0)")
@@ -84,28 +85,28 @@ with sync_playwright() as p:
         ok = all(f'= {d}°' in s for d, s in zip([40, 90, 135, 180, 250], seen)) and 'ครบทั้ง 5' in out() and gate()
         check('angType', ok, ' | '.join(seen))
     def equiSeg():
-        open_page(2204, 3); sel = 'svg.mg-sum'; good = 0
+        open_page(2204, 'เส้นตั้งฉากแบ่งครึ่ง'); sel = 'svg.mg-sum'; good = 0
         for y in [70, 140, 210]:
             drag(sel, [(200, y + 20), (284, y)]); good += 'PA = PB' in out()
         check('equiSeg', good == 3 and gate(), out()[:60])
     def equiAng():
-        open_page(2206, 1); sel = 'svg.mg-sum'; V = (70, 280); good = 0
+        open_page(2206, 'เส้นแบ่งครึ่งมุม'); sel = 'svg.mg-sum'; V = (70, 280); good = 0
         for r in [150, 260, 370]:
             q = (V[0] + r * math.cos(33 * R), V[1] - r * math.sin(33 * R)); drag(sel, [(q[0] + 30, q[1] + 30), q]); good += 'เท่ากัน' in out()
         check('equiAng', good == 3 and gate(), out()[:60])
     def dist():
-        open_page(2208, 3); sel = 'svg.mg-sum'
+        open_page(2208, 'ระยะห่าง'); sel = 'svg.mg-sum'
         drag(sel, [(110, 250), (200, 250)]); o1 = out(); drag(sel, [(200, 250), (306, 250)]); o2 = out()
         check('distSim', '⊥' not in o1 and '⊥' in o2 and gate(), o1[:20] + ' → ' + o2[:30])
     def trans():
-        open_page(2209, 1); sel = 'svg.mg-trans'
+        open_page(2209, 'ℓ ∥ m'); sel = 'svg.mg-trans'
         for k in range(3): click(f'.mg-set:nth-child({k + 1})')
         o1 = out(); P = lambda d: (330 + 90 * math.cos(d * R), 110 - 90 * math.sin(d * R))
         drag(sel, [P(60)] + [P(60 + 40 * k / 10) for k in range(1, 11)], 3); o2 = out()
         a1 = re.findall(r'(\d+)°', o1)[:2]; a2 = re.findall(r'(\d+)°', o2)[:2]
         check('transSim', gate() and a1 != a2 and len(a2) == 2 and int(a2[0]) + int(a2[1]) == 180, f'{a1} → {a2}')
     def sumSim():
-        open_page(2211, 2); sel = 'svg.mg-sum'; sums = []; c = (230, 70)
+        open_page(2211, 'มุมภายใน'); sel = 'svg.mg-sum'; sums = []; c = (230, 70)
         for t in [(120, 120), (400, 60), (300, 200)]:
             drag(sel, [c, t]); c = t; sums.append(re.findall(r'(\d+)°', out())[:4])
         ok = all(len(s) == 4 and int(s[0]) + int(s[1]) + int(s[2]) == 180 for s in sums) and len(set(tuple(s) for s in sums)) == 3 and gate()

@@ -106,6 +106,7 @@ grades/m1/m1qd.js
 grades/m1/m1rd.js
 grades/m1/m1qb.js
 grades/m1/m1ed.js
+grades/m1/m1gd.js
 app/lessons.js
 app/learn.js
 app/wpic.js

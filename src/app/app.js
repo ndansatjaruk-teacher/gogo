@@ -483,6 +483,7 @@ function showSettings() {
     sw('speak', 'อ่านออกเสียงคำสั่ง (ภาษาไทย)'),
     sw('sfx', 'เสียงเอฟเฟกต์'),
     sw('penAnywhere', 'Apple Pencil เขียนทดบนที่ว่างได้ทุกที่'),
+    (() => { const r = sw('scrubErase', 'ขีดไปมาซ้ำ ๆ ทับรอยเขียน = ลบ · ความไว'), g = h('div', { class: 'seg scrublv' }); [['low', 'ต่ำ'], ['normal', 'ปกติ'], ['high', 'สูง']].forEach(([k, t]) => g.append(h('button', { class: 'btn sm' + ((SET.scrubLv || 'normal') === k ? ' primary' : ''), onclick: e => { SET.scrubLv = k; persist(); g.querySelectorAll('button').forEach(b => b.classList.toggle('primary', b === e.currentTarget)); } }, t))); r.insertBefore(g, r.lastChild); return r; })(), /* v263: ขีดซ้ำเพื่อลบ เปิด/ปิด + ความไว ในแถวเดียว */
     sw('askNudge', 'ไก่น้อยถาม “มีอะไรถามมั้ย” ทุก 30 วินาที ระหว่างเล่นเกม'),
     sw('unlockAll', 'ปลดล็อกทุกด่าน (สำหรับครู)', () => { m.remove(); showMap(); }),
     sw('showFinal', 'แสดงด่านบอสใหญ่ประจำชั้นเสมอ (ปกติจะปรากฏเมื่อชนะบอสครบทุกบท)', () => { m.remove(); showMap(); }),
@@ -675,7 +676,8 @@ function startTeach(li, at = 0, seen = false) {
   const back = h('button', { class: 'btn icon', 'aria-label': 'ย้อนกลับ' }, icon('left'));
   const next = h('button', { class: 'btn primary' }, h('span', null, 'ถัดไป'), icon('right'));
   const steps = h('div', { class: 'steps' }), cap = h('div');
-  const stage = shell({ lesson: true, world: WORLD_OF(cityOf(L)), top: lessonTop(L, 'บทเรียน'), bottom: [back, h('div', { class: 'mid' }, steps, cap), next] });
+  const top = lessonTop(L, 'บทเรียน'); top.splice(2, 0, h('button', { class: 'ibtn wide skipgame', 'aria-label': 'ข้ามไปเล่นเกมเลย', onclick: e => { e.stopPropagation(); sfx.tap(); startGame(li); } }, icon('game'), h('span', { class: 'lbl' }, 'ข้ามไปเล่นเกม'))); /* v263 (ผู้ใช้ขอ): ระหว่างเรียน ข้ามไปเล่นเกมได้ทุกด่าน */
+  const stage = shell({ lesson: true, world: WORLD_OF(cityOf(L)), top, bottom: [back, h('div', { class: 'mid' }, steps, cap), next] });
   let total = L.teach.length + 1, bub = null, hint = null, vis = null;
   const setLock = locked => { next.classList.toggle('waiting', locked); if (hint) { hint.lastChild.textContent = locked ? 'ทำตัวอย่างให้ครบก่อน แล้วจึงไปต่อได้ · งงไหม? กดปุ่ม ? ด้านบน' : 'แตะตรงไหนก็ได้เพื่อไปต่อ'; hint.classList.toggle('lock', locked); } };
   function mountStep(s) {

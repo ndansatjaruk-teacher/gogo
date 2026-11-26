@@ -602,29 +602,29 @@ function miQuick15() {
   const H = { same: 'เครื่องหมายเหมือนกัน: บวกค่าสัมบูรณ์ แล้วใส่เครื่องหมายเดิม', mix: 'ต่างเครื่องหมาย: มากลบน้อย ใช้เครื่องหมายของตัวที่ค่าสัมบูรณ์มากกว่า', sub: 'ลบ = บวกด้วยจำนวนตรงข้ามของตัวลบ' };
   const K = [(lo, hi) => [`${P(-R(lo, hi))} + ${P(-R(lo, hi))}`, H.same], (lo, hi) => [`${P(-R(lo, hi))} + ${R(lo, hi)}`, H.mix], (lo, hi) => [`${R(lo, hi)} + ${P(-R(lo, hi))}`, H.mix],
     (lo, hi) => [`${R(lo, hi)} − ${P(-R(lo, hi))}`, H.sub], (lo, hi) => [`${P(-R(lo, hi))} − ${R(lo, hi)}`, H.sub], (lo, hi) => [`${P(-R(lo, hi))} − ${P(-R(lo, hi))}`, H.sub], (lo, hi) => { const a = R(lo, hi); return [`${a} − ${a + R(lo, hi)}`, H.sub]; }];
-  for (let i = 0, t = 0; out.length < 15 && t < 400; t++) { let e, hn; const k = (i + Math.floor(i / 7)) % 7;
-    if (i < 5) [e, hn] = K[k](1, 9); else if (i < 10) [e, hn] = K[k](10, 40);
+  for (let i = 0, t = 0; out.length < 10 && t < 400; t++) { let e, hn; const k = (i + Math.floor(i / 7)) % 7;
+    if (i < 3) [e, hn] = K[k](1, 9); else if (i < 7) [e, hn] = K[k](10, 40);
     else { const a = R(2, 30) * (Math.random() < .5 ? -1 : 1), b = R(2, 30) * (Math.random() < .5 ? -1 : 1), c = R(2, 30) * (Math.random() < .5 ? -1 : 1); e = `${P(a)} ${Math.random() < .5 ? '+' : '−'} ${P(b)} − ${P(c)}`; hn = 'ทำจากซ้ายไปขวา ลบ = บวกด้วยจำนวนตรงข้าม'; }
-    if (seen.has(e)) continue; seen.add(e); out.push(MIQ.x(e, hn)); i++; }
+    const nk = (e.match(/\d+/g) || []).join(','); if (seen.has(nk)) continue; seen.add(nk); out.push(MIQ.x(e, hn)); i++; } /* v263: ตัวเลขชุดเดียวกัน (6 × (−2) กับ 6 ÷ (−2)) เกมนับเป็นข้อซ้ำแล้วตัดทิ้ง จึงห้ามตั้งแต่แรก */
   return out;
 }
-LESSONS_M1C1.splice(LESSONS_M1C1.findIndex(L => L.id === 2008) + 1, 0, { id: 2016, bonus: true, place: 'แก่งถามตอบ', title: 'ด่านพิเศษ: บวก ลบ จำนวนเต็ม 15 ข้อ', short: 'ถามตอบ บวก ลบ', tone: 'yellow', learned: true, noTeach: true, gameN: 15,
-  goal: 'ฝึกบวกและลบจำนวนเต็มแบบถามตอบเร็ว 15 ข้อ (สุ่มใหม่ทุกครั้ง) เริ่มจากเลขหลักเดียว ไปสองหลัก และสามจำนวน', teach: [], game: miQuick15 });
-/* v226 (ผู้ใช้ขอ): ด่านพิเศษหลังด่าน 12 — ถามตอบเร็ว 15 ข้อ การคูณและการหารจำนวนเต็มเท่านั้น · สุ่มใหม่ทุกครั้ง
+LESSONS_M1C1.splice(LESSONS_M1C1.findIndex(L => L.id === 2008) + 1, 0, { id: 2016, bonus: true, place: 'แก่งถามตอบ', title: 'ด่านพิเศษ: บวก ลบ จำนวนเต็ม 10 ข้อ', short: 'ถามตอบ บวก ลบ', tone: 'yellow', learned: true, noTeach: true, gameN: 10,
+  goal: 'ฝึกบวกและลบจำนวนเต็มแบบถามตอบเร็ว 10 ข้อ (สุ่มใหม่ทุกครั้ง) เริ่มจากเลขหลักเดียว ไปสองหลัก และสามจำนวน', teach: [], game: miQuick15 });
+/* v226 (ผู้ใช้ขอ): ด่านพิเศษหลังด่าน 12 — ถามตอบเร็ว 10 ข้อ การคูณและการหารจำนวนเต็มเท่านั้น · สุ่มใหม่ทุกครั้ง
    ข้อ 1–5 ตัวประกอบหลักเดียว · 6–10 ใหญ่ขึ้น (สองหลัก) · 11–15 สามจำนวน · หารลงตัวเสมอ · วนเครื่องหมายครบ 6 แบบ */
 function miQuickMD15() {
   const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1)), P = miP, sg = k => [[1, -1], [-1, 1], [-1, -1]][k % 3], out = [], seen = new Set();
   const H = { m: 'คูณ: เครื่องหมายเหมือนกันได้บวก ต่างกันได้ลบ', d: 'หาร: เครื่องหมายเหมือนกันได้บวก ต่างกันได้ลบ (ตรวจด้วยการคูณ)', t: 'ทำจากซ้ายไปขวา แล้วดูเครื่องหมายทีละขั้น' };
-  for (let i = 0, t = 0; out.length < 15 && t < 400; t++) { let e, hn; const k = i % 2, [s1, s2] = sg(Math.floor(i / 2)); /* คู่ = คูณ คี่ = หาร · เครื่องหมายวน บวก×ลบ, ลบ×บวก, ลบ×ลบ */
-    if (i < 10) { const big = i >= 5, a = big ? R(11, 25) : R(2, 9), b = big ? R(3, 9) : R(2, 9);
+  for (let i = 0, t = 0; out.length < 10 && t < 400; t++) { let e, hn; const k = i % 2, [s1, s2] = sg(Math.floor(i / 2)); /* คู่ = คูณ คี่ = หาร · เครื่องหมายวน บวก×ลบ, ลบ×บวก, ลบ×ลบ */
+    if (i < 7) { const big = i >= 3, a = big ? R(11, 25) : R(2, 9), b = big ? R(3, 9) : R(2, 9);
       if (k % 2 === 0) { e = `${P(s1 * a)} × ${P(s2 * b)}`; hn = H.m; } else { e = `${P(s1 * a * b)} ÷ ${P(s2 * b)}`; hn = H.d; } }
     else { const a = R(2, 9), b = R(2, 6), c = R(2, 5), x = Math.random() < .5 ? -1 : 1, y = Math.random() < .5 ? -1 : 1, z = Math.random() < .5 ? -1 : 1;
       e = i % 2 ? `${P(x * a * c)} ÷ ${P(z * c)} × ${P(y * b)}` : `${P(x * a)} × ${P(y * b * c)} ÷ ${P(z * c)}`; hn = H.t; }
-    if (seen.has(e)) continue; seen.add(e); out.push(MIQ.x(e, hn)); i++; }
+    const nk = (e.match(/\d+/g) || []).join(','); if (seen.has(nk)) continue; seen.add(nk); out.push(MIQ.x(e, hn)); i++; } /* v263: ตัวเลขชุดเดียวกัน (6 × (−2) กับ 6 ÷ (−2)) เกมนับเป็นข้อซ้ำแล้วตัดทิ้ง จึงห้ามตั้งแต่แรก */
   return out;
 }
-LESSONS_M1C1.splice(LESSONS_M1C1.findIndex(L => L.id === 2012) + 1, 0, { id: 2017, bonus: true, place: 'แก่งคูณหาร', title: 'ด่านพิเศษ: คูณ หาร จำนวนเต็ม 15 ข้อ', short: 'ถามตอบ คูณ หาร', tone: 'yellow', learned: true, noTeach: true, gameN: 15,
-  goal: 'ฝึกคูณและหารจำนวนเต็มแบบถามตอบเร็ว 15 ข้อ (สุ่มใหม่ทุกครั้ง) เริ่มจากเลขหลักเดียว ไปสองหลัก และสามจำนวน', teach: [], game: miQuickMD15 });
+LESSONS_M1C1.splice(LESSONS_M1C1.findIndex(L => L.id === 2012) + 1, 0, { id: 2017, bonus: true, place: 'แก่งคูณหาร', title: 'ด่านพิเศษ: คูณ หาร จำนวนเต็ม 10 ข้อ', short: 'ถามตอบ คูณ หาร', tone: 'yellow', learned: true, noTeach: true, gameN: 10,
+  goal: 'ฝึกคูณและหารจำนวนเต็มแบบถามตอบเร็ว 10 ข้อ (สุ่มใหม่ทุกครั้ง) เริ่มจากเลขหลักเดียว ไปสองหลัก และสามจำนวน', teach: [], game: miQuickMD15 });
 LESSONS_M1C1.find(L => L.id === 2008).pracQ = () => miDiffQ(6, -2);
 LESSONS_M1C1.find(L => L.id === 2010).pracQ = () => MIQ.x('(−6) × (−4)', 'ลบ × ลบ ได้บวก · 6 × 4 = 24'); /* v224 (ผู้ใช้ขอ): ลองทำเองแบบ 2 จำนวนก่อน */ /* v223 (ผู้ใช้ขอ): ลองทำเองแบบปกติก่อน ไม่ใช่โจทย์ปัญหา */
 LESSONS_M1C1.push({ id: 2019, boss: true, place: 'วังจระเข้', title: 'ด่านบอส: ม.1 บทที่ 1 จำนวนเต็ม', short: 'ด่านบอส · ข้อสอบ', tone: 'jade',

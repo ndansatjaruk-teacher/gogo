@@ -107,10 +107,10 @@ def run():
         for k in pages(lid, 'ทำให้ดู'): check(f'show{lid - 2600}.{k}', lid, k, show)
         for k in pages(lid, 'ลองทำ'):
             open_(lid, k); res[f'try{lid - 2600}.{k}'] = 'ok' if pg.evaluate("!!document.querySelector('#stage .prac .qsim')") else 'ERR no practice question'
-    # v261: ด่านพิเศษ 2622 (จำนวนเต็มล้วน) และ 2623 (เศษส่วน ทศนิยม) ได้ครบ 15 ข้อทุกครั้ง
-    for lid in (2622, 2623):
-        n = pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {lid}); return Math.min(...Array.from({{ length: 10 }}, () => gameSet(L).length)); }})()")
-        res[f'bonus{lid}'] = 'ok' if n == 15 else f'only {n} questions'
+    # v263: ด่านพิเศษ (2622 2623 และ 2016 2017 ของบทที่ 1) ได้ 10 ข้อพอดีทุกครั้ง เรียงง่าย → ยาก
+    for lid in (2622, 2623, 2016, 2017):
+        n = pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {lid}); const s = Array.from({{ length: 10 }}, () => gameSet(L).length); return [Math.min(...s), Math.max(...s)]; }})()")
+        res[f'bonus{lid}'] = 'ok' if n == [10, 10] else f'{n} questions'
     for k, v in res.items(): print(f'{k:8s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
     print(f'{len(res) - len(bad)} / {len(res)} pages work as intended' + (' ✓' if not bad else f' ✗ {bad}')); sys.exit(1 if bad else 0)

@@ -4772,3 +4772,19 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .ep-ex sup{font-size:.6em;font-weight:900;line-height:0;vertical-align:super}
 .ep-ex .e3p{display:inline}.ep-ex .e3p sup{position:static;top:auto;vertical-align:super;line-height:0;margin-left:.04em;font-size:.6em}
 .ep-ex .fq{vertical-align:middle}
+/* v263: ปุ่มข้ามไปเล่นเกมระหว่างเรียน */
+.ibtn.skipgame{background:var(--sun-soft,#FFF3C4);color:#8A5A00;font-weight:800}
+.ibtn.skipgame:hover{filter:brightness(.97)}
+.seg.scrublv{display:flex;gap:6px}
+/* v263: ม.1 ลำน้ำเรขา — คำอธิบายสั้น ๆ ข้าง ๆ จุดที่กำลังสร้าง (ตัวอย่างทีละขั้น) */
+.mgb .cns-board{position:relative}
+.mg-bub{position:absolute;max-width:min(300px,44%);padding:7px 11px;border-radius:12px;background:#FFF6D6;border:2px solid #F0C85A;color:var(--ink);font:600 clamp(13px,1.45cqw,15px)/1.4 var(--font-th,inherit);box-shadow:0 4px 12px rgba(43,37,80,.14);pointer-events:none;opacity:0;transform:translate(14px,calc(-100% - 10px));transition:opacity .3s}
+.mg-bub.on{opacity:1}
+.mg-bub.lf{transform:translate(calc(-100% - 14px),calc(-100% - 10px))}
+.mg-bub.dn{transform:translate(14px,12px)}
+.mg-bub.lf.dn{transform:translate(calc(-100% - 14px),12px)}
+.cnsf-tools.mg-demo .mg-steps{display:none} /* v263: คำอธิบายย้ายไปอยู่ข้าง ๆ บนกระดานแล้ว */
+.mg-bub{font-size:clamp(14px,1.6cqw,17px)}
+.modal .setrow{padding:9px 0}
+.seg.scrublv{margin-left:auto}
+.seg.scrublv .btn.sm{min-height:34px;padding:0 12px}
