@@ -18,6 +18,7 @@ function r4dDo(o) {
   window.__lastWalk = S.map((s, i) => [`${i + 1}`, r4dTxt(s.n || s.w)]);
   const root = h('div', { class: 'r4d' + (o.dense ? ' dense' : '') }), fw = h('div', { class: 'r4d-fw' }), paper = h('div', { class: 'r4d-pap' }), lines = h('div', { class: 'r4d-lns' });
   fw.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="r4d-svg" aria-hidden="true">${o.fig}<g class="r4d-lay"></g>${o.top || ''}</svg>`;
+  if (H / W > .7) fw.style.width = `min(${Math.round(Math.min(560, 400 * W / H))}px, 52%)`; /* v258: รูปสูง (หารยาว) — จำกัดความสูงไม่ให้ล้นจอ */
   const svg = fw.firstChild, lay = svg.querySelector('.r4d-lay'), penF = h('div', { class: 'r4d-pen', html: R4D_PEN }), penP = h('div', { class: 'r4d-pen', html: R4D_PEN }), bub = h('div', { class: 'r4d-bub' });
   fw.append(penF, bub); if (o.q) paper.append(h('div', { class: 'r4d-q', html: o.q })); paper.append(lines, penP);
   const out = fNote2(), cnt = h('span', { class: 'r4d-k' }, `1/${n}`);
