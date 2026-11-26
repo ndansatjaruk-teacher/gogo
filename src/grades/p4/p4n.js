@@ -69,7 +69,7 @@ function simP4Tap(nums) {
       c.querySelectorAll('.p4d').forEach(x => x.classList.toggle('on', x === pc));
       note.innerHTML = d ? `${d} อยู่ใน<b>${pl}</b> มีค่า <span class="hl">${fmt(v)}</span>` : `0 อยู่ใน<b>${pl}</b> มีค่า 0 — ไม่ต้องเขียนในรูปกระจาย`;
       if (d) { filled.add(i); drawEx(i); } sfx.pop(i); say(d ? `${WORD[d]} อยู่ใน${pl} มีค่า ${thaiWords(v)}` : `ศูนย์ อยู่ใน${pl} มีค่าศูนย์`, true);
-      if (!doneT && nz.every(j => filled.has(j))) { doneT = true; note.innerHTML += '<br>ครบทุกหลักแล้ว! นี่คือ<b>รูปกระจาย</b>'; teachDone(box); } }; });
+      if (!doneT && nz.every(j => filled.has(j))) { doneT = true; note.innerHTML += r4vSep + 'ครบทุกหลักแล้ว! นี่คือ<b>รูปกระจาย</b>'; /* v266: no <br> (would split into ขั้นต่อไป) */ teachDone(box); } }; });
     box.append(c, note, ex, p4more(() => { idx = (idx + 1) % nums.length; draw(); }));
   };
   draw(); return box;
@@ -109,7 +109,7 @@ function p4Round(n0, pow, o = {}) {
     const s = String(u), kd = s.length - P, kdig = kd >= 0 ? +s[kd] : 0;
     big.innerHTML = `<b class="num">${p4u(u, kd, 'rl-key')}</b> <b class="fop">≈</b> <b class="num">${fmt(ans)}</b>`;
     const dl = u - lo, dh = hi - u;
-    out.innerHTML = `${fmt(u)} อยู่ระหว่าง ${fmt(lo)} กับ ${fmt(hi)} · ห่าง ${fmt(lo)} อยู่ ${fmt(dl)} · ห่าง ${fmt(hi)} อยู่ ${fmt(dh)}<br>` +
+    out.innerHTML = (o.noStep ? `${fmt(u)} อยู่ระหว่าง ${fmt(lo)} กับ ${fmt(hi)}${r4vSep}` : `${fmt(u)} อยู่ระหว่าง ${fmt(lo)} กับ ${fmt(hi)} · ห่าง ${fmt(lo)} อยู่ ${fmt(dl)} · ห่าง ${fmt(hi)} อยู่ ${fmt(dh)}<br>`) + /* v266 noStep: one block, no ขั้นต่อไป button */
       `ตัวเลขหลัก${P4_RN[P - 1]}คือ <b>${kdig}</b> ` + (dl === dh ? `→ อยู่<b>กึ่งกลางพอดี</b> ใช้จำนวนเต็ม${nm}ที่<b>มากกว่า</b>` : kdig >= 5 ? `≥ 5 → ใกล้ ${fmt(hi)} มากกว่า ใช้จำนวนเต็ม${nm}ที่<b>มากกว่า</b>` : `< 5 → ใกล้ ${fmt(lo)} มากกว่า ใช้จำนวนเต็ม${nm}ที่<b>น้อยกว่า</b>`);
   }
   const setFrom = e => { const r = bar.getBoundingClientRect(), f = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), lo = Math.floor(u / U()) * U(), tail = n0 % res(); u = lo + Math.min(U() - res(), Math.round(f * U() / res()) * res()) + (res() > 1 ? tail : 0); draw(); };
@@ -123,7 +123,7 @@ function p4Round(n0, pow, o = {}) {
   const ctrl = h('div', { class: 'rowstack rl-ctrl' });
   const mkCtrl = () => { ctrl.innerHTML = ''; ctrl.append(st('◀ ' + fmt(cs()), () => -cs()), st('− ' + fmt(res()), () => -res()), st('+ ' + fmt(res()), () => res()), st(fmt(cs()) + ' ▶', () => cs())); };
   mkCtrl();
-  const parts = [big, wrap, ctrl, out];
+  const parts = o.noStep ? [big, wrap, out] : [big, wrap, ctrl, out]; /* v266: noStep = drag only (no stepper buttons) */
   if (o.pows) { const seg = h('div', { class: 'seg p4seg' }); const bs = o.pows.map(p => h('button', { class: p === P ? 'on' : '', onclick: e => { e.stopPropagation(); P = p; bs.forEach((b, j) => b.classList.toggle('on', o.pows[j] === p)); mkCtrl(); draw(); sfx.tap(); say('ประมาณเป็นจำนวนเต็ม' + P4_RN[p], true); } }, 'เต็ม' + P4_RN[p])); seg.append(...bs); parts.unshift(seg); }
   return h('div', { class: 'colstack' }, ...parts);
 }

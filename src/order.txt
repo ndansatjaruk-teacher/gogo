@@ -109,6 +109,7 @@ grades/m1/m1ed.js
 grades/m1/m1gd.js
 grades/m3/m3td.js
 grades/p4/p4bd.js
+grades/p4/p4nd.js
 app/lessons.js
 app/learn.js
 app/wpic.js
