@@ -24,15 +24,16 @@ function e4dPvS(str, o = {}) { const dg = pvDigits(str), ks = Object.keys(dg).ma
 function e4dColS(a, b, op, o = {}) { const P = e4Plan(a, b, op), { p, n } = P, pa = dPl(a), pb = dPl(b), cw = o.cw || 36, pg = 14, Wt = (n + 1) * cw + (p ? pg : 0), x0 = ((o.W || 360) - Wt) / 2 + cw;
   const X = i => x0 + (n - 1 - i) * cw + (p && i < p ? pg : 0) + cw / 2, Y = { nm: 20, mk2: 42, mk: 62, a: 98, b: 136, ln: 150, r: 186, ln2: 198 }, ptX = X(p - 1) - cw / 2 - pg / 2;
   const show = (x, i) => i < String(x).length || i <= p, dig = (x, i) => Math.floor(x / 10 ** i) % 10;
-  let s = ''; for (let i = n - 1; i >= 0; i--) s += `<text x="${a4n(X(i))}" y="${Y.nm}" class="e4d-nm" text-anchor="middle">${(PV_NAME[i - p] || '').replace('ส่วน', 'ส.')}</text>`;
+  let s = ''; for (let i = n - 1; i >= 0; i--) s += `<text x="${a4n(X(i))}" y="${Y.nm}" class="e4d-nm" text-anchor="middle">${(PV_NAME[i - p] || (i - p >= 0 && typeof P4_SN !== 'undefined' ? P4_SN[8 - (i - p)] : '') || '').replace('ส่วน', 'ส.')}</text>`;
   const pad = []; [[P.A, pa, Y.a], [P.B, pb, Y.b]].forEach(([x, pl, y], r) => { for (let i = n - 1; i >= 0; i--) if (show(x, i)) { const z = i < p - pl; if (z) { pad.push([i, y]); if (!o.padShown) continue; } s += `<text x="${a4n(X(i))}" y="${y}" class="e4d-dg${z ? ' z' : ''}" text-anchor="middle">${dig(x, i)}</text>`; }
     if (p) s += `<text x="${a4n(ptX)}" y="${y}" class="e4d-dg" text-anchor="middle">.</text>`; });
   s += `<text x="${a4n(X(n - 1) - cw)}" y="${Y.b}" class="e4d-dg" text-anchor="middle">${op}</text><path d="M${a4n(X(n - 1) - cw * 1.5)} ${Y.ln} H${a4n(X(0) + cw / 2)}" stroke="${E4DC.ink}" stroke-width="2.4"/>`;
   return { s, P, X, Y, ptX, pad, cw, dig }; }
 /* worked column sum: the pencil does one column at a time */
-function e4dColDo(a, b, op, o = {}) { const C = e4dColS(a, b, op), { P, X, Y } = C, { p } = P, marked = {}, nm = i => 'หลัก' + (PV_NAME[i - p] || ''), steps = [], R = e4s(P.R, P.p);
+function e4dColDo(a, b, op, o = {}) { const C = e4dColS(a, b, op, o), { P, X, Y } = C, { p } = P, marked = {}, nm = i => 'หลัก' + (PV_NAME[i - p] || (i - p >= 0 && typeof P4_SN !== 'undefined' ? P4_SN[8 - (i - p)] : '') || '') /* v265: ถึงหลักร้อยล้าน (ป.4 บวกลบ) */, steps = [], R = e4s(P.R, P.p);
   const col = i => `<rect class="r4d-colhl" data-pop="1" x="${a4n(X(i) - C.cw / 2 + 2)}" y="${Y.mk2 - 16}" width="${C.cw - 4}" height="${Y.r - Y.mk2 + 26}" rx="6" fill="#FFE7A8" fill-opacity=".55"/>`, tx = (i, y, t, col2 = E4DC.p, cls = 'e4d-dg') => `<text x="${a4n(X(i))}" y="${y}" class="${cls}" text-anchor="middle" style="fill:${col2}">${t}</text>`;
-  steps.push({ ink: C.pad.map(([i, y]) => tx(i, y, '0', E4DC.fade)).join('') + `<path d="M${a4n(C.ptX)} ${Y.mk - 6} V${Y.ln2}" fill="none" stroke="${E4DC.b}" stroke-width="2" stroke-dasharray="5 4"/>`, n: C.pad.length ? 'จุดตรงกัน เติม 0 ให้ตำแหน่งเท่ากัน' : 'ตั้งให้จุดตรงกัน', at: [C.ptX, Y.r + 26] });
+  if (p) steps.push({ ink: C.pad.map(([i, y]) => tx(i, y, '0', E4DC.fade)).join('') + `<path d="M${a4n(C.ptX)} ${Y.mk - 6} V${Y.ln2}" fill="none" stroke="${E4DC.b}" stroke-width="2" stroke-dasharray="5 4"/>`, n: C.pad.length ? 'จุดตรงกัน เติม 0 ให้ตำแหน่งเท่ากัน' : 'ตั้งให้จุดตรงกัน', at: [C.ptX, Y.r + 26] });
+  else steps.push({ ink: `<rect x="${a4n(X(0) - C.cw / 2 + 2)}" y="${Y.a - 30}" width="${C.cw - 4}" height="${Y.b - Y.a + 42}" rx="6" fill="none" stroke="${E4DC.b}" stroke-width="2.2" stroke-dasharray="5 4"/>`, n: 'หลักหน่วยตรงกัน', at: [X(0), Y.r + 26] }); /* v265: จำนวนนับ — ตั้งหลักหน่วยให้ตรงกัน */
   P.steps.forEach(s => { if (op === '−' && s.auto) return; let ink = col(s.i), w, n;
     if (op === '+') { if (s.auto) { ink += tx(s.i, Y.r, String(s.out)); w = 'ทด 1 ลงมา'; n = 'หลักซ้ายสุด'; }
       else { ink += tx(s.i, Y.r, String(s.out)) + (s.carry ? tx(s.i + 1, Y.mk, '1', E4DC.o, 'e4d-sm') : ''); w = `${s.d1} + ${s.d2}${s.c ? ' + 1' : ''} = ${s.s}`; n = nm(s.i) + (s.carry ? ` เขียน ${s.out} ทด 1` : ''); } }
@@ -40,7 +41,7 @@ function e4dColDo(a, b, op, o = {}) { const C = e4dColS(a, b, op), { P, X, Y } =
       ink += tx(s.i, Y.r, String(s.out)); w = `${s.d1} − ${s.d2} = ${s.s}`; n = s.borrow != null ? `${s.d0} ลบ ${s.d2} ไม่ได้ → กระจาย` : nm(s.i); }
     if (p && s.i === p - 1) ink += `<text x="${a4n(C.ptX)}" y="${Y.r}" class="e4d-dg" text-anchor="middle" style="fill:${E4DC.p}">.</text>`;
     steps.push({ off: ['.r4d-colhl'], ink, w, n }); });
-  steps.push({ off: ['.r4d-colhl'], ink: `<path d="M${a4n(X(P.n - 1) - C.cw * 1.5)} ${Y.ln2} H${a4n(X(0) + C.cw / 2)}" stroke="${E4DC.ink}" stroke-width="2.4"/>`, w: `${fmtDec(a)} ${op} ${fmtDec(b)} = ${fmtDec(R)}`, n: 'ใส่จุดให้ตรงกัน', ans: 1 });
+  steps.push({ off: ['.r4d-colhl'], ink: `<path d="M${a4n(X(P.n - 1) - C.cw * 1.5)} ${Y.ln2} H${a4n(X(0) + C.cw / 2)}" stroke="${E4DC.ink}" stroke-width="2.4"/>`, w: `${fmtDec(a)} ${op} ${fmtDec(b)} = ${fmtDec(R)}`, n: p ? 'ใส่จุดให้ตรงกัน' : 'อ่านคำตอบ', ans: 1 });
   return r4dDo({ fig: C.s, q: o.q || `หาผล${op === '+' ? 'บวก' : 'ลบ'} ${fmtDec(a)} ${op} ${fmtDec(b)}`, steps, dense: steps.length > 5, fin: o.fin || `ตั้งให้<b>จุดตรงกัน</b> แล้ว${op === '+' ? 'บวก' : 'ลบ'}จากหลักขวาสุด`, say: o.say || `${fmtDec(a)} ${op === '+' ? 'บวก' : 'ลบ'} ${fmtDec(b)} เท่ากับ ${fmtDec(R)}` }); }
 
 /* hands-on (no steppers): drag across the squares to paint · drag a digit up or down in the place-value chart */
