@@ -35164,15 +35164,16 @@ function e4dPvS(str, o = {}) { const dg = pvDigits(str), ks = Object.keys(dg).ma
 function e4dColS(a, b, op, o = {}) { const P = e4Plan(a, b, op), { p, n } = P, pa = dPl(a), pb = dPl(b), cw = o.cw || 36, pg = 14, Wt = (n + 1) * cw + (p ? pg : 0), x0 = ((o.W || 360) - Wt) / 2 + cw;
   const X = i => x0 + (n - 1 - i) * cw + (p && i < p ? pg : 0) + cw / 2, Y = { nm: 20, mk2: 42, mk: 62, a: 98, b: 136, ln: 150, r: 186, ln2: 198 }, ptX = X(p - 1) - cw / 2 - pg / 2;
   const show = (x, i) => i < String(x).length || i <= p, dig = (x, i) => Math.floor(x / 10 ** i) % 10;
-  let s = ''; for (let i = n - 1; i >= 0; i--) s += `<text x="${a4n(X(i))}" y="${Y.nm}" class="e4d-nm" text-anchor="middle">${(PV_NAME[i - p] || '').replace('ส่วน', 'ส.')}</text>`;
+  let s = ''; for (let i = n - 1; i >= 0; i--) s += `<text x="${a4n(X(i))}" y="${Y.nm}" class="e4d-nm" text-anchor="middle">${(PV_NAME[i - p] || (i - p >= 0 && typeof P4_SN !== 'undefined' ? P4_SN[8 - (i - p)] : '') || '').replace('ส่วน', 'ส.')}</text>`;
   const pad = []; [[P.A, pa, Y.a], [P.B, pb, Y.b]].forEach(([x, pl, y], r) => { for (let i = n - 1; i >= 0; i--) if (show(x, i)) { const z = i < p - pl; if (z) { pad.push([i, y]); if (!o.padShown) continue; } s += `<text x="${a4n(X(i))}" y="${y}" class="e4d-dg${z ? ' z' : ''}" text-anchor="middle">${dig(x, i)}</text>`; }
     if (p) s += `<text x="${a4n(ptX)}" y="${y}" class="e4d-dg" text-anchor="middle">.</text>`; });
   s += `<text x="${a4n(X(n - 1) - cw)}" y="${Y.b}" class="e4d-dg" text-anchor="middle">${op}</text><path d="M${a4n(X(n - 1) - cw * 1.5)} ${Y.ln} H${a4n(X(0) + cw / 2)}" stroke="${E4DC.ink}" stroke-width="2.4"/>`;
   return { s, P, X, Y, ptX, pad, cw, dig }; }
 /* worked column sum: the pencil does one column at a time */
-function e4dColDo(a, b, op, o = {}) { const C = e4dColS(a, b, op), { P, X, Y } = C, { p } = P, marked = {}, nm = i => 'หลัก' + (PV_NAME[i - p] || ''), steps = [], R = e4s(P.R, P.p);
+function e4dColDo(a, b, op, o = {}) { const C = e4dColS(a, b, op, o), { P, X, Y } = C, { p } = P, marked = {}, nm = i => 'หลัก' + (PV_NAME[i - p] || (i - p >= 0 && typeof P4_SN !== 'undefined' ? P4_SN[8 - (i - p)] : '') || '') /* v265: ถึงหลักร้อยล้าน (ป.4 บวกลบ) */, steps = [], R = e4s(P.R, P.p);
   const col = i => `<rect class="r4d-colhl" data-pop="1" x="${a4n(X(i) - C.cw / 2 + 2)}" y="${Y.mk2 - 16}" width="${C.cw - 4}" height="${Y.r - Y.mk2 + 26}" rx="6" fill="#FFE7A8" fill-opacity=".55"/>`, tx = (i, y, t, col2 = E4DC.p, cls = 'e4d-dg') => `<text x="${a4n(X(i))}" y="${y}" class="${cls}" text-anchor="middle" style="fill:${col2}">${t}</text>`;
-  steps.push({ ink: C.pad.map(([i, y]) => tx(i, y, '0', E4DC.fade)).join('') + `<path d="M${a4n(C.ptX)} ${Y.mk - 6} V${Y.ln2}" fill="none" stroke="${E4DC.b}" stroke-width="2" stroke-dasharray="5 4"/>`, n: C.pad.length ? 'จุดตรงกัน เติม 0 ให้ตำแหน่งเท่ากัน' : 'ตั้งให้จุดตรงกัน', at: [C.ptX, Y.r + 26] });
+  if (p) steps.push({ ink: C.pad.map(([i, y]) => tx(i, y, '0', E4DC.fade)).join('') + `<path d="M${a4n(C.ptX)} ${Y.mk - 6} V${Y.ln2}" fill="none" stroke="${E4DC.b}" stroke-width="2" stroke-dasharray="5 4"/>`, n: C.pad.length ? 'จุดตรงกัน เติม 0 ให้ตำแหน่งเท่ากัน' : 'ตั้งให้จุดตรงกัน', at: [C.ptX, Y.r + 26] });
+  else steps.push({ ink: `<rect x="${a4n(X(0) - C.cw / 2 + 2)}" y="${Y.a - 30}" width="${C.cw - 4}" height="${Y.b - Y.a + 42}" rx="6" fill="none" stroke="${E4DC.b}" stroke-width="2.2" stroke-dasharray="5 4"/>`, n: 'หลักหน่วยตรงกัน', at: [X(0), Y.r + 26] }); /* v265: จำนวนนับ — ตั้งหลักหน่วยให้ตรงกัน */
   P.steps.forEach(s => { if (op === '−' && s.auto) return; let ink = col(s.i), w, n;
     if (op === '+') { if (s.auto) { ink += tx(s.i, Y.r, String(s.out)); w = 'ทด 1 ลงมา'; n = 'หลักซ้ายสุด'; }
       else { ink += tx(s.i, Y.r, String(s.out)) + (s.carry ? tx(s.i + 1, Y.mk, '1', E4DC.o, 'e4d-sm') : ''); w = `${s.d1} + ${s.d2}${s.c ? ' + 1' : ''} = ${s.s}`; n = nm(s.i) + (s.carry ? ` เขียน ${s.out} ทด 1` : ''); } }
@@ -35180,7 +35181,7 @@ function e4dColDo(a, b, op, o = {}) { const C = e4dColS(a, b, op), { P, X, Y } =
       ink += tx(s.i, Y.r, String(s.out)); w = `${s.d1} − ${s.d2} = ${s.s}`; n = s.borrow != null ? `${s.d0} ลบ ${s.d2} ไม่ได้ → กระจาย` : nm(s.i); }
     if (p && s.i === p - 1) ink += `<text x="${a4n(C.ptX)}" y="${Y.r}" class="e4d-dg" text-anchor="middle" style="fill:${E4DC.p}">.</text>`;
     steps.push({ off: ['.r4d-colhl'], ink, w, n }); });
-  steps.push({ off: ['.r4d-colhl'], ink: `<path d="M${a4n(X(P.n - 1) - C.cw * 1.5)} ${Y.ln2} H${a4n(X(0) + C.cw / 2)}" stroke="${E4DC.ink}" stroke-width="2.4"/>`, w: `${fmtDec(a)} ${op} ${fmtDec(b)} = ${fmtDec(R)}`, n: 'ใส่จุดให้ตรงกัน', ans: 1 });
+  steps.push({ off: ['.r4d-colhl'], ink: `<path d="M${a4n(X(P.n - 1) - C.cw * 1.5)} ${Y.ln2} H${a4n(X(0) + C.cw / 2)}" stroke="${E4DC.ink}" stroke-width="2.4"/>`, w: `${fmtDec(a)} ${op} ${fmtDec(b)} = ${fmtDec(R)}`, n: p ? 'ใส่จุดให้ตรงกัน' : 'อ่านคำตอบ', ans: 1 });
   return r4dDo({ fig: C.s, q: o.q || `หาผล${op === '+' ? 'บวก' : 'ลบ'} ${fmtDec(a)} ${op} ${fmtDec(b)}`, steps, dense: steps.length > 5, fin: o.fin || `ตั้งให้<b>จุดตรงกัน</b> แล้ว${op === '+' ? 'บวก' : 'ลบ'}จากหลักขวาสุด`, say: o.say || `${fmtDec(a)} ${op === '+' ? 'บวก' : 'ลบ'} ${fmtDec(b)} เท่ากับ ${fmtDec(R)}` }); }
 
 /* hands-on (no steppers): drag across the squares to paint · drag a digit up or down in the place-value chart */
@@ -38081,6 +38082,222 @@ T3D_TEACH[4111] = L => { const O = L.teach.slice(), T = t3dTri({ o: 8, a: 15, re
       fin: `วาดสามเหลี่ยม → หาด้านที่สาม → <b>sin cos tan</b> → กลับเป็น <b>cosec sec cot</b>`, say: 'วาดสามเหลี่ยม หาด้านที่สาม หาไซน์โคไซน์แทนเจนต์ แล้วกลับเศษเป็นส่วน' }),
     t3dTry(4111, ['x4', 'x5', 'x6', 'x7'], 'หาครบ 6 ตัว')]; };
 LESSONS_M3C11.forEach(L => { const f = T3D_TEACH[L.id]; if (f) { L.teach = f(L).filter(Boolean); L.__pracDone = 1; L.learned = true; } });
+
+/* =========================================================
+   ป.4 บทที่ 2 ทะเลทรายบวกลบ (ด่าน 421–433) — หน้าสอนและเกมเรียงใหม่ (v265 · ผู้ใช้ขอ) · prefix b4d
+   เหมือนบทที่ 3–10 ของ ป.4 และบทของ ม.1 ม.3: ประเด็นละหน้า ① ดูภาพ (หลักตรงกัน มัดสิบทด แตกสิบกระจาย เส้นจำนวนปัด แถบส่วน–รวม แถบเปรียบเทียบ
+   เครื่องคิดเลข ป้ายราคา) → ลงมือเอง (หน้าแตะ/ลาก/เลือกเดิม) → ② ทำให้ดู (ดินสอตั้งบวกลบทีละหลัก ทด/ขีดกระจาย · เขียนค่าลงบนแถบ
+   · เขียนสมการ วิธีทำ ทีละบรรทัดบนกระดาษ คำอธิบายสั้น ๆ ข้าง ๆ) → ③ ลองทำ (ข้อแบบเดียวกับในเกม)
+   ตัดการ์ด "รู้จัก" ตัวอย่างตัวหนังสือ (p4ex/dcWalk) และหน้ากดปุ่ม "ทำหลักต่อไป/ขั้นต่อไป" (simColumn simBarUnknown) ออก
+   เกมด่าน 1 2 5 6 เรียงง่าย → ยากตามประเด็น (b4dGame) · วางท้าย order.txt (ใช้ e4dColDo จาก p4ed.js, r4dShow, e1dEq, g5dTry)
+   ========================================================= */
+const B4C = { ink: '#2B2550', p: '#E5487A', b: '#2F7BC0', g: '#1B8862', o: '#EC7F1E', fade: '#B7AED3', y: '#FFE7A8', sky: '#BFE3F7', bad: '#D9534F' };
+const b4dT = (x, y, t, col = B4C.ink, cls = 'r4d-tx', anc = 'middle') => r4dTx(x, y, t, col, cls, anc);
+const b4dIn = s => String(s).replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+const b4dSee = (title, cap, list) => a4dSee(title, cap, list);
+const b4dTry = (id, mk, title) => g5dTry(id, mk, title);
+const b4dOld = p => p ? { ...p, t: `<b>ลงมือเอง</b> — ${String(p.t || '').replace(/<[^>]+>/g, '')}` } : null;
+/* the column sum done by the pencil (e4dColDo from ป.4 บทที่ 7, here with whole numbers) */
+const b4dCol = (a, b, op, o = {}) => T(`<b>ทำให้ดู</b> — ตั้ง${op === '+' ? 'บวก' : 'ลบ'} ${fmt(a)} ${op} ${fmt(b)}`, `ทำให้ดู ตั้ง${op === '+' ? 'บวก' : 'ลบ'}`, el => el.append(e4dColDo(String(a), String(b), op, {
+  q: `หาผล${op === '+' ? 'บวก' : 'ลบ'} ${fmt(a)} ${op} ${fmt(b)}`, fin: o.fin || `ตั้ง<b>หลักให้ตรงกัน</b> แล้ว${op === '+' ? 'บวก' : 'ลบ'}จากหลักหน่วยไปทางซ้าย`, say: o.say || `${op === '+' ? 'บวก' : 'ลบ'}จากหลักหน่วยไปทางซ้าย`, cw: o.cw })));
+/* where the labels of the bar pictures are (same numbers as p4pwSVG / p4cmpSVG) */
+const b4dPw = o => { const L = 488, f = Math.min(.74, Math.max(.26, o.p1 / (o.p1 + o.p2))), w1 = L * f; return { svg: b4dIn(p4pwSVG(o)), w: [260, 18], p1: [16 + w1 / 2, 88], p2: [16 + w1 + (L - w1) / 2, 88] }; };
+const b4dCmp = o => { const x0 = 118, L = 388, ws = L * Math.min(.76, Math.max(.3, o.small / o.big)); return { svg: b4dIn(p4cmpSVG(o)), big: [x0 + L / 2, 37], small: [x0 + ws / 2, 99], diff: [x0 + (ws + L) / 2, 164] }; };
+const b4dVal = (p, t, col = B4C.g) => `<rect x="${a4n(p[0] - 46)}" y="${a4n(p[1] - 22)}" width="92" height="30" rx="8" fill="#fff" data-pop="1"/>` + `<text x="${a4n(p[0])}" y="${a4n(p[1])}" text-anchor="middle" class="p4bt" style="fill:${col};font-size:21px">${t}</text>`;
+/* how hard a column sum is: more digits, more carries / borrows (and borrowing across zeros) */
+const b4dColD = (a, b, op) => { const A = String(a).split('').reverse().map(Number), B = String(b).split('').reverse().map(Number); let c = 0, k = 0, z = 0;
+  for (let i = 0; i < A.length; i++) { if (op === '+') { const s = A[i] + (B[i] || 0) + c; c = s > 9 ? 1 : 0; k += c; } else { const d = A[i] - (B[i] || 0) - c; c = d < 0 ? 1 : 0; k += c; if (c && A[i + 1] === 0) z++; } }
+  return String(a).length + 2 * k + 3 * z; };
+const b4dD = (q, d) => { q.__diff = d; q.__tier = 0; return q; };
+
+const B4D_TEACH = {
+  /* ด่าน 1 ตั้งบวก */
+  421: L => { const cw = 30, names = ['ล้าน', 'แสน', 'หมื่น', 'พัน', 'ร้อย', 'สิบ', 'หน่วย'], X = i => 70 + i * 36;
+    const row = (str, y, col = B4C.ink, right = true) => { const d = str.split(''); return d.map((c, i) => b4dT(right ? X(7 - d.length + i) : X(i), y, c, col, 'e4d-dg')).join(''); };
+    return [
+      b4dSee('ตั้งหลักให้ตรงกัน', '<b>แตะรูป</b> — หลักหน่วยต้องอยู่ตรงกัน', [
+        { t: '2,345,120 + 451,362', f: on => (on ? r4vH(names.map((n, i) => b4dT(X(i), 40, n, B4C.b, 'r4d-sm')).join('') + `<rect x="${X(6) - 16}" y="50" width="32" height="122" rx="6" fill="${B4C.y}" opacity=".7"/>`) : '') + row('2345120', 90) + b4dT(X(0) - 32, 140, '+', B4C.ink, 'e4d-dg') + row('451362', 140, on ? B4C.ink : B4C.bad, on) + `<path d="M${X(0) - 46} 156 H${X(6) + 18}" stroke="${B4C.ink}" stroke-width="2.4"/>` + (on ? '' : b4dT(180, 210, 'ผิด: หลักไม่ตรงกัน', B4C.bad, 'r4d-tx')), s: 'เรียงให้<b>หลักหน่วยตรงกัน</b> หลักอื่นจะตรงกันเอง<br>แล้วบวกจากหลักหน่วยไปทางซ้าย' }]),
+      b4dSee('ครบ 10 ต้องทด', '<b>แตะรูป</b> — ครบสิบมัดเป็น 1 สิบ', [
+        { t: '8 + 5', f: on => Array.from({ length: 13 }, (_, i) => `<circle cx="${a4n(on && i < 10 ? 46 + (i % 5) * 22 : on ? 250 + (i - 10) * 24 : 40 + (i % 7) * 26)}" cy="${a4n(on && i < 10 ? 90 + Math.floor(i / 5) * 24 : on ? 102 : 80 + Math.floor(i / 7) * 30)}" r="9" fill="${i < 8 ? '#9FD0F0' : '#FFC24C'}" stroke="${B4C.ink}" stroke-width="1.2"/>`).join('')
+          + (on ? r4vH(`<rect x="30" y="72" width="124" height="58" rx="10" fill="none" stroke="${B4C.p}" stroke-width="2.6"/>` + b4dT(92, 156, 'ทด 1 ไปหลักสิบ', B4C.p, 'r4d-sm') + b4dT(274, 156, 'เหลือ 3', B4C.g, 'r4d-sm') + b4dT(180, 210, '8 + 5 = 13 → เขียน 3 ทด 1', B4C.ink, 'r4v-tx')) : b4dT(180, 210, '8 + 5 = ?', B4C.ink, 'r4v-tx')), s: '8 + 5 = 13 ครบสิบ<br>เขียน <b>3</b> ในหลักนี้ <b>ทด 1</b> ไปหลักถัดไป' }]),
+      b4dCol(2345120, 451362, '+', { fin: `ไม่มีทด: บวกทีละหลักจาก<b>หลักหน่วย</b>`, say: 'บวกทีละหลักจากหลักหน่วย' }),
+      b4dTry(421, () => { const [a, b] = pick(P4W2_ADD0); return p4colQ(a, b, '+'); }, 'ตั้งบวก (ไม่มีทด)'),
+      b4dCol(3689457, 2546785, '+', { fin: `ครบ 10 <b>ทด 1</b> ไปหลักทางซ้าย แล้วบวกตัวที่ทดด้วย`, say: 'ครบสิบทดหนึ่งไปหลักทางซ้าย' }),
+      b4dTry(421, () => { const [a, b] = pick(P4W2_ADD1); return p4colQ(a, b, '+'); }, 'ตั้งบวก (มีทด)'),
+      b4dSee('ตรวจคำตอบด้วยค่าประมาณ', '<b>แตะรูป</b> — คำตอบควรใกล้ค่าประมาณ', [
+        { t: '3,689,457 + 2,546,785', f: on => b4dT(180, 50, '3,689,457 + 2,546,785', B4C.ink, 'r4v-tx') + (on ? r4vH(b4dT(180, 100, '≈ 4,000,000 + 3,000,000', B4C.b, 'r4v-tx') + b4dT(180, 140, '= 7,000,000', B4C.b, 'r4v-tx') + b4dT(180, 200, 'คำตอบ 6,236,242 ใกล้ 7,000,000 ✓', B4C.g, 'r4d-tx')) : ''), s: 'ปัดเป็นจำนวนเต็มล้านแล้วบวกในใจ<br>คำตอบจริงต้อง<b>ใกล้</b>ค่าประมาณ' }]),
+      b4dTry(421, () => { const [a, b] = pick(P4W2_ADD1); return p4estPick(a, '+', b); }, 'ใช้ค่าประมาณตรวจ')]; },
+
+  /* ด่าน 2 ตั้งลบ */
+  422: L => { const tens = (n, x, y, col) => Array.from({ length: n }, (_, i) => `<rect x="${x + i * 16}" y="${y}" width="11" height="70" rx="3" fill="${col}" stroke="${B4C.ink}" stroke-width="1"/>`).join(''), ones = (n, x, y, col) => Array.from({ length: n }, (_, i) => `<circle cx="${x + (i % 5) * 18}" cy="${y + Math.floor(i / 5) * 18}" r="7" fill="${col}" stroke="${B4C.ink}" stroke-width="1"/>`).join('');
+    return [
+      b4dSee('ลบไม่ได้ ต้องกระจาย', '<b>แตะรูป</b> — แตก 1 สิบ เป็น 10 หน่วย', [
+        { t: '42 − 7', f: on => tens(on ? 3 : 4, 40, 50, '#9FD0F0') + ones(on ? 12 : 2, 150, 60, '#FFC24C') + (on ? r4vH(`<rect x="88" y="50" width="11" height="70" rx="3" fill="none" stroke="${B4C.p}" stroke-width="2" stroke-dasharray="4 3"/>` + b4dT(240, 160, '2 ลบ 7 ไม่ได้ → แตก 1 สิบ', B4C.p, 'r4d-sm') + b4dT(180, 210, 'หลักหน่วยเป็น 12 → 12 − 7 = 5', B4C.ink, 'r4v-tx')) : b4dT(180, 210, '2 − 7 ลบไม่ได้', B4C.bad, 'r4v-tx')), s: 'หลักหน่วย 2 ลบ 7 ไม่ได้<br><b>กระจาย</b> 1 สิบมาเป็น 10 หน่วย → 12 − 7 = 5' },
+        { t: 'กระจายผ่าน 0', f: on => { const xs = [117, 162, 207, 252]; return ['6', '0', '0', '0'].map((d, i) => b4dT(xs[i], 80, d, B4C.ink, 'e4d-dg')).join('') + (on ? r4vH(xs.map((x, i) => `<path d="M${x - 10} ${86} L${x + 10} ${60}" stroke="${B4C.o}" stroke-width="2.4"/>` + b4dT(x, 46, ['5', '9', '9', '10'][i], B4C.o, 'e4d-sm')).join('') + b4dT(180, 140, '6,000 = 5,000 + 900 + 90 + 10', B4C.b, 'r4v-tx')) : ''); }, s: 'หลักที่เป็น 0 ไม่มีให้กระจาย<br>ต้องไปยืมหลักถัดไป → <b>5 9 9 10</b>' }]),
+      b4dCol(849850, 424340, '−', { fin: 'ไม่มีกระจาย: ลบทีละหลักจาก<b>หลักหน่วย</b>', say: 'ลบทีละหลักจากหลักหน่วย' }),
+      b4dTry(422, () => { const [a, b] = pick(P4W2_SUB0); return p4colQ(a, b, '−'); }, 'ตั้งลบ (ไม่มีกระจาย)'),
+      b4dCol(4568602, 2343835, '−', { fin: 'ลบไม่ได้ → <b>กระจาย</b>จากหลักทางซ้าย 1 แล้วเติม 10', say: 'ลบไม่ได้ กระจายจากหลักทางซ้าย' }),
+      b4dTry(422, () => { const [a, b] = pick(P4W2_SUB1); return p4colQ(a, b, '−'); }, 'ตั้งลบ (มีกระจาย)'),
+      b4dCol(6000000, 2473815, '−', { fin: 'หลักที่เป็น 0 → <b>กระจายต่อไปทางซ้าย</b> ได้ 9 9 … 10', say: 'หลักที่เป็นศูนย์ กระจายต่อไปทางซ้าย' }),
+      b4dTry(422, () => { const [a, b] = pick(P4W2_SUB2); return p4colQ(a, b, '−'); }, 'ตั้งลบ (กระจายผ่าน 0)'),
+      b4dTry(422, () => { const [a, b] = pick(P4W2_SUB1); return p4estPick(a, '−', b); }, 'ใช้ค่าประมาณตรวจ')]; },
+
+  /* ด่าน 3 ค่าประมาณ */
+  423: L => { const O = L.teach.slice(), NL = (lo, hi, v, lab) => { const X = x => 40 + (x - lo) / (hi - lo) * 280; return `<path d="M30 130 H330" stroke="${B4C.ink}" stroke-width="2.4"/>` + [lo, (lo + hi) / 2, hi].map((t, i) => `<path d="M${X(t)} 120 V140" stroke="${B4C.ink}" stroke-width="${i === 1 ? 1.4 : 2.4}"/>` + b4dT(X(t), 162, fmt(t), i === 1 ? B4C.fade : B4C.ink, 'r4d-sm')).join('') + `<circle cx="${a4n(X(v))}" cy="130" r="7" fill="${B4C.p}"/>` + b4dT(X(v), 108, lab, B4C.p, 'r4d-sm'); };
+    return [
+      b4dSee('ปัดเป็นจำนวนเต็มล้าน', '<b>แตะรูป</b> — ใกล้ล้านไหนมากกว่า', [
+        { t: '4,817,250', f: on => NL(4000000, 5000000, 4817250, '4,817,250') + (on ? r4vH(`<path d="M${40 + .817 * 280} 120 Q${40 + .9 * 280} 80 318 120" fill="none" stroke="${B4C.g}" stroke-width="2.6"/>` + b4dT(180, 214, '≈ 5,000,000', B4C.g, 'r4v-big')) : ''), s: 'เลยครึ่งทาง (4,500,000) → ปัด<b>ขึ้น</b><br>4,817,250 ≈ 5,000,000' },
+        { t: '2,395,680', f: on => NL(2000000, 3000000, 2395680, '2,395,680') + (on ? r4vH(`<path d="M${40 + .396 * 280} 120 Q${40 + .2 * 280} 80 42 120" fill="none" stroke="${B4C.g}" stroke-width="2.6"/>` + b4dT(180, 214, '≈ 2,000,000', B4C.g, 'r4v-big')) : ''), s: 'ยังไม่ถึงครึ่งทาง → ปัด<b>ลง</b><br>2,395,680 ≈ 2,000,000' }]),
+      b4dOld(O[0]),
+      b4dTry(423, () => p4estQ(pick(P4W2_EST)), 'หาค่าประมาณ'),
+      r4dShow('ใช้ค่าประมาณตรวจคำตอบ', e1dEq([{ e: '5,284,600 − 1,906,350' }, { e: '≈ !5,000,000 − !2,000,000', w: 'ปัดเป็นเต็มล้าน: 5 ล้าน กับ 2 ล้าน', n: 'ปัดเป็นจำนวนเต็มล้าน' }, { e: '= *3,000,000', w: '5 ล้าน − 2 ล้าน = 3 ล้าน', n: 'คิดในใจ' },
+        { e: 'เพื่อนได้ !4,378,250', w: 'ห่างจาก 3,000,000 มาก ✗', n: 'คำตอบนี้น่าจะผิด คิดใหม่', ans: 1 }], { q: 'เพื่อนคิด 5,284,600 − 1,906,350 ได้ 4,378,250 ถูกไหม', fin: `ประมาณ → คิดในใจ → <b>เทียบ</b>${r4vSep}ห่างกันมาก แสดงว่าคิดผิด`, say: 'ประมาณ คิดในใจ แล้วเทียบ ถ้าห่างกันมากแสดงว่าคิดผิด' })),
+      b4dTry(423, () => { const [a, b] = pick([...P4W2_ADD1, ...P4W2_SUB1]); return p4estPick(a, a > b && Math.random() < .5 ? '−' : '+', b); }, 'ตรวจคำตอบ')]; },
+
+  /* ด่าน 4 เครื่องคิดเลข */
+  424: L => { const O = L.teach.slice(), key = (x, y, t, on, col = '#fff') => `<rect x="${x}" y="${y}" width="30" height="30" rx="7" fill="${on ? B4C.y : col}" stroke="${on ? B4C.o : B4C.fade}" stroke-width="${on ? 2.6 : 1.6}"/>` + b4dT(x + 15, y + 21, t, B4C.ink, 'r4d-tx');
+    const calc = hl => { const K = [['C', '⌫', '÷', '×'], ['7', '8', '9', '−'], ['4', '5', '6', '+'], ['1', '2', '3', '='], ['0']]; return `<rect x="104" y="6" width="152" height="230" rx="14" fill="#EDEFF7" stroke="${B4C.ink}" stroke-width="2"/><rect x="114" y="14" width="132" height="30" rx="6" fill="#DDEBD2" stroke="${B4C.fade}"/>` + K.map((r, j) => r.map((k, i) => key(114 + i * 34, 52 + j * 36, k, hl && hl(k))).join('')).join(''); };
+    const chip = (x, t, y = 96, col = B4C.o) => `<rect x="${x}" y="${y}" width="${t.length > 3 ? 70 : 38}" height="32" rx="8" fill="#fff" stroke="${col}" stroke-width="2"/>` + b4dT(x + (t.length > 3 ? 35 : 19), y + 22, t, col, 'r4d-sm');
+    return [
+      b4dSee('รู้จักเครื่องคิดเลข', '<b>แตะรูป</b> — ปุ่มแต่ละกลุ่มทำอะไร', [
+        { t: 'ปุ่มตัวเลข', f: on => calc(on && (k => /\d/.test(k))), s: '<b>ปุ่มตัวเลข</b> 0–9 กดตัวเลขทีละหลัก<br>ไม่ต้องกดเครื่องหมายจุลภาค' },
+        { t: 'ปุ่มเครื่องหมาย', f: on => calc(on && (k => /[+−×÷=]/.test(k))), s: '<b>+ − × ÷</b> แล้วกด <b>=</b> ดูคำตอบ' },
+        { t: 'ปุ่ม C', f: on => calc(on && (k => k === 'C' || k === '⌫')), s: 'กดผิด กด <b>C</b> เริ่มใหม่<br>⌫ ลบตัวเลขที่กดล่าสุด' }]),
+      b4dOld(O[0]),
+      r4dShow('ลำดับการกดปุ่ม', { fig: `<rect x="30" y="20" width="300" height="56" rx="10" fill="#DDEBD2" stroke="${B4C.ink}" stroke-width="2"/>` + b4dT(180, 60, '(48,600 + 25,350) ÷ 3', B4C.ink, 'r4v-tx t3-q'), q: 'ใช้เครื่องคิดเลขหาค่า (48,600 + 25,350) ÷ 3',
+        steps: [{ ink: chip(30, '48600') + chip(106, '+') + chip(150, '25350') + chip(226, '='), w: 'กด 48600 + 25350 =', n: 'ในวงเล็บก่อน' },
+          { ink: b4dT(320, 156, '= 73,950', B4C.b, 'r4v-big', 'end'), w: 'จอขึ้น 73,950', n: 'ผลในวงเล็บ' },
+          { ink: chip(30, '÷', 176) + chip(74, '3', 176) + chip(118, '=', 176), w: 'กด ÷ 3 =', n: 'หารต่อจากคำตอบบนจอ' },
+          { ink: b4dT(320, 232, '= 24,650', B4C.g, 'r4v-big', 'end'), w: 'ตอบ 24,650', n: 'ไม่ต้องกดตัวเลขเดิมซ้ำ', ans: 1 }],
+        fin: `มีวงเล็บ → <b>คิดในวงเล็บก่อน</b> แล้วกดต่อจากคำตอบบนจอ`, say: 'มีวงเล็บ คิดในวงเล็บก่อน แล้วกดต่อจากคำตอบบนจอ' }),
+      b4dTry(424, () => Q.p4Calc({ expr: pick(P4W2_CALC) }), 'ใช้เครื่องคิดเลข')]; },
+
+  /* ด่าน 5 ตัวไม่ทราบค่า (ลบ) */
+  425: L => { const A = b4dPw({ w: 706750, p1: 186450, p2: 520300, unk: 'w', l1: 'ตัวลบ', l2: 'ผลลบ', lw: 'ตัวตั้ง' }), B = b4dPw({ w: 8000000, p1: 4735500, p2: 3264500, unk: '1', l1: 'ตัวลบ', l2: 'ผลลบ', lw: 'ตัวตั้ง' });
+    return [
+      b4dSee('ตัวตั้ง = ตัวลบ + ผลลบ', '<b>แตะรูป</b> — ไม่รู้ส่วนไหน', [
+        { t: '□ − 186,450 = 520,300', f: on => `<g transform="scale(.69) translate(0 66)">${A.svg}${on ? r4vH(b4dVal(A.w, '706,750')) : ''}</g>`  + (on ? r4vH(b4dT(180, 214, '□ = 186,450 + 520,300', B4C.g, 'r4v-tx')) : ''), s: 'ไม่รู้<b>ตัวตั้ง</b> (ทั้งแถบ)<br>→ นำสองส่วนมา<b>บวก</b>กัน' },
+        { t: '8,000,000 − □ = 3,264,500', f: on => `<g transform="scale(.69) translate(0 66)">${B.svg}${on ? r4vH(b4dVal(B.p1, '4,735,500')) : ''}</g>`  + (on ? r4vH(b4dT(180, 214, '□ = 8,000,000 − 3,264,500', B4C.g, 'r4v-tx')) : ''), s: 'ไม่รู้<b>ตัวลบ</b> (ส่วนหนึ่ง)<br>→ ทั้งแถบ<b>ลบ</b>อีกส่วน' }]),
+      r4dShow('8,000,000 − □ = 3,264,500', { W: 520, H: 150, fig: B.svg, q: 'หาค่าของ □ : 8,000,000 − □ = 3,264,500',
+        steps: [{ w: 'ตัวลบ = ตัวตั้ง − ผลลบ', n: 'ไม่รู้ส่วนหนึ่ง → ลบ' }, { w: '□ = 8,000,000 − 3,264,500', n: 'เขียนประโยคใหม่' },
+          { ink: b4dVal(B.p1, '4,735,500'), off: ['.p4bt.q'], w: '□ = 4,735,500', n: 'ตั้งลบ (กระจายผ่าน 0)' }, { w: '8,000,000 − 4,735,500 = 3,264,500 ✓', n: 'ตรวจ: แทนค่าแล้วจริง', ans: 1 }],
+        fin: `ไม่รู้ทั้งหมด → <b>บวก</b>${r4vSep}ไม่รู้ส่วนหนึ่ง → <b>ลบ</b>`, say: 'ไม่รู้ทั้งหมดให้บวก ไม่รู้ส่วนหนึ่งให้ลบ' }),
+      b4dTry(425, () => Q.b3Unk(pick(P4W2_UNK_SUB)), 'เลือกวิธีหา □'),
+      b4dTry(425, () => p4unkQ(pick(P4W2_UNK_SUB)), 'หาค่า □')]; },
+
+  /* ด่าน 6 ตัวไม่ทราบค่า (บวก) */
+  426: L => { const A = b4dPw({ w: 612380, p1: 245000, p2: 367380, unk: '2', l1: 'ตัวตั้ง', l2: 'ตัวบวก', lw: 'ผลบวก' }), B = b4dPw({ w: 5000000, p1: 2513300, p2: 2486700, unk: '1', l1: 'ตัวตั้ง', l2: 'ตัวบวก', lw: 'ผลบวก' });
+    return [
+      b4dSee('ผลบวก = ตัวตั้ง + ตัวบวก', '<b>แตะรูป</b> — ไม่รู้ส่วนหนึ่ง ใช้การลบ', [
+        { t: '245,000 + □ = 612,380', f: on => `<g transform="scale(.69) translate(0 66)">${A.svg}${on ? r4vH(b4dVal(A.p2, '367,380')) : ''}</g>`  + (on ? r4vH(b4dT(180, 214, '□ = 612,380 − 245,000', B4C.g, 'r4v-tx')) : ''), s: 'ไม่รู้<b>ตัวบวก</b> (ส่วนหนึ่ง)<br>→ ผลบวก<b>ลบ</b>อีกส่วน' }]),
+      r4dShow('□ + 2,486,700 = 5,000,000', { W: 520, H: 150, fig: B.svg, q: 'หาค่าของ □ : □ + 2,486,700 = 5,000,000',
+        steps: [{ w: 'ตัวตั้ง = ผลบวก − ตัวบวก', n: 'ไม่รู้ส่วนหนึ่ง → ลบ' }, { w: '□ = 5,000,000 − 2,486,700', n: 'เขียนประโยคใหม่' },
+          { ink: b4dVal(B.p1, '2,513,300'), off: ['.p4bt.q'], w: '□ = 2,513,300', n: 'ตั้งลบ' }, { w: '2,513,300 + 2,486,700 = 5,000,000 ✓', n: 'ตรวจ: แทนค่าแล้วจริง', ans: 1 }],
+        fin: `การบวก: ไม่รู้ส่วนหนึ่ง → <b>ผลบวกลบอีกส่วน</b>`, say: 'การบวก ไม่รู้ส่วนหนึ่ง ใช้ผลบวกลบอีกส่วน' }),
+      b4dTry(426, () => Q.b3Unk(pick(P4W2_UNK_ADD)), 'เลือกวิธีหา □'),
+      b4dTry(426, () => p4unkQ(pick(P4W2_UNK_ADD)), 'หาค่า □')]; },
+
+  /* ด่าน 7 โจทย์อย่างง่าย */
+  427: L => { const O = L.teach.slice(), A = b4dPw({ w: 334350, p1: 238600, p2: 95750, unk: 'w', l1: 'มีอยู่', l2: 'ปลูกเพิ่ม', lw: 'ทั้งหมด' });
+    return [
+      b4dSee('รวมกัน หรือ เอาออก', '<b>แตะรูป</b> — ไม่รู้ทั้งหมด หรือไม่รู้ส่วนหนึ่ง', [
+        { t: 'รวมกัน → บวก', f: on => `<g transform="scale(.69) translate(0 66)">${b4dIn(p4pwSVG({ w: 0, p1: 3, p2: 2, unk: 'w', l1: 'มีอยู่', l2: 'เพิ่ม', lw: 'ทั้งหมด', fv: () => '' }))}</g>` + (on ? r4vH(b4dT(180, 200, 'ไม่รู้ทั้งหมด → บวก', B4C.g, 'r4v-tx')) : ''), s: 'มีอยู่ + เพิ่มเข้ามา = ทั้งหมด<br>ไม่รู้ทั้งหมด → <b>บวก</b>' },
+        { t: 'เอาออก → ลบ', f: on => `<g transform="scale(.69) translate(0 66)">${b4dIn(p4pwSVG({ w: 0, p1: 3, p2: 2, unk: '2', l1: 'ใช้ไป', l2: 'เหลือ', lw: 'มีอยู่', fv: () => '' }))}</g>` + (on ? r4vH(b4dT(180, 200, 'ไม่รู้ส่วนที่เหลือ → ลบ', B4C.p, 'r4v-tx')) : ''), s: 'มีอยู่ − ใช้ไป = เหลือ<br>ไม่รู้ส่วนหนึ่ง → <b>ลบ</b>' }]),
+      b4dOld(O[0]),
+      r4dShow('4 ขั้นของการแก้โจทย์', { W: 520, H: 150, fig: A.svg, q: 'สวนมีต้นปาล์ม 238,600 ต้น ปลูกเพิ่ม 95,750 ต้น มีต้นปาล์มทั้งหมดกี่ต้น',
+        steps: [{ w: '① ถาม: ต้นปาล์มทั้งหมด', n: 'ขีดเส้นใต้คำถาม' }, { w: '② บอก: มี 238,600 ปลูกเพิ่ม 95,750', n: 'ใส่ตัวเลขลงแถบ' },
+          { w: '③ 238,600 + 95,750 = □', n: 'ไม่รู้ทั้งหมด → บวก' }, { ink: b4dVal(A.w, '334,350'), off: ['.p4bt.q'], w: '④ ตอบ 334,350 ต้น', n: 'ตอบพร้อมหน่วย', ans: 1 }],
+        fin: `ถามอะไร → บอกอะไร → <b>ประโยคสัญลักษณ์</b> → ตอบพร้อมหน่วย`, say: 'ถามอะไร บอกอะไร เขียนประโยคสัญลักษณ์ แล้วตอบพร้อมหน่วย' }),
+      b4dTry(427, () => Q.b3Story(pick(P4S_SIMPLE)), 'เลือกประโยคสัญลักษณ์'),
+      b4dTry(427, () => Q.dStory(pick(P4S_SIMPLE)), 'แก้โจทย์')]; },
+
+  /* ด่าน 8 มากกว่า */
+  428: L => { const O = L.teach.slice(), C = b4dCmp({ big: 2860000, small: 2385000, nb: 'ปีนี้', ns: 'ปีที่แล้ว', unk: 'small' }), cm = unk => b4dIn(p4cmpSVG({ big: 5, small: 3, nb: 'มาก', ns: 'น้อย', unk, fv: () => '' }));
+    return [
+      b4dSee('คำว่า “มากกว่า”', '<b>แตะรูป</b> — ดูว่าไม่รู้แถบไหน', [
+        { t: 'ไม่รู้จำนวนที่มาก', f: on => `<g transform="scale(.69) translate(0 20)">${cm('big')}</g>` + (on ? r4vH(b4dT(180, 200, 'น้อย + ผลต่าง → บวก', B4C.g, 'r4v-tx')) : ''), s: 'ไม่รู้จำนวนที่<b>มาก</b><br>→ จำนวนที่น้อย + ผลต่าง (<b>บวก</b>)' },
+        { t: 'ไม่รู้จำนวนที่น้อย', f: on => `<g transform="scale(.69) translate(0 20)">${cm('small')}</g>` + (on ? r4vH(b4dT(180, 200, 'มาก − ผลต่าง → ลบ', B4C.p, 'r4v-tx')) : ''), s: 'ไม่รู้จำนวนที่<b>น้อย</b><br>→ จำนวนที่มาก − ผลต่าง (<b>ลบ</b>)' }]),
+      b4dOld(O[0]),
+      r4dShow('มีคำว่า “มากกว่า” แต่ใช้การลบ', { W: 520, H: 172, fig: C.svg, q: 'ปีนี้ตลาดขายพรมได้ 2,860,000 บาท ซึ่งมากกว่าปีที่แล้ว 475,000 บาท ปีที่แล้วขายได้กี่บาท',
+        steps: [{ ink: b4dVal(C.diff, '475,000', B4C.o), w: 'ปีนี้มากกว่า 475,000', n: 'ผลต่างอยู่ปลายแถบ' }, { w: 'ไม่รู้ปีที่แล้ว (แถบสั้น)', n: 'ไม่รู้จำนวนที่น้อย' },
+          { w: '2,860,000 − 475,000 = □', n: 'มาก − ผลต่าง → ลบ' }, { ink: b4dVal(C.small, '2,385,000'), off: ['.p4bt.q'], w: 'ตอบ 2,385,000 บาท', n: 'มีคำว่ามากกว่า แต่ใช้การลบ', ans: 1 }],
+        fin: `ดูว่า<b>ไม่รู้แถบไหน</b> ไม่ใช่ดูแค่คำว่า “มากกว่า”`, say: 'ดูว่าไม่รู้แถบไหน ไม่ใช่ดูแค่คำว่ามากกว่า' }),
+      b4dTry(428, () => Q.b3Story(pick(P4S_MORE)), 'เลือกประโยคสัญลักษณ์'),
+      b4dTry(428, () => Q.dStory(pick(P4S_MORE)), 'แก้โจทย์ “มากกว่า”')]; },
+
+  /* ด่าน 9 น้อยกว่า */
+  429: L => { const O = L.teach.slice(), C = b4dCmp({ big: 863300, small: 724800, nb: 'ร้านผ้า', ns: 'ร้านเครื่องเทศ', unk: 'big' }), cm = unk => b4dIn(p4cmpSVG({ big: 5, small: 3, nb: 'มาก', ns: 'น้อย', unk, fv: () => '' }));
+    return [
+      b4dSee('คำว่า “น้อยกว่า”', '<b>แตะรูป</b> — ดูว่าไม่รู้แถบไหน', [
+        { t: 'ไม่รู้จำนวนที่น้อย', f: on => `<g transform="scale(.69) translate(0 20)">${cm('small')}</g>` + (on ? r4vH(b4dT(180, 200, 'มาก − ผลต่าง → ลบ', B4C.p, 'r4v-tx')) : ''), s: 'ไม่รู้จำนวนที่<b>น้อย</b> → <b>ลบ</b>' },
+        { t: 'ไม่รู้จำนวนที่มาก', f: on => `<g transform="scale(.69) translate(0 20)">${cm('big')}</g>` + (on ? r4vH(b4dT(180, 200, 'น้อย + ผลต่าง → บวก', B4C.g, 'r4v-tx')) : ''), s: 'ไม่รู้จำนวนที่<b>มาก</b> → <b>บวก</b><br>แม้มีคำว่า “น้อยกว่า”' }]),
+      b4dOld(O[0]),
+      r4dShow('มีคำว่า “น้อยกว่า” แต่ใช้การบวก', { W: 520, H: 172, fig: C.svg, q: 'ร้านเครื่องเทศขายได้ 724,800 บาท ซึ่งน้อยกว่าร้านผ้า 138,500 บาท ร้านผ้าขายได้กี่บาท',
+        steps: [{ ink: b4dVal(C.diff, '138,500', B4C.o), w: 'ร้านเครื่องเทศน้อยกว่า 138,500', n: 'ผลต่างอยู่ปลายแถบสั้น' }, { w: 'ไม่รู้ร้านผ้า (แถบยาว)', n: 'ไม่รู้จำนวนที่มาก' },
+          { w: '724,800 + 138,500 = □', n: 'น้อย + ผลต่าง → บวก' }, { ink: b4dVal(C.big, '863,300'), off: ['.p4bt.q'], w: 'ตอบ 863,300 บาท', n: 'มีคำว่าน้อยกว่า แต่ใช้การบวก', ans: 1 }],
+        fin: `ดูว่า<b>ไม่รู้แถบไหน</b> ไม่ใช่ดูแค่คำว่า “น้อยกว่า”`, say: 'ดูว่าไม่รู้แถบไหน ไม่ใช่ดูแค่คำว่าน้อยกว่า' }),
+      b4dTry(429, () => Q.b3Story(pick(P4S_LESS)), 'เลือกประโยคสัญลักษณ์'),
+      b4dTry(429, () => Q.dStory(pick(P4S_LESS)), 'แก้โจทย์ “น้อยกว่า”')]; },
+
+  /* ด่าน 10 สองขั้น */
+  430: L => { const O = L.teach.slice(), W = 3000000, P = [[1850000, '#CFE6FF', 'ที่ดิน'], [675400, '#FFD9AE', 'รถไถ'], [474600, '#FFF3B0', 'เหลือ']], X = v => 16 + v / W * 488;
+    let x = 0; const segs = P.map(([v, c, l], i) => { const s = `<rect x="${a4n(X(x))}" y="58" width="${a4n(X(x + v) - X(x))}" height="46" rx="6" fill="${c}" stroke="${B4C.ink}" stroke-width="1.6"${i === 2 ? ' stroke-dasharray="6 5"' : ''}/>` + `<text x="${a4n((X(x) + X(x + v)) / 2)}" y="128" text-anchor="middle" class="p4bl">${l}</text>` + (i < 2 ? `<text x="${a4n((X(x) + X(x + v)) / 2)}" y="88" text-anchor="middle" class="p4bt">${fmt(v)}</text>` : `<text x="${a4n((X(x) + X(x + v)) / 2)}" y="88" text-anchor="middle" class="p4bt q">?</text>`); x += v; return s; }).join('');
+    const fig = `<path d="M16 50 v-8 q0 -8 8 -8 H250 l10 -10 l10 10 H496 q8 0 8 8 v8" fill="none" stroke="#8B6A3E" stroke-width="2.4"/><text x="260" y="18" text-anchor="middle" class="p4bt">มีเงิน 3,000,000</text>` + segs;
+    return [
+      b4dOld(O[0]),
+      r4dShow('โจทย์สองขั้น', { W: 520, H: 150, fig, q: 'พ่อมีเงิน 3,000,000 บาท ซื้อที่ดิน 1,850,000 บาท ซื้อรถไถ 675,400 บาท พ่อเหลือเงินกี่บาท',
+        steps: [{ w: '3,000,000 − 1,850,000', n: 'ขั้นที่ 1: หลังซื้อที่ดิน' }, { w: '= 1,150,000', n: 'ตั้งลบ' }, { w: '1,150,000 − 675,400', n: 'ขั้นที่ 2: นำผลขั้นแรกมาทำต่อ' },
+          { ink: b4dVal([(X(1850000 + 675400) + X(W)) / 2, 88], '474,600'), off: ['.p4bt.q'], w: '= 474,600', n: 'ตั้งลบ' }, { w: 'ตอบ 474,600 บาท', n: 'ตอบพร้อมหน่วย', ans: 1 }], dense: true,
+        fin: `ทำ<b>ทีละขั้น</b> นำผลขั้นแรกไปใช้ขั้นต่อไป`, say: 'ทำทีละขั้น นำผลขั้นแรกไปใช้ขั้นต่อไป' }),
+      b4dTry(430, () => Q.dStory(pick(P4S_TWO)), 'โจทย์สองขั้น')]; },
+
+  /* ด่าน 11 แสดงวิธีทำ */
+  431: L => { const O = L.teach.slice(), ln = (i, t, col) => r4dTx(54, 58 + i * 46, t, col, 'r4v-tx', 'start'), C = b4dCmp({ big: 1450000, small: 865300, nb: 'ข้าว', ns: 'อ้อย', unk: 'diff' });
+    return [
+      b4dSee('การแสดงวิธีทำ', '<b>แตะรูป</b> — เขียนเป็นลำดับ', [
+        { t: 'แสดงวิธีทำ', f: on => `<rect x="30" y="16" width="300" height="208" rx="12" fill="#FFFDF6" stroke="#EDE6D2" stroke-width="2"/>` + (on ? r4vH(ln(0, '① ประโยคสัญลักษณ์ … = □', B4C.b) + ln(1, '② วิธีทำ สิ่งที่โจทย์บอก', B4C.o) + ln(2, '③ คำนวณ … = … หน่วย', B4C.o) + ln(3, '④ ตอบ … หน่วย', B4C.g)) : r4dTx(180, 126, '?', B4C.p, 'r4v-big')), s: 'ประโยค → วิธีทำ → คำนวณ<br>→ <b>ตอบพร้อมหน่วย</b>' }]),
+      r4dShow('แสดงวิธีทำที่สมบูรณ์', { W: 520, H: 172, fig: C.svg, q: 'จังหวัดหนึ่งปลูกข้าว 1,450,000 ไร่ ปลูกอ้อย 865,300 ไร่ ปลูกข้าวมากกว่าอ้อยกี่ไร่',
+        steps: [{ w: '1,450,000 − 865,300 = □', n: '① ประโยคสัญลักษณ์ (หาผลต่าง → ลบ)' }, { w: 'วิธีทำ ปลูกข้าว 1,450,000 ไร่', n: '② สิ่งที่โจทย์บอก' }, { w: 'ปลูกอ้อย 865,300 ไร่', n: '' },
+          { w: 'ปลูกข้าวมากกว่า 1,450,000 − 865,300', n: '③ คำนวณ' }, { ink: b4dVal(C.diff, '584,700'), off: ['.p4bt.q'], w: '= 584,700 ไร่', n: 'ตั้งลบ' }, { w: 'ตอบ <span class="thn">๕๘๔,๗๐๐</span> ไร่', n: '④ ตอบพร้อมหน่วย', ans: 1 }],
+        dense: true, fin: 'ประโยคสัญลักษณ์ → วิธีทำ → คำนวณ → <b>ตอบพร้อมหน่วย</b>', say: 'ประโยคสัญลักษณ์ วิธีทำ คำนวณ แล้วตอบพร้อมหน่วย' }),
+      b4dOld(O[0]),
+      b4dTry(431, () => { const o = pick(P4_SOL); return Q.p4Seq({ text: o.text, cards: P4_SOLVE(o) }); }, 'เรียงวิธีทำ'),
+      b4dTry(431, () => p4ansQ(pick(P4_SOL)), 'ตอบพร้อมหน่วย')]; },
+
+  /* ด่าน 12 สร้างโจทย์จากประโยค */
+  432: L => { const O = L.teach.slice();
+    return [
+      b4dSee('เครื่องหมายบอกเรื่อง', '<b>แตะรูป</b> — + กับ − ใช้กับเรื่องแบบไหน', [
+        { t: '+', f: on => b4dT(180, 80, '+', B4C.g, 'r4v-big') + (on ? r4vH(['รวมกัน', 'เพิ่มขึ้น', 'ทั้งหมด'].map((t, i) => e1dChip(30 + i * 104, 130, 92, t, B4C.g)).join('')) : ''), s: '<b>+</b> : รวมกัน เพิ่มขึ้น ทั้งหมด' },
+        { t: '−', f: on => b4dT(180, 80, '−', B4C.p, 'r4v-big') + (on ? r4vH(['เหลือ', 'ใช้ไป', 'มากกว่า…กี่'].map((t, i) => e1dChip(30 + i * 104, 130, 92, t, B4C.p)).join('')) : ''), s: '<b>−</b> : เหลือ ใช้ไป เอาออก<br>เปรียบเทียบ (มากกว่า/น้อยกว่ากี่)' }]),
+      b4dOld(O[0]),
+      r4dShow('สร้างโจทย์จาก 3,700,000 − 1,265,800 = □', { fig: b4dT(86, 46, '3,700,000', B4C.ink, 'r4v-tx') + b4dT(160, 46, '−', B4C.ink, 'r4v-tx') + b4dT(234, 46, '1,265,800', B4C.ink, 'r4v-tx') + b4dT(312, 46, '= □', B4C.ink, 'r4v-tx'), q: 'สร้างโจทย์ปัญหาจากประโยคสัญลักษณ์ 3,700,000 − 1,265,800 = □',
+        steps: [{ ink: `<circle cx="160" cy="40" r="15" fill="none" stroke="${B4C.p}" stroke-width="2.6"/>` + b4dT(180, 96, 'เอาออก → เหลือ', B4C.p, 'r4d-tx'), w: 'เครื่องหมาย − : เอาออก แล้วเหลือ', n: '① ดูเครื่องหมาย' },
+          { ink: b4dT(86, 140, 'เงินในบัญชี', B4C.b, 'r4d-sm') + b4dT(234, 140, 'ถอนออก', B4C.o, 'r4d-sm') + `<path d="M86 58 V76 M234 58 V76 M86 112 V124 M234 112 V124" stroke="${B4C.fade}" stroke-width="1.6" stroke-dasharray="4 4"/>`, w: 'เงินในบัญชี 3,700,000 บาท', n: '② เลือกเรื่อง ใส่ตัวเลข' }, { w: 'ถอนออก 1,265,800 บาท', n: '' },
+          { ink: b4dT(180, 190, 'เหลือเงินกี่บาท ?', B4C.g, 'r4d-tx'), w: 'ยังเหลือเงินในบัญชีกี่บาท', n: '③ ตั้งคำถามให้ได้ □', ans: 1 }],
+        fin: `เครื่องหมาย → <b>เรื่องที่เข้ากัน</b> → ใส่ตัวเลข → ตั้งคำถาม`, say: 'ดูเครื่องหมาย เลือกเรื่องที่เข้ากัน ใส่ตัวเลข แล้วตั้งคำถาม' }),
+      b4dTry(432, () => p4s2sQ(pick(P4_S2S)), 'เลือกโจทย์ที่ตรงกับประโยค'),
+      b4dTry(432, () => p4st2sQ(pick(P4_S2S)), 'เลือกประโยคที่ตรงกับโจทย์')]; },
+
+  /* ด่าน 13 สร้างโจทย์จากภาพ */
+  433: L => { const O = L.teach.slice(), tag = (x, k, nm, p) => `<g transform="translate(${x} 30)"><rect x="0" y="0" width="140" height="120" rx="12" fill="#FFFDF6" stroke="${B4C.fade}" stroke-width="2"/>${k === 'house' ? `<path d="M40 40 L70 14 L100 40 Z" fill="#E5487A"/><rect x="48" y="40" width="44" height="30" fill="#FFE7A8" stroke="#2B2550" stroke-width="1.6"/><rect x="64" y="52" width="12" height="18" fill="#8A5A1E"/>` : `<rect x="34" y="38" width="72" height="22" rx="8" fill="#6FB2F5" stroke="#2B2550" stroke-width="1.6"/><path d="M48 38 L58 24 H84 L94 38 Z" fill="#BFE3F7" stroke="#2B2550" stroke-width="1.6"/><circle cx="52" cy="62" r="7" fill="#2B2550"/><circle cx="90" cy="62" r="7" fill="#2B2550"/>`}` + b4dT(70, 88, nm, B4C.ink, 'r4d-sm') + b4dT(70, 110, fmt(p) + ' บาท', B4C.o, 'r4d-tx') + '</g>';
+    const fig = tag(20, 'house', 'บ้าน', 3450000) + tag(200, 'car', 'รถยนต์', 899000);
+    return [
+      b4dOld(O[0]),
+      r4dShow('สร้างโจทย์จากภาพ', { fig, q: 'สร้างโจทย์การบวกและโจทย์การลบจากภาพป้ายราคา',
+        steps: [{ ink: b4dT(180, 186, 'ซื้อทั้งสองอย่าง → +', B4C.g, 'r4d-tx'), w: 'ซื้อทั้งสองอย่าง จ่ายกี่บาท', n: 'โจทย์การบวก: รวมกัน' }, { w: '3,450,000 + 899,000', n: '' }, { w: '= 4,349,000 บาท', n: 'หาคำตอบ' },
+          { ink: b4dT(180, 220, 'แพงกว่ากี่บาท → −', B4C.p, 'r4d-tx'), w: 'บ้านแพงกว่ารถยนต์กี่บาท', n: 'โจทย์การลบ: เปรียบเทียบ' }, { w: '3,450,000 − 899,000', n: '' }, { w: '= 2,551,000 บาท', n: 'หาคำตอบ', ans: 1 }], dense: true,
+        fin: `ภาพเดียวกันสร้างได้ทั้ง<b>โจทย์บวก</b> (รวม) และ<b>โจทย์ลบ</b> (เปรียบเทียบ เหลือ)`, say: 'ภาพเดียวกันสร้างได้ทั้งโจทย์บวกและโจทย์ลบ' }),
+      b4dTry(433, () => p4picQ(pick(P4_PICS), pick(['sum', 'diff', 'sub'])), 'โจทย์จากภาพ')]; }
+};
+/* games of ด่าน 1 2 5 6: one point after another, easy → hard */
+const B4D_GAME = {
+  421: () => [...pkF(P4W2_ADD0, 2), ...pkF(P4W2_ADD1, 4)].map(([a, b]) => b4dD(p4colQ(a, b, '+'), b4dColD(a, b, '+'))).concat(pkF(P4W2_ADD1, 2).map(([a, b]) => b4dD(p4estPick(a, '+', b), 60))),
+  422: () => [...pkF(P4W2_SUB0, 2), ...pkF(P4W2_SUB1, 2), ...pkF(P4W2_SUB2, 2)].map(([a, b]) => b4dD(p4colQ(a, b, '−'), b4dColD(a, b, '−'))).concat(pkF(P4W2_SUB1, 2).map(([a, b]) => b4dD(p4estPick(a, '−', b), 60))),
+  425: () => { const S = pkF(P4W2_UNK_SUB, 7); return [...S.slice(0, 4).map((t, i) => b4dD(Q.b3Unk(t), 10 + i)), ...S.slice(4).map((t, i) => b4dD(p4unkQ(t), 20 + i))]; },
+  426: () => { const S = pkF(P4W2_UNK_ADD, 7); return [...S.slice(0, 4).map((t, i) => b4dD(Q.b3Unk(t), 10 + i)), ...S.slice(4).map((t, i) => b4dD(p4unkQ(t), 20 + i))]; }
+};
+LESSONS_P4C2.forEach(L => { const f = B4D_TEACH[L.id]; if (f) { L.teach = f(L).filter(Boolean); L.__pracDone = 1; L.learned = true; } if (B4D_GAME[L.id]) L.game = B4D_GAME[L.id]; });
 
 'use strict';
 /* =========================================================
