@@ -2942,6 +2942,12 @@ svg .e4d-sm{font:800 15px var(--font-num);fill:var(--ink)}
 svg .e4d-nm{font:700 10.5px var(--font);fill:#7A70A0}
 svg .e4d-ex{font:800 26px var(--font-num);fill:var(--ink)}
 .r4d-ink .e4d-dg,.r4d-ink .e4d-sm,.r4d-ink .e4d-ex{font-family:'Mali',var(--font-num);font-weight:600}
+/* v255 ป.4 บทที่ 6: เศษส่วนที่เขียนใน svg และบนกระดาษทด */
+svg .f4d-n{font:800 20px var(--font-num);fill:var(--ink)}
+svg .f4d-big{font:800 28px var(--font-num);fill:var(--ink)}
+.r4d-ink .f4d-n,.r4d-ink .f4d-big{font-family:'Mali',var(--font-num);font-weight:600}
+.r4d-w .fq,.r4d-q .fq{font-size:.82em;line-height:.98}
+.r4d-q .fr,.r4d-w .fr{line-height:1}
 .r4v-ps .r4v-sm{paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-linejoin:round}
 .r4v-ps .r4v-bar{font:800 12.5px var(--font-num)}
 .r4v-hl{animation:r4vIn .55s ease-out both}
