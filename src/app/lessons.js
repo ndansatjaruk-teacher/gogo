@@ -2956,6 +2956,9 @@ const CITIES = [
     theme: { river: true, hills: ['#BFE3C9', '#ADD9B8', '#CFEBD7'], far: '#DDF0E3', edge: ['pier', 'tree', 'stilthouse', 'pine'], small: ['lotus', 'reeds', 'flowers', 'kayak', 'bush', 'reeds'] } },
   { id: 92, grade: 7, name: 'ลำน้ำยกกำลัง', chapter: 'บทที่ 3 เลขยกกำลัง', lessons: LESSONS_M1C3,
     theme: { river: true, hills: ['#C9E4B0', '#BADB9C', '#D8EDC4'], far: '#E6F3D6', edge: ['ricebarn', 'tree', 'pier', 'stilthouse'], small: ['paddy', 'duck', 'reeds', 'lotus', 'flowers', 'kayak'] } },
+  /* v267 (ผู้ใช้ขอ): ม.1 บทที่ 4 ทศนิยมและเศษส่วน — 21 ด่าน 2401–2421 + บอส 2422 (m1d.js เกม · m1dd.js หน้าสอน) */
+  { id: 99, grade: 7, name: 'ลำน้ำทศนิยม', chapter: 'บทที่ 4 ทศนิยมและเศษส่วน', lessons: LESSONS_M1C4,
+    theme: { river: true, hills: ['#BEE3C2', '#ACDAB2', '#D0ECD3'], far: '#E0F2E2', edge: ['pier', 'stilthouse', 'ricebarn', 'tree'], small: ['lotus', 'kayak', 'reeds', 'duck', 'paddy', 'flowers'] } },
   /* v245 (ผู้ใช้ขอ): ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2601–2620 + บอส 2621 */
   { id: 97, grade: 7, term: 2, name: 'ลำน้ำสมการ', chapter: 'บทที่ 6 สมการเชิงเส้นตัวแปรเดียว', lessons: LESSONS_M1C6,
     theme: { river: true, hills: ['#C4E6B8', '#B3DDA4', '#D4EDC9'], far: '#E4F3DC', edge: ['stilthouse', 'pier', 'pine', 'tree'], small: ['reeds', 'duck', 'lotus', 'kayak', 'paddy', 'bush'] } },

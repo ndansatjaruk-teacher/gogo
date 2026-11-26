@@ -4788,3 +4788,11 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .modal .setrow{padding:9px 0}
 .seg.scrublv{margin-left:auto}
 .seg.scrublv .btn.sm{min-height:34px;padding:0 12px}
+/* v267 ม.1 บทที่ 4 ทศนิยมและเศษส่วน (m1d.js / m1dd.js) */
+.d1r{position:relative}
+.d1r::after{content:'';position:absolute;left:50%;top:-.02em;width:.17em;height:.17em;border-radius:50%;background:currentColor;transform:translateX(-50%)}
+.d1cmp{display:flex;align-items:center;justify-content:center;gap:.5em;font:800 1.5em var(--font-num);margin-top:.35em}
+.d1bx{color:#B7AED3}
+.d1fig{width:100%;max-width:340px;display:block;margin:0 auto}
+svg .d1nl{font:700 15px var(--font-num);fill:#2B2550}
+.d1rm{display:none}
