@@ -2984,6 +2984,13 @@ svg .g5d-t{font:800 15px var(--font-num);fill:var(--ink)}
 svg .g5d-h{font:700 14px var(--font);fill:#3A2F6B}
 svg .g5d-s{font:600 12.5px var(--font);fill:#4A4270}
 .r4v-ps .r4d-tx{font:800 15px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+/* v253 ป.4 บทที่ 8: รูปมุม (a4SVG) ในหน้าดูภาพและหน้าทำให้ดู */
+.r4d-svg .a4-n,.r4v-ps .a4-n{font:800 17px var(--font-num);fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.r4d-svg .a4-n.hl,.r4v-ps .a4-n.hl{fill:#E5487A}
+.r4d-svg .a4-al,.r4v-ps .a4-al{font:800 14px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:3px}
+.r4d-svg .a4-po,.r4v-ps .a4-po{font:700 8.6px var(--font-num);fill:#1E5FA8}
+.r4d-svg .a4-pi,.r4v-ps .a4-pi{font:700 7.2px var(--font-num);fill:#C2410C}
+.r4v-ps .r4v-sm{font:800 11px var(--font-num)}
 @container stage (orientation:portrait){.r4d-row{flex-direction:column;align-items:center}.r4d-fw{width:min(560px,92%)}.r4d-pap{width:min(560px,92%);flex:0 0 auto;min-height:220px}}
 .r4-svg .r4v-st{paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 .r4-svg .r4-rowno{font:700 11px var(--font-num);fill:#9A6406}

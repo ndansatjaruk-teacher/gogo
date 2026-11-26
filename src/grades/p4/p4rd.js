@@ -12,7 +12,7 @@ const r4dTxt = s => String(s || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' '
 
 /* worked example done like a person (no paragraphs): each step = { ink: svg drawn on the figure, w: line written on the scratch paper,
    wa: true → the line continues the previous line, n: short note beside it (or a bubble on the figure when the step writes nothing), ans: circle this line }
-   o = { W, H, fig (svg inside viewBox 0 0 W H), q: the problem (top of the paper), steps, fin, say } · step.off: selectors of figure parts that fade away (e.g. the “?”) · step.tmp: this ink goes away at the next step · o.top: svg kept above the ink (labels) */
+   o = { W, H, fig (svg inside viewBox 0 0 W H; a [data-grp] group in the ink pops in as one piece, e.g. a protractor), q: the problem (top of the paper), steps, fin, say } · step.off: selectors of figure parts that fade away (e.g. the “?”) · step.tmp: this ink goes away at the next step · o.top: svg kept above the ink (labels) */
 function r4dDo(o) {
   const W = o.W || 360, H = o.H || 240, S = o.steps, n = S.length, rm = r4dRM();
   window.__lastWalk = S.map((s, i) => [`${i + 1}`, r4dTxt(s.n || s.w)]);
@@ -29,7 +29,7 @@ function r4dDo(o) {
   const show = (p, on) => p.classList.toggle('on', on);
   /* draw one step's ink: lines are drawn by the pencil, filled shapes pop in one by one, writing appears where the pencil goes */
   const ink = s => { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'r4d-ink'); g.innerHTML = s.ink; lay.append(g);
-    const els = [...g.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse, text')].filter(e => !e.closest('defs, pattern')); let t = 160; const kf = [{ ...pct(pF), offset: 0, t: 0 }];
+    const els = [...g.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse, text, [data-grp]')].filter(e => !e.closest('defs, pattern') && !(e.parentElement && e.parentElement.closest('[data-grp]'))); let t = 160; const kf = [{ ...pct(pF), offset: 0, t: 0 }];
     const pops = els.filter(e => e.tagName !== 'text' && (e.hasAttribute('data-pop') || !(e.getAttribute('stroke') && (e.getAttribute('fill') || 'none') === 'none' && !e.getAttribute('stroke-dasharray')))).length, popD = Math.max(45, Math.min(130, 1500 / Math.max(1, pops)));
     els.forEach(e => { let bb = null; try { bb = e.getBBox(); } catch (_) { } const tag = e.tagName.toLowerCase(), st = e.getAttribute('stroke'), fl = e.getAttribute('fill') || (tag === 'text' ? '' : 'none'), dash = e.getAttribute('stroke-dasharray');
       if (tag === 'text') { const d = Math.min(700, 170 + 45 * (e.textContent || '').length); A(e, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: d, delay: t });
