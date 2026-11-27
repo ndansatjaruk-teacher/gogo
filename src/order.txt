@@ -125,4 +125,5 @@ app/learn.js
 app/wpic.js
 app/xteach.js
 app/xtra.js
+grades/p6/p6hd.js
 app/app.js

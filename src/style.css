@@ -4925,3 +4925,9 @@ svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-w
 .t9pie text,.t9pic text{pointer-events:none}
 .t9bars text{pointer-events:none}
 .t9pic svg{width:min(560px,54cqw)}
+/* v278 ป.6 บทที่ 1 หน้าลงมือเอง (แตะชิปเลือกจำนวน แทนปุ่ม + −) */
+.h6d-hand{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.h6d-pic{width:min(600px,90cqw)}
+.h6d-pic svg{width:100%;height:auto;display:block}
+.h6d-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.h6d-chips .h6-chip{min-width:64px}
