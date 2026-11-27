@@ -4900,3 +4900,8 @@ svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-w
 .fop{color:#C93A4C}
 .rp-card .e3p sup{font-size:.78em}
 .m3-t i{font-size:max(13px,.5em);color:#6E6596}
+/* v276 ม.1 บทที่ 1 จำนวนเต็ม หน้าสอนเรียงใหม่ (prefix i1d) */
+.i1l{font:800 15px var(--font-num);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+.i1n{font:700 14px var(--font-num);fill:#2B2550}
+.i1n.z{font-weight:900}
+.i1big{font:900 20px var(--font-num);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
