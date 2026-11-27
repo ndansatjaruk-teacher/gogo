@@ -69,7 +69,7 @@ a{color:var(--sky-2)}
   transform:translateY(0);transition:transform var(--t1) var(--ease),box-shadow var(--t1) var(--ease),filter var(--t1),opacity var(--t2)}
 .btn .ic{width:20px;height:20px}
 @media (hover:hover){.btn:hover{transform:translateY(-1px);filter:brightness(1.03)}}
-.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--c2),var(--rim),0 2px 4px -2px rgba(43,37,80,.2)}
+.btn:active,.btn.kb-hit{transform:translateY(3px);box-shadow:0 1px 0 var(--c2),var(--rim),0 2px 4px -2px rgba(43,37,80,.2)}
 .btn.btn:disabled,.btn.btn[aria-disabled=true]{--c:#EEE9DF;--c2:#DDD6C8;--fg:#B3ADC4;box-shadow:0 3px 0 var(--c2);pointer-events:none}
 .btn.primary{--c:var(--mint);--c2:var(--mint-2);--fg:#fff}
 .btn.accent{--c:var(--gold);--c2:var(--gold-2);--fg:#4A3200}
@@ -3152,7 +3152,7 @@ svg.a4-ptov{pointer-events:none}svg.a4-ptov rect{fill:#000;fill-opacity:0}
 .tfl-h b{text-align:center;font-size:.85rem}.tfl-ht{color:#1E9E6A}.tfl-hf{color:#D9434F}
 .tfl-r{background:var(--surface,#fff);border-radius:14px;padding:8px 10px 8px 16px;box-shadow:var(--e1);border:2px solid transparent;transition:border-color .15s}
 .tfl-t{font-size:clamp(16px,1.9vw,21px);line-height:1.45;text-align:left}
-.tfb{width:56px;height:52px;border-radius:14px;border:2px solid #D8D2E8;background:#fff;font:800 26px var(--font-num);color:#B9B0D3;cursor:pointer;justify-self:center}
+.tfb{width:56px;height:52px;border-radius:14px;border:2px solid #D8D2E8;background:#fff;font:800 26px var(--font-num);color:#7F75A8;cursor:pointer;justify-self:center}
 .tfb.t.on{background:#2DBE7E;border-color:#1E9E6A;color:#fff}
 .tfb.f.on{background:#F0545F;border-color:#D9434F;color:#fff}
 .tfl-r.bad{border-color:#F0545F;animation:shake .35s}.tfl-r.good{border-color:#2DBE7E}
@@ -4461,7 +4461,7 @@ button.m3-t{cursor:pointer;border:0}
 @media (prefers-reduced-motion:reduce){.pl-glide{animation:none}}
 /* v233 ม.1 บทที่ 3 เลขยกกำลัง (grades/m1/m1e.js) */
 .e3p{display:inline-flex;align-items:flex-start;white-space:nowrap;font-weight:800}
-.e3p sup{font-size:.6em;line-height:1;margin-left:.06em;position:relative;top:-.15em;font-weight:900}
+.e3p sup{font-size:.68em;line-height:1;margin-left:.06em;position:relative;top:-.15em;font-weight:900}
 .e3p .fq{font-size:.8em}
 .e3-x{display:inline-flex;align-items:center;flex-wrap:wrap;gap:.25em;font-weight:800;font-family:var(--font-num)}
 .e3-big{font:800 clamp(28px,3.6cqw,42px) var(--font-num);color:var(--ink);text-align:center;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:.3em;line-height:1.4}
@@ -4769,7 +4769,7 @@ button.m3-t.used{opacity:.28;pointer-events:none}
 .ep-grp{min-width:150px;padding:10px 16px;border-radius:14px;background:#fff;box-shadow:var(--e1);font-size:clamp(18px,2.2cqw,24px);text-align:center;color:var(--ink)}
 .ep-grp b{font-size:1.3em}
 .ep-ex{display:inline;white-space:normal;font-weight:800;font-family:var(--font-num)}
-.ep-ex sup{font-size:.6em;font-weight:900;line-height:0;vertical-align:super}
+.ep-ex sup{font-size:.68em;font-weight:900;line-height:0;vertical-align:super}
 .ep-ex .e3p{display:inline}.ep-ex .e3p sup{position:static;top:auto;vertical-align:super;line-height:0;margin-left:.04em;font-size:.6em}
 .ep-ex .fq{vertical-align:middle}
 /* v263: ปุ่มข้ามไปเล่นเกมระหว่างเรียน */
@@ -4828,9 +4828,9 @@ svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-w
 .k1tab{border-collapse:collapse;margin:6px auto;font:700 clamp(14px,1.6vw,18px) var(--font-num)}
 .k1tab th,.k1tab td{border:1.5px solid #C9C1E3;padding:6px 10px;text-align:center;min-width:34px}
 .k1tab th{background:#F1EEFA;font-family:var(--font)}
-.k1tab td.q{color:#E5487A;font-weight:900}
+.k1tab td.q{color:#C92E62;font-weight:900}
 .k1side{display:flex;justify-content:center}
-.k1pk b{font:800 15px var(--font);color:#7A70A0;margin-top:2px}
+.k1pk b{font:800 17px var(--font);color:#5B4F8C;margin-top:2px}
 .tg-fig .k1fig{width:min(440px,46cqw);max-width:none;max-height:min(46cqh,300px)}
 .colstack > .tg-fig .k1fig{width:min(460px,70cqw)}
 .tg-left .tg-fig .k1fig{width:min(400px,40cqw)}
@@ -4839,3 +4839,11 @@ svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-w
 .k1brd{width:min(560px,56cqw)}
 .k1brd svg{width:100%;height:auto;max-height:min(54cqh,380px);display:block}
 .k1row{align-items:center}
+.btn.sm.d1b-again{min-height:54px;padding-inline:18px;font-size:16px}
+.cnsf-tools .btn{min-height:50px} /* v274 UX: ≥ 44 px after the screen zooms to fit */
+.r4d-q .fq{font-size:1.12em} /* v274 UX: เศษส่วนในโจทย์บนกระดาษไม่เล็กเกินไป (≥ 13 px) */
+.xqt:has(.fq){line-height:1.72} /* v274 UX: โจทย์บอสที่มีเศษส่วนซ้อนสองบรรทัด ไม่ให้ตัวเศษทับบรรทัดบน */
+.hpl{font-size:14px} /* v274 UX: ป้ายพลังบอสอ่านได้ (เดิม 12 px) */
+.rp-card{min-height:46px} /* v274 UX: การ์ดที่แตะได้สูงพอสำหรับนิ้ว */
+.mgb .btn.info,.cnsf .btn.info{min-height:54px}
+.exam-card .spk{width:52px;height:52px} /* v274 UX: ปุ่มฟังโจทย์บอสไม่เล็กเกินนิ้วเมื่อจอย่อ */

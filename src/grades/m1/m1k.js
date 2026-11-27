@@ -8,7 +8,10 @@
    ========================================================= */
 const K1C = { ink: '#2B2550', grid: '#E3DEF2', ax: '#2B2550', p: '#E5487A', b: '#2F7BC0', g: '#1B8862', o: '#EC7F1E', v: '#7C5CE0', fade: '#B7AED3' };
 const k1N = n => miN(Math.round(n * 1000) / 1000);
-const k1P = (x, y) => `(${k1N(x)}, ${k1N(y)})`;
+const k1P = (x, y) => `(${k1N(x)},\u00a0${k1N(y)})`; /* v274: ช่องว่างไม่ตัดบรรทัด — (0, −2) ไม่แยกสองบรรทัด */
+const k1Nb = t => t == null ? t : String(t).replace(/\((−?[\d.\/]+),\s(−?[\d.\/]+)\)/g, '($1,\u00a0$2)');
+/* v274: ป้ายพิกัดของจุดอยู่ด้านที่ไม่ทับตัวเลขบนแกน (ตัวเลขแกน X อยู่ใต้แกน · ตัวเลขแกน Y อยู่ซ้ายแกน) */
+const k1Off = (x, y, P) => [x < 0 || (P && x >= P.xr[1] - 0.6) ? -9 : 9, y < 0 || (P && y >= P.yr[1] - 0.6) ? 18 : -9]; /* ชิดขอบขวา/บน → ป้ายหันเข้าด้านใน (ไม่ทับชื่อแกน X Y) */
 const k1T = (x, y, t, col = K1C.ink, cls = 'k1t', anc = 'middle') => `<text x="${a4n(x)}" y="${a4n(y)}" text-anchor="${anc}" class="${cls}" style="fill:${col}">${t}</text>`;
 const k1R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const k1Pk = a => a[Math.floor(Math.random() * a.length)];
@@ -35,14 +38,16 @@ function k1Plane(o = {}) {
   else s += k1T(X(xr[1]) + 8, Y(ay0) - 8, 'X', K1C.ax, 'k1ax') + k1T(X(ax0) + 9, Y(yr[1]) - 4, 'Y', K1C.ax, 'k1ax', 'start');
   const snap = (px, py) => { const x = Math.round(((px - ox) / ux + xr[0]) / xs) * xs, y = Math.round(((oy - py) / uy + yr[0]) / ys) * ys; return [Math.min(xr[1], Math.max(xr[0], Math.round(x * 1e6) / 1e6)), Math.min(yr[1], Math.max(yr[0], Math.round(y * 1e6) / 1e6))]; };
   return { s, X, Y, ux, uy, xr, yr, xs, ys, W, H, snap, q1 }; }
-const k1Dot = (P, x, y, col = K1C.p, lab = '', dx = 8, dy = -8, r = 5.5) => `<circle cx="${a4n(P.X(x))}" cy="${a4n(P.Y(y))}" r="${r}" fill="${col}" stroke="#fff" stroke-width="1.8"/>` + (lab ? k1T(P.X(x) + dx, P.Y(y) + dy, lab, col, 'k1l', dx < 0 ? 'end' : dx > 0 ? 'start' : 'middle') : '');
+const k1Dot = (P, x, y, col = K1C.p, lab = '', dx, dy, r = 5.5) => (dx == null && ([dx, dy] = k1Off(x, y, P)), dy == null && (dy = -8), /* v274: ไม่ได้บอกตำแหน่งป้าย → ด้านที่ไม่ทับตัวเลขแกน */ `<circle cx="${a4n(P.X(x))}" cy="${a4n(P.Y(y))}" r="${r}" fill="${col}" stroke="#fff" stroke-width="1.8"/>` + (lab ? k1T(P.X(x) + dx, P.Y(y) + dy, lab, col, 'k1l', dx < 0 ? 'end' : dx > 0 ? 'start' : 'middle') : ''));
 const k1Proj = (P, x, y, col = K1C.p) => `<path d="M${a4n(P.X(x))} ${a4n(P.Y(y))} V${a4n(P.Y(P.q1 ? P.yr[0] : 0))} M${a4n(P.X(x))} ${a4n(P.Y(y))} H${a4n(P.X(P.q1 ? P.xr[0] : 0))}" stroke="${col}" stroke-width="1.6" stroke-dasharray="4 3" fill="none"/>`;
 /* the part of y = m·x + b inside the plane (a vertical line when m is null: x = b) */
 function k1Line(P, m, b, col = K1C.b, sw = 2.6, lab) { let pts;
   if (m == null) pts = [[b, P.yr[0]], [b, P.yr[1]]];
   else { const c = []; [P.xr[0], P.xr[1]].forEach(x => { const y = m * x + b; if (y >= P.yr[0] - 1e-9 && y <= P.yr[1] + 1e-9) c.push([x, y]); }); if (m) [P.yr[0], P.yr[1]].forEach(y => { const x = (y - b) / m; if (x >= P.xr[0] - 1e-9 && x <= P.xr[1] + 1e-9) c.push([x, y]); }); c.sort((p, q) => p[0] - q[0]); pts = c.length ? [c[0], c[c.length - 1]] : null; }
   if (!pts) return ''; const [p, q] = pts;
-  return `<path d="M${a4n(P.X(p[0]))} ${a4n(P.Y(p[1]))} L${a4n(P.X(q[0]))} ${a4n(P.Y(q[1]))}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>` + (lab ? k1T(P.X(q[0]) - 4, P.Y(q[1]) + (q[1] >= P.yr[1] - 1e-9 ? 14 : -6), lab, col, 'k1l', 'end') : ''); }
+  if (Array.isArray(lab)) return `<path d="M${a4n(P.X(p[0]))} ${a4n(P.Y(p[1]))} L${a4n(P.X(q[0]))} ${a4n(P.Y(q[1]))}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>` + k1T(P.X(lab[1]), P.Y(lab[2]), lab[0], col, 'k1l', lab[3] || 'start'); /* v274: [ป้าย, x, y, anchor] วางป้ายเองเมื่อมีหลายเส้น */
+  return `<path d="M${a4n(P.X(p[0]))} ${a4n(P.Y(p[1]))} L${a4n(P.X(q[0]))} ${a4n(P.Y(q[1]))}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>` + (lab ? (() => { const top = q[1] >= P.yr[1] - 1e-9, rt = top && P.X(q[0]) + 8 + String(lab).length * 7.5 <= P.X(P.xr[1]) + 4; /* v274: ปลายเส้นอยู่ขอบบน → ป้ายไปทางขวาของปลายเส้น ไม่ทับตัวเลขแกน Y */
+    return rt ? k1T(P.X(q[0]) + 8, P.Y(q[1]) + 14, lab, col, 'k1l', 'start') : k1T(P.X(q[0]) - 4, P.Y(q[1]) + (top ? 14 : -6), lab, col, 'k1l', 'end'); })() : ''); }
 const k1Poly = (P, pts, col = K1C.b, dots = true) => `<path d="${pts.map((p, i) => (i ? 'L' : 'M') + a4n(P.X(p[0])) + ' ' + a4n(P.Y(p[1]))).join(' ')}" stroke="${col}" stroke-width="2.6" fill="none" stroke-linejoin="round"/>` + (dots ? pts.map(p => `<circle cx="${a4n(P.X(p[0]))}" cy="${a4n(P.Y(p[1]))}" r="3.6" fill="${col}"/>`).join('') : '');
 const k1Svg = (P, inner, cls = 'k1fig') => `<svg viewBox="0 0 ${P.W} ${P.H}" class="${cls}" aria-hidden="true">${P.s}${inner || ''}</svg>`;
 /* a small table (html) for the left side: rows = [['x', 1, 2, 3], ['y', 4, 5, '?']] */
@@ -54,18 +59,18 @@ const k1Mini = (shape, o = {}) => { const P = k1Plane({ W: 150, H: 110, xr: o.xr
   if (o.line) inner = k1Line(P, o.line[0], o.line[1], o.col || K1C.b);
   return k1Svg(P, inner, 'k1mini'); };
 /* ---------- question makers ---------- */
-const k1Num = (q, a, sig, diff, hint, o = {}) => Q.rpNum({ story: o.story, fig: o.fig, q, a, unit: o.unit, hint, sig, diff });
-const k1Opt = (q, opts, sig, diff, hint, o = {}) => Q.rpOpt({ story: o.story, fig: o.fig, q, opts, right: opts[0], hint, sig, diff });
-const k1TF = (text, ok, why, diff) => ({ ...rpTF(text, ok, why), __diff: diff });
+const k1Num = (q, a, sig, diff, hint, o = {}) => Q.rpNum({ story: k1Nb(o.story), fig: o.fig, q: k1Nb(q), a, unit: o.unit, hint: k1Nb(hint), sig, diff });
+const k1Opt = (q, opts, sig, diff, hint, o = {}) => Q.rpOpt({ story: k1Nb(o.story), fig: o.fig, q: k1Nb(q), opts: opts.map(k1Nb), right: k1Nb(opts[0]), hint: k1Nb(hint), sig, diff });
+const k1TF = (text, ok, why, diff) => ({ ...rpTF(k1Nb(text), ok, k1Nb(why)), __diff: diff });
 /* pick a graph: options are small svg pictures */
-Q.k1Pick = ({ story, q, figs, right = 0, hint, sig, diff, labs }) => ({ prompt: q, say: rpSaySt(story, q), ...rpMeta('k1k', { sig, q, diff }),
+Q.k1Pick = ({ story, q, figs, right = 0, hint, sig, diff, labs }) => (q = k1Nb(q), story = k1Nb(story), { prompt: q, say: rpSaySt(story, q), ...rpMeta('k1k', { sig, q, diff }),
   mount(bd, ctx) { const L = labs || ['ก', 'ข', 'ค', 'ง', 'จ'], ops = shuffle(figs.map((f, i) => ({ value: String(i), f }))).map((o, k) => ({ value: o.value, node: h('span', { class: 'k1pk', html: o.f + `<b>${L[k]}</b>` }) })); /* ป้าย ก ข ค ง ตามตำแหน่ง — รูปที่มีแต่ X Y จะไม่ถูกมองว่าเป็นตัวเลือกซ้ำ */
     const ch = choices(ctx, ops, String(right), { hint }); ch.classList.add('k1opts');
     bd.append(h('div', { class: story ? 'tg-qrow' : 'colstack' }, story ? tgLeft(story) : '', ch)); } });
 /* tap the plane to put the point (move it as often as you like), then check */
 function k1Board(ctx, P, want, o = {}) {
   const many = Array.isArray(want[0]), W = many ? want : [want], key = p => p.join(','), got = new Map(); let msg;
-  const fig = h('div', { class: 'k1brd ia' }), draw = (rev) => { fig.innerHTML = k1Svg(P, (o.inner || '') + [...got.values()].map(p => k1Dot(P, p[0], p[1], K1C.p, '', 0, 0, 7)).join('') + (rev ? W.map(p => k1Dot(P, p[0], p[1], K1C.g, k1P(...p), 9, -9, 7)).join('') : ''), 'k1fig k1big'); };
+  const fig = h('div', { class: 'k1brd ia' }), draw = (rev) => { fig.innerHTML = k1Svg(P, (o.inner || '') + [...got.values()].map(p => k1Dot(P, p[0], p[1], K1C.p, '', 0, 0, 7)).join('') + (rev ? W.map((p, i) => { const o = k1Off(p[0], p[1], P); if (W.length > 1 && i % 2 && p[1] >= 1 && p[1] < P.yr[1] - 0.6) o[1] = 18; /* หลายจุด: สลับป้ายบน/ล่าง ไม่ทับกัน */ return k1Dot(P, p[0], p[1], K1C.g, k1P(...p), o[0], o[1], 7); }).join('') : ''), 'k1fig k1big'); };
   fig.addEventListener('pointerdown', e => { if (wrap.classList.contains('done')) return; const svg = fig.querySelector('svg'); if (!svg) return; const [px, py] = miSvgPt(svg, e), p = P.snap(px, py), k = key(p);
     if (many) { if (got.has(k)) got.delete(k); else got.set(k, p); } else { got.clear(); got.set(k, p); } sfx.tap(); msg.textContent = ''; draw(); });
   const check = () => { if (wrap.classList.contains('done')) return; if (!got.size) { msg.textContent = many ? 'แตะวางจุดบนกราฟก่อนนะ' : 'แตะบนกราฟเพื่อวางจุดก่อนนะ'; return; }
@@ -78,7 +83,7 @@ function k1Board(ctx, P, want, o = {}) {
   const wrap = h('div', { class: 'ans ia k1ans' }, fig, h('div', { class: 'rowstack' }, h('button', { class: 'btn primary ok2 k1chk', onclick: e => { e.stopPropagation(); check(); } }, icon('check'), h('span', null, 'ตรวจ'))), msg);
   wrap.reveal = () => { got.clear(); W.forEach(p => got.set(key(p), p)); draw(true); wrap.classList.add('done', 'revealed'); };
   wrap.ansText = W.map(p => k1P(...p)).join(' '); draw(); return wrap; }
-Q.k1Plot = ({ story, q, P, want, inner, hint, sig, diff, side }) => ({ prompt: q, say: rpSaySt(story, q), ...rpMeta('k1p', { sig, q, diff }),
+Q.k1Plot = ({ story, q, P, want, inner, hint, sig, diff, side }) => (q = k1Nb(q), story = k1Nb(story), { prompt: q, say: rpSaySt(story, q), ...rpMeta('k1p', { sig, q, diff }),
   mount(bd, ctx) { bd.append(h('div', { class: 'tg-qrow k1row' }, story || side ? h('div', { class: 'colstack tg-left' }, story ? h('div', { class: 'tg-story', html: story }) : '', side ? h('div', { class: 'k1side', html: side }) : '') : '', k1Board(ctx, P, want, { inner, hint }))); } });
 const k1Plot = (q, P, want, sig, diff, hint, o = {}) => Q.k1Plot({ q, P, want, hint, sig, diff, story: o.story, side: o.side, inner: o.inner });
 
@@ -173,7 +178,7 @@ const LESSONS_M1C8 = [
       k1Opt('จุดใดอยู่บนแกน X', ['D', 'A', 'B', 'C'], `D ${D}`, 2, 'y = 0', { fig: f }),
       k1Opt(`จุดใดมีพิกัด ${k1P(...C)}`, ['C', 'A', 'B', 'D'], `which ${C}`, 3, 'ไล่ดูทีละจุด', { fig: f }),
       k1Opt('จุด B มีพิกัดเท่าใด', sw(B), `B ${B}`, 3, 'ระวังสลับ x กับ y', { fig: f }),
-      k1Opt(`ABCD เป็นรูปสี่เหลี่ยมผืนผ้า A${k1P(rx, ry)} B${k1P(rx + w, ry)} C${k1P(rx + w, ry + hh)} จุด D อยู่ที่ใด`, [k1P(rx, ry + hh), k1P(ry + hh, rx), k1P(rx + w, ry + hh + 1), k1P(rx - w, ry + hh)], `rect ${rx}${ry}${w}${hh}`, 7, 'D อยู่เหนือ A และระดับเดียวกับ C', { fig: k1Svg(P, k1Dot(P, rx, ry, K1C.b, 'A', -8, 14) + k1Dot(P, rx + w, ry, K1C.b, 'B', 8, 14) + k1Dot(P, rx + w, ry + hh, K1C.b, 'C')) }),
+      k1Opt(`ABCD เป็นรูปสี่เหลี่ยมผืนผ้า A${k1P(rx, ry)} B${k1P(rx + w, ry)} C${k1P(rx + w, ry + hh)} จุด D อยู่ที่ใด`, [k1P(rx, ry + hh), k1P(ry + hh, rx), k1P(rx + w, ry + hh + 1), k1P(rx - w, ry + hh)], `rect ${rx}${ry}${w}${hh}`, 7, 'D อยู่เหนือ A และระดับเดียวกับ C', { fig: k1Svg(P, k1Dot(P, rx, ry, K1C.b, 'A') + k1Dot(P, rx + w, ry, K1C.b, 'B') + k1Dot(P, rx + w, ry + hh, K1C.b, 'C')) }),
       k1Num(`จุด ${k1P(-3, 2)} กับ ${k1P(4, 2)} ห่างกันกี่หน่วย`, 7, 'dist', 6, 'y เท่ากัน นับระยะตามแนวนอน'),
       k1Num(`จุด ${k1P(1, -3)} กับ ${k1P(1, 4)} ห่างกันกี่หน่วย`, 7, 'dist2', 6, 'x เท่ากัน นับระยะตามแนวตั้ง'),
       k1Opt('จุดใดอยู่<b>สูงที่สุด</b> (ค่า y มากที่สุด)', [['A', A], ['B', B], ['C', C], ['D', D]].sort((p, q) => q[1][1] - p[1][1]).map(p => p[0]), `hi ${A}${B}${C}`, 4, 'ดูค่า y', { fig: f })]; }),

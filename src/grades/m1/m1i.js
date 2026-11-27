@@ -50,6 +50,16 @@ function miAns(ctx, expected, o = {}) {
   wrap.ansText = wantTxt;
   return wrap;
 }
+/* v274 (UX ม.1): พิมพ์คำตอบจากแป้นพิมพ์ได้ด้วย (คอม / iPad ต่อคีย์บอร์ด / ครูหน้าห้อง) — ตัวเลข  - หรือ −  .  /  :  Backspace  Enter
+   ใช้กับแป้นตัวเลขของ ม.ต้น (.mi-kp) ที่เห็นอยู่บนจอเพียงแป้นเดียว และยังไม่ได้ตอบ · Enter = ส่งคำตอบ (ไม่ไปหน้าถัดไปแทน) */
+const MI_KEYMAP = { '-': 'เครื่องหมายลบ', '−': 'เครื่องหมายลบ', '.': 'จุดทศนิยม', '/': 'เศษส่วน', ':': 'ต่อ', Backspace: 'ลบตัวเลข', Enter: 'ส่งคำตอบ' };
+addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey || e.repeat && e.key === 'Enter') return; if (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]')) return;
+  const lab = /^\d$/.test(e.key) ? e.key : MI_KEYMAP[e.key]; if (!lab) return;
+  const kps = [...document.querySelectorAll('.mi-kp')].filter(k => k.offsetParent !== null && !k.closest('.done, .revealed, [hidden]')); if (kps.length !== 1) return;
+  const b = kps[0].querySelector(`button[aria-label="${lab}"]`); if (!b || b.disabled) return;
+  e.preventDefault(); e.stopPropagation(); b.click(); b.classList.add('kb-hit'); setTimeout(() => b.classList.remove('kb-hit'), 140);
+}, true);
 
 /* ---------- number line (svg): ticks lo…hi, negative side coral, positive side sky ---------- */
 function miLine(lo, hi, o = {}) {

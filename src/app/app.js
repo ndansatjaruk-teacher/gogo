@@ -728,7 +728,8 @@ function startTeach(li, at = 0, seen = false) {
     if (nb) { nb.classList.remove('nudge'); void nb.offsetWidth; nb.classList.add('nudge'); nb.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     next.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 280 });
     return true; };
-  const go = d => { const j = i + d; if (j < 0) return; if (d > 0 && blocked()) return; if (j >= total) return startGame(li); dir = d; i = j; sfx.page(); render(); };
+  let goT = 0; /* v274 (UX ม.1): แตะ “ถัดไป” สองครั้งติดกันเร็ว ๆ ต้องไปแค่หน้าเดียว (เคยข้ามไปสองหน้า) */
+  const go = d => { const j = i + d; if (j < 0) return; if (d > 0 && blocked()) return; const now = Date.now(); if (now - goT < 350) return; goT = now; if (j >= total) return startGame(li); dir = d; i = j; sfx.page(); render(); };
   next.onclick = () => go(1); back.onclick = () => go(-1);
   backHandler = () => { if (i > 0) go(-1); else { sfx.page(); showMap(L.city); } };
   stage.addEventListener('click', e => {
@@ -762,6 +763,9 @@ function fitShrink(body) {
     for (let k = 0; k < 7; k++) { const m = (lo + hi) / 2; zset(kids, m); if (over()) hi = m; else lo = m; } zset(kids, lo); return true; };
   let ok = tryKids(top);
   if (!ok && top.length === 1) { const inner = [...top[0].children].filter(c => c.nodeType === 1); if (inner.length) { inner.forEach(c => { if (c.dataset.gz === undefined) c.dataset.gz = c.style.zoom || ''; }); ok = tryKids(inner); } }
+  if (!ok) { /* v274 (UX ม.1): a question inside a teach page grew itself (zoom > 1) and then could not be shrunk back → keypad below the screen. Undo the growth and try again */
+    const big = [...body.querySelectorAll('[style*="zoom"]')].filter(e => parseFloat(e.style.zoom) > 1);
+    if (big.length) { big.forEach(e => { e.style.zoom = ''; if (e.dataset.gz) e.dataset.gz = ''; }); body.querySelectorAll('.grown').forEach(g => g.classList.remove('grown')); ok = tryKids(top); } }
   if (!ok) return; body.classList.add('shrunk'); padsResize(body); dispatchEvent(new Event('layoutzoom')); }
 /* ---------- v84: chapters where the +/− steppers are removed (ผู้ใช้เลือก: เศษส่วน-ทศนิยม) → the space explains the example step by step ---------- */
 const NOSTEP_CH = new Set(['4:6', '4:7', '5:1', '5:2', '6:2', '6:3']);
@@ -816,7 +820,7 @@ function fitBody(body, opts = {}) {
   const ro = new ResizeObserver(req); ro.observe(body); [...body.children].forEach(c => ro.observe(c));
   const mo = new MutationObserver(muts => { muts.forEach(m => m.addedNodes.forEach(n => n.nodeType === 1 && n.parentNode === body && ro.observe(n))); req(); });
   mo.observe(body, { childList: true, subtree: true });
-  req(); setTimeout(req, 500);
+  req(); setTimeout(req, 500); setTimeout(() => { if (body.classList.contains('tall')) req(); }, 1300); /* v274: ยังล้นอยู่หลังจอจัดเสร็จ (เครื่องช้า) → จัดอีกรอบ */
   fitFigs(body);
 }
 /* grow small question pictures to use the space on big screens — re-measured whenever the play area changes (zoom, rotate, resize) */
