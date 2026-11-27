@@ -5082,6 +5082,8 @@ function confetti(n = 40) {
   }
 }
 /* rotate answer positions of an authored exam (answer key varies) */
+/* v271: a tap-the-picture page (a4dSee / g5dSee / r4dSee) remembers its pictures — app/seeboard.js turns it into board pages */
+const sbMark = (title, cap, list, page) => ({ ...page, __see: { title, cap, list } });
 const xrot = (ex, k = 0) => ex.map((q, i) => { const n = q.opts.length, r = (i * 7 + k) % n; return r ? { ...q, opts: [...q.opts.slice(r), ...q.opts.slice(0, r)], a: (q.a - r + n) % n } : q; });
 
 'use strict';
@@ -34389,8 +34391,8 @@ const r4dArr = (a, b, col = R4VC.p) => { const L = r4len(a, b) || 1, u = [(b[0] 
 
 /* ---------- pages ---------- */
 /* ① look first: 1–2 big pictures from R4V_SEE[id] (one idea per page) */
-const r4dSee = (id, idx, title, cap) => T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => { const all = R4V_SEE[id](), L = idx.map(i => all[i]);
-  el.append(r4vSee(cap, L, L.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))); });
+const r4dSee = (id, idx, title, cap) => sbMark(title, cap, () => { const all = R4V_SEE[id](); return idx.map(i => all[i]); }, T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => { const all = R4V_SEE[id](), L = idx.map(i => all[i]);
+  el.append(r4vSee(cap, L, L.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))); }));
 /* ② watch it done */
 const r4dShow = (title, o) => T(`<b>ทำให้ดู</b> — ${title}`, `ทำให้ดู ${r4dTxt(title)}`, el => el.append(r4dDo(o)));
 /* hands-on scene page (scenes from p4rm.js) */
@@ -34767,7 +34769,7 @@ const g5dTry = (id, mk, title) => ({ t: `<b>ลองทำ</b> — ${title}`, s
   v(el) { const L = LESSONS.find(x => x.id === id); L.__prac = L.__prac || new Set(); let q = null; for (let t = 0; t < 8; t++) { let x = null; __EASY = true; try { x = mk(); } catch (_) { x = null; } finally { __EASY = false; } if (x && x.mount && !L.__prac.has(qSig(x))) { q = x; break; } }
     if (!q) { el.append(fNote('ทบทวนตัวอย่างอีกครั้ง แล้วไปต่อกัน')); return; } L.__prac.add(qSig(q)); qAtoms(q).forEach(a => L.__prac.add(a)); promptOnce(q);
     const sim = qSim(q, 'เก่งมาก! แบบเดียวกับในเกมเลย', { bub: window.__teachBub }), pr = h('div', { class: 'colstack prac prac-game' }, sim); pr.classList.toggle('qs-figp', !!sim.querySelector(':scope > .qs-r')); el.append(pr); } });
-const g5dSee = (title, cap, list) => T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))));
+const g5dSee = (title, cap, list) => sbMark(title, cap, () => list.map(p => ({ W: 360, H: 240, ...p })), T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep)))));
 /* question makers used by both the practice pages and the games */
 const g5dTwOk = T => new Set(g4Tot(T).r).size === T.rows.length && T.cols.every((_, c) => new Set(T.rows.map(([, v]) => v[c])).size === T.rows.length);
 const g5dTw = () => { for (let t = 0; t < 30; t++) { const T = g4twRand(); if (g5dTwOk(T)) return T; } return g4twRand(); };
@@ -34956,7 +34958,7 @@ const a4dRay = (a, b, col = '#2B2550', ext = 30, w = 3.4) => { const d = a4dir(a
 const a4dSeg = (a, b, col = '#2B2550', w = 3.4) => `<path d="M${a4n(a[0])} ${a4n(a[1])} L${a4n(b[0])} ${a4n(b[1])}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
 const a4dProt = (c, rot, o = {}) => `<g data-grp="1" class="${o.cls || 'r4d-prot'}">${a4Prot(c, rot, o)}</g>`;
 const a4dCorner = (V, s = 66, d = 0) => { const a = a4P(V, s, d), c = a4P(a, s, d + 90), b = a4P(V, s, d + 90); return `<path data-pop="1" d="M${a4n(V[0])} ${a4n(V[1])} L${a4n(a[0])} ${a4n(a[1])} L${a4n(c[0])} ${a4n(c[1])} L${a4n(b[0])} ${a4n(b[1])}Z" fill="#FFC24C" fill-opacity=".35" stroke="#E6A21E" stroke-width="2.2" stroke-dasharray="6 4"/>`; };
-const a4dSee = (title, cap, list) => T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))));
+const a4dSee = (title, cap, list) => sbMark(title, cap, () => list.map(p => ({ W: 360, H: 240, ...p })), T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep)))));
 const a4dTry = (id, mk, title) => g5dTry(id, mk, title);
 const a4dD = (q, d, k) => ({ ...q, __diff: d, __kind: 'a4d' + k });
 /* question makers (same as the old games) */
@@ -38898,8 +38900,8 @@ const d1dChips = (y, list, cx = 180) => { const w = list.map(t => Math.max(54, e
    ปากกาเขียนเส้น/ตัวหนังสือลงกระดานทีละชิ้น แล้วคำอธิบายของจังหวะนั้นขึ้นใต้กระดาน (พูดออกเสียง) รอให้อ่านจบจึงขึ้นจังหวะถัดไป
    ครบทุกจังหวะแล้วปุ่ม "ถัดไป" จึงกดได้ · ปุ่ม "ดูอีกครั้ง" เล่นใหม่ · window.__D1B_FAST (ทดสอบ) คูณเวลาทั้งหมด ---------- */
 function d1dBoardDo(o) {
-  const W = 400, H = o.H || 200, S = o.beats, F = () => window.__D1B_FAST || 1;
-  const root = h('div', { class: 'd1b ia' }), bd = h('div', { class: 'd1b-bd' }), cap = h('div', { class: 'd1b-say' }),  dots = h('div', { class: 'd1b-dots' }, ...S.map(() => h('i')));
+  const W = o.W || 400, H = o.H || 200, S = o.beats, F = () => window.__D1B_FAST || 1;
+  const root = h('div', { class: 'd1b ia' }), bd = h('div', { class: 'd1b-bd', style: { maxWidth: `min(1000px, calc((100cqh - 112px) * ${(W / H).toFixed(3)}))` } }), /* v271: รูปทุกขนาด (กระดานของทุกบท) */ cap = h('div', { class: 'd1b-say' }),  dots = h('div', { class: 'd1b-dots' }, ...S.map(() => h('i')));
   bd.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="r4d-svg d1b-svg" aria-hidden="true">${o.fig || ''}<g class="d1b-lay"></g></svg>`;
   const svg = bd.firstChild, lay = svg.querySelector('.d1b-lay'), pen = h('div', { class: 'r4d-pen', html: R4D_PEN }); bd.append(pen);
   let k = 0, tm = null, pF = [W * .92, H * .9], started = false, phase = 'wait', cur = null;
@@ -38919,6 +38921,7 @@ function d1dBoardDo(o) {
   const speak = t => { const tx = r4dTxt(t); cap.innerHTML = `<span>${t}</span>`; cap.classList.add('on'); A(cap, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: Math.min(1500, 300 + 24 * tx.length), easing: 'linear' }); say(tx, true); return Math.max(2400, 700 + 88 * tx.length); };
   const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++; phase = 'ink'; cur = b;
     if (b.off) b.off.forEach(sel => svg.querySelectorAll(sel).forEach(e => A(e, [{ opacity: 1 }, { opacity: .12 }], { duration: 300 })));
+    if (b.clear) lay.querySelectorAll('.d1b-ink').forEach(e => A(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 })); /* v271: รูปใหม่ทั้งรูป → รูปเดิมหายไป */
     const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); phase = 'talk'; tm = setTimeout(step, speak(b.t) * F()); }, d1 * F()); };
   const again = h('button', { class: 'btn sm ia d1b-again', style: { display: 'none' }, onclick: e => { e.stopPropagation(); clearTimeout(tm); svg.querySelectorAll('*').forEach(x => x.getAnimations && x.getAnimations().forEach(a => a.cancel())); lay.innerHTML = ''; k = 0; pF = [W * .92, H * .9];
     [...dots.children].forEach(i => { i.className = ''; }); cap.innerHTML = ''; cap.classList.remove('on', 'fin'); again.style.display = 'none'; root.classList.add('ia'); phase = 'wait'; sfx.tap(); tm = setTimeout(step, 400 * F()); } }, icon('replay'), h('span', null, 'ดูอีกครั้ง'));
@@ -42289,6 +42292,25 @@ LESSONS.filter(L => L.boss).forEach(L => { const len = () => { try { return (L.e
   const fix = t => String(t || '').replace(/ +$/, '').replace(/ตอบถูก(อย่างน้อย )?\d+ ข้อ(ขึ้นไป)?/, () => `ตอบถูกอย่างน้อย ${L.pass} ข้อ (80%) `);
   Object.defineProperty(L, 'goal', { get: () => fix(g0.call(L)), configurable: true }); });
 Object.keys(SAVE.stars || {}).forEach(k => { if (!LESSONS.some(L => String(L.id) === k)) delete SAVE.stars[k]; });
+
+/* =========================================================
+   v271 (ผู้ใช้ขอ): หน้า "ดูภาพ" ทุกบท → กระดานแบบครูสอน (เหมือน ม.1 ลำน้ำทศนิยม v269–v270) · prefix sb
+   หน้าดูภาพเดิม (a4dSee / g5dSee / r4dSee → r4vSee) ให้แตะรูปทีละรูปแล้วผ่านไปได้เลย เด็กไม่สนใจ
+   ตอนนี้: รูปละ 1 หน้า (ประเด็นเดียวเต็มหน้า) เล่นบนกระดาน d1dBoardDo (m1dd.js): ปากกาวาดรูปตั้งต้น + บอกว่าจะดูอะไร
+   → วาดส่วนที่เดิมขึ้นหลังแตะ (ส่วนต่างของ f(true) จาก f(false)) + คำอธิบายบรรทัดแรก → คำอธิบายบรรทัดถัด ๆ ไป → ★ สรุป
+   เล่นเองทีละขั้น หรือแตะหน้าจอ / Space / → ไปทีละขั้นเองได้ · ครบแล้วปุ่มถัดไปจึงเปิด
+   หน้าที่ถูกทำเครื่องหมายไว้ด้วย sbMark ถูกแตกเป็นหน้ากระดานหลังจากทุกบทสร้างหน้าสอนเสร็จ (LESSONS พร้อมแล้ว)
+   ========================================================= */
+function sbPages(sp) { const list = sp.list(), n = list.length, strip = t => String(t || '').replace(/<[^>]+>/g, '').trim();
+  const capRest = String(sp.cap || '').replace(/^\s*<b>\s*แตะ[^<]*<\/b>\s*[—–-]?\s*/, '').replace(/^\s*แตะ\S*\s*[—–-]?\s*/, '').trim();
+  return list.map((p, i) => { const title = n > 1 && strip(p.t) ? `${sp.title} — ${strip(p.t)}` : sp.title;
+    return T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => { const W = p.W || 240, H = p.H || 170, b0 = p.f(false), b1 = p.f(true), lines = String(p.s || '').split(/<br\s*\/?>/).map(x => x.trim()).filter(Boolean);
+      const intro = (strip(p.t) ? `<b>${p.t}</b>` : '') + (capRest ? (strip(p.t) ? ' — ' : '') + capRest : ''), beats = [{ ink: b0, t: intro || title }];
+      if (b1.startsWith(b0)) { const ov = b1.slice(b0.length); beats.push(ov.trim() ? { ink: ov, t: lines[0] || '' } : { t: lines[0] || '' }); }
+      else beats.push({ ink: b1, t: lines[0] || '', clear: 1 }); /* รูปหลังแตะวาดใหม่ทั้งรูป: ลบรูปเดิมออกก่อน */
+      lines.slice(1).forEach(l => beats.push({ t: l }));
+      el.append(d1dBoardDo({ W, H, fig: '', beats: beats.filter(b => b.ink || b.t), fin: lines.join(' ') })); }); }); }
+LESSONS.forEach(L => { if (Array.isArray(L.teach) && L.teach.some(p => p && p.__see)) L.teach = L.teach.flatMap(p => p && p.__see ? sbPages(p.__see) : [p]); });
 
 /* =========================================================
    “รู้จักก่อน” — teach the idea BEFORE asking the student to do anything
