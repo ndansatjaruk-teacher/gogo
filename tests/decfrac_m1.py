@@ -1,4 +1,4 @@
-"""ม.1 บทที่ 4 ทศนิยมและเศษส่วน (ด่าน 2401–2421 + บอส 2422) · v267 (src/grades/m1/m1d.js เกม · m1dd.js หน้าสอน): ทุกหน้าดูภาพ (แตะครบ) ทำให้ดู (ดินสอทำทีละขั้นจนจบ)
+"""ม.1 บทที่ 4 ทศนิยมและเศษส่วน (ด่าน 2401–2421 + บอส 2422) · v267 (src/grades/m1/m1d.js เกม · m1dd.js หน้าสอน): ทุกหน้าดูภาพเป็นกระดานที่เล่นเอง (v269 — ปุ่มถัดไปเปิดเมื่อขึ้นครบทุกจังหวะ) ทำให้ดู (ดินสอทำทีละขั้นจนจบ)
 ลองทำ (ข้อจากเกม) ปลดล็อกปุ่มถัดไป · ไม่มีการ์ดข้อความ/ปุ่มทีละขั้น · เกมแต่ละด่าน 10 ข้อ ทุกข้อเฉลยถูก (ตอบตามเฉลยแล้วผ่าน)
 บอส 20 ข้อ เฉลยตรงกับการคำนวณ · ไม่มีตัวเลือกซ้ำ · หน้าจอไม่ล้น 1180×820
     python3 tests/decfrac_m1.py [--touch]
@@ -9,7 +9,7 @@ TOUCH = '--touch' in sys.argv
 def run():
   with sync_playwright() as p:
     br = p.chromium.launch(**({'executable_path': os.environ['CHROME']} if os.environ.get('CHROME') else {})); ctx = br.new_context(viewport={'width': 1180, 'height': 820}, has_touch=TOUCH); pg = ctx.new_page()
-    cdp = ctx.new_cdp_session(pg); pg.goto((pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'index.html').as_uri()); pg.wait_for_timeout(800); pg.evaluate("SET.mute = true; window.say = () => {}; 0")
+    cdp = ctx.new_cdp_session(pg); pg.goto((pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'index.html').as_uri()); pg.wait_for_timeout(800); pg.evaluate("SET.mute = true; window.say = () => {}; window.__D1B_FAST = 0.06; 0")
     locked = lambda: pg.evaluate("!!document.querySelector('.btn.primary.waiting')")
     def open_(lid, k):  # k = page number, or a word in the title of a hands-on page ("ลงมือเอง — …") (v262)
         li = pg.evaluate(f"LESSONS.findIndex(L=>L.id==={lid})")
@@ -35,10 +35,16 @@ def run():
         except Exception as e: res[name] = 'ERR ' + str(e)[:80]; return
         pg.wait_for_timeout(400); res[name] = ('ok' if (l0 and not locked()) else f'start_locked={l0} end_locked={locked()}')
     pages = lambda lid, word: pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {lid}); return L.teach.map((s, i) => (s.t || '').includes('{word}') ? i : -1).filter(i => i >= 0); }})()")
-    def see():
-        n = pg.evaluate("document.querySelectorAll('#stage .r4v-pan').length")
-        if n < 1: raise Exception('no pictures')
-        for i in range(n): tap('.r4v-pan', i)
+    def see():  # v269: the board plays by itself (no tapping); Next opens only after the last beat
+        if not pg.evaluate("!!document.querySelector('#stage .d1b')"): raise Exception('no board')
+        n = pg.evaluate("document.querySelectorAll('#stage .d1b-dots i').length")
+        if n < 2: raise Exception('board has fewer than 2 beats')
+        pg.wait_for_timeout(400)
+        if not locked(): raise Exception('Next is open before the board has finished')
+        for _ in range(160):
+            if not locked(): break
+            pg.wait_for_timeout(150)
+        if pg.evaluate("document.querySelectorAll('#stage .d1b-dots i.on').length") != n: raise Exception('not every beat was shown')
     def show():
         if pg.evaluate("!!document.querySelector('#stage .mgb.demo')"):  # the construction board plays itself step by step, with a note beside each step
             for _ in range(20):
