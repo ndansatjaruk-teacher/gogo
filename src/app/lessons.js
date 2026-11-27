@@ -2959,6 +2959,9 @@ const CITIES = [
   /* v267 (ผู้ใช้ขอ): ม.1 บทที่ 4 ทศนิยมและเศษส่วน — 21 ด่าน 2401–2421 + บอส 2422 (m1d.js เกม · m1dd.js หน้าสอน) */
   { id: 99, grade: 7, name: 'ลำน้ำทศนิยม', chapter: 'บทที่ 4 ทศนิยมและเศษส่วน', lessons: LESSONS_M1C4,
     theme: { river: true, hills: ['#BEE3C2', '#ACDAB2', '#D0ECD3'], far: '#E0F2E2', edge: ['pier', 'stilthouse', 'ricebarn', 'tree'], small: ['lotus', 'kayak', 'reeds', 'duck', 'paddy', 'flowers'] } },
+  /* v275 (ผู้ใช้ขอ): ม.1 บทที่ 5 รูปเรขาคณิตสองมิติและสามมิติ — 16 ด่าน 2501–2516 + บอส 2519 (หมุนรูปทรง พับภาพคลี่ ตัดด้วยระนาบ ต่อบล็อก) */
+  { id: 101, grade: 7, name: 'ลำน้ำรูปทรง', chapter: 'บทที่ 5 รูปเรขาคณิตสองมิติและสามมิติ', lessons: LESSONS_M1C5,
+    theme: { river: true, hills: ['#C7DDF2', '#B5D1EC', '#D9E8F7'], far: '#E6F0FA', edge: ['pier', 'stilthouse', 'tree', 'ricebarn'], small: ['lotus', 'kayak', 'reeds', 'duck', 'flowers', 'paddy'] } },
   /* v245 (ผู้ใช้ขอ): ม.1 บทที่ 6 สมการเชิงเส้นตัวแปรเดียว (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2601–2620 + บอส 2621 */
   { id: 97, grade: 7, term: 2, name: 'ลำน้ำสมการ', chapter: 'บทที่ 6 สมการเชิงเส้นตัวแปรเดียว', lessons: LESSONS_M1C6,
     theme: { river: true, hills: ['#C4E6B8', '#B3DDA4', '#D4EDC9'], far: '#E4F3DC', edge: ['stilthouse', 'pier', 'pine', 'tree'], small: ['reeds', 'duck', 'lotus', 'kayak', 'paddy', 'bush'] } },

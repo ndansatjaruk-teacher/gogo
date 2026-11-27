@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-463 types
+464 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -350,6 +350,7 @@
 | `Q.s2Num` | `{ q, fig, tiles, a, unit, hint, sig, base, diff }` | [`grades/m2/m2s.js:210`](../src/grades/m2/m2s.js#L210) |
 | `Q.s2Opt` | `{ q, fig, tiles, opts, right, hint, sig, base, diff }` | [`grades/m2/m2s.js:207`](../src/grades/m2/m2s.js#L207) |
 | `Q.s2two` | `{ expr }` | [`grades/p2/p2m.js:43`](../src/grades/p2/p2m.js#L43) |
+| `Q.s5Tap` | `{ q, k, what` | [`grades/m1/m1s.js:238`](../src/grades/m1/m1s.js#L238) |
 | `Q.s6Next` | `{ seq, hint }` | [`grades/p6/p6s.js:91`](../src/grades/p6/p6s.js#L91) |
 | `Q.s6PatN` | `{ kind, n }` | [`grades/p6/p6s.js:97`](../src/grades/p6/p6s.js#L97) |
 | `Q.s6Seq` | `{ seq, blanks, hint }` | [`grades/p6/p6s.js:81`](../src/grades/p6/p6s.js#L81) |

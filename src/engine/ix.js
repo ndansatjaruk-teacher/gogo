@@ -35,7 +35,7 @@ Object.assign(Q, {
       const paint = r => { r.bt.classList.toggle('on', r.v === 0); r.bf.classList.toggle('on', r.v === 1); r.el.classList.toggle('set', r.v != null); };
       rows.forEach(r => { const pick2 = v => e => { e.stopPropagation(); if (done) return; r.v = r.v === v ? null : v; r.el.classList.remove('bad', 'good'); paint(r); sfx.tap(); chk.disabled = rows.some(x => x.v == null); };
         r.bt = h('button', { class: 'tfb t ia', 'aria-label': lab[0], onclick: pick2(0) }, '✓'); r.bf = h('button', { class: 'tfb f ia', 'aria-label': lab[1], onclick: pick2(1) }, '✗');
-        r.el = h('div', { class: 'tfl-r' }, h('div', { class: 'tfl-t', html: r.it.label }), r.bt, r.bf); list.append(r.el); });
+        r.el = h('div', { class: 'tfl-r' }, h('div', { class: 'tfl-t', html: String(r.it.label).replace(/([−+×÷=]) (?=[\d(])/g, '$1\u00a0') /* v275 UX: เครื่องหมายไม่แยกบรรทัดจากตัวเลข */ }), r.bt, r.bf); list.append(r.el); });
       const chk = h('button', { class: 'btn primary ia', disabled: true, onclick: e => { e.stopPropagation(); if (done) return; const bad = rows.filter(r => r.v !== r.it.bin);
         rows.forEach(r => { r.el.classList.toggle('bad', r.v !== r.it.bin); r.el.classList.toggle('good', r.v === r.it.bin); });
         if (!bad.length) { done = true; ctx.check(true); } else ctx.check(false, (bad.length > 1 ? `ยังไม่ถูก ${bad.length} ข้อ (กรอบสีแดง) · ` : '') + (bad[0].it.why || hint || 'อ่านข้อความทีละข้ออีกครั้ง')); } }, icon('check'), 'ตรวจ');

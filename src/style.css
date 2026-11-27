@@ -4847,3 +4847,56 @@ svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-w
 .rp-card{min-height:46px} /* v274 UX: การ์ดที่แตะได้สูงพอสำหรับนิ้ว */
 .mgb .btn.info,.cnsf .btn.info{min-height:54px}
 .exam-card .spk{width:52px;height:52px} /* v274 UX: ปุ่มฟังโจทย์บอสไม่เล็กเกินนิ้วเมื่อจอย่อ */
+/* v275 ม.1 บทที่ 5 รูปเรขาคณิตสองมิติและสามมิติ (prefix s5) */
+.s5l{font:800 15px var(--font);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+.s5big{font:900 24px var(--font-num);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:4px}
+.s5fig{width:min(400px,40cqw);height:auto;display:block;margin:0 auto}
+.colstack > .tg-fig .s5fig{width:min(440px,56cqw);max-height:min(40cqh,300px)}
+.tg-story .s5fig{width:min(320px,32cqw);max-height:min(34cqh,240px)}
+.xchart .s5fig{width:min(340px,34cqw);max-height:min(36cqh,240px)}
+.s5mini{width:150px;height:auto;display:block}
+.k1pk .s5mini{width:min(150px,15cqw)}
+.s5v{touch-action:none;cursor:grab;width:min(520px,50cqw);user-select:none;-webkit-user-select:none}
+.s5v svg{width:100%;height:auto;display:block;max-height:min(50cqh,360px)}
+.s5ans .s5v{width:min(440px,44cqw)}
+.s5hit{cursor:pointer}
+.s5pg{gap:10px;align-items:center;width:100%}
+.s5tip{font-weight:600;color:#4A4270;text-align:center;font-size:clamp(15px,1.7cqw,18px)}
+.s5name{font-size:clamp(17px,2cqw,21px);text-align:center;min-height:1.4em}
+.s5chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.s5chips .btn.sm{min-height:46px}
+.s5chip.on{background:#EEE9FB;box-shadow:inset 0 0 0 2.5px #7C5CE0}
+.s5mis{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;font-weight:700;font-size:15px}
+.s5mis span{padding:4px 12px;border-radius:999px;background:#F1EEFA;color:#6B6290}
+.s5mis span.now{background:#FFF1C9;color:#2B2550}
+.s5mis span.ok{background:#DDF5E8;color:#1E7A4D}
+.s5two{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap}
+.s5two .s5v{width:min(440px,44cqw)}
+.s5vpic{display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:700;min-width:180px;text-align:center}
+.s5grid{display:grid;grid-template-columns:repeat(3,auto);gap:12px;justify-content:center}
+.s5card{background:#fff;border:0;border-radius:16px;box-shadow:var(--e1),inset 0 0 0 2px #E2DCEF;padding:6px;cursor:pointer}
+.s5card.on{box-shadow:var(--e1),inset 0 0 0 4px #E5487A;background:#FFF0F5}
+.s5card .s5mini{width:min(140px,14cqw)}
+.s5planw{gap:6px;align-items:center}
+.s5plan{display:grid;gap:6px;width:186px}
+.s5cell{aspect-ratio:1;border-radius:10px;border:0;background:#fff;box-shadow:inset 0 0 0 2px #C9C1E3;font:800 24px var(--font-num);color:#2B2550;cursor:pointer;min-height:54px}
+.s5cell.on{background:#FFD27A;box-shadow:inset 0 0 0 2px #E0A93A}
+.s5small{font-size:14px;font-weight:700;color:#6B6290}
+.s5goal{display:flex;flex-direction:column;align-items:center;font-size:14px}
+.s5goal .s5mini{width:130px}
+.s5cnt{font-weight:700;font-size:17px}
+.s5bar,.s5bar2{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap}
+.s5go{min-height:50px;min-width:110px}
+.s5grip{cursor:grab}
+.s5gt{fill:#fff;font:800 16px var(--font);pointer-events:none}
+.s5netw{cursor:pointer}
+.s5netw svg,.s5two > .s5v svg{max-height:min(44cqh,300px)}
+.s5netw .s5svg{width:min(320px,32cqw);height:auto}
+.s5row{gap:6px;align-items:center}
+.s5netw text{pointer-events:none}
+.xchart:has(.s5fig){min-width:min(340px,34cqw)} .xchart .s5fig{width:100%}
+/* v275 UX ม.2–ม.3 (จากตัวตรวจ ux_audit) */
+.s2-tapstem i.ia{display:inline-block;min-width:40px;min-height:42px;line-height:42px;text-align:center;border-radius:10px;margin:1px 2px}
+.fop{color:#C93A4C}
+.rp-card .e3p sup{font-size:.78em}
+.m3-t i{font-size:max(13px,.5em);color:#6E6596}
