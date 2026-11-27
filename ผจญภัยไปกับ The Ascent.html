@@ -4818,6 +4818,34 @@ svg .d1nl{font:700 15px var(--font-num);fill:#2B2550}
 .d1b-tip{font:600 13px var(--font);color:#7A70A0;margin-top:-2px}
 .d1b-tip.wait{color:#7C5CE0;font-weight:800;animation:d1bTip 1.4s ease-in-out infinite}
 @keyframes d1bTip{50%{opacity:.45}}
+/* v273 ม.1 บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น (m1k.js / m1kd.js) */
+svg .k1t{font:700 13px var(--font)}
+svg .k1n{font:700 11px var(--font-num)}
+svg .k1ax{font:800 12px var(--font)}
+svg .k1l{font:800 14px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px}
+.k1fig{width:100%;max-width:400px;display:block;margin:0 auto}
+.k1big.k1fig,.k1fig.k1big{max-width:min(520px,52cqw)}
+.k1brd{touch-action:none;cursor:crosshair;background:#fff;border-radius:16px;box-shadow:inset 0 0 0 2px #E6E0F3;padding:4px}
+.k1ans{display:flex;flex-direction:column;align-items:center;gap:8px}
+.k1ans.done .k1brd{box-shadow:inset 0 0 0 3px #9FDCBF}
+.k1mini{width:150px;height:110px;display:block}
+.k1opts{display:grid;grid-template-columns:repeat(2,auto);gap:12px;justify-content:center}
+.k1pk{display:flex;flex-direction:column;align-items:center}
+.k1tab{border-collapse:collapse;margin:6px auto;font:700 clamp(14px,1.6vw,18px) var(--font-num)}
+.k1tab th,.k1tab td{border:1.5px solid #C9C1E3;padding:6px 10px;text-align:center;min-width:34px}
+.k1tab th{background:#F1EEFA;font-family:var(--font)}
+.k1tab td.q{color:#E5487A;font-weight:900}
+.k1side{display:flex;justify-content:center}
+.k1pk b{font:800 15px var(--font);color:#7A70A0;margin-top:2px}
+.tg-fig .k1fig{width:min(440px,46cqw);max-width:none;max-height:min(46cqh,300px)}
+.colstack > .tg-fig .k1fig{width:min(460px,70cqw)}
+.tg-left .tg-fig .k1fig{width:min(400px,40cqw)}
+.k1pg .tg-board{width:min(520px,60cqw)}
+.k1pg .tg-board svg{max-height:min(52cqh,340px)}
+.k1brd{width:min(560px,56cqw)}
+.k1brd svg{width:100%;height:auto;max-height:min(54cqh,380px);display:block}
+.k1row{align-items:center}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -39306,6 +39334,586 @@ const D1D_TEACH = {
 };
 LESSONS_M1C4.forEach(L => { const f = D1D_TEACH[L.id]; if (f) { L.teach = f(L).filter(Boolean); L.__pracDone = 1; L.learned = true; } });
 
+/* =========================================================
+   ม.1 บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น (โลกแม่น้ำ · เมือง 100 · ด่าน 2801–2818 · บอสจระเข้ 2819) — v273 (ผู้ใช้ขอ) · prefix k1
+   18 ด่านตามแผนของผู้ใช้: ① พื้นฐาน (ความหมายของกราฟ แกนและพิกัดฉาก อ่านค่าบนแกน คู่อันดับ พล็อตจุด)
+   ② อ่านและสร้างกราฟ (อ่านจุด ตารางจากสถานการณ์ ตาราง→กราฟ แปลความหมาย สร้างกราฟ เปรียบเทียบแนวโน้ม)
+   ③ ความสัมพันธ์เชิงเส้น (ความสัมพันธ์ เชิงเส้น ตาราง กราฟ ทิศทาง/ความชัน สมการกับกราฟ ค่าตัดแกน โจทย์ประยุกต์)
+   ข้อที่ลงมือจริง: Q.k1Plot แตะระนาบวางจุด (ย้ายได้ แล้วกดตรวจ) · Q.k1Plots วางหลายจุดจากตาราง · Q.k1Pick เลือกกราฟจากรูป
+   โจทย์แต่งใหม่ทั้งหมด (ข้อมูลสมมติ) · หน้าสอนอยู่ใน m1kd.js
+   ========================================================= */
+const K1C = { ink: '#2B2550', grid: '#E3DEF2', ax: '#2B2550', p: '#E5487A', b: '#2F7BC0', g: '#1B8862', o: '#EC7F1E', v: '#7C5CE0', fade: '#B7AED3' };
+const k1N = n => miN(Math.round(n * 1000) / 1000);
+const k1P = (x, y) => `(${k1N(x)}, ${k1N(y)})`;
+const k1T = (x, y, t, col = K1C.ink, cls = 'k1t', anc = 'middle') => `<text x="${a4n(x)}" y="${a4n(y)}" text-anchor="${anc}" class="${cls}" style="fill:${col}">${t}</text>`;
+const k1R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const k1Pk = a => a[Math.floor(Math.random() * a.length)];
+const k1Nz = (a, b) => { let v = 0; while (!v) v = k1R(a, b); return v; };
+/* ---------- a coordinate plane ----------
+   mode 'cross' (default): axes through 0, equal units, numbers along the axes · mode 'q1': L axes at the left/bottom (real-life graphs, any scale) */
+function k1Plane(o = {}) {
+  const W = o.W || 360, H = o.H || 240, xr = o.xr || [-5, 5], yr = o.yr || [-5, 5], xs = o.xs || 1, ys = o.ys || 1, q1 = o.mode === 'q1', xl = o.xl || xs, yl = o.yl || ys;
+  let ux, uy, ox, oy;
+  if (q1) { const L = o.padL || 46, R = 18, T = 22, B = o.padB || 40; ux = (W - L - R) / (xr[1] - xr[0]); uy = (H - T - B) / (yr[1] - yr[0]); ox = L; oy = H - B; }
+  else { const m = 22; ux = uy = Math.min((W - 2 * m) / (xr[1] - xr[0]), (H - 2 * m) / (yr[1] - yr[0])); ox = (W - ux * (xr[1] - xr[0])) / 2; oy = H - (H - uy * (yr[1] - yr[0])) / 2; }
+  const X = x => ox + (x - xr[0]) * ux, Y = y => oy - (y - yr[0]) * uy, on = (v, s) => Math.abs(v / s - Math.round(v / s)) < 1e-6;
+  let s = '';
+  for (let x = xr[0]; x <= xr[1] + 1e-9; x += xs) s += `<path d="M${a4n(X(x))} ${a4n(Y(yr[0]))} V${a4n(Y(yr[1]))}" stroke="${K1C.grid}" stroke-width="1"/>`;
+  for (let y = yr[0]; y <= yr[1] + 1e-9; y += ys) s += `<path d="M${a4n(X(xr[0]))} ${a4n(Y(y))} H${a4n(X(xr[1]))}" stroke="${K1C.grid}" stroke-width="1"/>`;
+  const ax0 = q1 ? xr[0] : Math.min(Math.max(0, xr[0]), xr[1]), ay0 = q1 ? yr[0] : Math.min(Math.max(0, yr[0]), yr[1]);
+  s += `<path d="M${a4n(X(xr[0]) - (q1 ? 0 : 8))} ${a4n(Y(ay0))} H${a4n(X(xr[1]) + 10)}" stroke="${K1C.ax}" stroke-width="2.2"/><path d="M${a4n(X(xr[1]) + 10)} ${a4n(Y(ay0))} l-8 -4.5 v9 z" fill="${K1C.ax}"/>`;
+  s += `<path d="M${a4n(X(ax0))} ${a4n(Y(yr[0]) + (q1 ? 0 : 8))} V${a4n(Y(yr[1]) - 10)}" stroke="${K1C.ax}" stroke-width="2.2"/><path d="M${a4n(X(ax0))} ${a4n(Y(yr[1]) - 10)} l-4.5 8 h9 z" fill="${K1C.ax}"/>`;
+  if (o.nums !== false) {
+    for (let x = xr[0]; x <= xr[1] + 1e-9; x += xs) if (on(x, xl) && (q1 || Math.abs(x) > 1e-9)) s += k1T(X(x), Y(ay0) + 15, k1N(x), K1C.ink, 'k1n');
+    for (let y = yr[0]; y <= yr[1] + 1e-9; y += ys) if (on(y, yl) && (q1 ? y > yr[0] + 1e-9 || true : Math.abs(y) > 1e-9)) s += k1T(X(ax0) - 6, Y(y) + 4, k1N(y), K1C.ink, 'k1n', 'end');
+    if (!q1 && xr[0] < 0 && yr[0] < 0) s += k1T(X(0) - 6, Y(0) + 15, '0', K1C.ink, 'k1n', 'end'); }
+  if (q1) { if (o.xt) s += k1T((X(xr[0]) + X(xr[1])) / 2, H - 6, o.xt, K1C.v, 'k1ax'); if (o.yt) s += k1T(4, 12, o.yt, K1C.v, 'k1ax', 'start'); }
+  else s += k1T(X(xr[1]) + 8, Y(ay0) - 8, 'X', K1C.ax, 'k1ax') + k1T(X(ax0) + 9, Y(yr[1]) - 4, 'Y', K1C.ax, 'k1ax', 'start');
+  const snap = (px, py) => { const x = Math.round(((px - ox) / ux + xr[0]) / xs) * xs, y = Math.round(((oy - py) / uy + yr[0]) / ys) * ys; return [Math.min(xr[1], Math.max(xr[0], Math.round(x * 1e6) / 1e6)), Math.min(yr[1], Math.max(yr[0], Math.round(y * 1e6) / 1e6))]; };
+  return { s, X, Y, ux, uy, xr, yr, xs, ys, W, H, snap, q1 }; }
+const k1Dot = (P, x, y, col = K1C.p, lab = '', dx = 8, dy = -8, r = 5.5) => `<circle cx="${a4n(P.X(x))}" cy="${a4n(P.Y(y))}" r="${r}" fill="${col}" stroke="#fff" stroke-width="1.8"/>` + (lab ? k1T(P.X(x) + dx, P.Y(y) + dy, lab, col, 'k1l', dx < 0 ? 'end' : dx > 0 ? 'start' : 'middle') : '');
+const k1Proj = (P, x, y, col = K1C.p) => `<path d="M${a4n(P.X(x))} ${a4n(P.Y(y))} V${a4n(P.Y(P.q1 ? P.yr[0] : 0))} M${a4n(P.X(x))} ${a4n(P.Y(y))} H${a4n(P.X(P.q1 ? P.xr[0] : 0))}" stroke="${col}" stroke-width="1.6" stroke-dasharray="4 3" fill="none"/>`;
+/* the part of y = m·x + b inside the plane (a vertical line when m is null: x = b) */
+function k1Line(P, m, b, col = K1C.b, sw = 2.6, lab) { let pts;
+  if (m == null) pts = [[b, P.yr[0]], [b, P.yr[1]]];
+  else { const c = []; [P.xr[0], P.xr[1]].forEach(x => { const y = m * x + b; if (y >= P.yr[0] - 1e-9 && y <= P.yr[1] + 1e-9) c.push([x, y]); }); if (m) [P.yr[0], P.yr[1]].forEach(y => { const x = (y - b) / m; if (x >= P.xr[0] - 1e-9 && x <= P.xr[1] + 1e-9) c.push([x, y]); }); c.sort((p, q) => p[0] - q[0]); pts = c.length ? [c[0], c[c.length - 1]] : null; }
+  if (!pts) return ''; const [p, q] = pts;
+  return `<path d="M${a4n(P.X(p[0]))} ${a4n(P.Y(p[1]))} L${a4n(P.X(q[0]))} ${a4n(P.Y(q[1]))}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" fill="none"/>` + (lab ? k1T(P.X(q[0]) - 4, P.Y(q[1]) + (q[1] >= P.yr[1] - 1e-9 ? 14 : -6), lab, col, 'k1l', 'end') : ''); }
+const k1Poly = (P, pts, col = K1C.b, dots = true) => `<path d="${pts.map((p, i) => (i ? 'L' : 'M') + a4n(P.X(p[0])) + ' ' + a4n(P.Y(p[1]))).join(' ')}" stroke="${col}" stroke-width="2.6" fill="none" stroke-linejoin="round"/>` + (dots ? pts.map(p => `<circle cx="${a4n(P.X(p[0]))}" cy="${a4n(P.Y(p[1]))}" r="3.6" fill="${col}"/>`).join('') : '');
+const k1Svg = (P, inner, cls = 'k1fig') => `<svg viewBox="0 0 ${P.W} ${P.H}" class="${cls}" aria-hidden="true">${P.s}${inner || ''}</svg>`;
+/* a small table (html) for the left side: rows = [['x', 1, 2, 3], ['y', 4, 5, '?']] */
+const k1Tab = rows => `<table class="k1tab">${rows.map((r, i) => `<tr>${r.map((c, j) => j ? `<td${c === '?' ? ' class="q"' : ''}>${typeof c === 'number' ? k1N(c) : c}</td>` : `<th>${c}</th>`).join('')}</tr>`).join('')}</table>`;
+/* tiny graph icons for "which graph" choices */
+const k1Mini = (shape, o = {}) => { const P = k1Plane({ W: 150, H: 110, xr: o.xr || [0, 6], yr: o.yr || [0, 6], mode: 'q1', padL: 14, padB: 12, nums: false });
+  const path = { up: [[0, 1], [6, 5]], down: [[0, 5], [6, 1]], flat: [[0, 3], [6, 3]], upflat: [[0, 0.5], [3, 4], [6, 4]], upfast: [[0, 0.5], [6, 5.8]], upslow: [[0, 0.5], [6, 2.5]], curve: null, zig: [[0, 1], [2, 4], [3, 2], [5, 5], [6, 3]], flatup: [[0, 2], [3, 2], [6, 5.5]], downflat: [[0, 5], [3, 1.5], [6, 1.5]], stop: [[0, 0.5], [2, 3], [4, 3], [6, 5.5]] }[shape];
+  let inner = path ? k1Poly(P, path, o.col || K1C.b, false) : `<path d="${Array.from({ length: 25 }, (_, i) => { const x = i / 4, y = 0.15 * x * x + 0.3; return (i ? 'L' : 'M') + a4n(P.X(x)) + ' ' + a4n(P.Y(y)); }).join(' ')}" stroke="${o.col || K1C.b}" stroke-width="2.6" fill="none"/>`;
+  if (o.line) inner = k1Line(P, o.line[0], o.line[1], o.col || K1C.b);
+  return k1Svg(P, inner, 'k1mini'); };
+/* ---------- question makers ---------- */
+const k1Num = (q, a, sig, diff, hint, o = {}) => Q.rpNum({ story: o.story, fig: o.fig, q, a, unit: o.unit, hint, sig, diff });
+const k1Opt = (q, opts, sig, diff, hint, o = {}) => Q.rpOpt({ story: o.story, fig: o.fig, q, opts, right: opts[0], hint, sig, diff });
+const k1TF = (text, ok, why, diff) => ({ ...rpTF(text, ok, why), __diff: diff });
+/* pick a graph: options are small svg pictures */
+Q.k1Pick = ({ story, q, figs, right = 0, hint, sig, diff, labs }) => ({ prompt: q, say: rpSaySt(story, q), ...rpMeta('k1k', { sig, q, diff }),
+  mount(bd, ctx) { const L = labs || ['ก', 'ข', 'ค', 'ง', 'จ'], ops = shuffle(figs.map((f, i) => ({ value: String(i), f }))).map((o, k) => ({ value: o.value, node: h('span', { class: 'k1pk', html: o.f + `<b>${L[k]}</b>` }) })); /* ป้าย ก ข ค ง ตามตำแหน่ง — รูปที่มีแต่ X Y จะไม่ถูกมองว่าเป็นตัวเลือกซ้ำ */
+    const ch = choices(ctx, ops, String(right), { hint }); ch.classList.add('k1opts');
+    bd.append(h('div', { class: story ? 'tg-qrow' : 'colstack' }, story ? tgLeft(story) : '', ch)); } });
+/* tap the plane to put the point (move it as often as you like), then check */
+function k1Board(ctx, P, want, o = {}) {
+  const many = Array.isArray(want[0]), W = many ? want : [want], key = p => p.join(','), got = new Map(); let msg;
+  const fig = h('div', { class: 'k1brd ia' }), draw = (rev) => { fig.innerHTML = k1Svg(P, (o.inner || '') + [...got.values()].map(p => k1Dot(P, p[0], p[1], K1C.p, '', 0, 0, 7)).join('') + (rev ? W.map(p => k1Dot(P, p[0], p[1], K1C.g, k1P(...p), 9, -9, 7)).join('') : ''), 'k1fig k1big'); };
+  fig.addEventListener('pointerdown', e => { if (wrap.classList.contains('done')) return; const svg = fig.querySelector('svg'); if (!svg) return; const [px, py] = miSvgPt(svg, e), p = P.snap(px, py), k = key(p);
+    if (many) { if (got.has(k)) got.delete(k); else got.set(k, p); } else { got.clear(); got.set(k, p); } sfx.tap(); msg.textContent = ''; draw(); });
+  const check = () => { if (wrap.classList.contains('done')) return; if (!got.size) { msg.textContent = many ? 'แตะวางจุดบนกราฟก่อนนะ' : 'แตะบนกราฟเพื่อวางจุดก่อนนะ'; return; }
+    const need = new Set(W.map(key)), have = new Set(got.keys()), miss = [...need].filter(k => !have.has(k)).length, extra = [...have].filter(k => !need.has(k)).length, ok = !miss && !extra;
+    if (ok) wrap.classList.add('done');
+    const swp = !many && [...have][0] === key([W[0][1], W[0][0]]) && W[0][0] !== W[0][1];
+    ctx.check(ok, ok ? '' : swp ? 'สลับ x กับ y — <b>x (ตัวหน้า) ไปทางซ้าย–ขวาก่อน</b> แล้วจึง y ขึ้น–ลง' : many ? `${miss ? `ยังขาด ${miss} จุด` : ''}${miss && extra ? ' และ' : ''}${extra ? `มี ${extra} จุดที่ไม่ใช่` : ''} — ${o.hint || 'ไล่ดูทีละคู่อันดับ'}` : (o.hint || 'เริ่มจากจุดกำเนิด: เดินตามแกน X ก่อน แล้วขึ้นหรือลงตามค่า y'));
+    if (!ok && !wrap.classList.contains('revealed') && !many) { got.clear(); draw(); } };
+  msg = h('div', { class: 'pad-msg' });
+  const wrap = h('div', { class: 'ans ia k1ans' }, fig, h('div', { class: 'rowstack' }, h('button', { class: 'btn primary ok2 k1chk', onclick: e => { e.stopPropagation(); check(); } }, icon('check'), h('span', null, 'ตรวจ'))), msg);
+  wrap.reveal = () => { got.clear(); W.forEach(p => got.set(key(p), p)); draw(true); wrap.classList.add('done', 'revealed'); };
+  wrap.ansText = W.map(p => k1P(...p)).join(' '); draw(); return wrap; }
+Q.k1Plot = ({ story, q, P, want, inner, hint, sig, diff, side }) => ({ prompt: q, say: rpSaySt(story, q), ...rpMeta('k1p', { sig, q, diff }),
+  mount(bd, ctx) { bd.append(h('div', { class: 'tg-qrow k1row' }, story || side ? h('div', { class: 'colstack tg-left' }, story ? h('div', { class: 'tg-story', html: story }) : '', side ? h('div', { class: 'k1side', html: side }) : '') : '', k1Board(ctx, P, want, { inner, hint }))); } });
+const k1Plot = (q, P, want, sig, diff, hint, o = {}) => Q.k1Plot({ q, P, want, hint, sig, diff, story: o.story, side: o.side, inner: o.inner });
+
+const K1L = (no, place, title, short, goal, game) => ({ id: 2800 + no, no, place, title, short, tone: TONES5[(no + 1) % 6], goal, teach: [], game });
+const K1_Q = ['จตุภาคที่ 1', 'จตุภาคที่ 2', 'จตุภาคที่ 3', 'จตุภาคที่ 4'], k1Quad = (x, y) => x > 0 ? (y > 0 ? 0 : 3) : (y > 0 ? 1 : 2);
+/* real-life line graphs used by several lessons */
+const K1_TEMP = [{ t: [6, 7, 8, 9, 10, 11, 12], v: [22, 24, 27, 30, 32, 31, 33] }, { t: [6, 7, 8, 9, 10, 11, 12], v: [20, 21, 25, 28, 28, 30, 26] }, { t: [6, 7, 8, 9, 10, 11, 12], v: [24, 23, 26, 29, 31, 34, 32] }];
+const k1TempFig = d => { const P = k1Plane({ mode: 'q1', W: 360, H: 230, xr: [6, 12], yr: [18, 36], xs: 1, ys: 2, yl: 4, xt: 'เวลา (นาฬิกา)', yt: 'อุณหภูมิ (°C)' }); return k1Svg(P, k1Poly(P, d.t.map((t, i) => [t, d.v[i]]))); };
+const K1_TRIP = [{ p: [[0, 0], [1, 40], [2, 80], [3, 80], [4, 140], [5, 160]], who: 'รถของครอบครัวภาคิน' }, { p: [[0, 0], [1, 60], [2, 60], [3, 100], [4, 180], [5, 200]], who: 'รถทัวร์' }, { p: [[0, 0], [1, 40], [2, 80], [3, 160], [4, 160], [5, 200]], who: 'รถของคุณครูใบเตย' }]; /* ทุกเรื่องมีช่วงพักช่วงเดียว และช่วงที่เร็วที่สุดช่วงเดียว */
+const k1TripFig = d => { const P = k1Plane({ mode: 'q1', W: 360, H: 230, xr: [0, 5], yr: [0, 200], xs: 1, ys: 20, yl: 40, xt: 'เวลา (ชั่วโมง)', yt: 'ระยะทาง (กม.)', padL: 50 }); return k1Svg(P, k1Poly(P, d.p)); };
+const k1Lin = (m, b) => x => m * x + b;
+const k1Eq = (m, b, v = 'y') => `${v} = ${m === 1 ? '' : m === -1 ? '−' : k1N(m)}x${b ? (b > 0 ? ' + ' + k1N(b) : ' − ' + k1N(-b)) : ''}`;
+
+const LESSONS_M1C8 = [
+  /* ---------- 1 ความหมายของกราฟ ---------- */
+  K1L(1, 'ท่ากราฟ', 'ความหมายของกราฟ', 'กราฟคืออะไร', 'อธิบายว่ากราฟแสดงความเกี่ยวข้องของปริมาณสองชุด อ่านค่าและการเปลี่ยนแปลงจากกราฟเส้น และเลือกวิธีนำเสนอข้อมูลที่เหมาะสม', () => { const i = k1R(0, 2), d = K1_TEMP[i], f = k1TempFig(d), j = k1R(1, 5), mx = d.v.indexOf(Math.max(...d.v)), mn = d.v.indexOf(Math.min(...d.v)), k = k1R(0, 3);
+    return [
+      k1Opt('กราฟนี้แสดงความเกี่ยวข้องระหว่างอะไรกับอะไร', ['เวลา กับ อุณหภูมิ', 'วัน กับ เดือน', 'อุณหภูมิ กับ ความสูง', 'เวลา กับ ระยะทาง'], `what ${i}`, 1, 'ดูชื่อแกนนอนและแกนตั้ง', { fig: f }),
+      k1Num(`เวลา ${d.t[j]}.00 น. อุณหภูมิกี่องศาเซลเซียส`, d.v[j], `read ${i}${j}`, 2, `หา ${d.t[j]} บนแกนนอน ขึ้นไปถึงเส้นกราฟ แล้วมองไปทางซ้าย`, { fig: f, unit: '°C' }),
+      k1Opt('เวลาใดอุณหภูมิ<b>สูงที่สุด</b>', [`${d.t[mx]}.00 น.`, ...d.t.filter((_, q) => q !== mx).slice(0, 3).map(t => `${t}.00 น.`)], `max ${i}`, 2, 'จุดที่อยู่สูงที่สุดของกราฟ', { fig: f }),
+      k1Opt('เวลาใดอุณหภูมิ<b>ต่ำที่สุด</b>', [`${d.t[mn]}.00 น.`, ...d.t.filter((_, q) => q !== mn).slice(1, 4).map(t => `${t}.00 น.`)], `min ${i}`, 3, 'จุดที่อยู่ต่ำที่สุดของกราฟ', { fig: f }),
+      k1Num(`จาก ${d.t[k]}.00 น. ถึง ${d.t[k + 3]}.00 น. อุณหภูมิเปลี่ยนไปกี่องศา (ลดลงตอบเป็นจำนวนลบ)`, d.v[k + 3] - d.v[k], `chg ${i}${k}`, 5, 'ค่าหลัง − ค่าก่อน', { fig: f, unit: 'องศา' }),
+      k1Opt('ข้อมูลใด<b>เหมาะ</b>จะนำเสนอด้วยกราฟเส้นมากที่สุด', ['ความสูงของต้นไม้ที่วัดทุกสัปดาห์', 'ชื่อนักเรียนในห้อง', 'สีที่ชอบของเพื่อนแต่ละคน', 'ที่อยู่ของโรงเรียน'], 'which', 3, 'กราฟเส้นเหมาะกับข้อมูลที่เปลี่ยนไปตามเวลา'),
+      k1Opt('ข้อดีของการนำเสนอด้วยกราฟคือข้อใด', ['เห็นการเปลี่ยนแปลงและแนวโน้มได้ทันที', 'ได้ค่าทุกค่าละเอียดกว่าตาราง', 'ไม่ต้องมีชื่อแกน', 'ใช้ได้กับข้อมูลทุกแบบ'], 'why', 3, 'มองภาพรวมได้เร็ว'),
+      k1TF(`ช่วง ${d.t[mx - 1 >= 0 ? mx - 1 : 0]}.00–${d.t[mx]}.00 น. อุณหภูมิเพิ่มขึ้น`, d.v[mx] > d.v[Math.max(0, mx - 1)], 'ดูว่าเส้นกราฟขึ้นหรือลง', 4),
+      Q.k1Pick({ story: k1Tab([['เวลา (ชม.)', 0, 1, 2, 3], ['น้ำในถัง (ลิตร)', 10, 20, 30, 40]]), q: 'กราฟใดตรงกับตาราง', figs: [k1Mini('up'), k1Mini('down'), k1Mini('flat'), k1Mini('zig')], hint: 'น้ำเพิ่มขึ้นเท่า ๆ กันทุกชั่วโมง', sig: 'tab', diff: 4 }),
+      k1Num(`ช่วงเวลาใดอุณหภูมิเพิ่มขึ้นมากที่สุดใน 1 ชั่วโมง ให้ตอบเวลาเริ่มต้น (นาฬิกา)`, d.t[d.v.slice(1).map((v, q) => v - d.v[q]).reduce((b, v, q, A) => v > A[b] ? q : b, 0)], `rise ${i}`, 7, 'เส้นกราฟชันขึ้นมากที่สุดช่วงไหน', { fig: f, unit: 'นาฬิกา' })]; }),
+
+  /* ---------- 2 แกนและระบบพิกัดฉาก ---------- */
+  K1L(2, 'ลานพิกัดฉาก', 'รู้จักแกนและระบบพิกัดฉาก', 'แกน · จตุภาค', 'บอกแกน X แกน Y จุดกำเนิด ทิศบวกลบของแกน และบอกได้ว่าจุดอยู่ในจตุภาคใดหรืออยู่บนแกน', () => { const x = k1Nz(-5, 5), y = k1Nz(-5, 5), x2 = k1Nz(-4, 4), y2 = k1Nz(-4, 4), P = k1Plane({ xr: [-5, 5], yr: [-4, 4] }), q = k1R(0, 3);
+    return [
+      k1Opt('จุดที่แกน X และแกน Y ตัดกันเรียกว่าอะไร', ['จุดกำเนิด', 'จตุภาคที่ 1', 'จุดยอด', 'จุดกึ่งกลาง'], 'origin', 1, 'เป็นจุด (0, 0)'),
+      k1Opt('แกนในแนว<b>ตั้ง</b>คือแกนใด', ['แกน Y', 'แกน X', 'จตุภาค', 'เส้นจำนวนแนวนอน'], 'yaxis', 1, 'X นอน Y ตั้ง'),
+      k1Opt(`จุด ${k1P(x, y)} อยู่ที่ใด`, [K1_Q[k1Quad(x, y)], ...K1_Q.filter((_, k) => k !== k1Quad(x, y))], `quad ${x},${y}`, 3, 'ดูเครื่องหมายของ x และ y'),
+      k1Opt('จุด A อยู่ในจตุภาคใด', [K1_Q[k1Quad(x2, y2)], ...K1_Q.filter((_, k) => k !== k1Quad(x2, y2))], `quadf ${x2},${y2}`, 2, 'จตุภาคที่ 1 ขวาบน แล้วนับทวนเข็มนาฬิกา', { fig: k1Svg(P, k1Dot(P, x2, y2, K1C.p, 'A')) }),
+      k1Opt(`จุดใน${K1_Q[q]} มีค่า x และ y เป็นอย่างไร`, [['x บวก y บวก', 'x ลบ y บวก', 'x ลบ y ลบ', 'x บวก y ลบ'][q], ...['x บวก y บวก', 'x ลบ y บวก', 'x ลบ y ลบ', 'x บวก y ลบ'].filter((_, k) => k !== q)], `sign ${q}`, 4, 'ขวา = x บวก ขึ้น = y บวก'),
+      k1Opt(`จุด (0, ${k1N(y)}) อยู่ที่ใด`, ['บนแกน Y', 'บนแกน X', K1_Q[y > 0 ? 0 : 3], 'จุดกำเนิด'], `onY ${y}`, 4, 'x = 0 หมายความว่าไม่ไปทางซ้ายหรือขวาเลย'),
+      k1Opt(`จุด (${k1N(x)}, 0) อยู่ที่ใด`, ['บนแกน X', 'บนแกน Y', K1_Q[x > 0 ? 0 : 1], 'จุดกำเนิด'], `onX ${x}`, 4, 'y = 0 หมายความว่าไม่ขึ้นหรือลงเลย'),
+      k1Opt('จตุภาคที่ 3 อยู่ส่วนใดของระนาบ', ['ซ้ายล่าง', 'ขวาล่าง', 'ซ้ายบน', 'ขวาบน'], 'q3pos', 3, 'นับทวนเข็มนาฬิกาจากขวาบน'),
+      k1TF(`จุด ${k1P(-Math.abs(x) || -2, -Math.abs(y) || -3)} อยู่ในจตุภาคที่ 2`, false, 'x ลบ และ y ลบ อยู่จตุภาคที่ 3', 5),
+      k1Opt('บนแกน X ทางซ้ายของจุดกำเนิดเป็นจำนวนแบบใด', ['จำนวนลบ', 'จำนวนบวก', 'ศูนย์', 'เศษส่วน'], 'neg', 2, 'เหมือนเส้นจำนวน')]; }),
+
+  /* ---------- 3 อ่านค่าและระยะบนแกน ---------- */
+  K1L(3, 'ท่ามาตราส่วน', 'การอ่านค่าและระยะบนแกน', 'มาตราส่วน', 'อ่านตัวเลขบนแกนที่มีระยะห่างช่องละ 1, 2, 5, 10 หรือแกนที่ไม่เริ่มจาก 0 และเลือกมาตราส่วนให้เหมาะกับข้อมูล', () => {
+    const ax = (st, s0, k, lab) => { const P = k1Plane({ mode: 'q1', W: 360, H: 90, xr: [s0, s0 + 8 * st], yr: [0, 1], xs: st, ys: 1, xl: st, nums: false, padB: 30 }); let t = ''; for (let j = 0; j <= 8; j++) t += (j % 2 === 0 || lab) ? k1T(P.X(s0 + j * st), 70, j === 4 && lab === '?' ? '?' : k1N(s0 + j * st), j === 4 && lab === '?' ? K1C.p : K1C.ink, 'k1n') : ''; return { P, svg: inner => `<svg viewBox="0 0 360 90" class="k1fig" aria-hidden="true"><path d="M${a4n(P.X(s0))} 50 H${a4n(P.X(s0 + 8 * st) + 8)}" stroke="${K1C.ink}" stroke-width="2.2"/>${Array.from({ length: 9 }, (_, j) => `<path d="M${a4n(P.X(s0 + j * st))} 43 V57" stroke="${K1C.ink}" stroke-width="1.8"/>`).join('')}${t}${inner || ''}</svg>` }; };
+    const st = k1Pk([2, 5, 10, 25]), A = ax(st, 0, 4, '?'), st2 = k1Pk([2, 5, 10]), j = k1Pk([3, 5, 7]), B = ax(st2, 0, 0, ''), s0 = k1Pk([40, 100, 150]), st3 = k1Pk([5, 10]), j3 = k1Pk([3, 5, 7]), C = ax(st3, s0, 0, ''), st4 = k1Pk([10, 20]), j4 = k1Pk([1, 3, 5]);
+    const dot = (A, v, col = K1C.p) => `<circle cx="${a4n(A.P.X(v))}" cy="50" r="7" fill="${col}" stroke="#fff" stroke-width="2"/>`;
+    return [
+      k1Num('แกนนี้มีระยะห่างช่องละกี่หน่วย', st, `step ${st}`, 2, 'ดูตัวเลขสองตัวที่อยู่ติดกัน แล้วหาร 2 (เขียนตัวเลขทุก 2 ช่อง)', { fig: A.svg() }),
+      k1Num('ตัวเลขที่ ? แทนคือเท่าใด', 4 * st, `q ${st}`, 2, 'นับช่องจาก 0', { fig: A.svg() }),
+      k1Num('จุดสีชมพูแทนจำนวนใด', j * st2, `dot ${st2}${j}`, 3, 'หาว่าช่องละเท่าใด แล้วนับช่อง', { fig: B.svg(dot(B, j * st2)) }),
+      k1Num('จุดสีชมพูแทนจำนวนใด (แกนไม่ได้เริ่มที่ 0)', s0 + j3 * st3, `start ${s0}${st3}${j3}`, 5, 'เริ่มนับจากตัวเลขแรกบนแกน', { fig: C.svg(dot(C, s0 + j3 * st3)) }),
+      k1Num('จุดสีชมพูอยู่กึ่งกลางระหว่างขีด แทนจำนวนใด', st4 * j4 + st4 / 2, `half ${st4}${j4}`, 6, 'กึ่งกลางช่อง = ครึ่งหนึ่งของช่อง', { fig: ax(st4, 0, 0, '').svg(`<circle cx="${a4n(ax(st4, 0, 0, '').P.X(st4 * j4 + st4 / 2))}" cy="50" r="7" fill="${K1C.p}" stroke="#fff" stroke-width="2"/>`) }),
+      k1Opt('ข้อมูลมีค่ามากสุด 180 และแกนตั้งมี 10 ช่อง ควรใช้มาตราส่วนช่องละเท่าใด', ['ช่องละ 20', 'ช่องละ 1', 'ช่องละ 2', 'ช่องละ 100'], 'pick', 4, '10 ช่อง ต้องไปถึงอย่างน้อย 180'),
+      k1Opt('ข้อมูลมีค่า 3, 7, 4, 9, 6 ควรใช้มาตราส่วนแกนตั้งแบบใด', ['ช่องละ 1 เริ่มที่ 0', 'ช่องละ 50 เริ่มที่ 0', 'ช่องละ 100 เริ่มที่ 0', 'ช่องละ 0.01'], 'pick2', 3, 'ตัวเลขน้อย ใช้ช่องเล็ก'),
+      k1TF('บนแกนเดียวกัน ทุกช่องต้องมีระยะห่างเท่ากัน', true, '', 3),
+      k1Num('บนแกนช่องละ 5 จาก 15 ไปถึง 40 ห่างกันกี่ช่อง', 5, 'count', 4, '(40 − 15) ÷ 5')]; }),
+
+  /* ---------- 4 คู่อันดับ ---------- */
+  K1L(4, 'ศาลาคู่อันดับ', 'รู้จักคู่อันดับ', 'คู่อันดับ', 'บอกสมาชิกตัวที่หนึ่งและตัวที่สองของคู่อันดับ รู้ว่าลำดับสำคัญ เขียนคู่อันดับจากสถานการณ์และตาราง และหาค่าที่ไม่ทราบจากคู่อันดับที่เท่ากัน', () => { const a = k1Nz(-9, 9), b = k1Nz(-9, 9), u = k1R(2, 8), v = k1R(3, 9), n = k1R(3, 6), pr = k1Pk([12, 15, 25]), t0 = k1R(1, 4);
+    return [
+      k1Num(`สมาชิกตัวที่<b>หนึ่ง</b>ของ ${k1P(a, b)} คือเท่าใด`, a, `first ${a},${b}`, 1, 'ตัวหน้า = ตัวที่หนึ่ง'),
+      k1Num(`สมาชิกตัวที่<b>สอง</b>ของ ${k1P(b, a)} คือเท่าใด`, a, `second ${b},${a}`, 1, 'ตัวหลัง = ตัวที่สอง'),
+      k1TF(`${k1P(2, 7)} กับ ${k1P(7, 2)} เป็นคู่อันดับเดียวกัน`, false, 'ลำดับต่างกัน = คนละคู่อันดับ', 2),
+      k1Opt(`ปากกา ${n} ด้าม ราคา ${n * pr} บาท เขียนเป็นคู่อันดับ (จำนวนด้าม, ราคา) ได้ตามข้อใด`, [k1P(n, n * pr), k1P(n * pr, n), k1P(n, pr), k1P(pr, n * pr)], `sit ${n}${pr}`, 3, 'ตัวหน้าคือจำนวนด้าม'),
+      k1Opt('ข้อใดเป็นคู่อันดับจากตาราง', [k1P(t0 + 1, 3 * (t0 + 1)), k1P(3 * (t0 + 1), t0 + 1), k1P(t0 + 1, t0 + 4), k1P(t0, 3 * (t0 + 1))], `tab ${t0}`, 3, 'จับคู่ x กับ y ในคอลัมน์เดียวกัน', { story: k1Tab([['x', t0, t0 + 1, t0 + 2], ['y', 3 * t0, 3 * (t0 + 1), 3 * (t0 + 2)]]) }),
+      k1Num(`ถ้า (a + ${u}, 5) = (${u + v}, b − 2) แล้ว a เท่ากับเท่าใด`, v, `eqa ${u}${v}`, 5, 'ตัวที่หนึ่งเท่ากัน: a + ' + u + ' = ' + (u + v)),
+      k1Num(`ถ้า (a + ${u}, ${v + 1}) = (${u + v}, b − 2) แล้ว b เท่ากับเท่าใด`, v + 3, `eqb ${u}${v}`, 6, 'ตัวที่สองเท่ากัน: b − 2 = ' + (v + 1)),
+      k1Num(`ถ้า (x, y) = ${k1P(a, b)} แล้ว x + y เท่ากับเท่าใด`, a + b, `sum ${a},${b}`, 4, 'แทน x และ y'),
+      k1Opt('อายุ (ปี) กับส่วนสูง (ซม.) ของปลายฟ้าคือ 12 ปี 150 ซม. เขียนเป็นคู่อันดับ (อายุ, ส่วนสูง) ได้ตามข้อใด', ['(12, 150)', '(150, 12)', '(12, 12)', '(150, 150)'], 'sit2', 2, 'อายุมาก่อน'),
+      k1Num(`ถ้า (2x, y + 1) = (${2 * u}, ${v}) แล้ว x × y เท่ากับเท่าใด`, u * (v - 1), `eqxy ${u}${v}`, 8, 'หา x และ y ก่อน')]; }),
+
+  /* ---------- 5 ระบุตำแหน่งจุดบนกราฟ ---------- */
+  K1L(5, 'ลานพล็อตจุด', 'การระบุตำแหน่งจุดบนกราฟ', 'พล็อตจุด', 'เขียนกราฟของคู่อันดับ (พล็อตจุด) ในทุกจตุภาคและบนแกน โดยไปตามแกน X ก่อนแล้วจึงไปตามแกน Y', () => { const P = k1Plane({ xr: [-5, 5], yr: [-4, 4] }), s = [[1, 1], [-1, 1], [-1, -1], [1, -1]].map(([sx, sy]) => [sx * k1R(1, 5), sy * k1R(1, 4)]), ox = k1Nz(-5, 5), oy = k1Nz(-4, 4), L = [[k1R(1, 4), k1R(1, 3)], [-k1R(1, 4), k1R(1, 3)], [-k1R(1, 4), -k1R(1, 3)]];
+    return [
+      ...s.map((p, k) => k1Plot(`แตะวางจุด <b>${k1P(...p)}</b> บนกราฟ แล้วกดตรวจ`, P, p, `q${k + 1} ${p}`, 2 + k, `เดินตามแกน X ไป ${p[0] > 0 ? 'ขวา' : 'ซ้าย'} ${Math.abs(p[0])} ช่อง แล้ว${p[1] > 0 ? 'ขึ้น' : 'ลง'} ${Math.abs(p[1])} ช่อง`)),
+      k1Plot(`แตะวางจุด <b>${k1P(ox, 0)}</b>`, P, [ox, 0], `ax ${ox}`, 5, 'y = 0 อยู่บนแกน X'),
+      k1Plot(`แตะวางจุด <b>${k1P(0, oy)}</b>`, P, [0, oy], `ay ${oy}`, 5, 'x = 0 อยู่บนแกน Y'),
+      k1Opt(`จุดใดคือ ${k1P(...L[1])}`, ['B', 'A', 'C', 'D'], `which ${L[1]}`, 3, 'x ลบ = ซ้าย y บวก = ขึ้น', { fig: k1Svg(P, k1Dot(P, L[0][0], L[0][1], K1C.b, 'A') + k1Dot(P, L[1][0], L[1][1], K1C.b, 'B') + k1Dot(P, L[2][0], L[2][1], K1C.b, 'C') + k1Dot(P, L[1][1], L[1][0], K1C.b, 'D')) }),
+      k1Opt(`จากจุดกำเนิด เดินไปทางขวา 3 ช่อง แล้วลงไป 2 ช่อง ถึงจุดใด`, ['(3, −2)', '(−2, 3)', '(3, 2)', '(−3, −2)'], 'walk', 3, 'ขวา = x บวก ลง = y ลบ'),
+      k1Opt(`จากจุดกำเนิด เดินไปทางซ้าย 4 ช่อง แล้วขึ้นไป 1 ช่อง ถึงจุดใด`, ['(−4, 1)', '(1, −4)', '(4, 1)', '(−4, −1)'], 'walk2', 3, 'ซ้าย = x ลบ ขึ้น = y บวก'),
+      k1Plot('แตะวางจุด <b>จุดกำเนิด</b>', P, [0, 0], 'org', 1, 'จุดที่แกนทั้งสองตัดกัน')]; }),
+
+  /* ---------- 6 อ่านค่าจากจุดบนกราฟ ---------- */
+  K1L(6, 'ท่าอ่านพิกัด', 'การอ่านค่าจากจุดบนกราฟ', 'อ่านพิกัด', 'อ่านคู่อันดับของจุดบนระนาบ หาค่า x หรือ y ของจุด เปรียบเทียบตำแหน่ง และหาจุดที่หายไปจากรูปเรขาคณิต', () => { const P = k1Plane({ xr: [-5, 5], yr: [-4, 4] }), used = new Set(), np = () => { for (;;) { const q = [k1Nz(-5, 5), k1Nz(-4, 4)]; if (!used.has(q[0] + ',' + q[1]) && ![...used].some(u => u.split(',')[1] == q[1])) { used.add(q.join(',')); return q; } } }, A = np(), B = np(), C = np(), D = [k1Nz(-4, 4), 0]; /* คนละจุด และค่า y ไม่ซ้ำกัน */
+    const pts = k1Dot(P, ...A, K1C.p, 'A') + k1Dot(P, ...B, K1C.b, 'B') + k1Dot(P, ...C, K1C.g, 'C') + k1Dot(P, ...D, K1C.o, 'D'), f = k1Svg(P, pts), rx = k1R(-4, 0), ry = k1R(-3, 0), w = k1R(2, 4), hh = k1R(2, 3);
+    const sw = (p, k) => [k1P(...p), k1P(p[1], p[0]), k1P(-p[0], p[1]), k1P(p[0], -p[1])].filter((x, i, Ar) => Ar.indexOf(x) === i);
+    return [
+      k1Opt('จุด A มีพิกัดเท่าใด', sw(A), `A ${A}`, 2, 'อ่าน x ก่อน (ซ้าย–ขวา) แล้วอ่าน y (ขึ้น–ลง)', { fig: f }),
+      k1Num('ค่า x ของจุด B คือเท่าใด', B[0], `Bx ${B}`, 2, 'ลากลงไปที่แกน X', { fig: f }),
+      k1Num('ค่า y ของจุด C คือเท่าใด', C[1], `Cy ${C}`, 3, 'ลากไปที่แกน Y', { fig: f }),
+      k1Opt('จุดใดอยู่บนแกน X', ['D', 'A', 'B', 'C'], `D ${D}`, 2, 'y = 0', { fig: f }),
+      k1Opt(`จุดใดมีพิกัด ${k1P(...C)}`, ['C', 'A', 'B', 'D'], `which ${C}`, 3, 'ไล่ดูทีละจุด', { fig: f }),
+      k1Opt('จุด B มีพิกัดเท่าใด', sw(B), `B ${B}`, 3, 'ระวังสลับ x กับ y', { fig: f }),
+      k1Opt(`ABCD เป็นรูปสี่เหลี่ยมผืนผ้า A${k1P(rx, ry)} B${k1P(rx + w, ry)} C${k1P(rx + w, ry + hh)} จุด D อยู่ที่ใด`, [k1P(rx, ry + hh), k1P(ry + hh, rx), k1P(rx + w, ry + hh + 1), k1P(rx - w, ry + hh)], `rect ${rx}${ry}${w}${hh}`, 7, 'D อยู่เหนือ A และระดับเดียวกับ C', { fig: k1Svg(P, k1Dot(P, rx, ry, K1C.b, 'A', -8, 14) + k1Dot(P, rx + w, ry, K1C.b, 'B', 8, 14) + k1Dot(P, rx + w, ry + hh, K1C.b, 'C')) }),
+      k1Num(`จุด ${k1P(-3, 2)} กับ ${k1P(4, 2)} ห่างกันกี่หน่วย`, 7, 'dist', 6, 'y เท่ากัน นับระยะตามแนวนอน'),
+      k1Num(`จุด ${k1P(1, -3)} กับ ${k1P(1, 4)} ห่างกันกี่หน่วย`, 7, 'dist2', 6, 'x เท่ากัน นับระยะตามแนวตั้ง'),
+      k1Opt('จุดใดอยู่<b>สูงที่สุด</b> (ค่า y มากที่สุด)', [['A', A], ['B', B], ['C', C], ['D', D]].sort((p, q) => q[1][1] - p[1][1]).map(p => p[0]), `hi ${A}${B}${C}`, 4, 'ดูค่า y', { fig: f })]; }),
+
+  /* ---------- 7 ตารางค่าจากสถานการณ์ ---------- */
+  K1L(7, 'ตลาดตารางค่า', 'การสร้างตารางค่าจากสถานการณ์', 'ตารางค่า', 'บอกตัวแปรต้นและตัวแปรตาม สร้างตารางแสดงความสัมพันธ์จากสถานการณ์ และหาค่าที่หายไปจากรูปแบบของข้อมูล', () => { const p = k1Pk([12, 15, 18, 25]), n = k1R(4, 8), d = k1Pk([3, 4, 5]), s = k1R(1, 6), c = k1R(4, 7);
+    return [
+      k1Opt('ซื้อขนมปังชิ้นละ 15 บาท ราคาที่ต้องจ่ายขึ้นอยู่กับจำนวนชิ้น <b>ตัวแปรต้น</b>คือข้อใด', ['จำนวนชิ้นขนมปัง', 'ราคาที่ต้องจ่าย', 'ราคาต่อชิ้น', 'ร้านขนมปัง'], 'iv', 2, 'ตัวแปรต้นคือสิ่งที่เรากำหนดก่อน'),
+      k1Opt('รถวิ่งด้วยความเร็วคงที่ ระยะทางขึ้นอยู่กับเวลา <b>ตัวแปรตาม</b>คือข้อใด', ['ระยะทาง', 'เวลา', 'ความเร็ว', 'รถ'], 'dv', 2, 'ตัวแปรตามเปลี่ยนตามตัวแปรต้น'),
+      k1Num(`ดินสอแท่งละ ${p} บาท ซื้อ ${n} แท่ง ต้องจ่ายกี่บาท`, p * n, `cost ${p}${n}`, 2, `${p} × ${n}`, { story: k1Tab([['จำนวน (แท่ง)', 1, 2, 3, n], ['ราคา (บาท)', p, 2 * p, 3 * p, '?']]), unit: 'บาท' }),
+      k1Num(`จ่ายเงิน ${p * (n + 1)} บาท ได้ดินสอกี่แท่ง`, n + 1, `back ${p}${n}`, 4, `${p * (n + 1)} ÷ ${p}`, { story: k1Tab([['จำนวน (แท่ง)', 1, 2, 3, '?'], ['ราคา (บาท)', p, 2 * p, 3 * p, p * (n + 1)]]), unit: 'แท่ง' }),
+      k1Num('ค่า ? ในตารางคือเท่าใด', s + 4 * d, `pat ${s}${d}`, 3, `เพิ่มขึ้นทีละ ${d}`, { story: k1Tab([['x', 1, 2, 3, 4, 5], ['y', s + d, s + 2 * d, s + 3 * d, '?', s + 5 * d]]) }),
+      k1Num('ค่า ? ในตารางคือเท่าใด', c * 2 - 1, `pat2 ${c}`, 5, 'y = 2x − 1', { story: k1Tab([['x', 1, 2, 3, c], ['y', 1, 3, 5, '?']]) }),
+      k1Opt('ตารางนี้ใช้กฎใด', [`y = ${d}x`, `y = x + ${d}`, `y = ${d}x + 1`, `y = x − ${d}`], `rule ${d}`, 5, 'ลองแทน x = 1 และ x = 2', { story: k1Tab([['x', 1, 2, 3, 4], ['y', d, 2 * d, 3 * d, 4 * d]]) }),
+      k1Num(`รูปสี่เหลี่ยมผืนผ้ากว้าง 3 ซม. ยาว ${c} ซม. ความยาวรอบรูปเท่าใด`, 2 * (3 + c), `peri ${c}`, 4, '2 × (กว้าง + ยาว)', { story: k1Tab([['ยาว (ซม.)', 1, 2, 3, c], ['ความยาวรอบรูป (ซม.)', 8, 10, 12, '?']]), unit: 'ซม.' }),
+      k1Num(`ค่าจอดรถชั่วโมงแรก 20 บาท ชั่วโมงต่อไปชั่วโมงละ 10 บาท จอด ${c} ชั่วโมง ต้องจ่ายกี่บาท`, 20 + 10 * (c - 1), `park ${c}`, 6, '20 + 10 × (ชั่วโมง − 1)', { story: k1Tab([['ชั่วโมง', 1, 2, 3, c], ['ค่าจอด (บาท)', 20, 30, 40, '?']]), unit: 'บาท' })]; }),
+
+  /* ---------- 8 ตาราง → กราฟ ---------- */
+  K1L(8, 'ลานตารางเป็นกราฟ', 'การเปลี่ยนตารางให้เป็นกราฟ', 'ตาราง → กราฟ', 'นำข้อมูลในตารางมาเขียนเป็นคู่อันดับ แล้วพล็อตหลายจุดบนระนาบ และตรวจสอบความถูกต้องของจุด', () => { const P = k1Plane({ xr: [-5, 5], yr: [-4, 4] }), m = k1Pk([1, 2]), b = k1Pk([-2, -1, 0, 1]), sh = m === 1 ? k1R(0, 1) : 0, xs = [-1, 0, 1].map(x => x + sh), T1 = xs.map(x => [x, m * x + b]), T2 = [[-3, 2], [0, -1], [2, 3]].map(([x, y]) => [x + k1R(-1, 1), y]), w = k1R(1, 3);
+    return [
+      k1Plot('แตะวางจุดทั้งหมดจากตาราง แล้วกดตรวจ', P, T1, `p3 ${T1}`, 4, 'อ่านทีละคอลัมน์เป็นคู่อันดับ', { side: k1Tab([['x', ...T1.map(p => p[0])], ['y', ...T1.map(p => p[1])]]) }),
+      k1Plot('แตะวางจุดทั้งหมดจากตาราง แล้วกดตรวจ', P, T2, `p3b ${T2}`, 5, 'อ่านทีละคอลัมน์เป็นคู่อันดับ', { side: k1Tab([['x', ...T2.map(p => p[0])], ['y', ...T2.map(p => p[1])]]) }),
+      k1Opt('คู่อันดับจากตารางข้อใด<b>ถูกต้อง</b>', [k1P(...T1[2]), k1P(T1[2][1], T1[2][0]), k1P(T1[2][0], T1[2][1] + 2), k1P(T1[2][0] - 1, T1[2][1]), k1P(T1[2][0] + 1, T1[2][1] + 1)].filter((x, i, A) => A.indexOf(x) === i && (i === 0 || x !== A[0])).slice(0, 4), `pair ${T1}`, 2, 'x กับ y ในคอลัมน์เดียวกัน', { story: k1Tab([['x', ...T1.map(p => p[0])], ['y', ...T1.map(p => p[1])]]) }),
+      k1Opt('จุดใด<b>ไม่ได้</b>มาจากตาราง', ['D', 'A', 'B', 'C'], `odd ${T2}`, 4, 'อ่านพิกัดของแต่ละจุด แล้วเทียบกับตาราง', { story: k1Tab([['x', ...T2.map(p => p[0])], ['y', ...T2.map(p => p[1])]]), fig: k1Svg(P, T2.map((p, k) => k1Dot(P, p[0], p[1], K1C.b, 'ABC'[k])).join('') + k1Dot(P, T2[0][1], T2[0][0], K1C.b, 'D')) }),
+      Q.k1Pick({ story: k1Tab([['x', 0, 1, 2, 3], ['y', 4, 3, 2, 1]]), q: 'จุดในกราฟใดตรงกับตาราง', figs: [k1Mini('down'), k1Mini('up'), k1Mini('flat'), k1Mini('upflat')], hint: 'x เพิ่ม y ลดลง', sig: 'pickd', diff: 4 }),
+      Q.k1Pick({ story: k1Tab([['x', 0, 1, 2, 3], ['y', 2, 2, 2, 2]]), q: 'จุดในกราฟใดตรงกับตาราง', figs: [k1Mini('flat'), k1Mini('up'), k1Mini('down'), k1Mini('zig')], hint: 'y เท่ากันทุกค่า', sig: 'pickf', diff: 3 }),
+      k1Plot(`แตะวางจุดจากตาราง: x = ${w}, ${w + 1} และ y = 2 ทั้งคู่`, P, [[w, 2], [w + 1, 2]], `two ${w}`, 3, 'y = 2 ทั้งสองจุด', { side: k1Tab([['x', w, w + 1], ['y', 2, 2]]) }),
+      k1Num('ถ้าพล็อตจุดจากตารางแล้ว จุดที่ x = 3 จะอยู่สูงจากแกน X กี่หน่วย', 7, 'up', 5, 'หา y เมื่อ x = 3', { story: k1Tab([['x', 1, 2, 3], ['y', 3, 5, 7]]) }),
+      k1TF('ตารางที่มี 4 คอลัมน์ เขียนกราฟได้ 4 จุด', true, '1 คอลัมน์ = 1 คู่อันดับ = 1 จุด', 2)]; }),
+
+  /* ---------- 9 อ่านและแปลความหมายกราฟ ---------- */
+  K1L(9, 'ท่าแปลกราฟ', 'การอ่านและแปลความหมายกราฟ', 'แปลความหมายกราฟ', 'บอกความหมายของจุดบนกราฟในสถานการณ์จริง อ่านค่ามากสุด น้อยสุด เปรียบเทียบ และวิเคราะห์การเปลี่ยนแปลงจากกราฟระยะทางกับเวลา', () => { const i = k1R(0, 2), d = K1_TRIP[i], f = k1TripFig(d), j = k1R(1, 5), st = d.p.findIndex((p, k) => k && p[1] === d.p[k - 1][1]);
+    return [
+      k1Num(`ชั่วโมงที่ ${d.p[j][0]} ${d.who}อยู่ห่างจากจุดเริ่มต้นกี่กิโลเมตร`, d.p[j][1], `read ${i}${j}`, 2, 'หาเวลาบนแกนนอน ขึ้นไปถึงเส้น', { fig: f, unit: 'กม.' }),
+      k1Opt(`จุด (${d.p[2][0]}, ${d.p[2][1]}) บนกราฟหมายความว่าอย่างไร`, [`ชั่วโมงที่ ${d.p[2][0]} อยู่ห่าง ${d.p[2][1]} กม.`, `ชั่วโมงที่ ${d.p[2][1]} อยู่ห่าง ${d.p[2][0]} กม.`, `ใช้น้ำมัน ${d.p[2][1]} ลิตร`, `ความเร็ว ${d.p[2][1]} กม. ต่อชั่วโมง`], `mean ${i}`, 3, 'ตัวหน้าคือเวลา ตัวหลังคือระยะทาง', { fig: f }),
+      k1Opt('ช่วงใดรถ<b>หยุดพัก</b>', [`ชั่วโมงที่ ${st - 1} ถึง ${st}`, ...[0, 1, 2, 3, 4].filter(k => k !== st - 1).slice(0, 3).map(k => `ชั่วโมงที่ ${k} ถึง ${k + 1}`)], `rest ${i}`, 4, 'เส้นแนวนอน = ระยะทางไม่เปลี่ยน', { fig: f }),
+      k1Num('เมื่อจบชั่วโมงที่ 5 รถอยู่ห่างจากจุดเริ่มต้นกี่กิโลเมตร', d.p[5][1], `end ${i}`, 2, 'จุดสุดท้ายของกราฟ', { fig: f, unit: 'กม.' }),
+      k1Num('ชั่วโมงแรก รถวิ่งได้กี่กิโลเมตร', d.p[1][1], `first ${i}`, 3, 'จาก 0 ถึง 1 ชั่วโมง', { fig: f, unit: 'กม.' }),
+      k1Num(`จากชั่วโมงที่ ${(st + 1) % 5} ถึง ${(st + 1) % 5 + 1} รถวิ่งได้กี่กิโลเมตร`, d.p[(st + 1) % 5 + 1][1] - d.p[(st + 1) % 5][1], `seg ${i}`, 5, 'ระยะหลัง − ระยะก่อน', { fig: f, unit: 'กม.' }),
+      k1Opt('ช่วงใดรถวิ่ง<b>เร็วที่สุด</b>', (() => { const seg = [0, 1, 2, 3, 4].map(k => [k, d.p[k + 1][1] - d.p[k][1]]), best = seg.reduce((a, b) => b[1] > a[1] ? b : a); return [`ชั่วโมงที่ ${best[0]} ถึง ${best[0] + 1}`, ...seg.filter(s => s[1] < best[1]).slice(0, 3).map(s => `ชั่วโมงที่ ${s[0]} ถึง ${s[0] + 1}`)]; })(), `fast ${i}`, 7, 'เส้นชันมากที่สุด = 1 ชั่วโมงไปได้ไกลที่สุด', { fig: f }),
+      k1TF('ถ้ากราฟระยะทางกับเวลาเป็นเส้นแนวนอน แปลว่ารถหยุดอยู่กับที่', true, '', 3),
+      k1Num('รถใช้เวลารวมกี่ชั่วโมงไปถึงระยะ 160 กม. ขึ้นไป (ตอบจำนวนเต็มชั่วโมงแรกที่ถึง)', d.p.findIndex(p => p[1] >= 160), `reach ${i}`, 6, 'หา 160 บนแกนตั้ง มองไปทางขวาจนถึงเส้น', { fig: f, unit: 'ชั่วโมง' })]; }),
+
+  /* ---------- 10 สร้างกราฟจากข้อมูล ---------- */
+  K1L(10, 'ลานสร้างกราฟ', 'การสร้างกราฟจากข้อมูลที่กำหนด', 'สร้างกราฟ', 'สร้างกราฟจากข้อมูล: วาดแกน กำหนดมาตราส่วน ชื่อแกนและหน่วย แล้วพล็อตจุดให้ถูกตำแหน่ง', () => { const P = k1Plane({ mode: 'q1', W: 360, H: 240, xr: [0, 5], yr: [0, 50], xs: 1, ys: 10, xt: 'สัปดาห์', yt: 'ความสูง (ซม.)' }), D = [[1, 10], [2, 20], [3, 30], [4, 40]].map(([x, y]) => [x, y + k1Pk([0, 10]) * (x > 2 ? 1 : 0)]), D2 = [[0, 10], [2, 30], [4, 50]], x1 = k1R(1, 5), y1 = k1R(1, 5) * 10;
+    return [
+      k1Plot('พล็อตความสูงของต้นกล้าจากตาราง แล้วกดตรวจ', P, D, `grow ${D}`, 5, 'แกนตั้งช่องละ 10 ซม.', { side: k1Tab([['สัปดาห์', ...D.map(p => p[0])], ['ความสูง (ซม.)', ...D.map(p => p[1])]]) }),
+      k1Plot(`แตะวางจุด (${x1}, ${y1}) บนกราฟนี้`, P, [x1, y1], `one ${x1}${y1}`, 3, `แกนตั้งช่องละ 10 → ${y1} คือ ${y1 / 10} ช่อง`),
+      k1Plot('พล็อตจุดจากตาราง แล้วกดตรวจ', P, D2, 'grow2', 4, 'สัปดาห์ที่ 0, 2, 4', { side: k1Tab([['สัปดาห์', 0, 2, 4], ['ความสูง (ซม.)', 10, 30, 50]]) }),
+      k1Opt('จะเขียนกราฟความสูงของต้นไม้ที่วัดทุกสัปดาห์ แกนนอนควรเป็นอะไร', ['เวลา (สัปดาห์)', 'ความสูง (ซม.)', 'ชื่อต้นไม้', 'สีของใบ'], 'xaxis', 2, 'แกนนอนมักเป็นตัวแปรต้น'),
+      k1Opt('ข้อมูลน้ำหนัก 35, 42, 48, 51 กก. ถ้าแกนตั้งมี 6 ช่อง เริ่มที่ 0 ควรใช้ช่องละเท่าใด', ['ช่องละ 10 กก.', 'ช่องละ 1 กก.', 'ช่องละ 2 กก.', 'ช่องละ 100 กก.'], 'scale', 4, '6 ช่องต้องไปถึง 51'),
+      k1TF('ชื่อแกนและหน่วยช่วยให้ผู้อ่านรู้ว่ากราฟแสดงอะไร', true, '', 2),
+      k1Opt('ข้อใดเป็นสิ่งที่<b>ต้องมี</b>ในกราฟที่ดี', ['ชื่อแกนและหน่วย', 'สีหลายสี', 'รูปการ์ตูน', 'ตัวเลขทุกค่าบนเส้น'], 'need', 2, 'ผู้อ่านต้องรู้ว่าแต่ละแกนคืออะไร'),
+      k1Num('ถ้าแกนตั้งช่องละ 25 จุดที่อยู่สูง 6 ช่องแทนค่าเท่าใด', 150, 'ch', 3, '25 × 6')]; }),
+
+  /* ---------- 11 เปรียบเทียบกราฟและแนวโน้ม ---------- */
+  K1L(11, 'ศาลาแนวโน้ม', 'การเปรียบเทียบกราฟและวิเคราะห์ข้อมูล', 'แนวโน้ม', 'บอกแนวโน้มของกราฟ (เพิ่มขึ้น ลดลง คงที่) เปรียบเทียบกราฟสองเส้น และเลือกกราฟที่ตรงกับสถานการณ์', () => { const P = k1Plane({ mode: 'q1', W: 360, H: 230, xr: [0, 6], yr: [0, 60], xs: 1, ys: 10, xt: 'เวลา (นาที)', yt: 'น้ำ (ลิตร)' }), a = k1Pk([10, 8]), b = k1Pk([5, 4]), f2 = k1Svg(P, k1Line(P, a, 0, K1C.p, 2.6, 'ถัง ก') + k1Line(P, b, 10, K1C.b, 2.6, 'ถัง ข'));
+    const x = [1, 2, 3, 4, 5].find(t => a * t >= b * t + 10);
+    return [
+      Q.k1Pick({ q: 'ค่อย ๆ เติมน้ำลงถังเปล่าด้วยก๊อกที่เปิดคงที่ กราฟปริมาณน้ำกับเวลาเป็นแบบใด', figs: [k1Mini('up'), k1Mini('down'), k1Mini('flat'), k1Mini('zig')], hint: 'น้ำเพิ่มขึ้นตลอดเวลา', sig: 'fill', diff: 2 }),
+      Q.k1Pick({ q: 'เทียนไขกำลังลุกไหม้ กราฟความยาวเทียนกับเวลาเป็นแบบใด', figs: [k1Mini('down'), k1Mini('up'), k1Mini('flat'), k1Mini('upflat')], hint: 'เทียนสั้นลงเรื่อย ๆ', sig: 'candle', diff: 2 }),
+      Q.k1Pick({ q: 'รถจอดนิ่งอยู่ที่ลานจอด กราฟระยะทางจากบ้านกับเวลาเป็นแบบใด', figs: [k1Mini('flat'), k1Mini('up'), k1Mini('down'), k1Mini('curve')], hint: 'ระยะทางไม่เปลี่ยน', sig: 'park', diff: 3 }),
+      Q.k1Pick({ q: 'ขวัญข้าวเดินไปโรงเรียน แล้วหยุดซื้อขนมที่ร้านระหว่างทาง แล้วเดินต่อ กราฟระยะทางกับเวลาเป็นแบบใด', figs: [k1Mini('stop'), k1Mini('up'), k1Mini('down'), k1Mini('upflat')], hint: 'ขึ้น → แนวนอน (หยุด) → ขึ้น', sig: 'walk', diff: 5 }),
+      k1Opt('ถังใดน้ำเพิ่มขึ้น<b>เร็วกว่า</b>', ['ถัง ก', 'ถัง ข', 'เร็วเท่ากัน', 'บอกไม่ได้'], `fast ${a}${b}`, 4, 'เส้นที่ชันกว่า', { fig: f2 }),
+      k1Num('นาทีที่ 0 ถัง ข มีน้ำกี่ลิตร', 10, `zero ${a}${b}`, 3, 'จุดเริ่มของเส้นถัง ข', { fig: f2, unit: 'ลิตร' }),
+      k1Num('นาทีที่เท่าใดถัง ก มีน้ำเท่ากับหรือมากกว่าถัง ข เป็นครั้งแรก', x, `meet ${a}${b}`, 7, 'หาจุดที่เส้นทั้งสองตัดกันหรือเส้น ก ขึ้นไปอยู่เหนือ', { fig: f2, unit: 'นาที' }),
+      k1Opt('กราฟของถัง ข มีแนวโน้มอย่างไร', ['เพิ่มขึ้น', 'ลดลง', 'คงที่', 'ขึ้นแล้วลง'], `trend ${a}${b}`, 2, 'ดูจากซ้ายไปขวา', { fig: f2 }),
+      k1TF('กราฟที่ชันกว่า แสดงว่าค่าเปลี่ยนเร็วกว่า', true, '', 3)]; }),
+
+  /* ---------- 12 ความสัมพันธ์ระหว่างตัวแปร ---------- */
+  K1L(12, 'ท่าความสัมพันธ์', 'เข้าใจความสัมพันธ์ระหว่างตัวแปร', 'ความสัมพันธ์', 'อธิบายว่าเมื่อตัวแปรหนึ่งเปลี่ยน อีกตัวแปรเปลี่ยนอย่างไร (เพิ่มขึ้น ลดลง คงที่) จากตารางและสถานการณ์', () => { const d = k1R(2, 6), s = k1R(20, 40), e = k1R(3, 5), c = k1R(5, 9);
+    const T = (ys) => k1Tab([['x', 1, 2, 3, 4], ['y', ...ys]]);
+    return [
+      k1Opt('เมื่อ x เพิ่มขึ้น y เป็นอย่างไร', ['เพิ่มขึ้น', 'ลดลง', 'คงที่', 'ไม่แน่นอน'], `inc ${d}`, 1, 'ดูค่า y จากซ้ายไปขวา', { story: T([d, 2 * d, 3 * d, 4 * d]) }),
+      k1Opt('เมื่อ x เพิ่มขึ้น y เป็นอย่างไร', ['ลดลง', 'เพิ่มขึ้น', 'คงที่', 'ไม่แน่นอน'], `dec ${s}`, 1, 'ดูค่า y จากซ้ายไปขวา', { story: T([s, s - e, s - 2 * e, s - 3 * e]) }),
+      k1Opt('เมื่อ x เพิ่มขึ้น y เป็นอย่างไร', ['คงที่', 'เพิ่มขึ้น', 'ลดลง', 'เพิ่มทีละ 1'], `const ${c}`, 2, 'y เท่ากันทุกค่า', { story: T([c, c, c, c]) }),
+      k1Num('เมื่อ x เพิ่มขึ้น 1 y เพิ่มขึ้นครั้งละเท่าใด', d, `step ${d}`, 3, 'y ตัวถัดไป − y ตัวก่อน', { story: T([d + 1, 2 * d + 1, 3 * d + 1, 4 * d + 1]) }),
+      k1Num('เมื่อ x เพิ่มขึ้น 1 y เปลี่ยนไปครั้งละเท่าใด (ลดลงตอบเป็นจำนวนลบ)', -e, `stepd ${e}`, 4, 'y ตัวถัดไป − y ตัวก่อน', { story: T([s, s - e, s - 2 * e, s - 3 * e]) }),
+      k1Opt('ยิ่งออกกำลังกายนาน พลังงานที่ใช้ไปเป็นอย่างไร', ['เพิ่มขึ้น', 'ลดลง', 'คงที่', 'เป็นศูนย์'], 'ex', 2, 'ใช้เวลามากขึ้น ใช้พลังงานมากขึ้น'),
+      k1Opt('ขับรถไปเรื่อย ๆ น้ำมันในถังเป็นอย่างไร', ['ลดลง', 'เพิ่มขึ้น', 'คงที่', 'เพิ่มแล้วลด'], 'fuel', 2, 'ใช้น้ำมันไปเรื่อย ๆ'),
+      k1Opt('ค่าสมาชิกรายเดือนของห้องสมุดเท่าเดิมไม่ว่ายืมหนังสือกี่เล่ม ค่าสมาชิกกับจำนวนเล่มสัมพันธ์กันแบบใด', ['คงที่', 'เพิ่มขึ้น', 'ลดลง', 'เพิ่มเป็น 2 เท่า'], 'flat', 3, 'จ่ายเท่าเดิม'),
+      k1Num('ถ้าความสัมพันธ์เป็นแบบนี้ต่อไป เมื่อ x = 6 y เท่ากับเท่าใด', 6 * d + 1, `next ${d}`, 6, 'เพิ่มครั้งละเท่ากัน', { story: T([d + 1, 2 * d + 1, 3 * d + 1, 4 * d + 1]) })]; }),
+
+  /* ---------- 13 ความสัมพันธ์เชิงเส้น ---------- */
+  K1L(13, 'ลานเส้นตรง', 'รู้จักความสัมพันธ์เชิงเส้น', 'เชิงเส้น', 'บอกได้ว่าข้อมูลมีความสัมพันธ์เชิงเส้นหรือไม่ จากตาราง คู่อันดับ และกราฟ (จุดเรียงเป็นแนวเส้นตรง y เปลี่ยนเท่ากันทุกครั้ง)', () => { const d = k1R(2, 4), b = k1R(0, 3);
+    const tb = ys => `x: 1, 2, 3, 4 · y: ${ys.join(', ')}`.replace(' · ', ' | ');
+    return [
+      k1Opt('ตารางใดมี<b>ความสัมพันธ์เชิงเส้น</b>', [tb([b + d, b + 2 * d, b + 3 * d, b + 4 * d]), tb([1, 4, 9, 16]), tb([2, 3, 5, 8]), tb([1, 2, 4, 8])], `tab ${d}${b}`, 3, 'y ต้องเพิ่มเท่ากันทุกครั้ง'),
+      Q.k1Pick({ q: 'กราฟใดแสดงความสัมพันธ์เชิงเส้น', figs: [k1Mini('up'), k1Mini('curve'), k1Mini('zig'), k1Mini('upflat')], hint: 'เป็นเส้นตรงเส้นเดียว', sig: 'graph', diff: 2 }),
+      Q.k1Pick({ q: 'กราฟใด<b>ไม่ใช่</b>ความสัมพันธ์เชิงเส้น', figs: [k1Mini('curve'), k1Mini('up'), k1Mini('down'), k1Mini('flat')], hint: 'เส้นโค้งไม่ใช่เส้นตรง', sig: 'notg', diff: 3 }),
+      k1TF(`จุด (1, ${d}), (2, ${2 * d}), (3, ${3 * d}) เรียงอยู่บนเส้นตรงเดียวกัน`, true, `y เพิ่มทีละ ${d} เท่ากัน`, 4),
+      k1TF('จุด (1, 1), (2, 4), (3, 9) เรียงอยู่บนเส้นตรงเดียวกัน', false, 'y เพิ่ม 3 แล้วเพิ่ม 5 ไม่เท่ากัน', 4),
+      k1Num('ค่า ? ที่ทำให้ตารางมีความสัมพันธ์เชิงเส้นคือเท่าใด', b + 3 * d, `fill ${d}${b}`, 5, `y เพิ่มทีละ ${d}`, { story: k1Tab([['x', 1, 2, 3, 4], ['y', b + d, b + 2 * d, '?', b + 4 * d]]) }),
+      k1Opt('ความสัมพันธ์เชิงเส้นมีลักษณะอย่างไร', ['x เพิ่มเท่ากัน y เปลี่ยนเท่ากันทุกครั้ง', 'y เพิ่มเป็น 2 เท่าทุกครั้ง', 'กราฟเป็นเส้นโค้ง', 'y ต้องเพิ่มขึ้นเสมอ'], 'what', 3, 'เส้นตรง = เปลี่ยนสม่ำเสมอ'),
+      k1Opt('ข้อใดเป็นความสัมพันธ์เชิงเส้น', ['ค่าแท็กซี่ = 35 + 5 × ระยะทาง', 'พื้นที่จัตุรัส = ด้าน × ด้าน', 'จำนวนแบคทีเรียเพิ่มเป็น 2 เท่าทุกชั่วโมง', 'ปริมาตรลูกบาศก์ = ด้าน × ด้าน × ด้าน'], 'sit', 6, 'ตัวแปรต้นไม่ได้คูณตัวเอง'),
+      k1TF('ความสัมพันธ์ที่ y ลดลงเท่ากันทุกครั้งก็เป็นความสัมพันธ์เชิงเส้น', true, 'เส้นตรงที่ลาดลง', 5)]; }),
+
+  /* ---------- 14 ตารางจากความสัมพันธ์เชิงเส้น ---------- */
+  K1L(14, 'ท่าแทนค่า', 'การสร้างตารางจากความสัมพันธ์เชิงเส้น', 'แทนค่า', 'หาค่า y เมื่อกำหนด x และหาค่า x เมื่อกำหนด y จากสมการเชิงเส้น เติมตาราง และตรวจว่าคู่อันดับเป็นไปตามสมการหรือไม่', () => { const m = k1Pk([2, 3, 4]), b = k1Pk([-3, -1, 1, 2, 5]), x = k1R(2, 6), xn = -k1R(1, 4), yv = m * k1R(2, 5) + b, m2 = k1Pk([-2, -3]), b2 = k1R(4, 9);
+    return [
+      k1Num(`ถ้า ${k1Eq(m, b)} เมื่อ x = ${x} แล้ว y เท่ากับเท่าใด`, m * x + b, `y ${m}${b}${x}`, 2, `${m} × ${x} ${b < 0 ? '−' : '+'} ${Math.abs(b)}`),
+      k1Num(`ถ้า ${k1Eq(m, b)} เมื่อ x = ${k1N(xn)} แล้ว y เท่ากับเท่าใด`, m * xn + b, `yn ${m}${b}${xn}`, 4, 'แทน x เป็นจำนวนลบ ระวังเครื่องหมาย'),
+      k1Num(`ถ้า ${k1Eq(m, b)} เมื่อ y = ${k1N(yv)} แล้ว x เท่ากับเท่าใด`, (yv - b) / m, `x ${m}${b}${yv}`, 5, 'แทน y แล้วแก้สมการหา x'),
+      k1Num('ค่า ? ในตารางคือเท่าใด', m * 3 + b, `tab ${m}${b}`, 3, 'แทน x = 3', { story: `${k1Eq(m, b)}<br>` + k1Tab([['x', 1, 2, 3], ['y', m + b, 2 * m + b, '?']]) }),
+      k1Num(`ถ้า ${k1Eq(m2, b2)} เมื่อ x = 3 แล้ว y เท่ากับเท่าใด`, m2 * 3 + b2, `yneg ${m2}${b2}`, 4, `${m2} × 3 + ${b2}`),
+      k1Num(`ใน ${k1Eq(m, b)} เมื่อ x เพิ่มขึ้น 1 y เพิ่มขึ้นเท่าใด`, m, `rate ${m}${b}`, 5, 'ลองแทน x = 1 และ x = 2'),
+      k1TF(`(2, ${2 * m + b}) เป็นคู่อันดับที่สอดคล้องกับ ${k1Eq(m, b)}`, true, '', 3),
+      k1TF(`(${2 * m + b}, 2) เป็นคู่อันดับที่สอดคล้องกับ ${k1Eq(m, b)}`, 2 === m * (2 * m + b) + b, 'แทน x เป็นตัวหน้า y เป็นตัวหลัง', 5),
+      k1Opt(`คู่อันดับใดสอดคล้องกับ ${k1Eq(m, b)}`, [k1P(1, m + b), k1P(m + b, 1), k1P(1, m - b), k1P(0, m)].filter((v, i, A) => A.indexOf(v) === i), `pick ${m}${b}`, 4, 'แทน x แล้วดูว่าได้ y ตรงกันไหม'),
+      k1Num(`สมการ y = 2x + 3 ถ้า y = ${2 * x + 3} แล้ว x เท่ากับเท่าใด`, x, `back2 ${x}`, 5, '2x + 3 = ' + (2 * x + 3))]; }),
+
+  /* ---------- 15 กราฟจากความสัมพันธ์เชิงเส้น ---------- */
+  K1L(15, 'ลานลากเส้น', 'การสร้างกราฟจากความสัมพันธ์เชิงเส้น', 'กราฟเส้นตรง', 'สร้างตารางจากสมการเชิงเส้น พล็อตจุด สังเกตว่าจุดเรียงเป็นแนวเส้นตรง แล้วลากเส้นตรงผ่านจุด เป็นกราฟของสมการ', () => { const P = k1Plane({ xr: [-5, 5], yr: [-4, 4] }), m = k1Pk([1, -1]), b = k1Pk([-1, 0, 1, 2]), pts = [-1, 0, 1].map(x => [x, m * x + b]), m2 = k1Pk([2, -2]), b2 = k1Pk([-1, 1]);
+    const lineFig = (mm, bb) => { const P2 = k1Plane({ W: 160, H: 130, xr: [-4, 4], yr: [-3, 3], nums: false }); return k1Svg(P2, k1Line(P2, mm, bb, K1C.b), 'k1mini'); };
+    return [
+      k1Plot(`พล็อตจุดของ ${k1Eq(m, b)} เมื่อ x = −1, 0, 1 แล้วกดตรวจ`, P, pts, `plot ${m}${b}`, 4, 'แทน x หา y ก่อน แล้วจึงวางจุด', { side: k1Tab([['x', -1, 0, 1], ['y', '?', '?', '?']]) }),
+      Q.k1Pick({ q: `กราฟใดเป็นกราฟของ ${k1Eq(m2, b2)}`, figs: [lineFig(m2, b2), lineFig(-m2, b2), lineFig(m2, -b2), lineFig(0, b2)], hint: `ตัดแกน Y ที่ ${b2} และ ${m2 > 0 ? 'ลาดขึ้น' : 'ลาดลง'}ไปทางขวา`, sig: `pick ${m2}${b2}`, diff: 6 }),
+      k1Opt(`จุดใดอยู่บนกราฟของ ${k1Eq(m, b)}`, [k1P(2, 2 * m + b), k1P(2, 2 * m + b + 1), k1P(2, 2 * m + b - 1), k1P(-2, 2 * m + b + 2)], `on ${m}${b}`, 4, 'แทนค่า x ดูว่าได้ y ตรงไหม'),
+      k1Opt('ทำไมจึงลากเส้นตรงผ่านจุดของ y = x + 1 ได้', ['ทุกค่า x (รวมทศนิยม) ให้ y ที่อยู่บนแนวเดียวกัน', 'เพราะมีแค่ 3 จุด', 'เพราะเส้นตรงสวยกว่า', 'เพราะ x เป็นจำนวนนับเท่านั้น'], 'why', 5, 'x = 0.5 ก็มีจุด (0.5, 1.5)'),
+      k1Num(`กราฟของ ${k1Eq(m, b)} ผ่านจุด (3, ?) ค่า ? คือเท่าใด`, 3 * m + b, `pass ${m}${b}`, 3, 'แทน x = 3'),
+      k1Num(`กราฟของ ${k1Eq(m2, b2)} ตัดแกน Y ที่ y เท่ากับเท่าใด`, b2, `yint ${m2}${b2}`, 4, 'แทน x = 0'),
+      k1TF('การเขียนกราฟเส้นตรง ใช้เพียง 2 จุดก็ลากเส้นได้ แต่ควรมีจุดที่ 3 ไว้ตรวจ', true, '', 3),
+      k1Plot(`พล็อตจุดของ y = 2x เมื่อ x = −1, 0, 2 แล้วกดตรวจ`, P, [[-1, -2], [0, 0], [2, 4]], 'plot2', 5, 'y = 2 × x', { side: k1Tab([['x', -1, 0, 2], ['y', '?', '?', '?']]) })]; }),
+
+  /* ---------- 16 ทิศทางและความชัน ---------- */
+  K1L(16, 'ท่าความชัน', 'เข้าใจทิศทางและความชันของเส้นตรง', 'ความชัน', 'บอกทิศทางของเส้นตรง (ลาดขึ้น ลาดลง แนวนอน) เปรียบเทียบความชัน และหาความชันจากกราฟหรือจากสองจุด = การเปลี่ยนแปลงของ y ÷ การเปลี่ยนแปลงของ x', () => { const P = k1Plane({ xr: [-5, 5], yr: [-4, 4] }), sl = k1Pk([[1, 0], [2, 0], [-1, 1], [-2, 1], [1, -1], [3, -2]]), [x1, y1] = [k1R(-3, 0), k1R(-3, 0)], dx = k1R(1, 4), dy = k1Pk([-6, -4, -3, -2, 2, 3, 4, 6]);
+    const g16 = k1G(Math.abs(dy), dx), ans16 = dy % dx === 0 ? dy / dx : `${dy < 0 ? '−' : ''}${Math.abs(dy) / g16}/${dx / g16}`;
+    return [
+      Q.k1Pick({ q: 'เส้นตรงใด<b>ลาดลง</b>ไปทางขวา', figs: [k1Mini('down'), k1Mini('up'), k1Mini('flat'), k1Mini('upslow')], hint: 'มองจากซ้ายไปขวา', sig: 'down', diff: 1 }),
+      Q.k1Pick({ q: 'เส้นตรงใด<b>ชันมากที่สุด</b>', figs: [k1Mini('upfast'), k1Mini('upslow'), k1Mini('flat'), k1Mini('up', { line: [0.3, 1] })], hint: 'ขึ้นสูงมากในระยะทางแนวนอนเท่ากัน', sig: 'steep', diff: 3 }),
+      k1Num('ความชันของเส้นตรงนี้คือเท่าใด', sl[0], `slope ${sl}`, 5, 'เลือกสองจุดบนเส้น: y เปลี่ยน ÷ x เปลี่ยน', { fig: k1Svg(P, k1Line(P, sl[0], sl[1]) + k1Dot(P, 0, sl[1], K1C.p) + k1Dot(P, 1, sl[0] + sl[1], K1C.p)) }),
+      k1Num(`ความชันของเส้นตรงที่ผ่านจุด ${k1P(x1, y1)} และ ${k1P(x1 + dx, y1 + dy)} คือเท่าใด (ตอบเป็นเศษส่วนได้)`, typeof ans16 === 'number' ? ans16 : ans16, `two ${x1}${y1}${dx}${dy}`, 7, 'ความชัน = (y ที่สอง − y ที่หนึ่ง) ÷ (x ที่สอง − x ที่หนึ่ง)'),
+      k1Opt('เส้นตรงแนวนอนมีความชันเท่าใด', ['0', '1', '−1', 'ไม่มีค่า'], 'flat', 2, 'y ไม่เปลี่ยนเลย'),
+      k1Opt('เส้นตรงที่ลาดลงไปทางขวามีความชันเป็นจำนวนแบบใด', ['จำนวนลบ', 'จำนวนบวก', 'ศูนย์', 'จำนวนคู่'], 'sign', 3, 'x เพิ่ม y ลด'),
+      k1Opt(`เส้นใดชันกว่า: y = ${sl[0] === 3 ? 2 : 3}x กับ y = x`, [`y = ${sl[0] === 3 ? 2 : 3}x`, 'y = x', 'ชันเท่ากัน', 'บอกไม่ได้'], 'cmp', 4, 'ความชันมากกว่า (ค่าสัมบูรณ์) ชันกว่า'),
+      k1Num(`ความชันของ ${k1Eq(sl[0], sl[1])} คือเท่าใด`, sl[0], `eq ${sl}`, 4, 'สัมประสิทธิ์หน้า x (เมื่อ y อยู่ข้างเดียว)'),
+      k1TF('เส้นตรงที่ความชันเป็น 3 ชันกว่าเส้นตรงที่ความชันเป็น 1', true, '', 3)]; }),
+
+  /* ---------- 17 สมการกับกราฟ ค่าตัดแกน ---------- */
+  K1L(17, 'ศาลาค่าตัดแกน', 'วิเคราะห์สมการและกราฟความสัมพันธ์เชิงเส้น', 'ค่าตัดแกน', 'เชื่อมสมการ ตาราง และกราฟ หาค่าตัดแกน X และค่าตัดแกน Y จากสมการและกราฟ เลือกสมการให้ตรงกับกราฟ และบอกว่ากราฟสองเส้นขนานหรือตัดกัน', () => { const P = k1Plane({ xr: [-5, 5], yr: [-4, 4] }), xi = k1Nz(-4, 4), m = k1Pk([1, 2, -1, -2]), yi = -m * xi, ok = Math.abs(yi) <= 4, X0 = ok ? xi : 2, M = ok ? m : -1, Y0 = -M * X0, a = k1Pk([2, 3]), c = a * k1Pk([2, 3]), mm = k1Pk([1, 2]), b1 = k1Pk([-2, -1]), b2 = k1Pk([1, 2]);
+    const f = k1Svg(P, k1Line(P, M, Y0) + k1Dot(P, X0, 0, K1C.p) + k1Dot(P, 0, Y0, K1C.g));
+    return [
+      k1Num('ค่าตัดแกน Y ของเส้นตรงนี้คือเท่าใด', Y0, `ygr ${M}${X0}`, 3, 'จุดที่เส้นตัดแกน Y (x = 0)', { fig: f }),
+      k1Num('ค่าตัดแกน X ของเส้นตรงนี้คือเท่าใด', X0, `xgr ${M}${X0}`, 3, 'จุดที่เส้นตัดแกน X (y = 0)', { fig: f }),
+      k1Num(`ค่าตัดแกน Y ของ y = ${a}x − ${c} คือเท่าใด`, -c, `yeq ${a}${c}`, 4, 'แทน x = 0'),
+      k1Num(`ค่าตัดแกน X ของ y = ${a}x − ${c} คือเท่าใด`, c / a, `xeq ${a}${c}`, 5, 'แทน y = 0 แล้วแก้สมการ'),
+      k1Opt('สมการใดเป็นสมการของเส้นตรงนี้', [k1Eq(M, Y0), k1Eq(-M, Y0), k1Eq(M, -Y0), k1Eq(Y0 || 1, M)].filter((v, i, A) => A.indexOf(v) === i), `which ${M}${X0}`, 6, 'ดูค่าตัดแกน Y และทิศทางของเส้น', { fig: f }),
+      k1Opt(`กราฟของ y = ${mm}x ${b1 < 0 ? '−' : '+'} ${Math.abs(b1)} กับ y = ${mm}x + ${b2} เป็นอย่างไร`, ['ขนานกัน', 'ตัดกันหนึ่งจุด', 'เป็นเส้นเดียวกัน', 'ตั้งฉากกันเสมอ'], `par ${mm}`, 5, 'ความชันเท่ากัน แต่ตัดแกน Y คนละที่'),
+      k1Opt('จุดตัดของเส้นตรงสองเส้นนี้อยู่ที่ใด', [k1P(1, 2), k1P(2, 1), k1P(0, 1), k1P(1, 0)], 'meet', 6, 'อ่านพิกัดของจุดที่เส้นทั้งสองพบกัน', { fig: k1Svg(P, k1Line(P, 1, 1, K1C.b) + k1Line(P, -1, 3, K1C.p)) }),
+      k1Opt(`กราฟของ y = 2x + 1 กับ y = −x + 1 เป็นอย่างไร`, ['ตัดกันที่ (0, 1)', 'ขนานกัน', 'ตัดกันที่ (1, 0)', 'เป็นเส้นเดียวกัน'], 'cut', 6, 'ความชันต่างกัน แต่ตัดแกน Y ที่เดียวกัน'),
+      k1TF('กราฟของ y = 3x − 2 ตัดแกน Y ที่จุด (0, −2)', true, '', 3)]; }),
+
+  /* ---------- 18 โจทย์ประยุกต์ ---------- */
+  K1L(18, 'ภารกิจปลายลำน้ำ', 'โจทย์ประยุกต์และภารกิจสุดท้าย', 'โจทย์ประยุกต์', 'วิเคราะห์สถานการณ์ในชีวิตประจำวัน สร้างตาราง สมการ และกราฟ แล้วใช้กราฟหรือสมการหาค่าที่ไม่ทราบ และเลือกกราฟให้ตรงกับสถานการณ์', () => { const st = k1Pk([35, 40]), r = k1Pk([5, 6, 8]), km = k1R(4, 9), sv = k1Pk([50, 100]), w0 = k1Pk([200, 300]), dr = k1Pk([20, 25]);
+    const P = k1Plane({ mode: 'q1', W: 360, H: 230, xr: [0, 8], yr: [0, 400], xs: 1, ys: 50, yl: 100, xt: 'เดือน', yt: 'เงินออม (บาท)', padL: 48 }), f = k1Svg(P, k1Line(P, sv, 0, K1C.g));
+    return [
+      k1Num(`ค่าแท็กซี่เริ่มต้น ${st} บาท และกิโลเมตรละ ${r} บาท นั่งไป ${km} กิโลเมตร ต้องจ่ายกี่บาท`, st + r * km, `taxi ${st}${r}${km}`, 3, `${st} + ${r} × ${km}`, { unit: 'บาท' }),
+      k1Opt(`ค่าแท็กซี่เริ่มต้น ${st} บาท และกิโลเมตรละ ${r} บาท เขียนสมการได้ตามข้อใด (y = ค่าโดยสาร x = ระยะทาง)`, [`y = ${st} + ${r}x`, `y = ${r} + ${st}x`, `y = ${st + r}x`, `y = ${st}x − ${r}`], `taxieq ${st}${r}`, 4, 'ค่าเริ่มต้นจ่ายครั้งเดียว'),
+      k1Num(`จ่ายค่าแท็กซี่ ${st + r * (km + 2)} บาท นั่งไปกี่กิโลเมตร`, km + 2, `taxiback ${st}${r}${km}`, 6, `(${st + r * (km + 2)} − ${st}) ÷ ${r}`, { unit: 'กม.' }),
+      k1Num(`ออมเงินเดือนละ ${sv} บาท เดือนที่ 3 มีเงินออมกี่บาท`, 3 * sv, `save ${sv}`, 2, 'อ่านจากกราฟที่เดือน 3', { fig: f, unit: 'บาท' }),
+      k1Num(`ต้องออมกี่เดือนจึงมีเงิน ${sv * 6} บาท`, 6, `saveb ${sv}`, 4, 'หาค่าบนแกนตั้ง แล้วมองไปที่เส้น', { fig: f, unit: 'เดือน' }),
+      k1Num(`ถังมีน้ำ ${w0} ลิตร ปล่อยน้ำออกนาทีละ ${dr} ลิตร ผ่านไป 4 นาที เหลือน้ำกี่ลิตร`, w0 - 4 * dr, `tank ${w0}${dr}`, 4, `${w0} − ${dr} × 4`, { unit: 'ลิตร' }),
+      k1Num(`ถังมีน้ำ ${w0} ลิตร ปล่อยน้ำออกนาทีละ ${dr} ลิตร กี่นาทีน้ำจึงหมดถัง`, w0 / dr, `empty ${w0}${dr}`, 6, 'ค่าตัดแกน X: น้ำ = 0', { unit: 'นาที' }),
+      Q.k1Pick({ q: 'ถังมีน้ำเต็ม แล้วปล่อยน้ำออกคงที่จนหมด กราฟปริมาณน้ำกับเวลาเป็นแบบใด', figs: [k1Mini('down'), k1Mini('up'), k1Mini('flat'), k1Mini('downflat')], hint: 'ลดลงเท่า ๆ กันจนเป็นศูนย์', sig: 'tankg', diff: 3 }),
+      k1Opt('ค่าโทรศัพท์แบบ ก 100 บาท + นาทีละ 1 บาท แบบ ข นาทีละ 2 บาท ถ้าโทร 150 นาที แบบใดถูกกว่า', ['แบบ ก', 'แบบ ข', 'เท่ากัน', 'บอกไม่ได้'], 'plan', 7, 'ก = 100 + 150 = 250 ข = 2 × 150 = 300'),
+      k1Num('ค่าโทรศัพท์แบบ ก 100 บาท + นาทีละ 1 บาท แบบ ข นาทีละ 2 บาท โทรกี่นาทีค่าโทรสองแบบเท่ากัน', 100, 'equal', 8, '100 + x = 2x', { unit: 'นาที' })]; })
+];
+const k1G = (a, b) => b ? k1G(b, a % b) : a;
+/* ---------- boss 2819: ข้อสอบท้ายบท 20 ข้อ (แต่งใหม่ทั้งหมด) ---------- */
+const EXAM_M1C8 = xrot([
+  { q: 'จุด (−3, 5) อยู่ในจตุภาคใด', opts: ['จตุภาคที่ 2', 'จตุภาคที่ 1', 'จตุภาคที่ 3', 'จตุภาคที่ 4'], a: 0, lv: 2802 },
+  { q: 'จุด (0, −6) อยู่ที่ใด', opts: ['บนแกน Y', 'บนแกน X', 'จตุภาคที่ 4', 'จุดกำเนิด'], a: 0, lv: 2802 },
+  { q: 'สมาชิกตัวที่สองของคู่อันดับ (9, −4) คือข้อใด', opts: ['−4', '9', '5', '−9'], a: 0, lv: 2804 },
+  { q: 'ถ้า (a − 3, 8) = (5, b + 2) แล้ว a + b เท่ากับข้อใด', opts: ['14', '8', '2', '16'], a: 0, lv: 2804 },
+  { q: 'แกนตั้งของกราฟเขียนตัวเลข 0, 15, 30, 45 ทุกขีด จุดที่อยู่สูง 5 ขีดแทนค่าเท่าใด', opts: ['75', '50', '60', '90'], a: 0, lv: 2803 },
+  { q: 'จากจุดกำเนิด เดินไปทางซ้าย 2 หน่วย แล้วลงไป 5 หน่วย ถึงจุดใด', opts: ['(−2, −5)', '(−5, −2)', '(2, −5)', '(−2, 5)'], a: 0, lv: 2805 },
+  { q: 'สี่เหลี่ยมจัตุรัส ABCD มี A(1, 1) B(4, 1) C(4, 4) จุด D อยู่ที่ใด', opts: ['(1, 4)', '(4, 1)', '(4, 7)', '(−1, 4)'], a: 0, lv: 2806 },
+  { q: 'สมุดเล่มละ 18 บาท ราคาที่ต้องจ่ายเมื่อซื้อ 7 เล่มคือข้อใด', opts: ['126 บาท', '108 บาท', '25 บาท', '144 บาท'], a: 0, lv: 2807 },
+  { q: 'ตาราง x: 1, 2, 3, 4 และ y: 7, 10, 13, ? ค่า ? คือข้อใด', opts: ['16', '15', '17', '19'], a: 0, lv: 2807 },
+  { q: 'กราฟระยะทางกับเวลาช่วงที่เป็นเส้นแนวนอน หมายความว่าอย่างไร', opts: ['หยุดอยู่กับที่', 'เคลื่อนที่เร็วที่สุด', 'กำลังเดินกลับ', 'ความเร็วเพิ่มขึ้น'], a: 0, lv: 2809 },
+  { q: 'เติมน้ำลงถังด้วยอัตราคงที่ ปริมาณน้ำกับเวลามีความสัมพันธ์แบบใด', opts: ['เพิ่มขึ้นเป็นเส้นตรง', 'ลดลงเป็นเส้นตรง', 'คงที่', 'เพิ่มแล้วลด'], a: 0, lv: 2811 },
+  { q: 'ข้อมูลในข้อใดมีความสัมพันธ์แบบเชิงเส้น', opts: ['x: 1, 2, 3 | y: 4, 7, 10', 'x: 1, 2, 3 | y: 1, 4, 9', 'x: 1, 2, 3 | y: 2, 4, 8', 'x: 1, 2, 3 | y: 5, 6, 8'], a: 0, lv: 2813 },
+  { q: 'ถ้า y = 6x − 7 เมื่อ x = −2 แล้ว y เท่ากับข้อใด', opts: ['−19', '−5', '5', '19'], a: 0, lv: 2814 },
+  { q: 'ถ้า y = 3x + 2 เมื่อ y = 20 แล้ว x เท่ากับข้อใด', opts: ['6', '62', '18', '7'], a: 0, lv: 2814 },
+  { q: 'จุดใดอยู่บนกราฟของ y = −2x + 5', opts: ['(3, −1)', '(−1, 3)', '(3, 1)', '(2, −1)'], a: 0, lv: 2815 },
+  { q: 'ความชันของเส้นตรงที่ผ่านจุด (1, 2) และ (3, 8) คือข้อใด', opts: ['3', '6', '2', '1/3'], a: 0, lv: 2816 },
+  { q: 'เส้นตรงที่ลาดลงไปทางขวามีความชันเป็นอย่างไร', opts: ['เป็นจำนวนลบ', 'เป็นจำนวนบวก', 'เป็นศูนย์', 'มากกว่า 1 เสมอ'], a: 0, lv: 2816 },
+  { q: 'ค่าตัดแกน X ของกราฟ y = 2x − 8 คือข้อใด', opts: ['4', '−8', '8', '−4'], a: 0, lv: 2817 },
+  { q: 'กราฟของ y = 3x + 1 กับ y = 3x − 4 เป็นอย่างไร', opts: ['ขนานกัน', 'ตัดกันที่จุดกำเนิด', 'เป็นเส้นเดียวกัน', 'ตัดกันที่ (0, 1)'], a: 0, lv: 2817 },
+  { q: 'ค่าเช่าจักรยาน 20 บาท บวกชั่วโมงละ 15 บาท จ่าย 95 บาท เช่ากี่ชั่วโมง', opts: ['5 ชั่วโมง', '6 ชั่วโมง', '7 ชั่วโมง', '4 ชั่วโมง'], a: 0, lv: 2818 }
+], 3);
+LESSONS_M1C8.push({ id: 2819, boss: true, place: 'วังจระเข้กราฟ', title: 'ด่านบอส: ม.1 บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น', short: 'ด่านบอส · ข้อสอบ', tone: 'jade',
+  goal: 'ตอบคำถามเรื่องกราฟและความสัมพันธ์เชิงเส้น 20 ข้อ ตอบถูก 16 ข้อขึ้นไปเพื่อชนะจระเข้กราฟ',
+  exam: EXAM_M1C8, pass: 16, bossName: 'จระเข้กราฟ', bossPal: 'jade', emblem: 'xy', bossKind: 'croc',
+  winLine: 'ชนะจระเข้กราฟแล้ว! อ่านกราฟ พล็อตจุด และหาความชันได้คล่องมาก', loseLine: 'จระเข้กราฟยังเฝ้าวังน้ำอยู่ ลองทวนคู่อันดับ กราฟเส้นตรง และความชันอีกนิดแล้วมาสู้ใหม่นะ!' });
+
+/* =========================================================
+   ม.1 บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น — หน้าสอน (v273 · ผู้ใช้ขอ) · prefix k1d
+   ประเด็นละหน้า: ① ดูภาพ = กระดานครูสอน (d1dBoard: ขึ้นทีละขั้น รอแตะ / Space / ถัดไป)
+   → ลงมือเอง (ลากจุดบนระนาบ ลากจุดดูความชัน — tgScene) → ② ทำให้ดู (r4dShow ดินสอทีละขั้น + โน้ตข้าง ๆ)
+   → ③ ลองทำ (ข้อจากเกมของด่านนั้นเอง เลือกด้วย sig — e1dTry) · ใช้ระนาบ k1Plane จาก m1k.js
+   ========================================================= */
+const k1dB = (title, beats, fin, o = {}) => d1dBoard(title, { W: o.W || 400, H: o.H || 240, beats, fin });
+const k1dTry = (id, sigs, title) => e1dTry(id, sigs, title);
+const k1dPl = (o = {}) => k1Plane({ W: 400, H: 240, xr: [-5, 5], yr: [-4, 4], ...o });
+const k1dArrow = (x1, y1, x2, y2, col = K1C.o) => `<path d="M${a4n(x1)} ${a4n(y1)} L${a4n(x2)} ${a4n(y2)}" stroke="${col}" stroke-width="3" fill="none" stroke-linecap="round"/>` + (() => { const L = Math.hypot(x2 - x1, y2 - y1) || 1, u = [(x2 - x1) / L, (y2 - y1) / L], v = [-u[1], u[0]]; return `<path d="M${a4n(x2 - u[0] * 9 + v[0] * 5)} ${a4n(y2 - u[1] * 9 + v[1] * 5)} L${a4n(x2)} ${a4n(y2)} L${a4n(x2 - u[0] * 9 - v[0] * 5)} ${a4n(y2 - u[1] * 9 - v[1] * 5)}" stroke="${col}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`; })();
+const k1dWalk = (P, x, y, col = K1C.o) => k1dArrow(P.X(0), P.Y(0), P.X(x), P.Y(0), col) + (y ? k1dArrow(P.X(x), P.Y(0), P.X(x), P.Y(y), K1C.g) : '');
+const k1dBox = (x, y, w, hh, t, col = K1C.b, fill = '#fff') => `<rect x="${a4n(x)}" y="${a4n(y)}" width="${w}" height="${hh}" rx="8" fill="${fill}" stroke="${col}" stroke-width="2"/>` + k1T(x + w / 2, y + hh / 2 + 6, t, col, 'k1l');
+/* a table drawn in svg (for boards / pencil pages): rows = [['x', 1, 2], ['y', 3, 5]] · cols shown up to k */
+const k1dTab = (x, y, rows, cw = 44, rh = 30, show = 99, col = K1C.ink) => { let s = ''; rows.forEach((r, i) => r.forEach((c, j) => { if (j > show) return; s += `<rect x="${x + (j ? 70 + (j - 1) * cw : 0)}" y="${y + i * rh}" width="${j ? cw : 70}" height="${rh}" fill="${j ? '#fff' : '#F1EEFA'}" stroke="${K1C.fade}" stroke-width="1.4"/>` + k1T(x + (j ? 70 + (j - 1) * cw + cw / 2 : 35), y + i * rh + rh / 2 + 6, typeof c === 'number' ? k1N(c) : c, col, 'k1l'); })); return s; };
+const k1dCell = (x, y, j, i, t, col = K1C.p, cw = 44, rh = 30) => k1T(x + 70 + (j - 1) * cw + cw / 2, y + i * rh + rh / 2 + 6, t, col, 'k1l');
+
+const K1D_TEACH = {
+  /* ด่าน 1 ความหมายของกราฟ */
+  2801: L => { const d = K1_TEMP[0], P = k1Plane({ mode: 'q1', W: 400, H: 240, xr: [6, 12], yr: [18, 36], xs: 1, ys: 2, yl: 4, xt: 'เวลา (นาฬิกา)', yt: 'อุณหภูมิ (°C)' }), pts = d.t.map((t, i) => [t, d.v[i]]);
+    return [
+      k1dB('กราฟคืออะไร', [[P.s, 'กราฟแสดง<b>ความเกี่ยวข้องของปริมาณสองชุด</b> บนแกนสองแกน'], [k1T(200, 236, 'แกนนอน', K1C.v, 'k1ax'), 'แกนนอนคือ <b>เวลา</b> (นาฬิกา)'], [k1T(60, 40, 'แกนตั้ง', K1C.v, 'k1ax', 'start'), 'แกนตั้งคือ <b>อุณหภูมิ</b> (องศาเซลเซียส)'],
+        [k1Poly(P, pts), 'จุดแต่ละจุดคือ (เวลา, อุณหภูมิ) แล้วลากเส้นเชื่อม'], [k1Proj(P, 10, 32) + k1Dot(P, 10, 32, K1C.p, '(10, 32)'), 'อ่านค่า: 10.00 น. อุณหภูมิ <b>32 °C</b>'], [k1dArrow(P.X(6.3), P.Y(23), P.X(9.6), P.Y(33), K1C.g), 'เส้นขึ้น = อุณหภูมิ<b>เพิ่มขึ้น</b> เห็นแนวโน้มได้ทันที']],
+        `กราฟบอก<b>ค่า</b>และ<b>การเปลี่ยนแปลง</b>ได้ในภาพเดียว`),
+      k1dTry(2801, ['what', 'read', 'max', 'min'], 'อ่านกราฟ'),
+      r4dShow('อ่านค่าจากกราฟ', { W: 400, H: 240, fig: P.s + k1Poly(P, pts), q: 'เวลา 9.00 น. อุณหภูมิกี่องศาเซลเซียส',
+        steps: [{ ink: `<path d="M${a4n(P.X(9))} ${a4n(P.Y(18))} V${a4n(P.Y(30))}" stroke="${K1C.p}" stroke-width="2.4" stroke-dasharray="5 4"/>`, w: 'หา 9 บนแกนนอน ขึ้นไป', n: 'ลากขึ้นจนชนเส้นกราฟ' },
+          { ink: k1Dot(P, 9, 30, K1C.p), w: 'ชนเส้นตรงนี้', n: 'จุดบนกราฟ' }, { ink: `<path d="M${a4n(P.X(9))} ${a4n(P.Y(30))} H${a4n(P.X(6))}" stroke="${K1C.p}" stroke-width="2.4" stroke-dasharray="5 4"/>` + k1T(P.X(6) - 6, P.Y(30) + 5, '30', K1C.p, 'k1l', 'end'), w: 'มองไปทางซ้าย อ่านแกนตั้ง', n: 'ได้ 30' }, { w: '9.00 น. อุณหภูมิ 30 °C', n: 'ตอบพร้อมหน่วย', ans: 1 }],
+        fin: `หาค่าบนแกนนอน → ขึ้นถึงเส้น → มองไป<b>อ่านแกนตั้ง</b>`, say: 'หาค่าบนแกนนอน ขึ้นถึงเส้น แล้วมองไปอ่านแกนตั้ง' }),
+      k1dTry(2801, ['chg', 'rise', 'tab', 'which', 'why'], 'การเปลี่ยนแปลงบนกราฟ')]; },
+
+  /* ด่าน 2 แกนและระบบพิกัดฉาก */
+  2802: L => { const P = k1dPl(), q = [[3, 3, 'จตุภาคที่ 1'], [-3, 3, 'จตุภาคที่ 2'], [-3, -3, 'จตุภาคที่ 3'], [3, -3, 'จตุภาคที่ 4']];
+    return [
+      k1dB('ระบบพิกัดฉาก', [[P.s, 'เส้นจำนวน 2 เส้นตั้งฉากกัน = <b>ระบบพิกัดฉาก</b>'], [k1T(P.X(5) + 4, P.Y(0) + 24, 'แกน X', K1C.o, 'k1l', 'end') + `<path d="M${a4n(P.X(-5))} ${a4n(P.Y(0))} H${a4n(P.X(5))}" stroke="${K1C.o}" stroke-width="4" opacity=".5"/>`, 'เส้นนอนคือ <b>แกน X</b>'], [k1T(P.X(0) + 30, P.Y(4) + 6, 'แกน Y', K1C.g, 'k1l', 'start') + `<path d="M${a4n(P.X(0))} ${a4n(P.Y(-4))} V${a4n(P.Y(4))}" stroke="${K1C.g}" stroke-width="4" opacity=".5"/>`, 'เส้นตั้งคือ <b>แกน Y</b>'],
+        [k1Dot(P, 0, 0, K1C.p, 'จุดกำเนิด (0, 0)', 8, 18, 7), 'จุดที่แกนตัดกันคือ <b>จุดกำเนิด</b> (0, 0)'], [k1T(P.X(3.5), P.Y(0) - 8, 'บวก →', K1C.b, 'k1l') + k1T(P.X(-3.5), P.Y(0) - 8, '← ลบ', K1C.p, 'k1l') + k1T(P.X(0) - 10, P.Y(3), 'บวก', K1C.b, 'k1l', 'end') + k1T(P.X(0) - 10, P.Y(-3), 'ลบ', K1C.p, 'k1l', 'end'), 'ขวาและขึ้นเป็น<b>บวก</b> ซ้ายและลงเป็น<b>ลบ</b>']],
+        `แกน X (นอน) · แกน Y (ตั้ง) · ตัดกันที่จุดกำเนิด (0, 0)`.replace(/ · /g, ', ')),
+      k1dB('สี่จตุภาค', [[P.s, 'แกนทั้งสองแบ่งระนาบออกเป็น <b>4 ส่วน</b>'], ...q.map(([x, y, t], i) => [`<rect x="${a4n(Math.min(P.X(0), P.X(x * 1.6)))}" y="${a4n(Math.min(P.Y(0), P.Y(y * 1.3)))}" width="${a4n(Math.abs(P.X(x * 1.6) - P.X(0)))}" height="${a4n(Math.abs(P.Y(y * 1.3) - P.Y(0)))}" fill="${['#DCEBFA', '#FDE2EA', '#FFF1D6', '#D4F1E2'][i]}" opacity=".7"/>` + k1T(P.X(x), P.Y(y) + 6, t, K1C.ink, 'k1l'), ['ขวาบน = <b>จตุภาคที่ 1</b> (x บวก, y บวก)', 'ซ้ายบน = <b>จตุภาคที่ 2</b> (x ลบ, y บวก)', 'ซ้ายล่าง = <b>จตุภาคที่ 3</b> (x ลบ, y ลบ)', 'ขวาล่าง = <b>จตุภาคที่ 4</b> (x บวก, y ลบ)'][i]])],
+        'นับจตุภาค<b>ทวนเข็มนาฬิกา</b> เริ่มจากขวาบน · จุดบนแกนไม่อยู่ในจตุภาคใด'.replace(' · ', ' ')),
+      k1dTry(2802, ['origin', 'yaxis', 'quadf', 'q3pos'], 'แกน จตุภาค'),
+      r4dShow('จุด (−3, 2) อยู่ที่ใด', { W: 400, H: 240, fig: P.s, q: 'จุด (−3, 2) อยู่ในจตุภาคใด',
+        steps: [{ w: 'x = −3 เป็นลบ', n: 'ลบ = ทางซ้าย' }, { w: 'y = 2 เป็นบวก', wa: 1, n: 'บวก = ข้างบน' }, { ink: k1dWalk(P, -3, 2) + k1Dot(P, -3, 2, K1C.p, '(−3, 2)', -8), w: 'ซ้ายบน', n: 'เดินดูจริง' }, { w: 'จตุภาคที่ 2', n: 'ซ้ายบน = จตุภาคที่ 2', ans: 1 }],
+        fin: `ดู<b>เครื่องหมาย</b>ของ x และ y ก่อน แล้วจึงบอกจตุภาค`, say: 'ดูเครื่องหมายของ x และ y ก่อน แล้วจึงบอกจตุภาค' }),
+      k1dTry(2802, ['quad', 'sign', 'onY', 'onX', 'neg'], 'จุดอยู่ที่ใด')]; },
+
+  /* ด่าน 3 อ่านค่าและระยะบนแกน */
+  2803: L => { const ax = (s0, st, y, lab) => { const X = j => 40 + j * 40; let s = `<path d="M30 ${y} H${X(8) + 14}" stroke="${K1C.ink}" stroke-width="2.4"/>`; for (let j = 0; j <= 8; j++) s += `<path d="M${X(j)} ${y - 7} V${y + 7}" stroke="${K1C.ink}" stroke-width="1.8"/>` + (lab(j) != null ? k1T(X(j), y + 26, lab(j), K1C.ink, 'k1n') : ''); return { s, X }; };
+    const A = ax(0, 5, 70, j => j % 2 ? null : String(j * 5)), B = ax(40, 5, 180, j => j % 2 ? null : String(40 + j * 5));
+    return [
+      k1dB('ช่องละกี่หน่วย', [[A.s, 'แกนนี้เขียนตัวเลข<b>ทุก 2 ช่อง</b>'], [k1dArrow(A.X(0), 40, A.X(2), 40, K1C.o) + k1T(A.X(1), 32, '10', K1C.o, 'k1l'), 'จาก 0 ถึง 10 มี 2 ช่อง'], [k1T(A.X(1), 96, '5', K1C.p, 'k1l') + k1T(A.X(3), 96, '15', K1C.p, 'k1l'), '10 ÷ 2 = <b>ช่องละ 5</b> ขีดที่ไม่มีเลขคือ 5, 15, …'],
+        [B.s, 'แกนที่<b>ไม่เริ่มจาก 0</b> ก็อ่านแบบเดียวกัน'], [`<circle cx="${B.X(3)}" cy="180" r="8" fill="${K1C.p}" stroke="#fff" stroke-width="2"/>` + k1T(B.X(3), 160, '55', K1C.p, 'k1l'), 'จุดนี้อยู่ 3 ช่องจาก 40 → 40 + 3 × 5 = <b>55</b>']],
+        `หาว่า<b>ช่องละเท่าใด</b>ก่อน แล้วนับช่องจากตัวเลขที่รู้`),
+      k1dTry(2803, ['step', 'q', 'dot'], 'อ่านค่าบนแกน'),
+      r4dShow('อ่านค่าจุดบนแกน', { W: 400, H: 140, fig: ax(0, 10, 70, j => j % 2 ? null : String(j * 10)).s + `<circle cx="${40 + 5.5 * 40}" cy="70" r="8" fill="${K1C.p}" stroke="#fff" stroke-width="2"/>`, q: 'จุดสีชมพูแทนจำนวนใด',
+        steps: [{ w: '0 → 20 มี 2 ช่อง', n: 'ช่องละ 10' }, { ink: k1T(40 + 5 * 40, 50, '50', K1C.o, 'k1l'), w: 'ขีดที่ 5 คือ 50', n: 'นับช่อง' }, { ink: k1T(40 + 5.5 * 40, 104, '55', K1C.g, 'k1l'), w: 'กึ่งกลางช่องถัดไป = 50 + 5', n: 'ครึ่งช่อง = 5' }, { w: '= 55', n: '', ans: 1 }],
+        fin: `ครึ่งช่อง = <b>ครึ่งหนึ่งของช่องละ</b>`, say: 'ครึ่งช่องคือครึ่งหนึ่งของค่าช่องละ' }),
+      k1dTry(2803, ['start', 'half', 'pick', 'pick2', 'count'], 'มาตราส่วน')]; },
+
+  /* ด่าน 4 คู่อันดับ */
+  2804: L => { const P = k1dPl();
+    return [
+      k1dB('คู่อันดับ (x, y)', [[k1dBox(140, 30, 120, 50, '(x, y)', K1C.ink), 'คู่อันดับเขียนเป็น <b>(x, y)</b>'], [k1dArrow(165, 84, 120, 120, K1C.o) + k1dBox(40, 120, 120, 40, 'ตัวที่หนึ่ง', K1C.o), 'x อยู่หน้า = <b>สมาชิกตัวที่หนึ่ง</b>'], [k1dArrow(235, 84, 280, 120, K1C.g) + k1dBox(240, 120, 120, 40, 'ตัวที่สอง', K1C.g), 'y อยู่หลัง = <b>สมาชิกตัวที่สอง</b>'],
+        [k1T(200, 200, '(2, 3)  ≠  (3, 2)', K1C.p, 'k1big'), '<b>ลำดับสำคัญ</b> (2, 3) กับ (3, 2) เป็นคนละคู่']], `ตัวหน้าคือ x ตัวหลังคือ y สลับกันไม่ได้`),
+      k1dB('(2, 3) กับ (3, 2) อยู่คนละที่', [[P.s, 'ลองวางทั้งสองคู่บนระนาบ'], [k1dWalk(P, 2, 3) + k1Dot(P, 2, 3, K1C.p, '(2, 3)'), '(2, 3): ขวา 2 ขึ้น 3'], [k1dWalk(P, 3, 2, K1C.b) + k1Dot(P, 3, 2, K1C.b, '(3, 2)'), '(3, 2): ขวา 3 ขึ้น 2']], 'คนละตำแหน่ง → <b>คนละคู่อันดับ</b>'),
+      k1dTry(2804, ['first', 'second', 'sit', 'tab', 'sit2'], 'สมาชิกของคู่อันดับ'),
+      r4dShow('คู่อันดับที่เท่ากัน', e1dEq([{ e: '(a~+~3,~5) = (8,~b~−~2)' }, { e: 'a + 3 = !8', w: 'ตัวที่หนึ่งเท่ากัน', n: 'จับคู่ตัวหน้า' }, { e: 'a = *5', w: 'a = 5', n: '8 − 3' }, { e: 'b − 2 = !5', w: 'ตัวที่สองเท่ากัน', n: 'จับคู่ตัวหลัง' }, { e: 'b = *7', w: 'b = 7', n: '5 + 2', ans: 1 }],
+        { q: 'ถ้า (a + 3, 5) = (8, b − 2) จงหา a และ b', fin: `คู่อันดับเท่ากัน เมื่อ<b>ตัวที่หนึ่งเท่ากัน และตัวที่สองเท่ากัน</b>`, say: 'คู่อันดับเท่ากันเมื่อตัวที่หนึ่งเท่ากันและตัวที่สองเท่ากัน' })),
+      k1dTry(2804, ['eqa', 'eqb', 'sum', 'eqxy'], 'หาค่าจากคู่อันดับ')]; },
+
+  /* ด่าน 5 ระบุตำแหน่งจุด */
+  2805: L => { const P = k1dPl();
+    return [
+      k1dB('พล็อตจุด (3, 2)', [[P.s, 'เริ่มที่ <b>จุดกำเนิด</b> เสมอ'], [k1dArrow(P.X(0), P.Y(0), P.X(3), P.Y(0)), 'x = 3 → เดินตาม<b>แกน X</b> ไปทางขวา 3 ช่อง'], [k1dArrow(P.X(3), P.Y(0), P.X(3), P.Y(2), K1C.g), 'y = 2 → ขึ้นไป 2 ช่อง'], [k1Dot(P, 3, 2, K1C.p, '(3, 2)', 9, -9, 7), 'วางจุดตรงนี้']], `<b>x ก่อน</b> (ซ้าย–ขวา) แล้วจึง y (ขึ้น–ลง)`),
+      k1dB('พล็อตจุดที่เป็นจำนวนลบ', [[P.s, 'จุด (−4, −1)'], [k1dArrow(P.X(0), P.Y(0), P.X(-4), P.Y(0)), 'x = −4 → ไปทาง<b>ซ้าย</b> 4 ช่อง'], [k1dArrow(P.X(-4), P.Y(0), P.X(-4), P.Y(-1), K1C.g), 'y = −1 → <b>ลง</b> 1 ช่อง'], [k1Dot(P, -4, -1, K1C.p, '(−4, −1)', -9, 16, 7), 'อยู่จตุภาคที่ 3'], [k1Dot(P, 0, 3, K1C.b, '(0, 3)', 9, -6, 7), '(0, 3): x = 0 ไม่เดินซ้ายขวา ขึ้น 3 → <b>อยู่บนแกน Y</b>']], 'ลบ = ซ้าย/ลง บวก = ขวา/ขึ้น ค่าเป็น 0 = ไม่เดินแนวนั้น'),
+      T('<b>ลงมือเอง</b> — ลากจุดไปวางตามคู่อันดับ', 'ลงมือเอง ลากจุดไปวางตามคู่อันดับ', el => { const Q = k1Plane({ W: 420, H: 280, xr: [-5, 5], yr: [-4, 4] });
+        el.classList.add('k1pg'); el.append(tgScene({ W: 420, H: 280, st: [0, 0], cap: '<b>ลากจุดสีส้ม</b> ไปวางให้ครบทุกภารกิจ', missions: [['(3, 2)', s => s[0] === 3 && s[1] === 2], ['(−4, 1)', s => s[0] === -4 && s[1] === 1], ['(−2, −3)', s => s[0] === -2 && s[1] === -3], ['(0, −4)', s => s[0] === 0 && s[1] === -4]],
+          svg: s => Q.s + k1Proj(Q, s[0], s[1], K1C.o) + tgHandle(Q.X(s[0]), Q.Y(s[1])), drag: p => Q.snap(p[0], p[1]), info: s => `จุดอยู่ที่ <b class="num">${k1P(s[0], s[1])}</b>` })); }),
+      k1dTry(2805, ['q1', 'q2', 'q3', 'q4'], 'พล็อตจุด'),
+      k1dTry(2805, ['ax', 'ay', 'org', 'which', 'walk', 'walk2'], 'จุดบนแกน และเดินจากจุดกำเนิด')]; },
+
+  /* ด่าน 6 อ่านค่าจากจุดบนกราฟ */
+  2806: L => { const P = k1dPl();
+    return [
+      k1dB('อ่านพิกัดของจุด', [[P.s + k1Dot(P, -3, 2, K1C.p, 'A', -9, -8, 7), 'จุด A อยู่ที่ไหน'], [`<path d="M${a4n(P.X(-3))} ${a4n(P.Y(2))} V${a4n(P.Y(0))}" stroke="${K1C.o}" stroke-width="2.4" stroke-dasharray="5 4"/>` + k1T(P.X(-3), P.Y(0) + 30, 'x = −3', K1C.o, 'k1l'), 'ลากลงไปที่แกน X → <b>x = −3</b>'], [`<path d="M${a4n(P.X(-3))} ${a4n(P.Y(2))} H${a4n(P.X(0))}" stroke="${K1C.g}" stroke-width="2.4" stroke-dasharray="5 4"/>` + k1T(P.X(0) + 8, P.Y(2) + 5, 'y = 2', K1C.g, 'k1l', 'start'), 'ลากไปที่แกน Y → <b>y = 2</b>'], [k1T(P.X(-3), P.Y(2) - 18, '(−3, 2)', K1C.p, 'k1l'), 'A = (−3, 2)']], `อ่าน <b>x จากแกน X</b> แล้ว <b>y จากแกน Y</b>`),
+      k1dTry(2806, ['A', 'Bx', 'Cy', 'D', 'which'], 'อ่านพิกัด'),
+      r4dShow('หาจุดยอดที่หายไป', { W: 400, H: 240, fig: P.s + k1Dot(P, -2, -1, K1C.b, 'A', -8, 16) + k1Dot(P, 3, -1, K1C.b, 'B', 8, 16) + k1Dot(P, 3, 2, K1C.b, 'C'), q: 'ABCD เป็นรูปสี่เหลี่ยมผืนผ้า A(−2, −1) B(3, −1) C(3, 2) หาจุด D',
+        steps: [{ ink: `<path d="M${a4n(P.X(-2))} ${a4n(P.Y(-1))} H${a4n(P.X(3))} V${a4n(P.Y(2))}" stroke="${K1C.b}" stroke-width="2.4" fill="none"/>`, w: 'AB แนวนอน BC แนวตั้ง', n: 'ลากด้านที่รู้' }, { ink: `<path d="M${a4n(P.X(-2))} ${a4n(P.Y(-1))} V${a4n(P.Y(2))}" stroke="${K1C.p}" stroke-width="2.4" stroke-dasharray="5 4"/>`, w: 'D อยู่เหนือ A → x = −2', n: 'ด้าน AD ขนานกับ BC' }, { ink: `<path d="M${a4n(P.X(3))} ${a4n(P.Y(2))} H${a4n(P.X(-2))}" stroke="${K1C.p}" stroke-width="2.4" stroke-dasharray="5 4"/>`, w: 'D ระดับเดียวกับ C → y = 2', n: 'ด้าน DC ขนานกับ AB' }, { ink: k1Dot(P, -2, 2, K1C.g, 'D(−2, 2)', -8), w: 'D = (−2, 2)', n: '', ans: 1 }],
+        fin: `สี่เหลี่ยมผืนผ้า: จุดยอดคู่ที่อยู่ด้านเดียวกัน <b>มี x หรือ y เท่ากัน</b>`, say: 'สี่เหลี่ยมผืนผ้า จุดยอดที่อยู่ด้านเดียวกันมี x หรือ y เท่ากัน' }),
+      k1dTry(2806, ['B', 'rect', 'dist', 'dist2', 'hi'], 'อ่านพิกัด หาจุดที่หายไป')]; },
+
+  /* ด่าน 7 ตารางค่าจากสถานการณ์ */
+  2807: L => { const R = [['จำนวน (แท่ง)', 1, 2, 3, 4], ['ราคา (บาท)', 12, 24, 36, 48]];
+    return [
+      k1dB('จากเรื่องเป็นตาราง', [[k1T(200, 34, 'ดินสอแท่งละ 12 บาท', K1C.ink, 'k1big'), 'ดินสอแท่งละ 12 บาท ราคาขึ้นกับจำนวนแท่ง'], [k1dTab(60, 60, R, 60, 34, 0), 'จำนวนแท่ง = <b>ตัวแปรต้น</b> (เรากำหนดเอง) ราคา = <b>ตัวแปรตาม</b>'], [k1dTab(60, 60, R, 60, 34, 2), '1 แท่ง 12 บาท 2 แท่ง 24 บาท'], [k1dTab(60, 60, R, 60, 34, 4), '3 แท่ง 36 บาท 4 แท่ง 48 บาท'], [k1T(200, 170, '+1 แท่ง → +12 บาท', K1C.g, 'k1l') + k1T(200, 200, 'ราคา = 12 × จำนวนแท่ง', K1C.b, 'k1big'), 'จำนวนเพิ่ม 1 ราคาเพิ่ม 12 เสมอ → <b>ราคา = 12 × จำนวน</b>']], `เขียนตารางจากสถานการณ์ แล้วหา<b>กฎ</b>ที่เชื่อมสองแถว`),
+      k1dTry(2807, ['iv', 'dv', 'cost', 'back'], 'ตัวแปรและตาราง'),
+      r4dShow('หาค่าที่หายไปในตาราง', { W: 360, H: 160, fig: k1dTab(20, 20, [['x', 1, 2, 3, 4, 5], ['y', 5, 8, 11, '?', 17]], 50, 34), q: 'ค่า ? ในตารางคือเท่าใด',
+        steps: [{ ink: k1T(145, 110, '+3', K1C.g, 'k1l') + k1T(195, 110, '+3', K1C.g, 'k1l'), w: '5 → 8 → 11 เพิ่มทีละ 3', n: 'ดูการเปลี่ยนแปลงของ y' }, { ink: k1T(270, 110, '+3', K1C.p, 'k1l'), w: '11 + 3 = 14', n: 'ช่องที่หายไป' }, { ink: k1T(320, 110, '+3 ✓', K1C.g, 'k1l'), w: 'ตรวจ: 14 + 3 = 17 ✓', n: 'ตรงกับช่องสุดท้าย' }, { w: '? = 14', n: '', ans: 1 }],
+        fin: `ดูว่า y <b>เพิ่มทีละเท่าใด</b> แล้วตรวจกับค่าที่รู้`, say: 'ดูว่า y เพิ่มทีละเท่าใด แล้วตรวจกับค่าที่รู้' }),
+      k1dTry(2807, ['pat', 'pat2', 'rule', 'peri', 'park'], 'รูปแบบในตาราง')]; },
+
+  /* ด่าน 8 ตาราง → กราฟ */
+  2808: L => { const P = k1dPl({ W: 400 }), T1 = [[-1, -1], [0, 1], [1, 3]];
+    return [
+      k1dB('จากตารางเป็นกราฟ', [[k1dTab(14, 20, [['x', -1, 0, 1], ['y', -1, 1, 3]], 38, 30), 'ตาราง x กับ y'], [k1T(90, 110, '(−1, −1)', K1C.p, 'k1l') + k1T(90, 134, '(0, 1)', K1C.b, 'k1l') + k1T(90, 158, '(1, 3)', K1C.g, 'k1l'), 'อ่านทีละคอลัมน์เป็น<b>คู่อันดับ</b>'],
+        [P.s.replace(/<text[^>]*class="k1n"[^>]*>[^<]*<\/text>/g, ''), 'วางระนาบ'], [k1Dot(P, -1, -1, K1C.p, '', 0, 0, 7), 'จุดที่ 1: (−1, −1)'], [k1Dot(P, 0, 1, K1C.b, '', 0, 0, 7), 'จุดที่ 2: (0, 1)'], [k1Dot(P, 1, 3, K1C.g, '', 0, 0, 7), 'จุดที่ 3: (1, 3)']], `1 คอลัมน์ = 1 คู่อันดับ = <b>1 จุด</b>`),
+      k1dTry(2808, ['p3', 'p3b'], 'พล็อตจุดจากตาราง'),
+      r4dShow('ตรวจจุดกับตาราง', { W: 400, H: 240, fig: P.s + k1Dot(P, -3, 2, K1C.b, 'A') + k1Dot(P, 0, -1, K1C.b, 'B') + k1Dot(P, 3, 2, K1C.b, 'C') + k1Dot(P, 2, 3, K1C.b, 'D'), q: 'ตาราง x: −3, 0, 2 · y: 2, −1, 3 จุดใดไม่ได้มาจากตาราง'.replace(' · ', ' และ '),
+        steps: [{ ink: k1T(P.X(-3), P.Y(2) - 18, '✓', K1C.g, 'k1l'), w: 'A (−3, 2) ✓', n: 'มีในตาราง' }, { ink: k1T(P.X(0) + 18, P.Y(-1) + 18, '✓', K1C.g, 'k1l'), w: 'B (0, −1) ✓', wa: 1, n: '' }, { ink: k1T(P.X(3) + 16, P.Y(2) + 18, '✗', K1C.p, 'k1l'), w: 'C (3, 2) ✗', n: 'x = 3 ไม่มีในตาราง' }, { ink: k1T(P.X(2) - 16, P.Y(3) - 6, '✓', K1C.g, 'k1l'), w: 'D (2, 3) ✓ → ตอบ C', n: '', ans: 1 }],
+        fin: `อ่านพิกัดของแต่ละจุด แล้ว<b>เทียบกับตารางทีละคอลัมน์</b>`, say: 'อ่านพิกัดของแต่ละจุด แล้วเทียบกับตารางทีละคอลัมน์' }),
+      k1dTry(2808, ['pair', 'odd', 'pickd', 'pickf', 'two', 'up'], 'ตารางกับกราฟ')]; },
+
+  /* ด่าน 9 อ่านและแปลความหมายกราฟ */
+  2809: L => { const d = K1_TRIP[0], P = k1Plane({ mode: 'q1', W: 400, H: 240, xr: [0, 5], yr: [0, 200], xs: 1, ys: 20, yl: 40, xt: 'เวลา (ชั่วโมง)', yt: 'ระยะทาง (กม.)', padL: 50 });
+    return [
+      k1dB('แปลความหมายกราฟระยะทาง', [[P.s + k1Poly(P, d.p), 'กราฟระยะทางจากบ้านกับเวลาของรถคันหนึ่ง'], [k1Proj(P, 1, 40) + k1Dot(P, 1, 40, K1C.p, '(1, 40)', -8, -10), 'จุด (1, 40): <b>ชั่วโมงที่ 1 อยู่ห่าง 40 กม.</b>'], [`<path d="M${a4n(P.X(2))} ${a4n(P.Y(80))} H${a4n(P.X(3))}" stroke="${K1C.o}" stroke-width="7" opacity=".55"/>` + k1T(P.X(2.5), P.Y(80) - 12, 'หยุดพัก', K1C.o, 'k1l'), 'ชั่วโมงที่ 2–3 เส้น<b>แนวนอน</b> = ระยะทางไม่เปลี่ยน = หยุดพัก'], [`<path d="M${a4n(P.X(3))} ${a4n(P.Y(80))} L${a4n(P.X(4))} ${a4n(P.Y(140))}" stroke="${K1C.p}" stroke-width="7" opacity=".5"/>` + k1T(P.X(3.4), P.Y(120), 'ชันที่สุด', K1C.p, 'k1l', 'end'), 'ชั่วโมงที่ 3–4 <b>ชันที่สุด</b> = ไปได้ 60 กม. ใน 1 ชั่วโมง เร็วที่สุด']], `เส้นขึ้น = เคลื่อนที่ เส้นแนวนอน = หยุด ยิ่งชันยิ่งเร็ว`),
+      k1dTry(2809, ['read', 'mean', 'end', 'first'], 'อ่านกราฟระยะทาง'),
+      r4dShow('ระยะทางในช่วงหนึ่ง', { W: 400, H: 240, fig: P.s + k1Poly(P, d.p), q: 'จากชั่วโมงที่ 3 ถึง 5 รถวิ่งได้กี่กิโลเมตร',
+        steps: [{ ink: k1Proj(P, 3, 80, K1C.b) + k1Dot(P, 3, 80, K1C.b, '80', -8, -10), w: 'ชั่วโมงที่ 3 อยู่ที่ 80 กม.', n: 'อ่านจุดเริ่ม' }, { ink: k1Proj(P, 5, 160, K1C.p) + k1Dot(P, 5, 160, K1C.p, '160', -8, -10), w: 'ชั่วโมงที่ 5 อยู่ที่ 160 กม.', n: 'อ่านจุดจบ' }, { w: '160 − 80 = 80', n: 'หลัง − ก่อน' }, { w: 'วิ่งได้ 80 กม.', n: '', ans: 1 }],
+        fin: `ระยะทางในช่วงหนึ่ง = <b>ค่าตอนจบ − ค่าตอนเริ่ม</b>`, say: 'ระยะทางในช่วงหนึ่งเท่ากับค่าตอนจบลบค่าตอนเริ่ม' }),
+      k1dTry(2809, ['rest', 'seg', 'fast', 'reach'], 'แปลความหมายกราฟ')]; },
+
+  /* ด่าน 10 สร้างกราฟจากข้อมูล */
+  2810: L => { const P = k1Plane({ mode: 'q1', W: 400, H: 240, xr: [0, 5], yr: [0, 50], xs: 1, ys: 10, xt: 'สัปดาห์', yt: 'ความสูง (ซม.)' }), D = [[1, 10], [2, 20], [3, 30], [4, 40]];
+    return [
+      k1dB('สร้างกราฟทีละขั้น', [[k1dTab(70, 70, [['สัปดาห์', 1, 2, 3, 4], ['สูง (ซม.)', 10, 20, 30, 40]], 50, 34), 'ข้อมูลความสูงของต้นกล้า'], [P.s.replace(/<text[^>]*class="k1(n|ax)"[^>]*>[^<]*<\/text>/g, ''), '① วาด<b>แกนนอน</b>และ<b>แกนตั้ง</b>'], [k1T(200, 236, 'สัปดาห์', K1C.v, 'k1ax') + k1T(4, 12, 'ความสูง (ซม.)', K1C.v, 'k1ax', 'start'), '② ตั้ง<b>ชื่อแกนและหน่วย</b>'],
+        [[0, 1, 2, 3, 4, 5].map(x => k1T(P.X(x), P.Y(0) + 15, String(x), K1C.ink, 'k1n')).join('') + [10, 20, 30, 40, 50].map(y => k1T(P.X(0) - 6, P.Y(y) + 4, String(y), K1C.ink, 'k1n', 'end')).join(''), '③ เลือก<b>มาตราส่วน</b>: ข้อมูลถึง 40 → แกนตั้งช่องละ 10'], [D.map(p => k1Dot(P, p[0], p[1], K1C.p, '', 0, 0, 6)).join(''), '④ พล็อตจุดจากตาราง'], [k1Poly(P, D, K1C.p, false), '⑤ ลากเส้นเชื่อม เห็นว่าโตขึ้นสัปดาห์ละ 10 ซม.']], `แกน → ชื่อแกนและหน่วย → มาตราส่วน → พล็อตจุด → ตรวจ`),
+      k1dTry(2810, ['grow', 'one', 'grow2'], 'พล็อตจุดบนกราฟที่มีมาตราส่วน'),
+      k1dTry(2810, ['xaxis', 'scale', 'need', 'ch'], 'องค์ประกอบของกราฟ')]; },
+
+  /* ด่าน 11 แนวโน้มและเปรียบเทียบกราฟ */
+  2811: L => { const P = k1Plane({ mode: 'q1', W: 400, H: 240, xr: [0, 6], yr: [0, 60], xs: 1, ys: 10, xt: 'เวลา (นาที)', yt: 'น้ำ (ลิตร)' }), mini = (sh, x, y) => `<g transform="translate(${x} ${y}) scale(.75)">${k1Mini(sh).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '')}</g>`;
+    return [
+      k1dB('แนวโน้มของกราฟ', [[mini('up', 10, 40) + k1T(66, 140, 'เพิ่มขึ้น', K1C.b, 'k1l'), '<b>เพิ่มขึ้น</b>: เส้นขึ้นจากซ้ายไปขวา เช่น เติมน้ำลงถัง'], [mini('down', 140, 40) + k1T(196, 140, 'ลดลง', K1C.p, 'k1l'), '<b>ลดลง</b>: เส้นลง เช่น เทียนไขที่ลุกไหม้'], [mini('flat', 270, 40) + k1T(326, 140, 'คงที่', K1C.g, 'k1l'), '<b>คงที่</b>: เส้นแนวนอน เช่น รถที่จอดนิ่ง'], [mini('stop', 140, 160).replace('scale(.75)', 'scale(.5)') + k1T(260, 200, 'ขึ้น–หยุด–ขึ้น', K1C.o, 'k1l'), 'กราฟหลายช่วง: อ่านทีละช่วงจากซ้ายไปขวา']], `มองกราฟ<b>จากซ้ายไปขวา</b> เส้นขึ้น ลง หรือแนวนอน`),
+      k1dB('เปรียบเทียบสองกราฟ', [[P.s + k1Line(P, 10, 0, K1C.p, 2.6, 'ถัง ก') + k1Line(P, 5, 10, K1C.b, 2.6, 'ถัง ข'), 'ถังสองใบเติมน้ำพร้อมกัน'], [k1Dot(P, 0, 10, K1C.b, 'เริ่ม 10 ลิตร', 8, 4), 'ถัง ข มีน้ำอยู่ก่อน 10 ลิตร'], [k1dArrow(P.X(1), P.Y(10), P.X(1), P.Y(20), K1C.p) + k1dArrow(P.X(1) + 10, P.Y(15), P.X(1) + 10, P.Y(20), K1C.b), 'ใน 1 นาที ถัง ก เพิ่ม 10 ลิตร ถัง ข เพิ่ม 5 ลิตร → <b>เส้น ก ชันกว่า</b>'], [k1Dot(P, 2, 20, K1C.g, '(2, 20)', 8, 16, 7), 'นาทีที่ 2 เส้นตัดกัน = <b>น้ำเท่ากัน</b> 20 ลิตร']], 'เส้นที่<b>ชันกว่า</b>เปลี่ยนเร็วกว่า จุดตัดคือจุดที่ค่าเท่ากัน'),
+      k1dTry(2811, ['fill', 'candle', 'park', 'walk'], 'เลือกกราฟตามสถานการณ์'),
+      k1dTry(2811, ['fast', 'zero', 'meet', 'trend'], 'เปรียบเทียบสองกราฟ')]; },
+
+  /* ด่าน 12 ความสัมพันธ์ระหว่างตัวแปร */
+  2812: L => [
+    k1dB('x เปลี่ยน y เปลี่ยนอย่างไร', [[k1dTab(70, 30, [['x', 1, 2, 3, 4], ['y', 4, 7, 10, 13]], 56, 36), 'ตารางค่า x กับ y'], [[1, 2, 3].map(j => k1T(70 + 70 + (j - 1) * 56 + 56, 22, '+1', K1C.o, 'k1n')).join(''), 'x เพิ่มทีละ 1'], [[1, 2, 3].map(j => k1T(70 + 70 + (j - 1) * 56 + 56, 124, '+3', K1C.g, 'k1l')).join(''), 'y เพิ่มทีละ 3 ทุกครั้ง → <b>เพิ่มขึ้น</b>'], [k1dTab(70, 150, [['x', 1, 2, 3, 4], ['y', 20, 16, 12, 8]], 56, 36) + [1, 2, 3].map(j => k1T(70 + 70 + (j - 1) * 56 + 56, 244 - 10, '−4', K1C.p, 'k1l')).join(''), 'ตารางนี้ y ลดลงทีละ 4 → <b>ลดลง</b>']], `ดูว่าเมื่อ x เพิ่ม 1 y <b>เพิ่ม ลด หรือคงที่</b> และเปลี่ยนครั้งละเท่าใด`, { H: 250 }),
+    k1dTry(2812, ['inc', 'dec', 'const', 'ex', 'fuel', 'flat'], 'เพิ่มขึ้น ลดลง คงที่'),
+    r4dShow('ทำนายค่าต่อไป', { W: 360, H: 150, fig: k1dTab(20, 20, [['x', 1, 2, 3, 4], ['y', 5, 9, 13, 17]], 56, 34), q: 'ถ้าความสัมพันธ์เป็นแบบนี้ต่อไป เมื่อ x = 6 y เท่ากับเท่าใด',
+      steps: [{ ink: [1, 2, 3].map(j => k1T(90 + 56 * j + 28 - 28, 110, '+4', K1C.g, 'k1l')).join(''), w: 'y เพิ่มทีละ 4', n: 'หาการเปลี่ยนแปลง' }, { w: 'x = 5 → 17 + 4 = 21', n: 'ต่อทีละขั้น' }, { w: 'x = 6 → 21 + 4 = 25', n: '' }, { w: 'y = 25', n: '', ans: 1 }],
+      fin: `หา<b>การเปลี่ยนแปลงต่อ 1 หน่วย</b> แล้วต่อไปทีละขั้น`, say: 'หาการเปลี่ยนแปลงต่อหนึ่งหน่วย แล้วต่อไปทีละขั้น' }),
+    k1dTry(2812, ['step', 'stepd', 'next'], 'เปลี่ยนครั้งละเท่าใด')],
+
+  /* ด่าน 13 ความสัมพันธ์เชิงเส้น */
+  2813: L => { const P = k1Plane({ W: 400, H: 240, xr: [0, 5], yr: [0, 10], mode: 'q1', xs: 1, ys: 1, yl: 2 });
+    return [
+      k1dB('ความสัมพันธ์เชิงเส้น', [[P.s, 'ลองพล็อตสองชุดข้อมูล'], [[[1, 3], [2, 5], [3, 7], [4, 9]].map(p => k1Dot(P, p[0], p[1], K1C.b, '', 0, 0, 6)).join(''), 'ชุดที่ 1: y = 3, 5, 7, 9 (เพิ่มทีละ 2 เท่ากัน)'], [k1Line(P, 2, 1, K1C.b), 'จุดเรียงเป็น<b>แนวเส้นตรง</b> → ความสัมพันธ์เชิงเส้น'],
+        [[[1, 1], [2, 4], [3, 9]].map(p => k1Dot(P, p[0], p[1], K1C.p, '', 0, 0, 6)).join(''), 'ชุดที่ 2: y = 1, 4, 9 (เพิ่ม 3 แล้วเพิ่ม 5)'], [`<path d="${Array.from({ length: 22 }, (_, i) => { const x = 0.8 + i * 0.11; return (i ? 'L' : 'M') + a4n(P.X(x)) + ' ' + a4n(P.Y(x * x)); }).join(' ')}" stroke="${K1C.p}" stroke-width="2.4" fill="none" stroke-dasharray="5 4"/>`, 'จุดเรียงเป็น<b>เส้นโค้ง</b> → ไม่ใช่เชิงเส้น']], `x เพิ่มเท่ากัน แล้ว y <b>เปลี่ยนเท่ากันทุกครั้ง</b> = ความสัมพันธ์เชิงเส้น (กราฟเป็นเส้นตรง)`),
+      k1dTry(2813, ['tab', 'graph', 'notg', 'what'], 'เชิงเส้นหรือไม่'),
+      k1dTry(2813, ['fill', 'sit'], 'เติมให้เป็นเชิงเส้น')]; },
+
+  /* ด่าน 14 ตารางจากความสัมพันธ์เชิงเส้น */
+  2814: L => [
+    r4dShow('สร้างตารางจาก y = 2x + 1', { W: 360, H: 200, fig: k1T(180, 30, 'y = 2x + 1', K1C.ink, 'k1big') + k1dTab(40, 60, [['x', 0, 1, 2, 3], ['y', '', '', '', '']], 56, 36), q: 'เติมตารางของ y = 2x + 1',
+      steps: [{ ink: k1dCell(40, 60, 1, 1, '1', K1C.p, 56, 36), w: 'x = 0: 2(0) + 1 = 1', n: 'แทนค่า x' }, { ink: k1dCell(40, 60, 2, 1, '3', K1C.p, 56, 36), w: 'x = 1: 2(1) + 1 = 3', n: '' }, { ink: k1dCell(40, 60, 3, 1, '5', K1C.p, 56, 36), w: 'x = 2: 2(2) + 1 = 5', n: '' }, { ink: k1dCell(40, 60, 4, 1, '7', K1C.p, 56, 36) + k1T(180, 170, 'y เพิ่มทีละ 2 = ตัวคูณหน้า x', K1C.g, 'k1l'), w: 'x = 3: 2(3) + 1 = 7', n: 'y เพิ่มทีละ 2', ans: 1 }],
+      fin: `แทนค่า x ลงในสมการทีละค่า${r4vSep}x เพิ่ม 1 y เพิ่มเท่ากับ<b>ตัวคูณหน้า x</b>`, say: 'แทนค่า x ลงในสมการทีละค่า x เพิ่มหนึ่ง y เพิ่มเท่ากับตัวคูณหน้า x' }),
+    k1dTry(2814, ['y', 'yn', 'tab', 'yneg', 'rate'], 'แทน x หา y'),
+    r4dShow('รู้ y หา x', e1dEq([{ e: 'y = 3x − 4 ,  y = 11' }, { e: '11 = 3x − 4', w: 'แทน y = 11', n: 'ได้สมการตัวแปรเดียว' }, { e: '15 = 3x', w: 'บวก 4 ทั้งสองข้าง', n: '' }, { e: 'x = *5', w: 'x = 5', n: 'หาร 3 ทั้งสองข้าง · ตรวจ: 3(5) − 4 = 11 ✓'.replace(' · ', ' '), ans: 1 }],
+      { q: 'ถ้า y = 3x − 4 และ y = 11 จงหา x', fin: `รู้ y: แทนค่า แล้ว<b>แก้สมการ</b>หา x`, say: 'รู้ y แทนค่าแล้วแก้สมการหา x' })),
+    k1dTry(2814, ['x', 'back2', 'pick'], 'รู้ y หา x และตรวจคู่อันดับ')],
+
+  /* ด่าน 15 กราฟจากความสัมพันธ์เชิงเส้น */
+  2815: L => { const P = k1dPl();
+    return [
+      k1dB('กราฟของ y = x + 1', [[k1dTab(6, 10, [['x', -2, 0, 2], ['y', -1, 1, 3]], 36, 28), 'ตารางจากสมการ y = x + 1'], [P.s.replace(/<text[^>]*class="k1n"[^>]*>[^<]*<\/text>/g, '').replace(/^/, ''), 'วางระนาบ'], [[[-2, -1], [0, 1], [2, 3]].map(p => k1Dot(P, p[0], p[1], K1C.p, '', 0, 0, 6.5)).join(''), 'พล็อตจุด 3 จุด — เรียงเป็นแนวตรง'], [k1Line(P, 1, 1, K1C.b), 'ลากเส้นตรงผ่านทุกจุด'], [k1Dot(P, 0.5, 1.5, K1C.g, '(0.5, 1.5)', 8, 16, 5.5), 'x = 0.5 ก็ได้ y = 1.5 อยู่บนเส้นเดียวกัน — <b>ทุกจุดบนเส้นเป็นคำตอบของสมการ</b>']], `ตาราง → จุด → <b>เส้นตรง</b> (2 จุดลากได้ จุดที่ 3 ไว้ตรวจ)`),
+      k1dTry(2815, ['plot', 'plot2'], 'พล็อตจุดของสมการ'),
+      r4dShow('เขียนกราฟของ y = −x + 2', { W: 400, H: 240, fig: P.s, q: 'เขียนกราฟของ y = −x + 2',
+        steps: [{ w: 'x = 0, 2, −1 → y = 2, 0, 3', n: 'แทนค่า x สามค่าใน y = −x + 2' }, { ink: [[0, 2], [2, 0], [-1, 3]].map(p => k1Dot(P, p[0], p[1], K1C.p, k1P(...p), 8, -8, 6)).join(''), w: '(0, 2) (2, 0) (−1, 3)', n: 'พล็อตจุด' }, { ink: k1Line(P, -1, 2, K1C.b), w: 'ลากเส้นตรงผ่านจุด', n: 'เส้นลาดลง' }, { w: 'กราฟของ y = −x + 2', n: 'ตรวจ: ทุกจุดอยู่บนเส้น', ans: 1 }],
+        fin: `เลือก x ที่คิดง่าย (เช่น 0) หา y พล็อตจุด แล้ว<b>ลากเส้นตรง</b>`, say: 'เลือก x ที่คิดง่าย หา y พล็อตจุด แล้วลากเส้นตรง' }),
+      k1dTry(2815, ['pick', 'on', 'pass', 'yint', 'why'], 'กราฟกับสมการ')]; },
+
+  /* ด่าน 16 ทิศทางและความชัน */
+  2816: L => { const P = k1dPl();
+    return [
+      k1dB('ความชัน = y เปลี่ยน ÷ x เปลี่ยน', [[P.s + k1Line(P, 2, -1, K1C.b), 'เส้นตรง y = 2x − 1'], [k1Dot(P, 1, 1, K1C.p, 'A', -10, -6, 6.5) + k1Dot(P, 2, 3, K1C.p, 'B', -10, -6, 6.5), 'เลือกสองจุดบนเส้น A(1, 1) และ B(2, 3)'], [k1dArrow(P.X(1), P.Y(1), P.X(2), P.Y(1), K1C.o) + k1T(P.X(1.5), P.Y(1) + 18, 'x +1', K1C.o, 'k1l'), 'ไปทางขวา 1 (x เปลี่ยน 1)'], [k1dArrow(P.X(2), P.Y(1), P.X(2), P.Y(3), K1C.g) + k1T(P.X(2) + 8, P.Y(2) + 5, 'y +2', K1C.g, 'k1l', 'start'), 'ขึ้นไป 2 (y เปลี่ยน 2)'], [k1T(P.X(-3), P.Y(3), 'ความชัน = 2 ÷ 1 = 2', K1C.p, 'k1big'), '<b>ความชัน = 2 ÷ 1 = 2</b> ขวา 1 ขึ้น 2']], `ความชัน = <b>การเปลี่ยนแปลงของ y ÷ การเปลี่ยนแปลงของ x</b>`),
+      k1dB('ทิศทางและความชัน', [[P.s + k1Line(P, 2, 0, K1C.b, 2.6, 'y = 2x'), 'ความชัน 2: ลาดขึ้น ชันมาก'], [k1Line(P, 0.5, 0, K1C.g, 2.6, 'y = 0.5x'), 'ความชัน 0.5: ลาดขึ้น ชันน้อย'], [k1Line(P, -1, 0, K1C.p, 2.6, 'y = −x'), 'ความชัน<b>ติดลบ</b>: ลาดลงไปทางขวา'], [k1Line(P, 0, 3, K1C.o, 2.6, 'y = 3'), 'ความชัน 0: <b>แนวนอน</b>']], `บวก = ลาดขึ้น · ลบ = ลาดลง · 0 = แนวนอน · ค่ายิ่งมากยิ่งชัน`.replace(/ · /g, ', ')),
+      T('<b>ลงมือเอง</b> — ลากจุด B ดูความชัน', 'ลงมือเอง ลากจุด B ดูความชัน', el => { const Q = k1Plane({ W: 420, H: 280, xr: [-5, 5], yr: [-4, 4] }), A = [-1, -1], sl = s => s[0] === A[0] ? null : (s[1] - A[1]) / (s[0] - A[0]);
+        el.classList.add('k1pg'); el.append(tgScene({ W: 420, H: 280, st: [2, 1], cap: 'จุด A อยู่ที่ (−1, −1) <b>ลากจุด B</b> ให้ได้ความชันตามภารกิจ', missions: [['ความชัน = 2', s => sl(s) === 2], ['ความชัน = −1', s => sl(s) === -1], ['ความชัน = 0 (แนวนอน)', s => sl(s) === 0 && s[0] !== A[0]]],
+          svg: s => Q.s + (s[0] !== A[0] ? k1Line(Q, sl(s), A[1] - sl(s) * A[0], K1C.b) + `<path d="M${a4n(Q.X(A[0]))} ${a4n(Q.Y(A[1]))} H${a4n(Q.X(s[0]))} V${a4n(Q.Y(s[1]))}" stroke="${K1C.o}" stroke-width="2.4" stroke-dasharray="5 4" fill="none"/>` : '') + k1Dot(Q, A[0], A[1], K1C.p, 'A', -10, 16, 7) + tgHandle(Q.X(s[0]), Q.Y(s[1])) + k1T(Q.X(s[0]) + 14, Q.Y(s[1]) - 12, 'B', K1C.o, 'k1l', 'start'),
+          drag: p => { const s = Q.snap(p[0], p[1]); return s[0] === A[0] && s[1] === A[1] ? null : s; }, info: s => s[0] === A[0] ? 'x เปลี่ยน 0 — เส้นตั้ง ยังหาความชันไม่ได้' : `x เปลี่ยน <b class="num">${k1N(s[0] - A[0])}</b>${r4vSep}y เปลี่ยน <b class="num">${k1N(s[1] - A[1])}</b>${r4vSep}ความชัน = <b class="num">${(s[1] - A[1]) % (s[0] - A[0]) === 0 ? k1N(sl(s)) : `${k1N(s[1] - A[1])}/${k1N(s[0] - A[0])}`}</b>` })); }),
+      r4dShow('ความชันจากสองจุด', e1dEq([{ e: '(1,~2)~และ~(4,~8)' }, { e: 'y~เปลี่ยน = 8 − 2 = !6', w: 'ผลต่างของ y', n: 'ตัวหลัง − ตัวหน้า' }, { e: 'x~เปลี่ยน = 4 − 1 = ^3', w: 'ผลต่างของ x', n: 'ลำดับเดียวกัน' }, { e: 'ความชัน = {!6|^3} = *2', w: 'ความชัน = 2', n: 'y เปลี่ยน ÷ x เปลี่ยน', ans: 1 }],
+        { q: 'หาความชันของเส้นตรงที่ผ่านจุด (1, 2) และ (4, 8)', fin: `ความชัน = <b>(y₂ − y₁) ÷ (x₂ − x₁)</b> ลบตามลำดับเดียวกัน`, say: 'ความชันเท่ากับ y สองลบ y หนึ่ง หารด้วย x สองลบ x หนึ่ง' })),
+      k1dTry(2816, ['down', 'steep', 'flat', 'sign', 'cmp'], 'ทิศทางของเส้นตรง'),
+      k1dTry(2816, ['slope', 'two', 'eq'], 'หาความชัน')]; },
+
+  /* ด่าน 17 สมการกับกราฟ ค่าตัดแกน */
+  2817: L => { const P = k1dPl();
+    return [
+      k1dB('ค่าตัดแกน', [[P.s + k1Line(P, 2, -4, K1C.b, 2.6, 'y = 2x − 4'), 'กราฟของ y = 2x − 4'], [k1Dot(P, 0, -4, K1C.g, '(0, −4)', 8, 6, 7), 'ตัดแกน Y ที่ (0, −4) → <b>ค่าตัดแกน Y = −4</b> (แทน x = 0)'], [k1Dot(P, 2, 0, K1C.p, '(2, 0)', 8, -8, 7), 'ตัดแกน X ที่ (2, 0) → <b>ค่าตัดแกน X = 2</b> (แทน y = 0)']], `ค่าตัดแกน Y: แทน <b>x = 0</b>${'  '}ค่าตัดแกน X: แทน <b>y = 0</b>`),
+      r4dShow('หาค่าตัดแกนจากสมการ', e1dEq([{ e: 'y = 3x − 6' }, { e: 'x = 0 : y = 3(0) − 6 = !−6', w: 'ค่าตัดแกน Y = −6', n: 'แทน x = 0' }, { e: 'y = 0 : 0 = 3x − 6', w: 'แทน y = 0', n: 'ได้สมการ' }, { e: '3x = 6 , x = *2', w: 'ค่าตัดแกน X = 2', n: 'แก้สมการ', ans: 1 }],
+        { q: 'หาค่าตัดแกน X และค่าตัดแกน Y ของ y = 3x − 6', fin: `สองจุดนี้ใช้<b>เขียนกราฟได้เร็ว</b>: (0, −6) และ (2, 0)`, say: 'สองจุดนี้ใช้เขียนกราฟได้เร็ว' })),
+      k1dTry(2817, ['ygr', 'xgr', 'yeq', 'xeq', 'which'], 'ค่าตัดแกน'),
+      k1dB('ขนานหรือตัดกัน', [[P.s + k1Line(P, 1, -2, K1C.b, 2.6, 'y = x − 2'), 'y = x − 2 ความชัน 1'], [k1Line(P, 1, 2, K1C.p, 2.6, 'y = x + 2'), 'y = x + 2 ความชันก็ 1 → <b>ขนานกัน</b> ไม่ตัดกันเลย'], [k1Line(P, -1, 2, K1C.g, 2.6, 'y = −x + 2') + k1Dot(P, 0, 2, K1C.o, '(0, 2)', 8, 16, 6.5), 'y = −x + 2 ความชันต่างกัน → <b>ตัดกัน</b> 1 จุด']], `ความชัน<b>เท่ากัน</b> (ค่าตัดแกน Y ต่างกัน) → ขนาน · ความชันต่างกัน → ตัดกัน`.replace(' · ', ' ')),
+      k1dTry(2817, ['par', 'meet', 'cut'], 'ขนานหรือตัดกัน')]; },
+
+  /* ด่าน 18 โจทย์ประยุกต์ */
+  2818: L => { const P = k1Plane({ mode: 'q1', W: 400, H: 240, xr: [0, 10], yr: [0, 100], xs: 1, ys: 10, yl: 20, xt: 'ระยะทาง (กม.)', yt: 'ค่าโดยสาร (บาท)' });
+    return [
+      k1dB('จากเรื่องสู่กราฟ: ค่าแท็กซี่', [[P.s, 'ค่าแท็กซี่เริ่มต้น 35 บาท และกิโลเมตรละ 5 บาท'], [k1Dot(P, 0, 35, K1C.p, '(0, 35)', 8, -6, 6.5), 'ยังไม่ออกรถก็จ่าย 35 → จุด (0, 35) = <b>ค่าตัดแกน Y</b>'], [k1Dot(P, 2, 45, K1C.b, '(2, 45)', 8, 14, 6) + k1Dot(P, 6, 65, K1C.b, '(6, 65)', 8, 14, 6), '2 กม. = 35 + 10 = 45 · 6 กม. = 35 + 30 = 65'.replace(' · ', ' ')], [k1Line(P, 5, 35, K1C.b), 'เส้นตรง: <b>y = 35 + 5x</b> (ความชัน 5 บาทต่อกิโลเมตร)'], [k1Proj(P, 9, 80, K1C.g) + k1Dot(P, 9, 80, K1C.g, '(9, 80)', -8, -8, 6.5), 'จ่าย 80 บาท → อ่านกราฟได้ <b>9 กม.</b>']], `เรื่อง → ตาราง/สมการ → กราฟ แล้ว<b>อ่านค่าจากกราฟ</b>หรือแทนในสมการ`),
+      k1dTry(2818, ['taxi', 'taxieq', 'taxiback'], 'ค่าแท็กซี่'),
+      r4dShow('ค่าโทรสองแบบเท่ากันเมื่อใด', e1dEq([{ e: 'แบบ~ก:~y = 100 + x' }, { e: 'แบบ~ข:~y = 2x', w: 'เขียนสมการทั้งสองแบบ', n: 'x = จำนวนนาที' }, { e: '100 + x = 2x', w: 'ค่าเท่ากัน', n: 'จุดตัดของกราฟสองเส้น' }, { e: 'x = *100', w: 'โทร 100 นาทีเท่ากัน', n: 'ลบ x ทั้งสองข้าง', ans: 1 }],
+        { q: 'แบบ ก 100 บาท + นาทีละ 1 บาท แบบ ข นาทีละ 2 บาท โทรกี่นาทีจึงจ่ายเท่ากัน', fin: `จุดที่ค่าเท่ากัน = <b>จุดตัดของกราฟ</b> โทรน้อยกว่านั้นแบบ ข ถูกกว่า มากกว่านั้นแบบ ก ถูกกว่า`, say: 'จุดที่ค่าเท่ากันคือจุดตัดของกราฟ' })),
+      k1dTry(2818, ['save', 'saveb', 'tank', 'empty', 'tankg', 'plan', 'equal'], 'โจทย์ประยุกต์')]; }
+};
+LESSONS_M1C8.forEach(L => { const f = K1D_TEACH[L.id]; if (f) { L.teach = f(L).filter(Boolean); L.__pracDone = 1; L.learned = true; } });
+
 'use strict';
 /* =========================================================
    Each lesson = { id, title, goal, video, icon, color,
@@ -42273,6 +42881,9 @@ const CITIES = [
   /* v244 (ผู้ใช้ขอ): ม.1 บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ (หนังสือ สสวท. ม.1 เล่ม 2) — 20 ด่าน 2701–2720 + บอส 2721 */
   { id: 96, grade: 7, term: 2, name: 'ลำน้ำอัตราส่วน', chapter: 'บทที่ 7 อัตราส่วน สัดส่วน และร้อยละ', lessons: LESSONS_M1C7,
     theme: { river: true, hills: ['#CDE8B4', '#BEE0A0', '#DCEFC8'], far: '#E8F4DA', edge: ['pier', 'stilthouse', 'tree', 'ricebarn'], small: ['kayak', 'lotus', 'duck', 'paddy', 'reeds', 'flowers'] } },
+  /* v273 (ผู้ใช้ขอ): ม.1 บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น — 18 ด่าน 2801–2818 + บอส 2819 (m1k.js เกม · m1kd.js หน้าสอน) */
+  { id: 100, grade: 7, term: 2, name: 'ลำน้ำกราฟ', chapter: 'บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น', lessons: LESSONS_M1C8,
+    theme: { river: true, hills: ['#C2E4C4', '#B0DBB3', '#D2EDD3'], far: '#E2F3E3', edge: ['stilthouse', 'pier', 'tree', 'pine'], small: ['reeds', 'lotus', 'kayak', 'duck', 'flowers', 'paddy'] } },
   /* v248 (ผู้ใช้ขอ): ม.2 บทที่ 5 สมบัติของเลขยกกำลัง — 18 ด่าน 8501–8518 + บอส 8519 (ความยากเท่าแบบฝึกหัดที่ผู้ใช้ส่งมา) */
   { id: 98, grade: 8, name: 'เมืองนักสืบเลขยกกำลัง', chapter: 'บทที่ 5 สมบัติของเลขยกกำลัง', lessons: LESSONS_M2C5,
     theme: { detect: true, hills: ['#DDE4F6', '#D1DAF0', '#EFE6DA'], far: '#ECF0FA', edge: ['dtoffice', 'dtlamp', 'dthouse', 'dtboard'], small: ['dtbook', 'dtmagnify', 'dtbox', 'dtprints', 'dtbench', 'dthydrant'] } },
