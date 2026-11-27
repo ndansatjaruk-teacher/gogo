@@ -1,0 +1,86 @@
+"""ป.6 จัดเรียงหน้าสอนใหม่ทีละบท (v279 ขึ้นไป · src/grades/p6/p6*d.js): ทุกหน้าดูภาพเป็นกระดานครู (กดทีละขั้นจนครบ) ทำให้ดู (ดินสอทีละขั้นจนจบ)
+ลองทำ (ข้อแบบเดียวกับเกม) ปลดล็อกปุ่มถัดไป · ไม่เหลือการ์ดรู้จัก ตัวอย่างตัวหนังสือ หรือหน้าปุ่ม + − / กดทีละขั้น · หน้าลงมือเอง (แตะชิป ลากระบาย
+แตะเครื่องหมาย) ทำงาน · เกมแต่ละด่าน ≥ 8 ข้อ เรียงง่าย → ยาก (บทที่ 1 ใช้ tests/hcf_p6.py)
+    python3 tests/reorg_p6.py --ch 2 [--touch]
+"""
+import os, sys, pathlib
+from playwright.sync_api import sync_playwright
+TOUCH = '--touch' in sys.argv
+CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
+RANGE = {2: (731, 742)}
+OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|stepper"
+def run():
+  with sync_playwright() as p:
+    br = p.chromium.launch(**({'executable_path': os.environ['CHROME']} if os.environ.get('CHROME') else {})); ctx = br.new_context(viewport={'width': 1180, 'height': 820}, has_touch=TOUCH); pg = ctx.new_page()
+    errs = []; pg.on('pageerror', lambda e: errs.append(str(e)[:120]))
+    pg.goto((pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'index.html').as_uri()); pg.wait_for_timeout(800); pg.evaluate("SET.mute = true; window.say = () => {}; window.__D1B_FAST = .1; 0")
+    locked = lambda: pg.evaluate("!!document.querySelector('.btn.primary.waiting')")
+    def open_(lid, k):
+        li = pg.evaluate(f"LESSONS.findIndex(L=>L.id==={lid})")
+        if isinstance(k, str): k = pg.evaluate(f"LESSONS[{li}].teach.findIndex(s => (s.t || '').includes('ลงมือเอง') && (s.t || '').replace(/<[^>]+>/g, '').includes({k!r}))")
+        if k < 0: raise Exception('page not found')
+        pg.evaluate(f"startTeach({li},{k})"); pg.wait_for_timeout(600)
+    def tapq(sel, i=0):
+        el = pg.locator(f'#stage {sel}').nth(i)
+        if TOUCH: el.tap()
+        else: el.click()
+        pg.wait_for_timeout(150)
+    def tapsvg(x, y, sel='#stage .tg-board svg'):
+        r = pg.evaluate(f"(() => {{ const s = document.querySelector('{sel}'), m = s.getScreenCTM(), q = s.createSVGPoint(); q.x = {x}; q.y = {y}; const r = q.matrixTransform(m); return [r.x, r.y]; }})()")
+        if TOUCH: pg.touchscreen.tap(*r)
+        else: pg.mouse.click(*r)
+        pg.wait_for_timeout(200)
+    res = {}
+    def check(name, lid, k, fn):
+        try: open_(lid, k); l0 = locked(); fn()
+        except Exception as e: res[name] = 'ERR ' + str(e)[:80]; return
+        pg.wait_for_timeout(400); res[name] = ('ok' if (l0 and not locked()) else f'start_locked={l0} end_locked={locked()}')
+    pages = lambda lid, word: pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {lid}); return L.teach.map((s, i) => (s.t || '').includes('{word}') ? i : -1).filter(i => i >= 0); }})()")
+    def see():
+        if not pg.evaluate("!!document.querySelector('#stage .d1b')"): raise Exception('no board')
+        nb = pg.evaluate("document.querySelectorAll('#stage .d1b-dots i').length")
+        if nb < 2: raise Exception('board has fewer than 2 steps')
+        for j in range(nb * 2 + 2):
+            if not pg.evaluate("!!document.querySelector('#stage .d1b.ia')"): break
+            if j % 2 and TOUCH: pg.locator('#stage .d1b-bd').tap()
+            elif j % 2: pg.evaluate("document.querySelector('#stage .d1b-bd').dispatchEvent(new MouseEvent('click', { bubbles: true }))")
+            else: pg.keyboard.press('Space')
+            pg.wait_for_timeout(160)
+        pg.wait_for_timeout(500)
+        if pg.evaluate("document.querySelectorAll('#stage .d1b-dots i.on').length") != nb: raise Exception('not every step was shown')
+    def show():
+        for _ in range(40):
+            if not pg.evaluate("!!document.querySelector('#stage .r4d-nx')"): break
+            tapq('.r4d-nx'); pg.wait_for_timeout(600)
+        if pg.evaluate("!!document.querySelector('#stage .r4d-nx')"): raise Exception('steps not finished')
+    lo, hi = RANGE[CH]
+    for lid in range(lo, hi + 1):
+        n = lid - lo + 1
+        bad = pg.evaluate(f"LESSONS.find(L => L.id === {lid}).teach.filter(s => new RegExp({OLD!r}).test(String(s.v || ''))).length")
+        res[f'old{n}'] = 'ok' if not bad else f'ERR {bad} old pages left'
+        for k in pages(lid, 'ดูภาพ'): check(f'see{n}.{k}', lid, k, see)
+        for k in pages(lid, 'ทำให้ดู'): check(f'show{n}.{k}', lid, k, show)
+        for k in pages(lid, 'ลองทำ'):
+            open_(lid, k); res[f'try{n}.{k}'] = 'ok' if pg.evaluate("!!document.querySelector('#stage .prac .qsim')") else 'ERR no practice question'
+        g = pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {lid}); return [0, 1, 2, 3].map(() => {{ const s = gameSet(L); return [s.length, s.every((q, i) => !i || qDiff(s[i - 1]) <= qDiff(q))]; }}); }})()")
+        m = min(x[0] for x in g)
+        res[f'game{n}'] = ('ok ' if m >= 8 and all(x[1] for x in g) else 'ERR ') + str(m)
+    def chips(best):  # a wrong chip keeps the page locked, the best one unlocks it
+        vals = pg.evaluate("[...document.querySelectorAll('#stage .h6d-chips .h6-chip')].map(b => +b.dataset.v)")
+        if best not in vals: raise Exception('no chips')
+        tapq('.h6d-chips .h6-chip', vals.index([v for v in vals if v != best][0]))
+        if not locked(): raise Exception('unlocked by a wrong chip')
+        tapq('.h6d-chips .h6-chip', vals.index(best))
+    if CH == 2:
+        check('hand1', 731, 'ส่วนเท่ากัน', lambda: chips(12))
+        def paint():  # 3 parts a bar: tap the 7th, 8th, then 5th part (7/3, 2 2/3, 5/3)
+            for x, y in ((140, 167), (280, 167), (280, 103)): tapsvg(x, y)
+        check('hand3', 733, 'ลากระบาย', paint)
+        for lid in (737, 738, 739):
+            try: open_(lid, {737: 'แตะเครื่องหมาย', 738: 'ไม่มีวงเล็บ', 739: 'วงเล็บซ้อน'}[lid]); res[f'kept{lid - 730}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .f6-op').length >= 2") else 'ERR no operators'
+            except Exception as e: res[f'kept{lid - 730}'] = 'ERR ' + str(e)[:60]
+    res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
+    for k, v in res.items(): print(f'{k:9s} {v}')
+    bad = [k for k, v in res.items() if not v.startswith('ok')]
+    print(f'{len(res) - len(bad)} / {len(res)} pages work as intended' + (' ✓' if not bad else f' ✗ {bad}')); sys.exit(1 if bad else 0)
+run()

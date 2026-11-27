@@ -126,4 +126,5 @@ app/wpic.js
 app/xteach.js
 app/xtra.js
 grades/p6/p6hd.js
+grades/p6/p6fd.js
 app/app.js

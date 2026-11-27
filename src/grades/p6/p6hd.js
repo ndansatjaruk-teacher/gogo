@@ -62,7 +62,7 @@ function h6dTree(t, o = {}) {
 /* game order: ranks from the prompt (a list of patterns, or a function) · same rank → fewer numbers, smaller numbers first · __diff is absolute (gameSet mixes several L.game() calls) */
 const h6dTx = q => String(q.prompt || '').replace(/<[^>]+>/g, '');
 const h6dOrd = (L, rk) => { const f = L.game, R = typeof rk === 'function' ? rk : t => { const i = rk.findIndex(re => re.test(t)); return i < 0 ? rk.length : i; };
-  L.game = () => f().map((q, i) => { const t = h6dTx(q), ns = (t.replace(/\d+\.\d+\s*น\./g, ' ').match(/\d+/g) || []).map(Number); return { q, r: R(t), c: ns.length, b: Math.max(0, ...ns), i }; })
+  L.game = () => f().map((q, i) => { const t = h6dTx(q), ns = (String(q.prompt || '').replace(/<[^>]+>/g, ' ').replace(/\d+\.\d+\s*น\./g, ' ').match(/\d+/g) || []).map(Number); return { q, r: R(t), c: ns.length, b: Math.max(0, ...ns), i }; })
     .sort((a, b) => a.r - b.r || a.c - b.c || a.b - b.b || a.i - b.i).map((x, j) => Object.assign(x.q, { __diff: x.r * 1e4 + x.c * 1e3 + Math.min(x.b, 999) + j / 100, __tier: 0 }, /\d/.test(h6dTx(x.q)) && !x.q.__dup ? { __dup: 'h6d ' + h6dTx(x.q) } : {})); }; /* โจทย์เดียวกัน (ตัวเลขเดียวกัน) ไม่ซ้ำในเกม แม้ตัวเลือกสุ่มต่างกัน */
 /* question makers for the "ลองทำ" pages (same kinds as the game, new numbers) */
 const h6dPFPick = n => { const F = h6pf(n), a = h6x(F), b = h6x([F[0] * F[1], ...F.slice(2)].sort((x, y) => x - y)), c = h6x(n % 2 ? [3, n / 3] : [2, n / 2]);

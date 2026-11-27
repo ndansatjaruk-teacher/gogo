@@ -1527,7 +1527,7 @@ button.solidbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #E7E0D1}
 .fslot.filled{color:var(--ink)}
 .fans.done .fslot{background:var(--mint-soft);color:var(--mint-2);box-shadow:none}
 .fnav{display:flex;gap:6px;margin-bottom:6px}
-.fnav .btn{padding:4px 10px;font-size:13px;min-height:32px}
+.fnav .btn{padding:4px 12px;font-size:14px;min-height:38px} /* v279: ปุ่มเลือกช่องให้นิ้วแตะได้ (เดิม 32px) */
 .opt.fopt{font-size:clamp(22px,2.8cqw,30px)}
 .fslots .slot,.fcards .ncard{font-size:clamp(24px,3cqw,34px);min-height:76px}
 .xopt .xt.fx{font-size:clamp(20px,2.4cqw,28px);display:inline-flex;align-items:center;flex-wrap:wrap;gap:.25em}
