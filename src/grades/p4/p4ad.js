@@ -11,7 +11,7 @@ const a4dRay = (a, b, col = '#2B2550', ext = 30, w = 3.4) => { const d = a4dir(a
 const a4dSeg = (a, b, col = '#2B2550', w = 3.4) => `<path d="M${a4n(a[0])} ${a4n(a[1])} L${a4n(b[0])} ${a4n(b[1])}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
 const a4dProt = (c, rot, o = {}) => `<g data-grp="1" class="${o.cls || 'r4d-prot'}">${a4Prot(c, rot, o)}</g>`;
 const a4dCorner = (V, s = 66, d = 0) => { const a = a4P(V, s, d), c = a4P(a, s, d + 90), b = a4P(V, s, d + 90); return `<path data-pop="1" d="M${a4n(V[0])} ${a4n(V[1])} L${a4n(a[0])} ${a4n(a[1])} L${a4n(c[0])} ${a4n(c[1])} L${a4n(b[0])} ${a4n(b[1])}Z" fill="#FFC24C" fill-opacity=".35" stroke="#E6A21E" stroke-width="2.2" stroke-dasharray="6 4"/>`; };
-const a4dSee = (title, cap, list) => T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))));
+const a4dSee = (title, cap, list) => sbMark(title, cap, () => list.map(p => ({ W: 360, H: 240, ...p })), T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep)))));
 const a4dTry = (id, mk, title) => g5dTry(id, mk, title);
 const a4dD = (q, d, k) => ({ ...q, __diff: d, __kind: 'a4d' + k });
 /* question makers (same as the old games) */

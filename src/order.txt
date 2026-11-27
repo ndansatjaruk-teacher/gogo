@@ -113,6 +113,7 @@ grades/p4/p4nd.js
 grades/m1/m1d.js
 grades/m1/m1dd.js
 app/lessons.js
+app/seeboard.js
 app/learn.js
 app/wpic.js
 app/xteach.js

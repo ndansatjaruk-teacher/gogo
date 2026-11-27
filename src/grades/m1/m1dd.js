@@ -44,8 +44,8 @@ const d1dChips = (y, list, cx = 180) => { const w = list.map(t => Math.max(54, e
    ปากกาเขียนเส้น/ตัวหนังสือลงกระดานทีละชิ้น แล้วคำอธิบายของจังหวะนั้นขึ้นใต้กระดาน (พูดออกเสียง) รอให้อ่านจบจึงขึ้นจังหวะถัดไป
    ครบทุกจังหวะแล้วปุ่ม "ถัดไป" จึงกดได้ · ปุ่ม "ดูอีกครั้ง" เล่นใหม่ · window.__D1B_FAST (ทดสอบ) คูณเวลาทั้งหมด ---------- */
 function d1dBoardDo(o) {
-  const W = 400, H = o.H || 200, S = o.beats, F = () => window.__D1B_FAST || 1;
-  const root = h('div', { class: 'd1b ia' }), bd = h('div', { class: 'd1b-bd' }), cap = h('div', { class: 'd1b-say' }),  dots = h('div', { class: 'd1b-dots' }, ...S.map(() => h('i')));
+  const W = o.W || 400, H = o.H || 200, S = o.beats, F = () => window.__D1B_FAST || 1;
+  const root = h('div', { class: 'd1b ia' }), bd = h('div', { class: 'd1b-bd', style: { maxWidth: `min(1000px, calc((100cqh - 112px) * ${(W / H).toFixed(3)}))` } }), /* v271: รูปทุกขนาด (กระดานของทุกบท) */ cap = h('div', { class: 'd1b-say' }),  dots = h('div', { class: 'd1b-dots' }, ...S.map(() => h('i')));
   bd.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="r4d-svg d1b-svg" aria-hidden="true">${o.fig || ''}<g class="d1b-lay"></g></svg>`;
   const svg = bd.firstChild, lay = svg.querySelector('.d1b-lay'), pen = h('div', { class: 'r4d-pen', html: R4D_PEN }); bd.append(pen);
   let k = 0, tm = null, pF = [W * .92, H * .9], started = false, phase = 'wait', cur = null;
@@ -65,6 +65,7 @@ function d1dBoardDo(o) {
   const speak = t => { const tx = r4dTxt(t); cap.innerHTML = `<span>${t}</span>`; cap.classList.add('on'); A(cap, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: Math.min(1500, 300 + 24 * tx.length), easing: 'linear' }); say(tx, true); return Math.max(2400, 700 + 88 * tx.length); };
   const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++; phase = 'ink'; cur = b;
     if (b.off) b.off.forEach(sel => svg.querySelectorAll(sel).forEach(e => A(e, [{ opacity: 1 }, { opacity: .12 }], { duration: 300 })));
+    if (b.clear) lay.querySelectorAll('.d1b-ink').forEach(e => A(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 })); /* v271: รูปใหม่ทั้งรูป → รูปเดิมหายไป */
     const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); phase = 'talk'; tm = setTimeout(step, speak(b.t) * F()); }, d1 * F()); };
   const again = h('button', { class: 'btn sm ia d1b-again', style: { display: 'none' }, onclick: e => { e.stopPropagation(); clearTimeout(tm); svg.querySelectorAll('*').forEach(x => x.getAnimations && x.getAnimations().forEach(a => a.cancel())); lay.innerHTML = ''; k = 0; pF = [W * .92, H * .9];
     [...dots.children].forEach(i => { i.className = ''; }); cap.innerHTML = ''; cap.classList.remove('on', 'fin'); again.style.display = 'none'; root.classList.add('ia'); phase = 'wait'; sfx.tap(); tm = setTimeout(step, 400 * F()); } }, icon('replay'), h('span', null, 'ดูอีกครั้ง'));

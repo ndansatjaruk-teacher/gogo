@@ -162,4 +162,6 @@ function confetti(n = 40) {
   }
 }
 /* rotate answer positions of an authored exam (answer key varies) */
+/* v271: a tap-the-picture page (a4dSee / g5dSee / r4dSee) remembers its pictures — app/seeboard.js turns it into board pages */
+const sbMark = (title, cap, list, page) => ({ ...page, __see: { title, cap, list } });
 const xrot = (ex, k = 0) => ex.map((q, i) => { const n = q.opts.length, r = (i * 7 + k) % n; return r ? { ...q, opts: [...q.opts.slice(r), ...q.opts.slice(0, r)], a: (q.a - r + n) % n } : q; });

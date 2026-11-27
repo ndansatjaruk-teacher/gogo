@@ -44,7 +44,7 @@ const g5dTry = (id, mk, title) => ({ t: `<b>ลองทำ</b> — ${title}`, s
   v(el) { const L = LESSONS.find(x => x.id === id); L.__prac = L.__prac || new Set(); let q = null; for (let t = 0; t < 8; t++) { let x = null; __EASY = true; try { x = mk(); } catch (_) { x = null; } finally { __EASY = false; } if (x && x.mount && !L.__prac.has(qSig(x))) { q = x; break; } }
     if (!q) { el.append(fNote('ทบทวนตัวอย่างอีกครั้ง แล้วไปต่อกัน')); return; } L.__prac.add(qSig(q)); qAtoms(q).forEach(a => L.__prac.add(a)); promptOnce(q);
     const sim = qSim(q, 'เก่งมาก! แบบเดียวกับในเกมเลย', { bub: window.__teachBub }), pr = h('div', { class: 'colstack prac prac-game' }, sim); pr.classList.toggle('qs-figp', !!sim.querySelector(':scope > .qs-r')); el.append(pr); } });
-const g5dSee = (title, cap, list) => T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))));
+const g5dSee = (title, cap, list) => sbMark(title, cap, () => list.map(p => ({ W: 360, H: 240, ...p })), T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => el.append(r4vSee(cap, list.map(p => ({ W: 360, H: 240, ...p })), list.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep)))));
 /* question makers used by both the practice pages and the games */
 const g5dTwOk = T => new Set(g4Tot(T).r).size === T.rows.length && T.cols.every((_, c) => new Set(T.rows.map(([, v]) => v[c])).size === T.rows.length);
 const g5dTw = () => { for (let t = 0; t < 30; t++) { const T = g4twRand(); if (g5dTwOk(T)) return T; } return g4twRand(); };

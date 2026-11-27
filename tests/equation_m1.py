@@ -94,9 +94,17 @@ def run():
     # v259: every "ดูภาพ" (tap all pictures), "ทำให้ดู" (pencil steps to the end) and "ลองทำ" (an item of the game) page
     pages = lambda lid, word: pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {lid}); return L.teach.map((s, i) => (s.t || '').includes('{word}') ? i : -1).filter(i => i >= 0); }})()")
     def see():
-        n = pg.evaluate("document.querySelectorAll('#stage .r4v-pan').length")
-        if n < 1: raise Exception('no pictures')
-        for i in range(n): tapsel('.r4v-pan', i)
+        # v271: "ดูภาพ" is a board now — step it by hand (Space / tap) until every step is shown and Next opens
+        if not pg.evaluate("!!document.querySelector('#stage .d1b')"): raise Exception('no board')
+        nb = pg.evaluate("document.querySelectorAll('#stage .d1b-dots i').length")
+        if nb < 2: raise Exception('board has fewer than 2 steps')
+        for j in range(nb * 2 + 2):
+            if pg.evaluate("!!document.querySelector('#stage .d1b.ia')") is False and not pg.evaluate("!!document.querySelector('.btn.primary.waiting')"): break
+            if j % 2: pg.evaluate("document.querySelector('#stage .d1b-bd').dispatchEvent(new MouseEvent('click', { bubbles: true }))")
+            else: pg.keyboard.press('Space')
+            pg.wait_for_timeout(130)
+        pg.wait_for_timeout(500)
+        if pg.evaluate("document.querySelectorAll('#stage .d1b-dots i.on').length") != nb: raise Exception('not every step was shown')
     def show():
         for _ in range(40):
             if not pg.evaluate("!!document.querySelector('#stage .r4d-nx')"): break

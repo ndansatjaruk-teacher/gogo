@@ -79,8 +79,8 @@ const r4dArr = (a, b, col = R4VC.p) => { const L = r4len(a, b) || 1, u = [(b[0] 
 
 /* ---------- pages ---------- */
 /* ① look first: 1–2 big pictures from R4V_SEE[id] (one idea per page) */
-const r4dSee = (id, idx, title, cap) => T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => { const all = R4V_SEE[id](), L = idx.map(i => all[i]);
-  el.append(r4vSee(cap, L, L.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))); });
+const r4dSee = (id, idx, title, cap) => sbMark(title, cap, () => { const all = R4V_SEE[id](); return idx.map(i => all[i]); }, T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => { const all = R4V_SEE[id](), L = idx.map(i => all[i]);
+  el.append(r4vSee(cap, L, L.map(p => p.s.replace(/<br>/g, r4vSep)).join(r4vSep))); }));
 /* ② watch it done */
 const r4dShow = (title, o) => T(`<b>ทำให้ดู</b> — ${title}`, `ทำให้ดู ${r4dTxt(title)}`, el => el.append(r4dDo(o)));
 /* hands-on scene page (scenes from p4rm.js) */
