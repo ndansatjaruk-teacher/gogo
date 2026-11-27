@@ -35,16 +35,19 @@ def run():
         except Exception as e: res[name] = 'ERR ' + str(e)[:80]; return
         pg.wait_for_timeout(400); res[name] = ('ok' if (l0 and not locked()) else f'start_locked={l0} end_locked={locked()}')
     pages = lambda lid, word: pg.evaluate(f"(() => {{ const L = LESSONS.find(L => L.id === {lid}); return L.teach.map((s, i) => (s.t || '').includes('{word}') ? i : -1).filter(i => i >= 0); }})()")
-    def see():  # v269: the board plays by itself (no tapping); Next opens only after the last beat
+    def see():  # v272: the board waits for the child — step it with Space / tap until every step is shown and Next opens
         if not pg.evaluate("!!document.querySelector('#stage .d1b')"): raise Exception('no board')
-        n = pg.evaluate("document.querySelectorAll('#stage .d1b-dots i').length")
-        if n < 2: raise Exception('board has fewer than 2 beats')
+        nb = pg.evaluate("document.querySelectorAll('#stage .d1b-dots i').length")
+        if nb < 2: raise Exception('board has fewer than 2 steps')
         pg.wait_for_timeout(400)
         if not locked(): raise Exception('Next is open before the board has finished')
-        for _ in range(160):
+        for j in range(nb * 2 + 2):
             if not locked(): break
-            pg.wait_for_timeout(150)
-        if pg.evaluate("document.querySelectorAll('#stage .d1b-dots i.on').length") != n: raise Exception('not every beat was shown')
+            if j % 2: pg.evaluate("document.querySelector('#stage .d1b-bd').dispatchEvent(new MouseEvent('click', { bubbles: true }))")
+            else: pg.keyboard.press('Space')
+            pg.wait_for_timeout(130)
+        pg.wait_for_timeout(500)
+        if pg.evaluate("document.querySelectorAll('#stage .d1b-dots i.on').length") != nb: raise Exception('not every step was shown')
     def show():
         if pg.evaluate("!!document.querySelector('#stage .mgb.demo')"):  # the construction board plays itself step by step, with a note beside each step
             for _ in range(20):
@@ -86,6 +89,10 @@ def run():
         else: pg.evaluate("document.querySelector('.d1b-bd').dispatchEvent(new MouseEvent('click', { bubbles: true }))")
         pg.wait_for_timeout(200)
     pg.wait_for_timeout(500); res['manual'] = 'ok' if not locked() and pg.evaluate("document.querySelectorAll('.d1b-dots i.on').length") == nb else 'ERR board did not step by hand'
+    # v272: no auto-advance — after 6 s at normal speed the board is still on its first step; the Next button steps the board
+    pg.evaluate(f"startTeach({li},{k})"); pg.wait_for_timeout(6000); one = pg.evaluate("document.querySelectorAll('.d1b-dots i.on').length")
+    pg.evaluate("[...document.querySelectorAll('button.btn.primary')].find(b => /ถัดไป/.test(b.textContent)).click()"); pg.wait_for_timeout(300); two = pg.evaluate("document.querySelectorAll('.d1b-dots i.on').length")
+    res['wait'] = 'ok' if one == 1 and two == 2 else f'ERR auto-advanced or Next did not step ({one}, {two})'
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
     print(f'{len(res) - len(bad)} / {len(res)} pages work as intended' + (' ✓' if not bad else f' ✗ {bad}')); sys.exit(1 if bad else 0)

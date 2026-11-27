@@ -4809,3 +4809,5 @@ svg .d1nl{font:700 15px var(--font-num);fill:#2B2550}
 .d1b-bar{display:flex;align-items:center;gap:14px}
 .d1b-dots{display:flex;gap:7px}.d1b-dots i{width:11px;height:11px;border-radius:50%;background:#E3DDF3;transition:background .3s}.d1b-dots i.on{background:#7C5CE0}
 .d1b-tip{font:600 13px var(--font);color:#7A70A0;margin-top:-2px}
+.d1b-tip.wait{color:#7C5CE0;font-weight:800;animation:d1bTip 1.4s ease-in-out infinite}
+@keyframes d1bTip{50%{opacity:.45}}

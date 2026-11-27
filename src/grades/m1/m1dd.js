@@ -51,7 +51,7 @@ function d1dBoardDo(o) {
   let k = 0, tm = null, pF = [W * .92, H * .9], started = false, phase = 'wait', cur = null;
   const A = (el, kf, op) => el.animate ? el.animate(kf, { fill: 'both', ...op, duration: op.duration * F(), delay: (op.delay || 0) * F() }) : null;
   const pct = ([x, y]) => ({ left: `${(x / W * 100).toFixed(2)}%`, top: `${(y / H * 100).toFixed(2)}%` });
-  const ink = s => { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'd1b-ink'); g.innerHTML = s; lay.append(g);
+  const ink = s => { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'd1b-ink'); g.innerHTML = s; if (typeof sbKeys === 'function') sbKeys(g).forEach(([e, key]) => { e.__k = key; }); lay.append(g);
     const els = [...g.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse, text')]; let t = 120; const kf = [{ ...pct(pF), t: 0 }];
     els.forEach(e => { let bb = null; try { bb = e.getBBox(); } catch (_) { } const tag = e.tagName.toLowerCase(), st = e.getAttribute('stroke'), fl = e.getAttribute('fill') || (tag === 'text' ? '' : 'none'), dash = e.getAttribute('stroke-dasharray');
       if (tag === 'text') { const d = Math.min(650, 150 + 40 * (e.textContent || '').length); A(e, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: d, delay: t });
@@ -63,21 +63,23 @@ function d1dBoardDo(o) {
     if (kf.length > 1) { const last = kf[kf.length - 1]; pF = [parseFloat(last.left) / 100 * W, parseFloat(last.top) / 100 * H]; pen.classList.add('on'); A(pen, kf.map(f => ({ left: f.left, top: f.top, offset: Math.min(1, f.t / (t || 1)) })), { duration: t, easing: 'linear' }); }
     return t + 150; };
   const speak = t => { const tx = r4dTxt(t); cap.innerHTML = `<span>${t}</span>`; cap.classList.add('on'); A(cap, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: Math.min(1500, 300 + 24 * tx.length), easing: 'linear' }); say(tx, true); return Math.max(2400, 700 + 88 * tx.length); };
-  const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++; phase = 'ink'; cur = b;
+  const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++; phase = 'ink'; cur = b; tip.classList.remove('wait');
+    if (b.hide && b.hide.length) { const c = {}; b.hide.forEach(x => { c[x] = (c[x] || 0) + 1; }); lay.querySelectorAll('*').forEach(e => { if (e.__k && c[e.__k] > 0) { c[e.__k]--; A(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 350 }); } }); } /* v272: ส่วนที่รูปถัดไปไม่มีแล้ว ค่อย ๆ หายไป (รูปเดิมอยู่ต่อ ไม่วาดใหม่) */
     if (b.off) b.off.forEach(sel => svg.querySelectorAll(sel).forEach(e => A(e, [{ opacity: 1 }, { opacity: .12 }], { duration: 300 })));
     if (b.clear) lay.querySelectorAll('.d1b-ink').forEach(e => A(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 })); /* v271: รูปใหม่ทั้งรูป → รูปเดิมหายไป */
-    const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); phase = 'talk'; tm = setTimeout(step, speak(b.t) * F()); }, d1 * F()); };
+    const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); phase = 'talk'; speak(b.t); tip.classList.add('wait'); }, d1 * F()); }; /* v272 (ผู้ใช้ขอ): ไม่ไปขั้นถัดไปเอง — รอแตะ / Space / ถัดไป */
   const again = h('button', { class: 'btn sm ia d1b-again', style: { display: 'none' }, onclick: e => { e.stopPropagation(); clearTimeout(tm); svg.querySelectorAll('*').forEach(x => x.getAnimations && x.getAnimations().forEach(a => a.cancel())); lay.innerHTML = ''; k = 0; pF = [W * .92, H * .9];
     [...dots.children].forEach(i => { i.className = ''; }); cap.innerHTML = ''; cap.classList.remove('on', 'fin'); again.style.display = 'none'; root.classList.add('ia'); phase = 'wait'; sfx.tap(); tm = setTimeout(step, 400 * F()); } }, icon('replay'), h('span', null, 'ดูอีกครั้ง'));
-  const end = () => { phase = 'end'; root.classList.remove('ia'); tip.textContent = 'ครบแล้ว — แตะหรือกด Space ไปหน้าถัดไป'; pen.classList.remove('on'); if (o.fin) { cap.innerHTML = `<span>★ ${o.fin}</span>`; cap.classList.add('fin'); A(cap, [{ transform: 'scale(.96)' }, { transform: 'scale(1.03)' }, { transform: 'none' }], { duration: 420 }); } again.style.display = ''; sfx.ok(); teachDone(root); };
+  const end = () => { phase = 'end'; tip.classList.remove('wait'); root.classList.remove('ia'); tip.textContent = 'ครบแล้ว — แตะหรือกด Space ไปหน้าถัดไป'; pen.classList.remove('on'); if (o.fin) { cap.innerHTML = `<span>★ ${o.fin}</span>`; cap.classList.add('fin'); A(cap, [{ transform: 'scale(.96)' }, { transform: 'scale(1.03)' }, { transform: 'none' }], { duration: 420 }); } again.style.display = ''; sfx.ok(); teachDone(root); };
   const go = () => { if (started) return; if (!root.isConnected) { setTimeout(go, 150); return; } started = true; tm = setTimeout(step, 700 * F()); }; setTimeout(go, 30);
   /* v270 (ผู้ใช้ขอ): กดเองทีละขั้นได้ — แตะหน้าจอ / Space / → / Enter: กำลังเขียนอยู่ → เขียนเสร็จทันทีและขึ้นคำอธิบาย · ขึ้นคำอธิบายแล้ว → ไปขั้นถัดไปเลย (ไม่ต้องรอ) */
   const tip = h('span', { class: 'd1b-tip' }, 'แตะหน้าจอ หรือกด Space ไปขั้นต่อไป');
   const fast = () => { (root.getAnimations ? root.getAnimations({ subtree: true }) : []).forEach(a => { try { a.finish(); } catch (_) { } }); pen.classList.remove('on'); };
   const skip = () => { if (phase === 'end' || phase === 'busy') return false; clearTimeout(tm); started = true;
-    if (phase === 'ink') { fast(); phase = 'talk'; tm = setTimeout(step, speak(cur.t) * F()); } else { fast(); step(); } return true; };
+    if (phase === 'ink') { fast(); phase = 'talk'; speak(cur.t); tip.classList.add('wait'); } else { fast(); step(); } return true; };
   const off = () => { removeEventListener('click', onTap, true); removeEventListener('keydown', onKey, true); };
   const onTap = e => { if (!root.isConnected) return off(); if (phase === 'end' || (typeof Scratch !== 'undefined' && Scratch.on)) return; const t = e.target;
+    const nx = t.closest && t.closest('button.btn.primary'); if (nx && /ถัดไป/.test(nx.textContent) && !nx.closest('.visual')) { e.stopPropagation(); e.preventDefault(); skip(); return; } /* v272: ปุ่ม "ถัดไป" ระหว่างกระดานยังไม่ครบ = ไปขั้นถัดไปบนกระดาน */
     if (!t.closest || !t.closest('.screen.teach') || t.closest('button, a, .bottombar, .restart, .skipgame')) return; e.stopPropagation(); e.preventDefault(); skip(); };
   const onKey = e => { if (!root.isConnected) return off(); if (phase === 'end' || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return; if (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]')) return;
     if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); skip(); } };
