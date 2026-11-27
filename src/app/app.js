@@ -485,7 +485,7 @@ function showSettings() {
     sw('penAnywhere', 'Apple Pencil เขียนทดบนที่ว่างได้ทุกที่'),
     (() => { const r = sw('scrubErase', 'ขีดไปมาซ้ำ ๆ ทับรอยเขียน = ลบ · ความไว'), g = h('div', { class: 'seg scrublv' }); [['low', 'ต่ำ'], ['normal', 'ปกติ'], ['high', 'สูง']].forEach(([k, t]) => g.append(h('button', { class: 'btn sm' + ((SET.scrubLv || 'normal') === k ? ' primary' : ''), onclick: e => { SET.scrubLv = k; persist(); g.querySelectorAll('button').forEach(b => b.classList.toggle('primary', b === e.currentTarget)); } }, t))); r.insertBefore(g, r.lastChild); return r; })(), /* v263: ขีดซ้ำเพื่อลบ เปิด/ปิด + ความไว ในแถวเดียว */
     sw('askNudge', 'ไก่น้อยถาม “มีอะไรถามมั้ย” ทุก 30 วินาที ระหว่างเล่นเกม'),
-    sw('unlockAll', 'ปลดล็อกทุกด่าน (สำหรับครู)', () => { m.remove(); showMap(); }),
+    sw('unlockAll', 'ปลดล็อกทุกด่าน (ปิดเพื่อให้เล่นตามลำดับทีละด่าน)', () => { m.remove(); showMap(); }),
     sw('showFinal', 'แสดงด่านบอสใหญ่ประจำชั้นเสมอ (ปกติจะปรากฏเมื่อชนะบอสครบทุกบท)', () => { m.remove(); showMap(); }),
     h('div', { class: 'setrow' }, h('span', null, 'ขนาดหน้าจอ (ซูม) · ใช้สองนิ้วถ่าง/หุบได้'), zoomCtl()),
     h('div', { class: 'actions' },

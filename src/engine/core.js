@@ -70,7 +70,8 @@ const SAVE = (() => {
   try { d = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { }
   d.stars = d.stars || {};
   if (d.settings && !('mute' in d.settings) && d.settings.speak === false) { d.settings.mute = true; d.settings.speak = true; } // old top button only toggled speech
-  d.settings = Object.assign({ speak: true, sfx: true, mute: false, input: 'keypad', penAnywhere: true, scrubErase: true, scrubLv: 'normal', autoClear: true, unlockAll: false, askNudge: true }, d.settings || {});
+  d.settings = Object.assign({ speak: true, sfx: true, mute: false, input: 'keypad', penAnywhere: true, scrubErase: true, scrubLv: 'normal', autoClear: true, unlockAll: true, askNudge: true }, d.settings || {});
+  if (!d.settings.unlockV) { d.settings.unlockAll = true; d.settings.unlockV = 1; } /* v268 (ผู้ใช้ขอ): เปิดลิงก์แล้วทุกด่านปลดล็อกเป็นค่าเริ่มต้น — ครั้งเดียวสำหรับเครื่องที่เคยเล่น ครูปิดได้ในตั้งค่า */
   return d;
 })();
 function persist() { try { localStorage.setItem(STORE_KEY, JSON.stringify(SAVE)); } catch (e) { } }
