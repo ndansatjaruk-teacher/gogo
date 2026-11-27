@@ -4816,6 +4816,8 @@ svg .d1nl{font:700 15px var(--font-num);fill:#2B2550}
 .d1b-bar{display:flex;align-items:center;gap:14px}
 .d1b-dots{display:flex;gap:7px}.d1b-dots i{width:11px;height:11px;border-radius:50%;background:#E3DDF3;transition:background .3s}.d1b-dots i.on{background:#7C5CE0}
 .d1b-tip{font:600 13px var(--font);color:#7A70A0;margin-top:-2px}
+.d1b-tip.wait{color:#7C5CE0;font-weight:800;animation:d1bTip 1.4s ease-in-out infinite}
+@keyframes d1bTip{50%{opacity:.45}}
 </style></head>
 <body><div id="app"></div>
 <script>'use strict';
@@ -38907,7 +38909,7 @@ function d1dBoardDo(o) {
   let k = 0, tm = null, pF = [W * .92, H * .9], started = false, phase = 'wait', cur = null;
   const A = (el, kf, op) => el.animate ? el.animate(kf, { fill: 'both', ...op, duration: op.duration * F(), delay: (op.delay || 0) * F() }) : null;
   const pct = ([x, y]) => ({ left: `${(x / W * 100).toFixed(2)}%`, top: `${(y / H * 100).toFixed(2)}%` });
-  const ink = s => { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'd1b-ink'); g.innerHTML = s; lay.append(g);
+  const ink = s => { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'd1b-ink'); g.innerHTML = s; if (typeof sbKeys === 'function') sbKeys(g).forEach(([e, key]) => { e.__k = key; }); lay.append(g);
     const els = [...g.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse, text')]; let t = 120; const kf = [{ ...pct(pF), t: 0 }];
     els.forEach(e => { let bb = null; try { bb = e.getBBox(); } catch (_) { } const tag = e.tagName.toLowerCase(), st = e.getAttribute('stroke'), fl = e.getAttribute('fill') || (tag === 'text' ? '' : 'none'), dash = e.getAttribute('stroke-dasharray');
       if (tag === 'text') { const d = Math.min(650, 150 + 40 * (e.textContent || '').length); A(e, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: d, delay: t });
@@ -38919,21 +38921,23 @@ function d1dBoardDo(o) {
     if (kf.length > 1) { const last = kf[kf.length - 1]; pF = [parseFloat(last.left) / 100 * W, parseFloat(last.top) / 100 * H]; pen.classList.add('on'); A(pen, kf.map(f => ({ left: f.left, top: f.top, offset: Math.min(1, f.t / (t || 1)) })), { duration: t, easing: 'linear' }); }
     return t + 150; };
   const speak = t => { const tx = r4dTxt(t); cap.innerHTML = `<span>${t}</span>`; cap.classList.add('on'); A(cap, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: Math.min(1500, 300 + 24 * tx.length), easing: 'linear' }); say(tx, true); return Math.max(2400, 700 + 88 * tx.length); };
-  const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++; phase = 'ink'; cur = b;
+  const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++; phase = 'ink'; cur = b; tip.classList.remove('wait');
+    if (b.hide && b.hide.length) { const c = {}; b.hide.forEach(x => { c[x] = (c[x] || 0) + 1; }); lay.querySelectorAll('*').forEach(e => { if (e.__k && c[e.__k] > 0) { c[e.__k]--; A(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 350 }); } }); } /* v272: ส่วนที่รูปถัดไปไม่มีแล้ว ค่อย ๆ หายไป (รูปเดิมอยู่ต่อ ไม่วาดใหม่) */
     if (b.off) b.off.forEach(sel => svg.querySelectorAll(sel).forEach(e => A(e, [{ opacity: 1 }, { opacity: .12 }], { duration: 300 })));
     if (b.clear) lay.querySelectorAll('.d1b-ink').forEach(e => A(e, [{ opacity: 1 }, { opacity: 0 }], { duration: 300 })); /* v271: รูปใหม่ทั้งรูป → รูปเดิมหายไป */
-    const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); phase = 'talk'; tm = setTimeout(step, speak(b.t) * F()); }, d1 * F()); };
+    const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); phase = 'talk'; speak(b.t); tip.classList.add('wait'); }, d1 * F()); }; /* v272 (ผู้ใช้ขอ): ไม่ไปขั้นถัดไปเอง — รอแตะ / Space / ถัดไป */
   const again = h('button', { class: 'btn sm ia d1b-again', style: { display: 'none' }, onclick: e => { e.stopPropagation(); clearTimeout(tm); svg.querySelectorAll('*').forEach(x => x.getAnimations && x.getAnimations().forEach(a => a.cancel())); lay.innerHTML = ''; k = 0; pF = [W * .92, H * .9];
     [...dots.children].forEach(i => { i.className = ''; }); cap.innerHTML = ''; cap.classList.remove('on', 'fin'); again.style.display = 'none'; root.classList.add('ia'); phase = 'wait'; sfx.tap(); tm = setTimeout(step, 400 * F()); } }, icon('replay'), h('span', null, 'ดูอีกครั้ง'));
-  const end = () => { phase = 'end'; root.classList.remove('ia'); tip.textContent = 'ครบแล้ว — แตะหรือกด Space ไปหน้าถัดไป'; pen.classList.remove('on'); if (o.fin) { cap.innerHTML = `<span>★ ${o.fin}</span>`; cap.classList.add('fin'); A(cap, [{ transform: 'scale(.96)' }, { transform: 'scale(1.03)' }, { transform: 'none' }], { duration: 420 }); } again.style.display = ''; sfx.ok(); teachDone(root); };
+  const end = () => { phase = 'end'; tip.classList.remove('wait'); root.classList.remove('ia'); tip.textContent = 'ครบแล้ว — แตะหรือกด Space ไปหน้าถัดไป'; pen.classList.remove('on'); if (o.fin) { cap.innerHTML = `<span>★ ${o.fin}</span>`; cap.classList.add('fin'); A(cap, [{ transform: 'scale(.96)' }, { transform: 'scale(1.03)' }, { transform: 'none' }], { duration: 420 }); } again.style.display = ''; sfx.ok(); teachDone(root); };
   const go = () => { if (started) return; if (!root.isConnected) { setTimeout(go, 150); return; } started = true; tm = setTimeout(step, 700 * F()); }; setTimeout(go, 30);
   /* v270 (ผู้ใช้ขอ): กดเองทีละขั้นได้ — แตะหน้าจอ / Space / → / Enter: กำลังเขียนอยู่ → เขียนเสร็จทันทีและขึ้นคำอธิบาย · ขึ้นคำอธิบายแล้ว → ไปขั้นถัดไปเลย (ไม่ต้องรอ) */
   const tip = h('span', { class: 'd1b-tip' }, 'แตะหน้าจอ หรือกด Space ไปขั้นต่อไป');
   const fast = () => { (root.getAnimations ? root.getAnimations({ subtree: true }) : []).forEach(a => { try { a.finish(); } catch (_) { } }); pen.classList.remove('on'); };
   const skip = () => { if (phase === 'end' || phase === 'busy') return false; clearTimeout(tm); started = true;
-    if (phase === 'ink') { fast(); phase = 'talk'; tm = setTimeout(step, speak(cur.t) * F()); } else { fast(); step(); } return true; };
+    if (phase === 'ink') { fast(); phase = 'talk'; speak(cur.t); tip.classList.add('wait'); } else { fast(); step(); } return true; };
   const off = () => { removeEventListener('click', onTap, true); removeEventListener('keydown', onKey, true); };
   const onTap = e => { if (!root.isConnected) return off(); if (phase === 'end' || (typeof Scratch !== 'undefined' && Scratch.on)) return; const t = e.target;
+    const nx = t.closest && t.closest('button.btn.primary'); if (nx && /ถัดไป/.test(nx.textContent) && !nx.closest('.visual')) { e.stopPropagation(); e.preventDefault(); skip(); return; } /* v272: ปุ่ม "ถัดไป" ระหว่างกระดานยังไม่ครบ = ไปขั้นถัดไปบนกระดาน */
     if (!t.closest || !t.closest('.screen.teach') || t.closest('button, a, .bottombar, .restart, .skipgame')) return; e.stopPropagation(); e.preventDefault(); skip(); };
   const onKey = e => { if (!root.isConnected) return off(); if (phase === 'end' || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return; if (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]')) return;
     if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); skip(); } };
@@ -42301,13 +42305,23 @@ Object.keys(SAVE.stars || {}).forEach(k => { if (!LESSONS.some(L => String(L.id)
    เล่นเองทีละขั้น หรือแตะหน้าจอ / Space / → ไปทีละขั้นเองได้ · ครบแล้วปุ่มถัดไปจึงเปิด
    หน้าที่ถูกทำเครื่องหมายไว้ด้วย sbMark ถูกแตกเป็นหน้ากระดานหลังจากทุกบทสร้างหน้าสอนเสร็จ (LESSONS พร้อมแล้ว)
    ========================================================= */
+/* v272 (ผู้ใช้ขอ: หน้าแรก → หน้าที่สองวาดรูปใหม่ทั้งรูป ไม่จำเป็น): เทียบรูปก่อน/หลังทีละชิ้น (ชิ้น = element ที่ไม่มีลูก หรือ text พร้อมกลุ่มที่ครอบอยู่)
+   ชิ้นที่มีอยู่แล้วไม่วาดซ้ำ · ชิ้นใหม่วาดเพิ่ม (คงกลุ่ม/transform ที่ครอบไว้) · ชิ้นที่หายไปส่ง key ให้กระดานค่อย ๆ ซ่อน */
+const SBNS = 'http://www.w3.org/2000/svg';
+const sbParse = s => { const g = document.createElementNS(SBNS, 'g'); g.innerHTML = s; return g; };
+const sbLeaf = e => e.tagName.toLowerCase() === 'text' || !e.children.length;
+function sbKeys(root) { const out = [], walk = (e, path) => [...e.children].forEach(c => { if (sbLeaf(c)) out.push([c, path + '>' + c.outerHTML]); else walk(c, path + '<' + c.tagName + ' ' + [...c.attributes].map(a => a.name + '=' + a.value).sort().join(' ') + '>'); }); walk(root, ''); return out; }
+function sbDiff(b0, b1) { const A = sbParse(b0), B = sbParse(b1), cnt = {}, isNew = new Set(), gone = [];
+  sbKeys(A).forEach(([, k]) => { cnt[k] = (cnt[k] || 0) + 1; }); sbKeys(B).forEach(([e, k]) => { if (cnt[k] > 0) cnt[k]--; else isNew.add(e); });
+  Object.entries(cnt).forEach(([k, n]) => { for (let i = 0; i < n; i++) gone.push(k); });
+  const keep = e => { if (sbLeaf(e)) return isNew.has(e); let any = false; [...e.children].forEach(c => { if (keep(c)) any = true; else c.remove(); }); return any; };
+  [...B.children].forEach(c => { if (!keep(c)) c.remove(); }); return { ink: B.innerHTML.trim(), gone }; }
 function sbPages(sp) { const list = sp.list(), n = list.length, strip = t => String(t || '').replace(/<[^>]+>/g, '').trim();
   const capRest = String(sp.cap || '').replace(/^\s*<b>\s*แตะ[^<]*<\/b>\s*[—–-]?\s*/, '').replace(/^\s*แตะ\S*\s*[—–-]?\s*/, '').trim();
   return list.map((p, i) => { const title = n > 1 && strip(p.t) ? `${sp.title} — ${strip(p.t)}` : sp.title;
     return T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${r4dTxt(title)}`, el => { const W = p.W || 240, H = p.H || 170, b0 = p.f(false), b1 = p.f(true), lines = String(p.s || '').split(/<br\s*\/?>/).map(x => x.trim()).filter(Boolean);
       const intro = (strip(p.t) ? `<b>${p.t}</b>` : '') + (capRest ? (strip(p.t) ? ' — ' : '') + capRest : ''), beats = [{ ink: b0, t: intro || title }];
-      if (b1.startsWith(b0)) { const ov = b1.slice(b0.length); beats.push(ov.trim() ? { ink: ov, t: lines[0] || '' } : { t: lines[0] || '' }); }
-      else beats.push({ ink: b1, t: lines[0] || '', clear: 1 }); /* รูปหลังแตะวาดใหม่ทั้งรูป: ลบรูปเดิมออกก่อน */
+      const D = sbDiff(b0, b1); beats.push({ ink: D.ink, hide: D.gone, t: lines[0] || '' }); /* v272: ใช้รูปเดิมต่อ วาดเพิ่มเฉพาะส่วนใหม่ ส่วนที่ไม่มีแล้วค่อย ๆ หายไป */
       lines.slice(1).forEach(l => beats.push({ t: l }));
       el.append(d1dBoardDo({ W, H, fig: '', beats: beats.filter(b => b.ink || b.t), fin: lines.join(' ') })); }); }); }
 LESSONS.forEach(L => { if (Array.isArray(L.teach) && L.teach.some(p => p && p.__see)) L.teach = L.teach.flatMap(p => p && p.__see ? sbPages(p.__see) : [p]); });
