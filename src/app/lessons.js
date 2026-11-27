@@ -2971,6 +2971,9 @@ const CITIES = [
   /* v273 (ผู้ใช้ขอ): ม.1 บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น — 18 ด่าน 2801–2818 + บอส 2819 (m1k.js เกม · m1kd.js หน้าสอน) */
   { id: 100, grade: 7, term: 2, name: 'ลำน้ำกราฟ', chapter: 'บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น', lessons: LESSONS_M1C8,
     theme: { river: true, hills: ['#C2E4C4', '#B0DBB3', '#D2EDD3'], far: '#E2F3E3', edge: ['stilthouse', 'pier', 'tree', 'pine'], small: ['reeds', 'lotus', 'kayak', 'duck', 'flowers', 'paddy'] } },
+  /* v277 (ผู้ใช้ขอ): ม.1 บทที่ 9 สถิติ (1) — 12 ด่าน 2901–2912 + บอส 2919 */
+  { id: 102, grade: 7, term: 2, name: 'ลำน้ำสถิติ', chapter: 'บทที่ 9 สถิติ (1)', lessons: LESSONS_M1C9,
+    theme: { river: true, hills: ['#F6D6C8', '#F0C6B5', '#FBE4DA'], far: '#FCEDE6', edge: ['pier', 'stilthouse', 'ricebarn', 'tree'], small: ['lotus', 'kayak', 'reeds', 'duck', 'paddy', 'flowers'] } },
   /* v248 (ผู้ใช้ขอ): ม.2 บทที่ 5 สมบัติของเลขยกกำลัง — 18 ด่าน 8501–8518 + บอส 8519 (ความยากเท่าแบบฝึกหัดที่ผู้ใช้ส่งมา) */
   { id: 98, grade: 8, name: 'เมืองนักสืบเลขยกกำลัง', chapter: 'บทที่ 5 สมบัติของเลขยกกำลัง', lessons: LESSONS_M2C5,
     theme: { detect: true, hills: ['#DDE4F6', '#D1DAF0', '#EFE6DA'], far: '#ECF0FA', edge: ['dtoffice', 'dtlamp', 'dthouse', 'dtboard'], small: ['dtbook', 'dtmagnify', 'dtbox', 'dtprints', 'dtbench', 'dthydrant'] } },

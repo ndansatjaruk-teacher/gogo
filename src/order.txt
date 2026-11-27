@@ -117,6 +117,8 @@ grades/m1/m1kd.js
 grades/m1/m1s.js
 grades/m1/m1sd.js
 grades/m1/m1id.js
+grades/m1/m1t.js
+grades/m1/m1td.js
 app/lessons.js
 app/seeboard.js
 app/learn.js

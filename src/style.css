@@ -4905,3 +4905,23 @@ svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-w
 .i1n{font:700 14px var(--font-num);fill:#2B2550}
 .i1n.z{font-weight:900}
 .i1big{font:900 20px var(--font-num);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+/* v277 ม.1 บทที่ 9 สถิติ (prefix t9) */
+.t9l{font:800 14px var(--font);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+.t9n{font:700 12.5px var(--font-num);fill:#2B2550}
+.t9big{font:900 19px var(--font);fill:#2B2550;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.t9fig{width:min(420px,42cqw);height:auto;display:block;margin:0 auto}
+.colstack > .tg-fig .t9fig{width:min(460px,56cqw);max-height:min(42cqh,300px)}
+.xchart .t9fig{width:100%;max-height:min(36cqh,250px)}
+.xchart:has(.t9fig){min-width:min(360px,36cqw)}
+.t9tab{font-size:clamp(15px,1.7cqw,18px)}
+.t9card{display:block;padding:14px 12px;font:700 clamp(15px,1.7cqw,18px)/1.35 var(--font);color:#2B2550;max-width:200px}
+.t9chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:760px}
+.t9chips .btn.sm{min-height:46px;font-size:16px}
+.t9chip.done{opacity:.35}
+.t9tal svg,.t9pic svg,.t9pie svg,.t9fixed svg,.t9bars svg{width:min(420px,42cqw);height:auto;display:block}
+.t9pic{cursor:pointer}
+.t9grip{cursor:ns-resize}
+.t9bars{touch-action:none}
+.t9pie text,.t9pic text{pointer-events:none}
+.t9bars text{pointer-events:none}
+.t9pic svg{width:min(560px,54cqw)}
