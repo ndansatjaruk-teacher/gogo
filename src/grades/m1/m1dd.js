@@ -48,7 +48,7 @@ function d1dBoardDo(o) {
   const root = h('div', { class: 'd1b ia' }), bd = h('div', { class: 'd1b-bd' }), cap = h('div', { class: 'd1b-say' }),  dots = h('div', { class: 'd1b-dots' }, ...S.map(() => h('i')));
   bd.innerHTML = `<svg viewBox="0 0 ${W} ${H}" class="r4d-svg d1b-svg" aria-hidden="true">${o.fig || ''}<g class="d1b-lay"></g></svg>`;
   const svg = bd.firstChild, lay = svg.querySelector('.d1b-lay'), pen = h('div', { class: 'r4d-pen', html: R4D_PEN }); bd.append(pen);
-  let k = 0, tm = null, pF = [W * .92, H * .9], started = false;
+  let k = 0, tm = null, pF = [W * .92, H * .9], started = false, phase = 'wait', cur = null;
   const A = (el, kf, op) => el.animate ? el.animate(kf, { fill: 'both', ...op, duration: op.duration * F(), delay: (op.delay || 0) * F() }) : null;
   const pct = ([x, y]) => ({ left: `${(x / W * 100).toFixed(2)}%`, top: `${(y / H * 100).toFixed(2)}%` });
   const ink = s => { const g = document.createElementNS('http://www.w3.org/2000/svg', 'g'); g.setAttribute('class', 'd1b-ink'); g.innerHTML = s; lay.append(g);
@@ -63,14 +63,25 @@ function d1dBoardDo(o) {
     if (kf.length > 1) { const last = kf[kf.length - 1]; pF = [parseFloat(last.left) / 100 * W, parseFloat(last.top) / 100 * H]; pen.classList.add('on'); A(pen, kf.map(f => ({ left: f.left, top: f.top, offset: Math.min(1, f.t / (t || 1)) })), { duration: t, easing: 'linear' }); }
     return t + 150; };
   const speak = t => { const tx = r4dTxt(t); cap.innerHTML = `<span>${t}</span>`; cap.classList.add('on'); A(cap, [{ opacity: 0, clipPath: 'inset(0 100% 0 0)' }, { opacity: 1, clipPath: 'inset(0 0 0 0)' }], { duration: Math.min(1500, 300 + 24 * tx.length), easing: 'linear' }); say(tx, true); return Math.max(2400, 700 + 88 * tx.length); };
-  const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++;
+  const step = () => { tm = null; if (!root.isConnected) return; if (k >= S.length) { end(); return; } const b = S[k]; dots.children[k].className = 'on'; k++; phase = 'ink'; cur = b;
     if (b.off) b.off.forEach(sel => svg.querySelectorAll(sel).forEach(e => A(e, [{ opacity: 1 }, { opacity: .12 }], { duration: 300 })));
-    const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); tm = setTimeout(step, speak(b.t) * F()); }, d1 * F()); };
+    const d1 = b.ink ? ink(b.ink) : 0; tm = setTimeout(() => { if (!root.isConnected) return; pen.classList.remove('on'); phase = 'talk'; tm = setTimeout(step, speak(b.t) * F()); }, d1 * F()); };
   const again = h('button', { class: 'btn sm ia d1b-again', style: { display: 'none' }, onclick: e => { e.stopPropagation(); clearTimeout(tm); svg.querySelectorAll('*').forEach(x => x.getAnimations && x.getAnimations().forEach(a => a.cancel())); lay.innerHTML = ''; k = 0; pF = [W * .92, H * .9];
-    [...dots.children].forEach(i => { i.className = ''; }); cap.innerHTML = ''; cap.classList.remove('on', 'fin'); again.style.display = 'none'; sfx.tap(); tm = setTimeout(step, 400 * F()); } }, icon('replay'), h('span', null, 'ดูอีกครั้ง'));
-  const end = () => { pen.classList.remove('on'); if (o.fin) { cap.innerHTML = `<span>★ ${o.fin}</span>`; cap.classList.add('fin'); A(cap, [{ transform: 'scale(.96)' }, { transform: 'scale(1.03)' }, { transform: 'none' }], { duration: 420 }); } again.style.display = ''; sfx.ok(); teachDone(root); };
+    [...dots.children].forEach(i => { i.className = ''; }); cap.innerHTML = ''; cap.classList.remove('on', 'fin'); again.style.display = 'none'; root.classList.add('ia'); phase = 'wait'; sfx.tap(); tm = setTimeout(step, 400 * F()); } }, icon('replay'), h('span', null, 'ดูอีกครั้ง'));
+  const end = () => { phase = 'end'; root.classList.remove('ia'); tip.textContent = 'ครบแล้ว — แตะหรือกด Space ไปหน้าถัดไป'; pen.classList.remove('on'); if (o.fin) { cap.innerHTML = `<span>★ ${o.fin}</span>`; cap.classList.add('fin'); A(cap, [{ transform: 'scale(.96)' }, { transform: 'scale(1.03)' }, { transform: 'none' }], { duration: 420 }); } again.style.display = ''; sfx.ok(); teachDone(root); };
   const go = () => { if (started) return; if (!root.isConnected) { setTimeout(go, 150); return; } started = true; tm = setTimeout(step, 700 * F()); }; setTimeout(go, 30);
-  root.append(bd, h('div', { class: 'd1b-row' }, cap, h('div', { class: 'd1b-bar' }, dots, again))); return root;
+  /* v270 (ผู้ใช้ขอ): กดเองทีละขั้นได้ — แตะหน้าจอ / Space / → / Enter: กำลังเขียนอยู่ → เขียนเสร็จทันทีและขึ้นคำอธิบาย · ขึ้นคำอธิบายแล้ว → ไปขั้นถัดไปเลย (ไม่ต้องรอ) */
+  const tip = h('span', { class: 'd1b-tip' }, 'แตะหน้าจอ หรือกด Space ไปขั้นต่อไป');
+  const fast = () => { (root.getAnimations ? root.getAnimations({ subtree: true }) : []).forEach(a => { try { a.finish(); } catch (_) { } }); pen.classList.remove('on'); };
+  const skip = () => { if (phase === 'end' || phase === 'busy') return false; clearTimeout(tm); started = true;
+    if (phase === 'ink') { fast(); phase = 'talk'; tm = setTimeout(step, speak(cur.t) * F()); } else { fast(); step(); } return true; };
+  const off = () => { removeEventListener('click', onTap, true); removeEventListener('keydown', onKey, true); };
+  const onTap = e => { if (!root.isConnected) return off(); if (phase === 'end' || (typeof Scratch !== 'undefined' && Scratch.on)) return; const t = e.target;
+    if (!t.closest || !t.closest('.screen.teach') || t.closest('button, a, .bottombar, .restart, .skipgame')) return; e.stopPropagation(); e.preventDefault(); skip(); };
+  const onKey = e => { if (!root.isConnected) return off(); if (phase === 'end' || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return; if (e.target.closest && e.target.closest('input,textarea,select,[contenteditable]')) return;
+    if (e.key === ' ' || e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); e.stopImmediatePropagation(); skip(); } };
+  addEventListener('click', onTap, true); addEventListener('keydown', onKey, true);
+  root.append(bd, h('div', { class: 'd1b-row' }, cap, h('div', { class: 'd1b-bar' }, dots, again)), tip); return root;
 }
 const d1dBoard = (title, o) => T(`<b>ดูภาพ</b> — ${title}`, `ดูภาพ ${title}`, el => el.append(d1dBoardDo({ ...o, beats: o.beats.map(b => Array.isArray(b) ? { ink: b[0], t: b[1], off: b[2] } : b) })));
 /* board drawing helpers (board = 400 × 200) */

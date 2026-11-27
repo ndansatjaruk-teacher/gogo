@@ -78,6 +78,14 @@ def run():
     chk = pg.evaluate("""(() => { const B = LESSONS.find(L => L.id === 2422), out = [], V = s => d1Val(d1Ev(s));
       const want = { 'ผลลัพธ์ของ': 1 }; B.exam.forEach((q, i) => { const r = q.opts[q.a], t = typeof r === 'string' ? r : r.html.replace(/<[^>]+>/g, ''); out.push(t); }); return out; })()""")
     res['bossans'] = 'ok' if len(chk) == 20 else 'ERR'
+    # v270: the board can be stepped by hand (Space / tap) at normal speed — each press finishes the drawing or goes to the next point
+    pg.evaluate("window.__D1B_FAST = 1"); li = pg.evaluate("LESSONS.findIndex(L => L.id === 2403)"); k = pg.evaluate(f"LESSONS[{li}].teach.findIndex(s => /ดูภาพ/.test(s.t))")
+    pg.evaluate(f"startTeach({li},{k})"); pg.wait_for_timeout(300); nb = pg.evaluate("document.querySelectorAll('.d1b-dots i').length")
+    for i in range(nb * 2 + 1):
+        if i % 2 == 0: pg.keyboard.press('Space')
+        else: pg.evaluate("document.querySelector('.d1b-bd').dispatchEvent(new MouseEvent('click', { bubbles: true }))")
+        pg.wait_for_timeout(200)
+    pg.wait_for_timeout(500); res['manual'] = 'ok' if not locked() and pg.evaluate("document.querySelectorAll('.d1b-dots i.on').length") == nb else 'ERR board did not step by hand'
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
     print(f'{len(res) - len(bad)} / {len(res)} pages work as intended' + (' ✓' if not bad else f' ✗ {bad}')); sys.exit(1 if bad else 0)
