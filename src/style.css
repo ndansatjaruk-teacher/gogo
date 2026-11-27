@@ -4811,3 +4811,31 @@ svg .d1nl{font:700 15px var(--font-num);fill:#2B2550}
 .d1b-tip{font:600 13px var(--font);color:#7A70A0;margin-top:-2px}
 .d1b-tip.wait{color:#7C5CE0;font-weight:800;animation:d1bTip 1.4s ease-in-out infinite}
 @keyframes d1bTip{50%{opacity:.45}}
+/* v273 ม.1 บทที่ 8 กราฟและความสัมพันธ์เชิงเส้น (m1k.js / m1kd.js) */
+svg .k1t{font:700 13px var(--font)}
+svg .k1n{font:700 11px var(--font-num)}
+svg .k1ax{font:800 12px var(--font)}
+svg .k1l{font:800 14px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
+svg .k1big{font:800 20px var(--font-num);paint-order:stroke;stroke:#fff;stroke-width:4px}
+.k1fig{width:100%;max-width:400px;display:block;margin:0 auto}
+.k1big.k1fig,.k1fig.k1big{max-width:min(520px,52cqw)}
+.k1brd{touch-action:none;cursor:crosshair;background:#fff;border-radius:16px;box-shadow:inset 0 0 0 2px #E6E0F3;padding:4px}
+.k1ans{display:flex;flex-direction:column;align-items:center;gap:8px}
+.k1ans.done .k1brd{box-shadow:inset 0 0 0 3px #9FDCBF}
+.k1mini{width:150px;height:110px;display:block}
+.k1opts{display:grid;grid-template-columns:repeat(2,auto);gap:12px;justify-content:center}
+.k1pk{display:flex;flex-direction:column;align-items:center}
+.k1tab{border-collapse:collapse;margin:6px auto;font:700 clamp(14px,1.6vw,18px) var(--font-num)}
+.k1tab th,.k1tab td{border:1.5px solid #C9C1E3;padding:6px 10px;text-align:center;min-width:34px}
+.k1tab th{background:#F1EEFA;font-family:var(--font)}
+.k1tab td.q{color:#E5487A;font-weight:900}
+.k1side{display:flex;justify-content:center}
+.k1pk b{font:800 15px var(--font);color:#7A70A0;margin-top:2px}
+.tg-fig .k1fig{width:min(440px,46cqw);max-width:none;max-height:min(46cqh,300px)}
+.colstack > .tg-fig .k1fig{width:min(460px,70cqw)}
+.tg-left .tg-fig .k1fig{width:min(400px,40cqw)}
+.k1pg .tg-board{width:min(520px,60cqw)}
+.k1pg .tg-board svg{max-height:min(52cqh,340px)}
+.k1brd{width:min(560px,56cqw)}
+.k1brd svg{width:100%;height:auto;max-height:min(54cqh,380px);display:block}
+.k1row{align-items:center}

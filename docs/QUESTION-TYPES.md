@@ -4,7 +4,7 @@
 
 ทุกชนิดคืนค่าเป็น object คำถาม `{ prompt, say, mount(bd, ctx) … }` ใช้ในฟังก์ชัน `game` ของด่าน · ก่อนสร้างชนิดใหม่ ให้หาในตารางนี้ก่อนว่ามีของเดิมใช้ได้ไหม
 
-461 types
+463 types
 
 | ชนิด | พารามิเตอร์ | ไฟล์ |
 |---|---|---|
@@ -166,6 +166,8 @@
 | `Q.ixMatch` | `{ q, say: sy, pairs, hint, wide, rows }` | [`engine/ix.js:11`](../src/engine/ix.js#L11) |
 | `Q.ixSort` | `{ q, say: sy, items, dir = 'asc', k, slotLabels, hint, fig, side }` | [`engine/ix.js:19`](../src/engine/ix.js#L19) |
 | `Q.ixTF` | `{ q, say: sy, bins, items, hint }` | [`engine/ix.js:30`](../src/engine/ix.js#L30) |
+| `Q.k1Pick` | `{ story, q, figs, right` | [`grades/m1/m1k.js:61`](../src/grades/m1/m1k.js#L61) |
+| `Q.k1Plot` | `{ story, q, P, want, inner, hint, sig, diff, side }` | [`grades/m1/m1k.js:81`](../src/grades/m1/m1k.js#L81) |
 | `Q.k3Cmp` | `{ L, R }` | [`grades/p3/p3k.js:59`](../src/grades/p3/p3k.js#L59) |
 | `Q.k3Col` | `{ a, m, flip }` | [`grades/p3/p3k.js:43`](../src/grades/p3/p3k.js#L43) |
 | `Q.k3Groups` | `{ g, m, z }` | [`grades/p3/p3k.js:57`](../src/grades/p3/p3k.js#L57) |

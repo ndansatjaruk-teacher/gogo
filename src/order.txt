@@ -112,6 +112,8 @@ grades/p4/p4bd.js
 grades/p4/p4nd.js
 grades/m1/m1d.js
 grades/m1/m1dd.js
+grades/m1/m1k.js
+grades/m1/m1kd.js
 app/lessons.js
 app/seeboard.js
 app/learn.js
