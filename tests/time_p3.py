@@ -1,4 +1,4 @@
-"""ป.3 บทที่ 3 เวลา (ด่าน 1201–1211 หน้าสอนแบบ ม.ต้น v246): ลาก/แตะทุกหน้าลงมือทำจริงจนครบภารกิจ แล้วตรวจว่าปุ่ม "ถัดไป" ปลดล็อก
+"""ป.3 บทที่ 3 เวลา (ด่าน 1201–1211 · v298: หน้าลงมือเอง (ลาก/แตะ) ที่คงไว้ หาหน้าจากชื่อ "ลงมือเอง"): ลาก/แตะทุกหน้าลงมือทำจริงจนครบภารกิจ แล้วตรวจว่าปุ่ม "ถัดไป" ปลดล็อก
     python3 tests/time_p3.py            เมาส์
     python3 tests/time_p3.py --touch    นิ้ว (CDP touch events)
 ต้อง build ก่อน (dist/index.html) · ใช้ CHROME=/path/to/chrome ได้
@@ -12,7 +12,7 @@ def run():
     pg.goto((pathlib.Path(__file__).resolve().parent.parent / 'dist' / 'index.html').as_uri()); pg.wait_for_timeout(800); pg.evaluate("SET.mute = true; window.say = () => {}; 0")
     locked = lambda: pg.evaluate("!!document.querySelector('.btn.primary.waiting')")
     def open_(lid, k):
-        li = pg.evaluate(f"LESSONS.findIndex(L=>L.id==={lid})"); pg.evaluate(f"startTeach({li},{k})"); pg.wait_for_timeout(600)
+        li = pg.evaluate(f"LESSONS.findIndex(L=>L.id==={lid})"); k = pg.evaluate(f"(() => {{ const i = LESSONS[{li}].teach.findIndex(s => (s.t || '').includes('ลงมือเอง')); return i < 0 ? {k} : i; }})()"); pg.evaluate(f"startTeach({li},{k})"); pg.wait_for_timeout(600)
     def cpt(x, y):
         return pg.evaluate(f"(() => {{ const s = document.querySelector('#stage .tg-board svg'), m = s.getScreenCTM(), q = s.createSVGPoint(); q.x = {x}; q.y = {y}; const r = q.matrixTransform(m); return [r.x, r.y]; }})()")
     def drag(x0, y0, x1, y1):
