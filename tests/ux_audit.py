@@ -56,12 +56,12 @@ AUDIT = r"""() => {
     if (!shown(el)) continue;
     const rg = document.createRange(); rg.selectNodeContents(n); const rs = [...rg.getClientRects()].filter(r => r.width > 1 && r.height > 1); if (!rs.length) continue;
     const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
-    const c = clipRect(el);
+    const ell = cs.textOverflow === 'ellipsis', c = ell ? clipRect(n) : clipRect(el); /* a long title that ends in … is cut on purpose: only its visible part counts */
     for (const r of rs) {
       const vw = Math.min(r.right, c.r) - Math.max(r.left, c.l), vh = Math.min(r.bottom, c.b) - Math.max(r.top, c.t);
       const a = Math.max(0, vw) * Math.max(0, vh) / (r.width * r.height);
-      if (a > 0.05 && a < 0.9) out.push({ k: 'cut', w: name(el), d: `"${s.trim().slice(0, 30)}" ${Math.round(a * 100)}% seen` });
-      if (a >= 0.9) lines.push({ r, el, s: s.trim() });
+      if (a > 0.05 && a < 0.9 && !ell) out.push({ k: 'cut', w: name(el), d: `"${s.trim().slice(0, 30)}" ${Math.round(a * 100)}% seen` });
+      if (a >= 0.9 || (ell && a > 0.05)) { const L = Math.max(r.left, c.l), R = Math.min(r.right, c.r), T = Math.max(r.top, c.t), B = Math.min(r.bottom, c.b); lines.push({ r: { left: L, right: R, top: T, bottom: B, width: R - L, height: B - T }, el, s: s.trim() }); } /* only the part that is not clipped (a long title ends in … before the buttons) */
     }
     if (fs < 13 && s.trim().length > 1) out.push({ k: 'small', w: name(el), d: `${fs}px "${s.trim().slice(0, 24)}"` });
     /* a minus or a pair (x, y) broken over two lines */

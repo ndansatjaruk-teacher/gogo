@@ -7,8 +7,8 @@ import os, sys, pathlib
 from playwright.sync_api import sync_playwright
 TOUCH = '--touch' in sys.argv
 CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
-RANGE = {2: (731, 742)}
-OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|stepper"
+RANGE = {2: (731, 742), 3: (751, 760)}
+OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|stepper"
 def run():
   with sync_playwright() as p:
     br = p.chromium.launch(**({'executable_path': os.environ['CHROME']} if os.environ.get('CHROME') else {})); ctx = br.new_context(viewport={'width': 1180, 'height': 820}, has_touch=TOUCH); pg = ctx.new_page()
@@ -79,6 +79,15 @@ def run():
         for lid in (737, 738, 739):
             try: open_(lid, {737: 'แตะเครื่องหมาย', 738: 'ไม่มีวงเล็บ', 739: 'วงเล็บซ้อน'}[lid]); res[f'kept{lid - 730}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .f6-op').length >= 2") else 'ERR no operators'
             except Exception as e: res[f'kept{lid - 730}'] = 'ERR ' + str(e)[:60]
+    if CH == 3:
+        check('hand1', 751, 'ตัวคูณ', lambda: chips(25))
+        check('hand7', 757, '× หรือ ÷', lambda: chips(710))
+        for lid in (754, 755, 756):
+            try: open_(lid, 'จุด'); res[f'kept{lid - 750}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .dpt-gap').length >= 2") else 'ERR no gaps'
+            except Exception as e: res[f'kept{lid - 750}'] = 'ERR ' + str(e)[:60]
+        for lid in (758, 759, 760):
+            try: open_(lid, 'ประโยคสัญลักษณ์'); res[f'kept{lid - 750}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .d6-pick').length >= 2") else 'ERR no choices'
+            except Exception as e: res[f'kept{lid - 750}'] = 'ERR ' + str(e)[:60]
     res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
