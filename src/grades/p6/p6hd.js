@@ -18,7 +18,7 @@ const h6dO = (x, y, r = 16, col = H6C.g) => `<circle cx="${a4n(x)}" cy="${a4n(y)
 const h6dChipS = (x, y, t, fill = '#fff', col = H6C.ink, w = 38) => `<rect x="${a4n(x - w / 2)}" y="${a4n(y - 17)}" width="${w}" height="30" rx="9" fill="${fill}" stroke="${H6C.fade}" stroke-width="1.4"/>` + h6dT(x, y + 5, t, col, 'r4d-tx');
 const h6dArc = (x1, x2, y, hgt, col = H6C.b) => `<path d="M${a4n(x1)} ${y} Q${a4n((x1 + x2) / 2)} ${a4n(y - hgt * 2)} ${a4n(x2)} ${y}" fill="none" stroke="${col}" stroke-width="2.6" stroke-linecap="round"/>`;
 /* the hands-on pages already in the lesson (tap to split a tree, tap a prime to divide, tap ห.ร.ม./ค.ร.น.) — kept, renamed "ลงมือเอง" */
-const h6dHands = (L, re) => (L.__old || []).filter(s => re.test(String(s.v))).map(s => ({ ...s, t: `<b>ลงมือเอง</b> — ${String(s.t).replace(/^(ลองเอง|อีกวิธี|ตัวอย่างทีละขั้น):\s*/, '')}`, s: `ลงมือเอง ${r4dTxt(s.t)}` }));
+const h6dHands = (L, re) => (L.__old || []).filter(s => re.test(String(s.v))).map(s => ({ ...s, t: `<b>ลงมือเอง</b> — ${String(s.t).replace(/^(ลองเอง|อีกวิธี|ตัวอย่างทีละขั้น):\s*/, '').replace(/ลองทำ/g, 'ลอง')}` /* คำว่า “ลองทำ” ใช้เฉพาะหน้าลองทำ */, s: `ลงมือเอง ${r4dTxt(s.t)}` }));
 const h6dOld = (title, f) => T(`<b>ลงมือเอง</b> — ${title}`, `ลงมือเอง ${r4dTxt(title)}`, f);
 /* a hands-on picture driven by a row of number chips (instead of + − buttons): draw(v) → { s, H, note, ok, done } */
 function h6dChip(cap, vals, draw, o = {}) {

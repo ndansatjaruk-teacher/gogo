@@ -56,7 +56,7 @@ function triSVG(p, o = {}) {
     const tk = o.ticks ? o.ticks[k] : 0; for (let j = 0; j < tk; j++) { const off = (j - (tk - 1) / 2) * 6, c = [M[0] + u[0] * off, M[1] + u[1] * off]; s += `<path d="M${c[0] - u[1] * 7} ${c[1] + u[0] * 7} L${c[0] + u[1] * 7} ${c[1] - u[0] * 7}" stroke="#2B2550" stroke-width="2"/>`; }
     if (o.sides && o.sides[k] != null) s += `<text x="${M[0] + d[0] / L * 24}" y="${M[1] + d[1] / L * 24 + 5}" text-anchor="middle" class="t6-sv">${o.sides[k] === true ? inf.S[k] + ' ซม.' : o.sides[k]}</text>`; });
   (o.sideHit ? [0, 1, 2] : []).forEach(k => { s += `<path class="t6-side" data-k="${k}" d="M${p[k]} L${p[(k + 1) % 3]}" stroke="transparent" stroke-width="26"/>`; });
-  (o.handles ? [0, 1, 2] : []).forEach(i => { s += `<circle class="t6-h drag" data-i="${i}" cx="${p[i][0]}" cy="${p[i][1]}" r="11" fill="#7E6ED6" fill-opacity=".85" stroke="#fff" stroke-width="2.4"/>`; });
+  (o.handles ? [0, 1, 2] : []).forEach(i => { s += `<circle class="t6-h drag" data-i="${i}" cx="${p[i][0]}" cy="${p[i][1]}" r="17" fill="#7E6ED6" fill-opacity=".85" stroke="#fff" stroke-width="2.4"/>`; });
   return s + (o.extra || '') + '</svg>';
 }
 const t6tick = inf => { const t = [0, 0, 0]; if (inf.byS === 'equi') return [1, 1, 1]; inf.eq.forEach((e, j) => { if (e) { t[j] = 1; t[(j + 1) % 3] = 1; } }); return t; };
@@ -268,7 +268,7 @@ const T6W_PER = [
   { fig: T6F([[40, 60], [320, 60], [180, 200]], ['34.6 ม.', null, '20 ม.'], { ticks: [0, 1, 1] }), a: '74.6', unit: 'ม.' }];
 /* area figures drawn TO SCALE from the numbers (ผู้ใช้แจ้ง: รูปเดิมไม่ได้สัดส่วน ตัวเลขทับเส้น) — base A(0,0)–B(b,0), apex C(off,h) */
 function t6AreaSVG({ b, h: H, off, unit: u, flip, sides = {}, noH }) {
-  const mnx = Math.min(0, off), mxx = Math.max(b, off), w = mxx - mnx, s = Math.min(300 / w, 170 / H), px = 62, py = 34;
+  const mnx = Math.min(0, off), mxx = Math.max(b, off), w = mxx - mnx, s = Math.min(300 / w, 170 / H), px = 62, py = 42; /* v283: ป้ายฐานไม่ชิดขอบล่าง */
   const X = x => +(px + (x - mnx) * s).toFixed(1), Y = y => +(flip ? py + y * s : py + (H - y) * s).toFixed(1), W = +(w * s + 2 * px).toFixed(1), Hh = +(H * s + 2 * py).toFixed(1);
   const A = [X(0), Y(0)], B = [X(b), Y(0)], C = [X(off), Y(H)], F = [X(off), Y(0)], dn = flip ? -1 : 1, t = (x, y, txt, a = 'middle', c = 't6-al') => `<text x="${x}" y="${y}" text-anchor="${a}" class="${c}">${txt}</text>`;
   const len = (p, q) => +Math.hypot(p[0] - q[0], p[1] - q[1]).toFixed(1), lab = v => typeof v === 'string' ? v : `${fmtDec(String(v))} ${u}`;
