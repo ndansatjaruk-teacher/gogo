@@ -110,14 +110,14 @@ function simAngles8(groups = ['int', 'ext', 'alt', 'side']) {
   const draw = () => { box.innerHTML = transFig({ ...st, hl, arcs: Object.keys(hl).map(Number) }); };
   const G = { int: ['มุมภายใน', () => { hl = {}; G6_INT.forEach(k => hl[k] = 'b'); return 'มุม 3 4 5 6 อยู่<b>ระหว่าง</b>เส้น AB กับ CD = <b>มุมภายใน</b>'; }],
     ext: ['มุมภายนอก', () => { hl = {}; [1, 2, 7, 8].forEach(k => hl[k] = 'd'); return 'มุม 1 2 7 8 อยู่<b>นอก</b>เส้นคู่นั้น = <b>มุมภายนอก</b>'; }],
-    alt: ['มุมแย้ง', () => { hl = { 3: 'a', 6: 'a', 4: 'c', 5: 'c' }; return '<b>มุมแย้ง</b> = มุมภายในที่อยู่<b>คนละข้าง</b>ของเส้นตัด และอยู่คนละเส้น (รูปตัว Z): <b>3 กับ 6</b> · <b>4 กับ 5</b>'; }],
-    side: ['มุมภายในบนข้างเดียวกัน', () => { hl = { 3: 'a', 5: 'a', 4: 'c', 6: 'c' }; return '<b>มุมภายในที่อยู่บนข้างเดียวกันของเส้นตัด</b> (รูปตัว C/U): <b>3 กับ 5</b> · <b>4 กับ 6</b>'; }],
-    corr: ['มุมภายนอก-ภายในตรงข้าม', () => { hl = { 1: 'a', 5: 'a', 4: 'c', 8: 'c' }; return '<b>มุมภายนอกและมุมภายในที่อยู่ตรงข้ามบนข้างเดียวกันของเส้นตัด</b> (รูปตัว F): 1 กับ 5 · 4 กับ 8'; }] };
+    alt: ['มุมแย้ง', () => { hl = { 3: 'a', 6: 'a', 4: 'c', 5: 'c' }; return '<b>มุมแย้ง</b> = มุมภายในที่อยู่<b>คนละข้าง</b>ของเส้นตัด และอยู่คนละเส้น (รูปตัว Z): <b>3 กับ 6</b> — <b>4 กับ 5</b>'; }],
+    side: ['มุมภายในบนข้างเดียวกัน', () => { hl = { 3: 'a', 5: 'a', 4: 'c', 6: 'c' }; return '<b>มุมภายในที่อยู่บนข้างเดียวกันของเส้นตัด</b> (รูปตัว C/U): <b>3 กับ 5</b> — <b>4 กับ 6</b>'; }],
+    corr: ['มุมภายนอก-ภายในตรงข้าม', () => { hl = { 1: 'a', 5: 'a', 4: 'c', 8: 'c' }; return '<b>มุมภายนอกและมุมภายในที่อยู่ตรงข้ามบนข้างเดียวกันของเส้นตัด</b> (รูปตัว F): 1 กับ 5 — 4 กับ 8'; }] };
   box.addEventListener('click', e => { const w = e.target.closest('.g6w'); if (!w) return; e.stopPropagation(); const k = +w.dataset.k, nm = G6_INT.includes(k) ? 'มุมภายใน' : 'มุมภายนอก', a = g6partner(k, 'alt'), s2 = g6partner(k, 'side');
     hl = { [k]: 'a' }; if (a) hl[a] = 'c'; if (s2) hl[s2] = 'b'; draw(); sfx.pop(k);
-    out.innerHTML = `มุม ${k} เป็น<b>${nm}</b>` + (a ? ` · มุมแย้งของมุม ${k} คือ <b style="color:${G6COL.c}">มุม ${a}</b> · มุมภายในบนข้างเดียวกันคือ <b style="color:${G6COL.b}">มุม ${s2}</b>` : ` · มุมตรงข้ามของมุม ${k} คือมุม ${g6partner(k, 'vert')}`); });
+    out.innerHTML = `มุม ${k} เป็น<b>${nm}</b>` + (a ? ` — มุมแย้งของมุม ${k} คือ <b style="color:${G6COL.c}">มุม ${a}</b> — มุมภายในบนข้างเดียวกันคือ <b style="color:${G6COL.b}">มุม ${s2}</b>` : ` — มุมตรงข้ามของมุม ${k} คือมุม ${g6partner(k, 'vert')}`); });
   const btns = h('div', { class: 'rowstack' }, ...groups.map(g => h('button', { class: 'btn sm ia', onclick: e => { e.stopPropagation(); out.innerHTML = G[g][1](); draw(); sfx.page(); } }, G[g][0])));
-  draw(); out.innerHTML = 'เส้น EF <b>ตัดขวาง</b>เส้น AB และ CD เกิดมุม <b>8 มุม</b> · กดปุ่มดูกลุ่มมุม หรือ<b>แตะมุม</b>ที่อยากรู้';
+  draw(); out.innerHTML = 'เส้น EF <b>ตัดขวาง</b>เส้น AB และ CD เกิดมุม <b>8 มุม</b> — กดปุ่มดูกลุ่มมุม หรือ<b>แตะมุม</b>ที่อยากรู้';
   return h('div', { class: 'colstack' }, box, btns, out);
 }
 /* property sim: drag until parallel; watch interior same-side sum or alternate angles */
