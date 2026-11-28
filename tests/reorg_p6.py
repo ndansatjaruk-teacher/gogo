@@ -2,13 +2,16 @@
 ลองทำ (ข้อแบบเดียวกับเกม) ปลดล็อกปุ่มถัดไป · ไม่เหลือการ์ดรู้จัก ตัวอย่างตัวหนังสือ หรือหน้าปุ่ม + − / กดทีละขั้น · หน้าลงมือเอง (แตะชิป ลากระบาย
 แตะเครื่องหมาย) ทำงาน · เกมแต่ละด่าน ≥ 8 ข้อ เรียงง่าย → ยาก (บทที่ 1 ใช้ tests/hcf_p6.py)
     python3 tests/reorg_p6.py --ch 2 [--touch]
+    python3 tests/reorg_p6.py --p5 1 [--touch]   (ป.5 บทที่ 1)
 """
 import os, sys, pathlib
 from playwright.sync_api import sync_playwright
 TOUCH = '--touch' in sys.argv
 CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
-RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868), 10: (871, 876)}
-OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap|simDiagQuad|simQuadSplit|simCircParts|simCompass|simRoll|simCircum|simSectors|simCircArea|simRing|simTank|picWalk|stepper"
+if '--p5' in sys.argv: CH = 50 + int(sys.argv[sys.argv.index('--p5') + 1])  # ป.5 บทที่ n (v288 ขึ้นไป · src/grades/p5/p5*d.js)
+RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868), 10: (871, 876), 51: (501, 530)}
+OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap|simDiagQuad|simQuadSplit|simCircParts|simCompass|simRoll|simCircum|simSectors|simCircArea|simRing|simTank|picWalk|fWalk|fracBars|simHalf|simOfSet|simArea\(|stepper"
+if CH > 50: OLD = OLD.replace(r'simLine\(|', '')  # ป.5 คงหน้าลากบนเส้นจำนวน simLine
 def run():
   with sync_playwright() as p:
     br = p.chromium.launch(**({'executable_path': os.environ['CHROME']} if os.environ.get('CHROME') else {})); ctx = br.new_context(viewport={'width': 1180, 'height': 820}, has_touch=TOUCH); pg = ctx.new_page()
@@ -143,6 +146,15 @@ def run():
         for lid, word, sel in ((871, 'ลากจุด', '.pz-h'), (871, 'กะพริบ', '.pz-sec'), (872, 'เปรียบ', '.pz-sec'), (873, 'ทีละส่วน', '.pz-sec'), (874, '12,000', '.pz-sec'), (874, 'วางแผน', '.d6-pick'), (875, 'วางแผน', '.d6-pick'), (876, 'วางแผน', '.d6-pick')):
             try: open_(lid, word); res[f'kept{lid - 870}{sel}'] = 'ok' if pg.evaluate(f"document.querySelectorAll('#stage {sel}').length >= 2") else 'ERR nothing to tap'
             except Exception as e: res[f'kept{lid - 870}{sel}'] = 'ERR ' + str(e)[:60]
+    if CH == 51:
+        def three():  # three different chips: still locked after two, unlocked after the third
+            tapq('.h6d-chips .h6-chip', 0); tapq('.h6d-chips .h6-chip', 1)
+            if not locked(): raise Exception('unlocked too early')
+            tapq('.h6d-chips .h6-chip', 3)
+        for lid, word in ((501, 'เกินครึ่ง'), (511, 'ของ 15'), (514, 'ทับกัน')): check(f'hand{lid - 500}', lid, word, three)
+        for lid in (503, 504, 506, 507, 512, 513, 517, 518, 519):
+            try: open_(lid, ''); res[f'kept{lid - 500}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .ia').length >= 1") else 'ERR nothing to tap'
+            except Exception as e: res[f'kept{lid - 500}'] = 'ERR ' + str(e)[:60]
     res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
