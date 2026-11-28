@@ -160,4 +160,5 @@ grades/p2/p2nd.js
 grades/p2/p2bd.js
 grades/p2/p2ld.js
 grades/p2/p2wd.js
+grades/p2/p2xd.js
 app/app.js
