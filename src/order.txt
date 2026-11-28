@@ -151,4 +151,5 @@ grades/p3/p3cd.js
 grades/p3/p3fd.js
 grades/p3/p3kd.js
 grades/p3/p3dd.js
+grades/p3/p3ld.js
 app/app.js
