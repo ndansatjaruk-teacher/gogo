@@ -152,7 +152,7 @@ function simReadBar(spec) {
 function simDouble(spec) {
   const out = fNote(); let off = [], c;
   const show = ci => { const vs = spec.series.map(se => se.v[ci]); c.draw({ off, hlc: [ci], guide: spec.series.map((_, si) => [ci, si]).filter(([, si]) => !off.includes(si)), hl: spec.series.map((_, si) => ci + ':' + si) });
-    out.innerHTML = `<b>${gCat(spec, ci)}</b>: ` + spec.series.map((se, si) => `<span class="gsw" style="background:${se.col || GCOL[si]}"></span>${se.name} ${gNum(vs[si])}`).join(' · ') + (vs.length === 2 ? ` → ต่างกัน <b>${gNum(Math.abs(vs[0] - vs[1]))}</b>` : ''); sfx.pop(ci + 2); };
+    out.innerHTML = `<b>${gCat(spec, ci)}</b>: ` + spec.series.map((se, si) => `<span class="gsw" style="background:${se.col || GCOL[si]}"></span>${se.name} ${gNum(vs[si])}`).join(', ') + (vs.length === 2 ? ` → ต่างกัน <b>${gNum(Math.abs(vs[0] - vs[1]))}</b>` : ''); sfx.pop(ci + 2); };
   c = dataChart(spec, { onTap: ci => show(ci), onLegend: si => { off = off.includes(si) ? off.filter(x => x !== si) : [...off, si]; if (off.length === spec.series.length) off = []; c.draw({ off }); sfx.tap(); out.innerHTML = `แสดง: ${spec.series.filter((_, k) => !off.includes(k)).map(se => se.name).join(', ')} — สีของแท่งบอกว่าเป็นข้อมูลชุดไหน (ดูที่<b>คำอธิบายสัญลักษณ์</b>)`; } });
   out.innerHTML = 'แตะ<b>กลุ่มแท่ง</b>เพื่ออ่านค่าทั้งสองชุด · แตะ<b>สัญลักษณ์สี</b>ด้านบนเพื่อซ่อน/แสดงข้อมูลแต่ละชุด'; return h('div', { class: 'colstack' }, c, out);
 }
