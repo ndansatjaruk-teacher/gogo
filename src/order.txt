@@ -166,4 +166,5 @@ grades/p2/p2td.js
 grades/p2/p2vd.js
 grades/p2/p2gd.js
 grades/p2/p2od.js
+grades/p2/p2cd.js
 app/app.js
