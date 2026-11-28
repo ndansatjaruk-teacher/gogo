@@ -128,4 +128,5 @@ app/xtra.js
 grades/p6/p6hd.js
 grades/p6/p6fd.js
 grades/p6/p6dd.js
+grades/p6/p6pd.js
 app/app.js

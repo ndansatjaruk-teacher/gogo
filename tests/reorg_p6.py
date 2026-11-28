@@ -7,8 +7,8 @@ import os, sys, pathlib
 from playwright.sync_api import sync_playwright
 TOUCH = '--touch' in sys.argv
 CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
-RANGE = {2: (731, 742), 3: (751, 760)}
-OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|stepper"
+RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785)}
+OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|stepper"
 def run():
   with sync_playwright() as p:
     br = p.chromium.launch(**({'executable_path': os.environ['CHROME']} if os.environ.get('CHROME') else {})); ctx = br.new_context(viewport={'width': 1180, 'height': 820}, has_touch=TOUCH); pg = ctx.new_page()
@@ -88,6 +88,10 @@ def run():
         for lid in (758, 759, 760):
             try: open_(lid, 'ประโยคสัญลักษณ์'); res[f'kept{lid - 750}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .d6-pick').length >= 2") else 'ERR no choices'
             except Exception as e: res[f'kept{lid - 750}'] = 'ERR ' + str(e)[:60]
+    if CH == 4:
+        for lid, word, sel in ((772, 'ลองเลือกเอง', '.btn.info'), (776, 'ลองเลือกเอง', '.btn.info'), (773, 'วางแผน', '.d6-pick'), (777, 'วางแผน', '.d6-pick'), (778, 'วางแผน', '.d6-pick'), (779, 'วางแผน', '.d6-pick'), (783, 'แผนผัง', '.p6-pl'), (784, 'มาตราส่วน', '.p6-seg'), (785, 'เส้นทาง', '.p6-seg')):
+            try: open_(lid, word); res[f'kept{lid - 770}'] = 'ok' if pg.evaluate(f"document.querySelectorAll('#stage {sel}').length >= 2") else 'ERR nothing to tap'
+            except Exception as e: res[f'kept{lid - 770}'] = 'ERR ' + str(e)[:60]
     res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
