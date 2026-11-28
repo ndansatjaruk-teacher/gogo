@@ -12,8 +12,9 @@ CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
 if '--p5' in sys.argv: CH = 50 + int(sys.argv[sys.argv.index('--p5') + 1])  # ป.5 บทที่ n (v288 ขึ้นไป · src/grades/p5/p5*d.js)
 if '--p3' in sys.argv: CH = 30 + int(sys.argv[sys.argv.index('--p3') + 1])  # ป.3 บทที่ n (v296 ขึ้นไป · src/grades/p3/p3*d.js)
 if '--p2' in sys.argv: CH = 60 + int(sys.argv[sys.argv.index('--p2') + 1])  # ป.2 บทที่ n (v309 ขึ้นไป · src/grades/p2/p2*d.js)
-RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868), 10: (871, 876), 51: (501, 530), 52: (541, 562), 53: (571, 582), 54: (591, 596), 55: (601, 614), 56: (621, 628), 57: (631, 650), 58: (661, 672), 31: (101, 106), 32: (111, 118), 33: (1201, 1211), 34: (1221, 1224), 35: (1341, 1345), 36: (1361, 1370), 37: (1381, 1389), 38: (1301, 1309), 39: (1321, 1331), 40: (1241, 1252), 41: (1261, 1270), 42: (1281, 1291), 43: (1401, 1406), 61: (41, 52), 62: (61, 73), 63: (81, 88), 64: (901, 910), 65: (921, 932), 66: (941, 952), 67: (961, 969), 68: (981, 989)}
+RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868), 10: (871, 876), 51: (501, 530), 52: (541, 562), 53: (571, 582), 54: (591, 596), 55: (601, 614), 56: (621, 628), 57: (631, 650), 58: (661, 672), 31: (101, 106), 32: (111, 118), 33: (1201, 1211), 34: (1221, 1224), 35: (1341, 1345), 36: (1361, 1370), 37: (1381, 1389), 38: (1301, 1309), 39: (1321, 1331), 40: (1241, 1252), 41: (1261, 1270), 42: (1281, 1291), 43: (1401, 1406), 61: (41, 52), 62: (61, 73), 63: (81, 88), 64: (901, 910), 65: (921, 932), 66: (941, 952), 67: (961, 969), 68: (981, 989), 69: (1001, 1005)}
 OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar\(|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap\(|simDiagQuad|simQuadSplit|simCircParts|simCompass|simRoll|simCircum|simSectors|simCircArea|simRing|simTank|picWalk|fWalk|fracBars|simHalf|simOfSet|simArea\(|simDecGrid|simDecArea|pvChart|gWalk|simRate\(|simQuadBuild|simParaArea|q5ex|simPrism5|simCuboid|simIso\(|simVolLayers|simFill|simUnitConv|v5ex|abacusMachine|hopStrip|compareStep|revealBtn|simColumn|simBarUnknown|miCards|rpWalk|simF3Cut|simF3Cmp|simF3Add|simK3Zero|simMul1|simMulLong|simK3Unk|d3demo|simL3Walk|simL3Guess|simW3Guess|simW2Units|w3demo|simV3Guess|simV3Spoon|simMnLedger|simX3Sense|skipDemo|blocksMachine|evenPairs|simBlocksAdd|simBlocksSub|p2blkSim|simFamily|colWalk|simMeterBuild|simCmpUnits|simP2Tools|simW2Tools|simW2Units|simW2Conv|simMtGroups|simMtArray|simMtZero|simMtTens|simDvGroup|simDvShare|simDvFam|simDvRem|simDvSense|simTkFist|simTkDate|simTkHours|simTkMins|simPour\(|simLiter|simPourCmp|stepper"
+KEEP_OK = {69: ('simPolyMake',)}  # ป.2 บทที่ 9: simPolyMake เป็นหน้าลากจุด จึงคงไว้
 if CH > 50: OLD = OLD.replace(r'simLine\(|', '').replace('simLongDiv|', '').replace(r'simRule3\(|', '')  # ป.5 คงหน้าลากบนเส้นจำนวน simLine
 def run():
   with sync_playwright() as p:
@@ -62,7 +63,8 @@ def run():
     lo, hi = RANGE[CH]
     for lid in range(lo, hi + 1):
         n = lid - lo + 1
-        bad = pg.evaluate(f"LESSONS.find(L => L.id === {lid}).teach.filter(s => new RegExp({OLD!r}).test(String(s.v || ''))).length")
+        old_re = '|'.join(x for x in OLD.split('|') if x not in KEEP_OK.get(CH, ()))  # sims kept on purpose in this chapter
+        bad = pg.evaluate(f"LESSONS.find(L => L.id === {lid}).teach.filter(s => new RegExp({old_re!r}).test(String(s.v || ''))).length")
         res[f'old{n}'] = 'ok' if not bad else f'ERR {bad} old pages left'
         for k in pages(lid, 'ดูภาพ'): check(f'see{n}.{k}', lid, k, see)
         for k in pages(lid, 'ทำให้ดู'): check(f'show{n}.{k}', lid, k, show)
@@ -370,6 +372,10 @@ def run():
         for lid in (984, 985, 988, 989):
             try: open_(lid, ''); res[f'kept{lid - 980}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .ia, #stage button').length >= 2") else 'ERR nothing to tap'
             except Exception as e: res[f'kept{lid - 980}'] = 'ERR ' + str(e)[:60]
+    if CH == 69:
+        for lid in (1001, 1002, 1003, 1004, 1005):
+            try: open_(lid, ''); res[f'kept{lid - 1000}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .ia, #stage button, #stage circle').length >= 2") else 'ERR nothing to tap'
+            except Exception as e: res[f'kept{lid - 1000}'] = 'ERR ' + str(e)[:60]
     res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
