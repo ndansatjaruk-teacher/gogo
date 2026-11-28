@@ -7,7 +7,7 @@ import os, sys, pathlib
 from playwright.sync_api import sync_playwright
 TOUCH = '--touch' in sys.argv
 CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
-RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868)}
+RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868), 10: (871, 876)}
 OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap|simDiagQuad|simQuadSplit|simCircParts|simCompass|simRoll|simCircum|simSectors|simCircArea|simRing|simTank|picWalk|stepper"
 def run():
   with sync_playwright() as p:
@@ -139,6 +139,10 @@ def run():
         for lid, word, sel in ((861, 'ปริซึม', '.s9-view'), (862, 'สิ่งของ', '.s9o-card'), (863, 'รูปคลี่ของพีระมิด', '.s9-view'), (864, 'พับ', '.s9-view'), (865, 'แบ่ง', '.s9-view'), (867, 'วางแผน', '.d6-pick'), (868, 'วางแผน', '.d6-pick')):
             try: open_(lid, word); res[f'kept{lid - 860}'] = 'ok' if pg.evaluate(f"document.querySelectorAll('#stage {sel}, #stage .btn.ia').length >= 2") else 'ERR nothing to tap'
             except Exception as e: res[f'kept{lid - 860}'] = 'ERR ' + str(e)[:60]
+    if CH == 10:
+        for lid, word, sel in ((871, 'ลากจุด', '.pz-h'), (871, 'กะพริบ', '.pz-sec'), (872, 'เปรียบ', '.pz-sec'), (873, 'ทีละส่วน', '.pz-sec'), (874, '12,000', '.pz-sec'), (874, 'วางแผน', '.d6-pick'), (875, 'วางแผน', '.d6-pick'), (876, 'วางแผน', '.d6-pick')):
+            try: open_(lid, word); res[f'kept{lid - 870}{sel}'] = 'ok' if pg.evaluate(f"document.querySelectorAll('#stage {sel}').length >= 2") else 'ERR nothing to tap'
+            except Exception as e: res[f'kept{lid - 870}{sel}'] = 'ERR ' + str(e)[:60]
     res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
