@@ -7,8 +7,8 @@ import os, sys, pathlib
 from playwright.sync_api import sync_playwright
 TOUCH = '--touch' in sys.argv
 CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
-RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832)}
-OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap|simDiagQuad|simQuadSplit|stepper"
+RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852)}
+OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap|simDiagQuad|simQuadSplit|simCircParts|simCompass|simRoll|simCircum|simSectors|simCircArea|simRing|stepper"
 def run():
   with sync_playwright() as p:
     br = p.chromium.launch(**({'executable_path': os.environ['CHROME']} if os.environ.get('CHROME') else {})); ctx = br.new_context(viewport={'width': 1180, 'height': 820}, has_touch=TOUCH); pg = ctx.new_page()
@@ -121,6 +121,15 @@ def run():
         for lid, word, sel in ((821, 'รูปไหน', '.k7-card'), (829, '3 วิธี', '.btn'), (830, 'วางแผน', '.d6-pick'), (831, 'วางแผน', '.d6-pick'), (832, 'วางแผน', '.d6-pick')):
             try: open_(lid, word); res[f'kept{lid - 820}'] = 'ok' if pg.evaluate(f"document.querySelectorAll('#stage {sel}').length >= 2") else 'ERR nothing to tap'
             except Exception as e: res[f'kept{lid - 820}'] = 'ERR ' + str(e)[:60]
+    if CH == 8:
+        def three():  # three different chips: still locked after two, unlocked after the third
+            tapq('.h6d-chips .h6-chip', 0); tapq('.h6d-chips .h6-chip', 1)
+            if not locked(): raise Exception('unlocked too early')
+            tapq('.h6d-chips .h6-chip', 3)
+        for lid, word in ((841, 'รัศมี'), (843, 'กางวงเวียน'), (844, 'ขนาดล้อ'), (845, 'รัศมี'), (846, 'จำนวนชิ้น'), (847, 'รัศมี'), (848, 'วงเล็ก')): check(f'hand{lid - 840}', lid, word, three)
+        for lid, word, sel in ((842, 'แตะเส้น', '.c8-hit'), (849, 'วางแผน', '.d6-pick'), (850, 'วางแผน', '.d6-pick'), (851, 'วางแผน', '.d6-pick'), (852, 'วางแผน', '.d6-pick')):
+            try: open_(lid, word); res[f'kept{lid - 840}'] = 'ok' if pg.evaluate(f"document.querySelectorAll('#stage {sel}').length >= 2") else 'ERR nothing to tap'
+            except Exception as e: res[f'kept{lid - 840}'] = 'ERR ' + str(e)[:60]
     res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
