@@ -144,4 +144,5 @@ grades/p5/p5gd.js
 grades/p5/p5qd.js
 grades/p5/p5vd.js
 grades/p3/p3nd.js
+grades/p3/p3bd.js
 app/app.js

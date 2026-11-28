@@ -11,8 +11,8 @@ TOUCH = '--touch' in sys.argv
 CH = int(sys.argv[sys.argv.index('--ch') + 1]) if '--ch' in sys.argv else 2
 if '--p5' in sys.argv: CH = 50 + int(sys.argv[sys.argv.index('--p5') + 1])  # ป.5 บทที่ n (v288 ขึ้นไป · src/grades/p5/p5*d.js)
 if '--p3' in sys.argv: CH = 30 + int(sys.argv[sys.argv.index('--p3') + 1])  # ป.3 บทที่ n (v296 ขึ้นไป · src/grades/p3/p3*d.js)
-RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868), 10: (871, 876), 51: (501, 530), 52: (541, 562), 53: (571, 582), 54: (591, 596), 55: (601, 614), 56: (621, 628), 57: (631, 650), 58: (661, 672), 31: (101, 106)}
-OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar\(|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap\(|simDiagQuad|simQuadSplit|simCircParts|simCompass|simRoll|simCircum|simSectors|simCircArea|simRing|simTank|picWalk|fWalk|fracBars|simHalf|simOfSet|simArea\(|simDecGrid|simDecArea|pvChart|gWalk|simRate\(|simQuadBuild|simParaArea|q5ex|simPrism5|simCuboid|simIso\(|simVolLayers|simFill|simUnitConv|v5ex|abacusMachine|hopStrip|compareStep|revealBtn|stepper"
+RANGE = {2: (731, 742), 3: (751, 760), 4: (771, 785), 5: (791, 795), 6: (801, 815), 7: (821, 832), 8: (841, 852), 9: (861, 868), 10: (871, 876), 51: (501, 530), 52: (541, 562), 53: (571, 582), 54: (591, 596), 55: (601, 614), 56: (621, 628), 57: (631, 650), 58: (661, 672), 31: (101, 106), 32: (111, 118)}
+OLD = r"lrnBoard|dcWalk|dcStory|picWalk|simSteps|simStory|simFrac2|simImproper|simMixParts|simLine\(|simBar\(|simFracDec|simLongDiv|simPointShift|simShiftDiv|simFx|simPctOf|simPctGrid|simProfit|simDiscount|simRatioMix|simEqRatio|simRatioBar|simRule3\(|simSeqHop|simFigPat|simDiffs|simSeqMul|simBuild3|simPerim|simAreaRect|simConstruct|simPolyMake|simAngles7|simFan|simPolyPer|simTrap\(|simDiagQuad|simQuadSplit|simCircParts|simCompass|simRoll|simCircum|simSectors|simCircArea|simRing|simTank|picWalk|fWalk|fracBars|simHalf|simOfSet|simArea\(|simDecGrid|simDecArea|pvChart|gWalk|simRate\(|simQuadBuild|simParaArea|q5ex|simPrism5|simCuboid|simIso\(|simVolLayers|simFill|simUnitConv|v5ex|abacusMachine|hopStrip|compareStep|revealBtn|simColumn|simBarUnknown|stepper"
 if CH > 50: OLD = OLD.replace(r'simLine\(|', '').replace('simLongDiv|', '').replace(r'simRule3\(|', '')  # ป.5 คงหน้าลากบนเส้นจำนวน simLine
 def run():
   with sync_playwright() as p:
@@ -219,6 +219,15 @@ def run():
         for lid in (103, 105):
             try: open_(lid, ''); res[f'kept{lid - 100}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .ia').length >= 1") else 'ERR nothing to tap'
             except Exception as e: res[f'kept{lid - 100}'] = 'ERR ' + str(e)[:60]
+    if CH == 32:
+        def three():
+            tapq('.h6d-chips .h6-chip', 0); tapq('.h6d-chips .h6-chip', 1)
+            if not locked(): raise Exception('unlocked too early')
+            tapq('.h6d-chips .h6-chip', 2)
+        for lid in (111, 112, 113, 114, 115, 116): check(f'hand{lid - 110}', lid, 'แตะ', three)
+        for lid in (117, 118):
+            try: open_(lid, ''); res[f'kept{lid - 110}'] = 'ok' if pg.evaluate("document.querySelectorAll('#stage .ia').length >= 1") else 'ERR nothing to tap'
+            except Exception as e: res[f'kept{lid - 110}'] = 'ERR ' + str(e)[:60]
     res['jserr'] = 'ok' if not errs else 'ERR ' + errs[0]
     for k, v in res.items(): print(f'{k:9s} {v}')
     bad = [k for k, v in res.items() if not v.startswith('ok')]
