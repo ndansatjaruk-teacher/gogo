@@ -138,4 +138,5 @@ grades/p6/p6qd.js
 grades/p5/p5fd.js
 grades/p5/p5dd.js
 grades/p5/p5cd.js
+grades/p5/p5rd.js
 app/app.js
