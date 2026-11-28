@@ -6,8 +6,10 @@
    ========================================================= */
 const L2_CM = (m, c) => (m * 100 + c) * 10; /* หน่วยฐานของ W3P.mcm คือ มม. */
 const l2dT = (c, short) => { const m = Math.floor(c / 100), r = c % 100; return short ? (m && r ? `${m} ม. ${r} ซม.` : m ? `${m} ม.` : `${r} ซม.`) : (m && r ? `${m} เมตร ${r} เซนติเมตร` : m ? `${m} เมตร` : `${r} เซนติเมตร`); };
-const l2dShow = (title, a, b, op, q, fin) => { const C = [0, 1, 2].map(k => w3dCol(a, b, op, 'mcm', k));
-  return r4dShow(title, { W: 380, H: 196, fig: C[0].s, q, steps: [{ ink: C[1].s, w: C[1].note[0] + ' ซม.', n: 'เซนติเมตรก่อน' }, { ink: C[2].s, w: w3t(C[2].r, 'mcm'), n: C[2].note[1] + ' ม.', ans: 1 }], fin, say: fin }); };
+/* short notebook line + side note from a w3dCol note (borrow / carry text moved to the side note) */
+const l2dNote = (t, U) => { const f = x => x.replace(/\b\d{4,}\b/g, d => fmt(+d)); if (t.includes('→')) return { w: f(t.split('→ ').pop()) + ' ' + U[1], n: 'กระจาย 1 ' + U[0] }; if (t.includes(' ครบ')) { const [x, y] = t.split(' ครบ'); return { w: f(x) + ' ' + U[1], n: 'ครบ' + f(y) + ' ' + U[0] }; } return { w: f(t) + ' ' + U[1], n: U[1] + 'ก่อน' }; };
+const l2dShow = (title, a, b, op, q, fin, m = 'mcm') => { const C = [0, 1, 2].map(k => w3dCol(a, b, op, m, k)), U = W3P[m].U;
+  return r4dShow(title, { W: 380, H: 196, fig: C[0].s, q, steps: [{ ink: C[1].s, ...l2dNote(C[1].note[0], U) }, { ink: C[2].s, w: w3t(C[2].r, m), n: C[2].note[1] + ' ' + U[0], ans: 1 }], fin, say: fin }); };
 const l2dStick = (cm, x = 10, y = 10, k = .65) => s9dG(l3StickSVG(cm), x, y, k);
 /* map: บ้าน → (ตลาด | วัด) → โรงเรียน */
 const L2D_MAP = { n: { 'บ้าน': [50, 110], 'ตลาด': [190, 40], 'วัด': [190, 180], 'โรงเรียน': [330, 110] }, e: [['บ้าน', 'ตลาด', 250, 96, 62], ['ตลาด', 'โรงเรียน', 300, 290, 62], ['บ้าน', 'วัด', 200, 96, 172], ['วัด', 'โรงเรียน', 320, 290, 172]] };

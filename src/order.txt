@@ -159,4 +159,5 @@ grades/p3/p3xd.js
 grades/p2/p2nd.js
 grades/p2/p2bd.js
 grades/p2/p2ld.js
+grades/p2/p2wd.js
 app/app.js
