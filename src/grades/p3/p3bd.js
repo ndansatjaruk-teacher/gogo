@@ -12,22 +12,22 @@ function b3dPlan(a, b, op) { const A = String(a).padStart(5, ' ').split('').reve
       if (t[p] < (B[p] || 0)) { let j = p + 1; while (t[j] === 0) j++; ch.push([j, t[j] - 1]); t[j] -= 1; for (let k = j - 1; k > p; k--) { ch.push([k, 9]); t[k] = 9; } ch.push([p, t[p] + 10]); t[p] += 10; txt = `${A[p]} − ${B[p] || 0} ไม่ได้ กระจาย 1 จากหลัก${B3D_NM[4 - j]}${j > p + 1 ? ' (0 กลายเป็น 9)' : ''} → `; }
       steps.push({ p, res: t[p] - (B[p] || 0), ch, txt: txt + `${t[p]} − ${B[p] || 0} = ${t[p] - (B[p] || 0)}` }); } }
   return { A, B, steps }; }
-function b3dCol(a, b, op, upto, o = {}) { const P = b3dPlan(a, b, op), cw = 46, X = p => 180 + (2 - p) * cw, y0 = o.y0 || 0; let s = '';
-  B3D_NM.forEach((n, i) => { s += h6dT(X(4 - i), y0 + 30, n, '#7A70A0', 'e4d-nm'); });
+function b3dCol(a, b, op, upto, o = {}) { const P = b3dPlan(a, b, op), cw = 46, X = p => 180 + (2 - p) * cw - (o.pl ? (2 - (o.pl - 1) / 2) * cw : 0), y0 = o.y0 || 0, LP = o.pl ? o.pl - 1 : 4; let s = ''; /* v310: o.pl = จำนวนหลักที่แสดง (ป.2) */
+  B3D_NM.forEach((n, i) => { if (4 - i > LP) return; s += h6dT(X(4 - i), y0 + 30, n, '#7A70A0', 'e4d-nm'); });
   if (upto > 0 && upto <= P.steps.length && o.hi !== false) s += `<rect x="${X(P.steps[upto - 1].p) - 21}" y="${y0 + 40}" width="42" height="160" rx="8" fill="${H6C.y}" opacity=".75"/>`;
   const done = P.steps.slice(0, upto), cross = new Map(); done.forEach(st => (st.ch || []).forEach(([p, v]) => cross.set(p, v)));
   P.A.forEach((d, p) => { if (d == null) return; s += h6dT(X(p), y0 + 96, String(d), cross.has(p) ? '#9A93B8' : H6C.ink, 'e4d-dg'); if (cross.has(p)) s += `<path d="M${X(p) - 11} ${y0 + 98} L${X(p) + 11} ${y0 + 72}" stroke="${H6C.p}" stroke-width="2.4"/>` + h6dT(X(p), y0 + 58, String(cross.get(p)), H6C.p, 'r4d-sm'); });
   P.B.forEach((d, p) => { if (d != null) s += h6dT(X(p), y0 + 140, String(d), H6C.ink, 'e4d-dg'); });
-  s += h6dT(X(4) - 34, y0 + 140, op, H6C.ink, 'e4d-dg') + `<path d="M${X(4) - 50} ${y0 + 154} H${X(0) + 24}" stroke="${H6C.ink}" stroke-width="2.4"/>`;
+  s += h6dT(X(LP) - 34, y0 + 140, op, H6C.ink, 'e4d-dg') + `<path d="M${X(LP) - 50} ${y0 + 154} H${X(0) + 24}" stroke="${H6C.ink}" stroke-width="2.4"/>`;
   if (op === '+') done.forEach(st => { if (st.carryOut && st.p < 4) s += h6dT(X(st.p + 1), y0 + 60, '1', H6C.p, 'r4d-sm'); });
   const lead = op === '−' ? (() => { let k = P.steps.length - 1; while (k > 0 && P.steps[k].res === 0) k--; return k; })() : 9;
   done.forEach((st, i) => { if (i <= lead) s += h6dT(X(st.p), y0 + 190, String(st.res), H6C.g, 'e4d-dg'); });
   if (op === '+' && upto >= P.steps.length && P.steps[P.steps.length - 1].carryOut) s += h6dT(X(P.steps.length), y0 + 190, '1', H6C.g, 'e4d-dg');
   return { s, P }; }
 /* chip page: tap a place, see that place worked (all places to its right too) */
-const b3dColChip = (a, b, op) => { const P = b3dPlan(a, b, op), n = P.steps.length;
+const b3dColChip = (a, b, op, o = {}) => { const P = b3dPlan(a, b, op), n = P.steps.length;
   return q5dChip(`แตะหลัก ดูการ${op === '+' ? 'บวก' : 'ลบ'}ทีละหลัก`, `${fmt(a)} ${op} ${fmt(b)} แตะเลือก<b>หลัก</b>`, Array.from({ length: n }, (_, p) => p), p => 'หลัก' + B3D_NM[4 - p],
-    p => p == null ? { s: b3dCol(a, b, op, 0).s, H: 206, note: 'เริ่มที่หลักหน่วย แล้วไปทางซ้าย' } : { s: b3dCol(a, b, op, p + 1).s, H: 206, note: `หลัก${B3D_NM[4 - p]}: ${P.steps[p].txt}` + (p === n - 1 ? ` ได้ <b>${fmt(op === '+' ? a + b : a - b)}</b>` : '') }); };
+    p => p == null ? { s: b3dCol(a, b, op, 0, o).s, H: 206, note: 'เริ่มที่หลักหน่วย แล้วไปทางซ้าย' } : { s: b3dCol(a, b, op, p + 1, o).s, H: 206, note: `หลัก${B3D_NM[4 - p]}: ${P.steps[p].txt}` + (p === n - 1 ? ` ได้ <b>${fmt(op === '+' ? a + b : a - b)}</b>` : '') }); };
 const b3dBar = (o, x = 0, y = 0) => `<g transform="translate(${x} ${y})">${b4dIn(p4pwSVG(o))}</g>`;
 const b3dBarS = o => `<g transform="scale(.76)">${b4dIn(p4pwSVG(o))}</g>`;
 const b3dCmp = (o, x = 0, y = 0) => `<g transform="translate(${x} ${y})">${b4dIn(p4cmpSVG(o))}</g>`;
